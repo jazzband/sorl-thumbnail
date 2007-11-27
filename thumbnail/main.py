@@ -17,7 +17,7 @@ class Thumbnail:
         return self.thumbnail
 
     def get_url(self):
-        if hasattr(self, 'thumbnail') and self.thumbnail:
+        if self.thumbnail:
             return "%s%s" % (settings.MEDIA_URL, "/".join(self.thumbnail.split(os.path.sep)))
         else:
             return ""
