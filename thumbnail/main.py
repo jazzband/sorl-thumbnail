@@ -37,13 +37,10 @@ class Thumbnail:
 
     def set_thumbnail(self):
         if os.path.isfile(self.filename_abs):
+            self.thumbnail = self.thumbnail_filename
             if os.path.isfile(self.thumbnail_filename_abs):
                 if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
                     self.make_thumbnail()
-                else:
-                    #debug
-                    #self.make_thumbnail()
-                    self.thumbnail = self.thumbnail_filename
             else:
                 self.make_thumbnail()
         else:
@@ -76,5 +73,3 @@ class Thumbnail:
             im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality, optimize=1)
         except:
             im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality)
-       
-        self.thumbnail = self.thumbnail_filename
