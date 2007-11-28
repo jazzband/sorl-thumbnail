@@ -33,9 +33,11 @@ class Thumbnail:
         for m in METHOD_LIST:
             if getattr(self, m):
                 details_list.append(m)
-        details = "_".join(details_list) 
-        self.thumbnail_filename = os.path.join(filehead, self.subdir, '%s%s_%s_q%s.jpg' % \
-            (self.prefix, urlquote(basename), details, self.quality))
+        details_list.append("q%s" % self.quality)
+        details = "_".join(details_list)
+
+        self.thumbnail_filename = os.path.join(filehead, self.subdir, '%s%s_%s.jpg' % \
+            (self.prefix, urlquote(basename), details))
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)
 
     
