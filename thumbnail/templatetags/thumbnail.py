@@ -17,6 +17,7 @@ def thumbnail_url(filename, arg=""):
     
     return thumbnail.get_url()
 
+
 def get_thumbnail(filename, arg=""):
 
     kwargs  = {\
