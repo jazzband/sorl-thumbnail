@@ -41,7 +41,7 @@ class Thumbnail:
             details = "%s_%s" % (details, 'crop')
         if self.enlarge:
             details = "%s_%s" % (details, 'enlarge')
-        self.thumbnail_filename = os.path.join(filehead, self.subdir, u'%s%s_%s_q%s.jpg' % \
+        self.thumbnail_filename = os.path.join(filehead, self.subdir, '%s%s_%s_q%s.jpg' % \
             (self.prefix, urlquote(basename), details, self.quality))
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)
 
