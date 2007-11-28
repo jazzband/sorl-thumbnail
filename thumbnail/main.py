@@ -1,7 +1,6 @@
 import os, urllib
 from PIL import Image
 from django.conf import settings
-from sorl.thumbnail.exceptions import *
 
 class Thumbnail:
 
@@ -91,4 +90,17 @@ class Thumbnail:
                 raise ThumbnailIOError(detail)
         
         self.thumbnail = self.thumbnail_filename
+
+
+class ThumbnailException(Exception):
+    pass
+
+class ThumbnailInvalidImage(ThumbnailException):
+    pass
+
+class ThumbnailIOError(ThumbnailException):
+    pass
+
+class ThumbnailOSError(ThumbnailException):
+    pass
 
