@@ -55,7 +55,7 @@ class Thumbnail:
         except IOError, detail:
             raise Exception(detail)
 
-        if im.mode not in ("L", "RGB") or self.grayscale:
+        if self.grayscale or im.mode not in ("L", "RGB"):
             if self.grayscale:
                 im = im.convert("L")
             else:
