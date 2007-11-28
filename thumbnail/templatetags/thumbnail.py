@@ -7,7 +7,14 @@ register = Library()
 
 @register.filter
 def thumbnail_url(filename, arg=""):
-    thumbnail = get_thumbnail(filename, arg)
+    try:
+        thumbnail = get_thumbnail(filename, arg)
+    except Exception:
+        if hasattr(settings, 'THUMBNAIL_DEBUG') and settings.THUMBNAIL_DEBUG:
+            raise
+        else:
+            return ""
+    
     return thumbnail.get_url()
 
 def get_thumbnail(filename, arg=""):
@@ -19,7 +26,6 @@ def get_thumbnail(filename, arg=""):
         'crop': False,
         'enlarge': False,
         'quality': 85,
-        'debug': False,
     }
 
     for a in kwargs.keys():

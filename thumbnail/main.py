@@ -15,30 +15,17 @@ class Thumbnail:
             self.set_thumbnail_filename()
             self.set_thumbnail()
         else:
-            if self.debug:
-                raise ThumbnailInvalidImage("File does not exist.")
-
-    def __unicode__(self):
-        return self.thumbnail
+            raise Exception("File does not exist.")
 
     def get_url(self):
-        if self.thumbnail:
-            return "%s%s" % (settings.MEDIA_URL, "/".join(self.thumbnail.split(os.path.sep)))
-        else:
-            return ""
+        return "%s%s" % (settings.MEDIA_URL, "/".join(self.thumbnail.split(os.path.sep)))
 
     def set_thumbnail_filename(self):
         filehead, filetail = os.path.split(self.filename)
         basename, ext = os.path.splitext(filetail)
         thumbs_dir = os.path.join(settings.MEDIA_ROOT, filehead, self.subdir)
         if not os.path.isdir(thumbs_dir):
-            try:
-                os.mkdir(thumbs_dir)
-            except OSError, detail:
-                if self.debug:
-                    raise ThumbnailOSError(detail)
-                else:
-                    return
+            os.mkdir(thumbs_dir)
                 
         details = "%sx%s" % (self.size[0], self.size[1])
         if self.crop:
@@ -61,13 +48,7 @@ class Thumbnail:
             
 
     def make_thumbnail(self):
-        try:
-            im = Image.open(self.filename_abs)
-        except IOError, detail:
-            if self.debug:
-                raise ThumbnailInvalidImage(detail)
-            else:
-                return
+        im = Image.open(self.filename_abs)
 
         if im.mode not in ("L", "RGB"): 
             im = im.convert("RGB") 
@@ -92,26 +73,6 @@ class Thumbnail:
         try:
             im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality, optimize=1)
         except:
-            try:
-                im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality)
-            except IOError, detail:
-                if self.debug:
-                    raise ThumbnailIOError(detail)
-                else:
-                    return
+            im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality)
         
         self.thumbnail = self.thumbnail_filename
-
-
-class ThumbnailException(Exception):
-    pass
-
-class ThumbnailInvalidImage(ThumbnailException):
-    pass
-
-class ThumbnailIOError(ThumbnailException):
-    pass
-
-class ThumbnailOSError(ThumbnailException):
-    pass
-
