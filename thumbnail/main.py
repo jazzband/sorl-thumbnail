@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 from django.conf import settings
-from django.utils.http import urlquote
+from django.template.defaultfilters import slugify
 
 METHOD_LIST = ['crop', 'enlarge', 'grayscale']
 
@@ -36,8 +36,9 @@ class Thumbnail:
         details_list.append("q%s" % self.quality)
         details = "_".join(details_list)
 
+        #anyone got a bettar idea than slugify?
         self.thumbnail_filename = os.path.join(filehead, self.subdir, '%s%s_%s.jpg' % \
-            (self.prefix, urlquote(basename), details))
+            (self.prefix, slugify(basename), details))
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)
 
     
