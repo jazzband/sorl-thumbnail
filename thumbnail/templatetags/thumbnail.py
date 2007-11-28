@@ -1,6 +1,6 @@
 import re, os
 from django.template import Library
-from sorl.thumbnail import Thumbnail
+from sorl.thumbnail import Thumbnail, METHOD_LIST
 from django.conf import settings
 
 register = Library()
@@ -25,6 +25,7 @@ def get_thumbnail(filename, arg=""):
         'size': (80,80),
         'crop': False,
         'enlarge': False,
+        'grayscale': False,
         'quality': 85,
     }
 
@@ -33,11 +34,10 @@ def get_thumbnail(filename, arg=""):
             kwargs.update({a: getattr(settings, 'THUMBNAIL_%s' % a.upper())})
     
     kwargs.update(filename=filename)
-    
-    if arg.find('crop') != -1:
-        kwargs.update(crop=True)
-    if arg.find('enlarge') != -1:
-        kwargs.update(enlarge=True)
+     
+    for m in METHOD_LIST:
+        if arg.find(m) != -1:
+            kwargs.update({m: True})
     quality_pat = re.compile(r'q(\d+)')
     m = quality_pat.search(arg)
     if m:

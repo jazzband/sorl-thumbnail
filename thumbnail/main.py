@@ -3,6 +3,8 @@ from PIL import Image
 from django.conf import settings
 from django.utils.http import urlquote
 
+METHOD_LIST = ['crop', 'enlarge', 'grayscale']
+
 class Thumbnail:
 
     def __init__(self, **kwargs):
@@ -27,11 +29,11 @@ class Thumbnail:
         if not os.path.isdir(thumbs_dir):
             os.mkdir(thumbs_dir)
         
-        details = "%sx%s" % (self.size[0], self.size[1])
-        if self.crop:
-            details = "%s_%s" % (details, 'crop')
-        if self.enlarge:
-            details = "%s_%s" % (details, 'enlarge')
+        details_list = [ "%sx%s" % (self.size[0], self.size[1]) ]
+        for m in METHOD_LIST:
+            if getattr(self, m):
+                details_list.append(m)
+        details = "_".join(details_list) 
         self.thumbnail_filename = os.path.join(filehead, self.subdir, '%s%s_%s_q%s.jpg' % \
             (self.prefix, urlquote(basename), details, self.quality))
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)
@@ -53,8 +55,11 @@ class Thumbnail:
         except IOError, detail:
             raise Exception(detail)
 
-        if im.mode not in ("L", "RGB"): 
-            im = im.convert("RGB") 
+        if im.mode not in ("L", "RGB"):
+            if self.grayscale:
+                im = im.convert("L")
+            else:
+                im = im.convert("RGB")
 
         x, y   = [float(v) for v in im.size]
         xr, yr = [float(v) for v in self.size]
@@ -72,6 +77,9 @@ class Thumbnail:
             x, y   = [float(v) for v in im.size]
             ex, ey = (x-min(x, xr))/2, (y-min(y, yr))/2
             im = im.crop((int(ex), int(ey), int(x-ex), int(y-ey)))
+
+        if self.grayscale:
+            im = im.convert("L")
 
         try:
             im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality, optimize=1)
