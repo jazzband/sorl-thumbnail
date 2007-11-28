@@ -1,6 +1,7 @@
-import os, urllib
+import os
 from PIL import Image
 from django.conf import settings
+from django.utils.http import urlquote
 
 class Thumbnail:
 
@@ -40,8 +41,8 @@ class Thumbnail:
             details = "%s_%s" % (details, 'crop')
         if self.enlarge:
             details = "%s_%s" % (details, 'enlarge')
-        self.thumbnail_filename = os.path.join(filehead, self.subdir, '%s%s_%s_q%s.jpg' % \
-            (self.prefix, urllib.quote(basename), details, self.quality))
+        self.thumbnail_filename = os.path.join(filehead, self.subdir, u'%s%s_%s_q%s.jpg' % \
+            (self.prefix, urlquote(basename), details, self.quality))
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)
 
     
