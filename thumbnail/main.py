@@ -55,7 +55,7 @@ class Thumbnail:
         except IOError, detail:
             raise Exception(detail)
 
-        if im.mode not in ("L", "RGB"):
+        if im.mode not in ("L", "RGB") or self.grayscale:
             if self.grayscale:
                 im = im.convert("L")
             else:
@@ -77,9 +77,6 @@ class Thumbnail:
             x, y   = [float(v) for v in im.size]
             ex, ey = (x-min(x, xr))/2, (y-min(y, yr))/2
             im = im.crop((int(ex), int(ey), int(x-ex), int(y-ey)))
-
-        if self.grayscale:
-            im = im.convert("L")
 
         try:
             im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality, optimize=1)
