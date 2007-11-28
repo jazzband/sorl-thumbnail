@@ -3,7 +3,7 @@ from PIL import Image
 from django.conf import settings
 from django.template.defaultfilters import slugify
 
-METHOD_LIST = ['crop', 'enlarge', 'grayscale']
+METHOD_LIST = ['crop', 'upscale', 'bw']
 
 class Thumbnail:
 
@@ -55,8 +55,8 @@ class Thumbnail:
         except IOError, detail:
             raise Exception(detail)
 
-        if self.grayscale or im.mode not in ("L", "RGB"):
-            if self.grayscale:
+        if self.bw or im.mode not in ("L", "RGB"):
+            if self.bw:
                 im = im.convert("L")
             else:
                 im = im.convert("RGB")
@@ -69,7 +69,7 @@ class Thumbnail:
         else:
             r = min(xr/x, yr/y)
             
-        if not self.enlarge:
+        if not self.upscale:
             r = min(r,1)
         im = im.resize((int(x*r), int(y*r)), resample=Image.ANTIALIAS)
         

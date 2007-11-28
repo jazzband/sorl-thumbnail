@@ -24,8 +24,8 @@ def get_thumbnail(filename, arg=""):
         'subdir': '_thumbs',
         'size': (80,80),
         'crop': False,
-        'enlarge': False,
-        'grayscale': False,
+        'upscale': False,
+        'bw': False,
         'quality': 85,
     }
 
