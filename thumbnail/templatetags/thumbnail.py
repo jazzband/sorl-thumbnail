@@ -35,7 +35,7 @@ def get_thumbnail(filename, arg=""):
         'crop': False,
         'upscale': False,
         'bw': False,
-    }
+    })
      
     for m in METHOD_LIST:
         if arg.find(m) != -1:
