@@ -29,7 +29,7 @@ class Thumbnail:
         if not os.path.isdir(thumbs_dir):
             os.mkdir(thumbs_dir)
         
-        #anyone got a bettar idea than slugify?
+        #anyone got a better idea than slugify?
         #hopefully the filename is already ascii so we don't get collisions
         name_list = [slugify(basename), "%sx%s" % self.size]
         for m in METHOD_LIST:
