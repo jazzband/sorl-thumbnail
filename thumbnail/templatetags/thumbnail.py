@@ -22,7 +22,6 @@ def get_thumbnail(filename, arg=""):
     kwargs  = {\
         'prefix': '',
         'subdir': '_thumbs',
-        'size': (80,80),
         'quality': 85,
     }
 
@@ -32,6 +31,7 @@ def get_thumbnail(filename, arg=""):
     
     kwargs.update({\
         'filename': filename,
+        'size': (80,80),
         'crop': False,
         'upscale': False,
         'bw': False,
