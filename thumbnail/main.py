@@ -30,6 +30,7 @@ class Thumbnail:
             os.mkdir(thumbs_dir)
         
         #anyone got a bettar idea than slugify?
+        #hopefully the filename is already ascii to avoid collisions
         name_list = [ slugify(basename), "%sx%s" % (self.size[0], self.size[1]) ]
         for m in METHOD_LIST:
             if getattr(self, m):
