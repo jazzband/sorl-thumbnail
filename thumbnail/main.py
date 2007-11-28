@@ -26,7 +26,7 @@ class Thumbnail:
         thumbs_dir = os.path.join(settings.MEDIA_ROOT, filehead, self.subdir)
         if not os.path.isdir(thumbs_dir):
             os.mkdir(thumbs_dir)
-                
+        
         details = "%sx%s" % (self.size[0], self.size[1])
         if self.crop:
             details = "%s_%s" % (details, 'crop')
@@ -48,7 +48,10 @@ class Thumbnail:
             
 
     def make_thumbnail(self):
-        im = Image.open(self.filename_abs)
+        try:
+            im = Image.open(self.filename_abs)
+        except IOError, detail:
+            raise Exception(detail)
 
         if im.mode not in ("L", "RGB"): 
             im = im.convert("RGB") 
@@ -73,6 +76,9 @@ class Thumbnail:
         try:
             im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality, optimize=1)
         except:
-            im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality)
+            try:
+                im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality)
+            except IOError, detail:
+                raise Exception(detail)
         
         self.thumbnail = self.thumbnail_filename

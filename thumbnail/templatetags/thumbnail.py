@@ -9,7 +9,7 @@ register = Library()
 def thumbnail_url(filename, arg=""):
     try:
         thumbnail = get_thumbnail(filename, arg)
-    except Exception:
+    except:
         if hasattr(settings, 'THUMBNAIL_DEBUG') and settings.THUMBNAIL_DEBUG:
             raise
         else:
