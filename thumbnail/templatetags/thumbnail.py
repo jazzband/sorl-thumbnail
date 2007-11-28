@@ -19,6 +19,7 @@ def get_thumbnail(filename, arg=""):
         'crop': False,
         'enlarge': False,
         'quality': 85,
+        'debug': False,
     }
 
     for a in kwargs.keys():

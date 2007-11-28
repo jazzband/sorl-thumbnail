@@ -15,7 +15,8 @@ class Thumbnail:
             self.set_thumbnail_filename()
             self.set_thumbnail()
         else:
-            raise ThumbnailInvalidImage("File does not exist.")
+            if self.debug:
+                raise ThumbnailInvalidImage("File does not exist.")
 
     def __unicode__(self):
         return self.thumbnail
@@ -34,7 +35,10 @@ class Thumbnail:
             try:
                 os.mkdir(thumbs_dir)
             except OSError, detail:
-                raise ThumbnailOSError(detail)
+                if self.debug:
+                    raise ThumbnailOSError(detail)
+                else:
+                    return
                 
         details = "%sx%s" % (self.size[0], self.size[1])
         if self.crop:
@@ -60,7 +64,10 @@ class Thumbnail:
         try:
             im = Image.open(self.filename_abs)
         except IOError, detail:
-            raise ThumbnailInvalidImage(detail)
+            if self.debug:
+                raise ThumbnailInvalidImage(detail)
+            else:
+                return
 
         if im.mode not in ("L", "RGB"): 
             im = im.convert("RGB") 
@@ -88,7 +95,10 @@ class Thumbnail:
             try:
                 im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality)
             except IOError, detail:
-                raise ThumbnailIOError(detail)
+                if self.debug:
+                    raise ThumbnailIOError(detail)
+                else:
+                    return
         
         self.thumbnail = self.thumbnail_filename
 
