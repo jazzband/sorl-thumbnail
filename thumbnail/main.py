@@ -12,15 +12,22 @@ class Thumbnail:
             setattr(self, k, v)
 
         self.filename_abs = os.path.join(settings.MEDIA_ROOT, self.filename)
-        self.thumbnail = ""
         if os.path.isfile(self.filename_abs):
             self.set_thumbnail_filename()
-            self.set_thumbnail()
+
+            if os.path.isfile(self.thumbnail_filename_abs):
+                if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
+                    self.make_thumbnail()
+            else:
+                self.make_thumbnail()
+        
         else:
             raise Exception("File does not exist.")
 
+
     def get_url(self):
-        return "%s%s" % (settings.MEDIA_URL, "/".join(self.thumbnail.split(os.path.sep)))
+        return "%s%s" % (settings.MEDIA_URL, "/".join(self.thumbnail_filename.split(os.path.sep)))
+
 
     def set_thumbnail_filename(self):
         filehead, filetail = os.path.split(self.filename)
@@ -42,16 +49,6 @@ class Thumbnail:
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)
 
     
-    def set_thumbnail(self):
-        if os.path.isfile(self.thumbnail_filename_abs):
-            if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
-                self.make_thumbnail()
-            else:
-                self.thumbnail = self.thumbnail_filename
-        else:
-            self.make_thumbnail()
-            
-
     def make_thumbnail(self):
         try:
             im = Image.open(self.filename_abs)
@@ -88,5 +85,3 @@ class Thumbnail:
                 im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality)
             except IOError, detail:
                 raise Exception(detail)
-        
-        self.thumbnail = self.thumbnail_filename
