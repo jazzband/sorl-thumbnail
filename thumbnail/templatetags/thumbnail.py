@@ -23,9 +23,6 @@ def get_thumbnail(filename, arg=""):
         'prefix': '',
         'subdir': '_thumbs',
         'size': (80,80),
-        'crop': False,
-        'upscale': False,
-        'bw': False,
         'quality': 85,
     }
 
@@ -33,7 +30,12 @@ def get_thumbnail(filename, arg=""):
         if hasattr(settings, 'THUMBNAIL_%s' % a.upper()):
             kwargs.update({a: getattr(settings, 'THUMBNAIL_%s' % a.upper())})
     
-    kwargs.update(filename=filename)
+    kwargs.update({\
+        'filename': filename,
+        'crop': False,
+        'upscale': False,
+        'bw': False,
+    }
      
     for m in METHOD_LIST:
         if arg.find(m) != -1:
