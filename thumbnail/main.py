@@ -29,16 +29,15 @@ class Thumbnail:
         if not os.path.isdir(thumbs_dir):
             os.mkdir(thumbs_dir)
         
-        details_list = [ "%sx%s" % (self.size[0], self.size[1]) ]
+        #anyone got a bettar idea than slugify?
+        name_list = [ slugify(basename), "%sx%s" % (self.size[0], self.size[1]) ]
         for m in METHOD_LIST:
             if getattr(self, m):
-                details_list.append(m)
-        details_list.append("q%s" % self.quality)
-        details = "_".join(details_list)
+                name_list.append(m)
+        name_list.append("q%s" % self.quality)
 
-        #anyone got a bettar idea than slugify?
-        self.thumbnail_filename = os.path.join(filehead, self.subdir, '%s%s_%s.jpg' % \
-            (self.prefix, slugify(basename), details))
+        self.thumbnail_filename = \
+            os.path.join(filehead, self.subdir, '%s%s.jpg' % (self.prefix, "_".join(name_list)))
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)
 
     
