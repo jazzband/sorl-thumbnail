@@ -23,7 +23,7 @@ def get_thumbnail(filename, arg=""):
     kwargs  = {\
         'prefix': '',
         'subdir': '_thumbs',
-        'quality': 85
+        'quality': 85,
         'filename_encoding': 'utf-8',
     }
     for a in kwargs.keys():
