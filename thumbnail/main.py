@@ -14,7 +14,7 @@ class Thumbnail:
             setattr(self, k, v)
 
         self.filename_abs = os.path.join(settings.MEDIA_ROOT, self.filename)\
-            .encode(self.filename_encoding)
+            .encode('utf-8')
         if os.path.isfile(self.filename_abs):
             self.set_thumbnail_filename()
 
@@ -49,7 +49,7 @@ class Thumbnail:
         self.thumbnail_filename = \
             os.path.join(filehead, self.subdir, '%s%s.jpg' % (self.prefix, "_".join(name_list)))
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)\
-            .encode(self.filename_encoding)
+            .encode('utf-8')
 
     
     def make_thumbnail(self):

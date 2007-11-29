@@ -20,12 +20,7 @@ def thumbnail_url(filename, arg=""):
 
 def get_thumbnail(filename, arg=""):
 
-    kwargs  = {\
-        'prefix': '',
-        'subdir': '_thumbs',
-        'quality': 85,
-        'filename_encoding': 'utf-8',
-    }
+    kwargs  = {'prefix': '', 'subdir': '_thumbs', 'quality': 85}
     for a in kwargs.keys():
         if hasattr(settings, 'THUMBNAIL_%s' % a.upper()):
             kwargs.update({a: getattr(settings, 'THUMBNAIL_%s' % a.upper())})
