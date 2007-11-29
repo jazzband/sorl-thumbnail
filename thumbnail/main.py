@@ -17,8 +17,8 @@ class Thumbnail:
             self.set_thumbnail_filename()
 
             if os.path.isfile(self.thumbnail_filename_abs):
-                #if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
-                self.make_thumbnail()
+                if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
+                    self.make_thumbnail()
             else:
                 self.make_thumbnail()
         
