@@ -29,7 +29,7 @@ def get_thumbnail(filename, arg=""):
     for a in kwargs.keys():
         if hasattr(settings, 'THUMBNAIL_%s' % a.upper()):
             kwargs.update({a: getattr(settings, 'THUMBNAIL_%s' % a.upper())})
-    kwargs.update({'filename': filename, size: (80,80)})
+    kwargs.update({'filename': filename, 'size': (80,80)})
      
     arg_list = arg.split()
     for m in METHOD_LIST:
