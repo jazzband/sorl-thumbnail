@@ -1,6 +1,6 @@
 def autocrop(im):
 
-    WHITE_RATIO = 0.9
+    WHITE_RATIO = 0.95
 
     bw = im.convert("1")
     pix = bw.load()
