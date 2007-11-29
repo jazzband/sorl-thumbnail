@@ -2,8 +2,9 @@ import os
 from PIL import Image, ImageFilter
 from django.conf import settings
 from django.template.defaultfilters import slugify
+from sorl.thumbnail.methods import autocrop
 
-METHOD_LIST = ['crop', 'upscale', 'bw', 'detail', 'sharpen']
+METHOD_LIST = ['crop', 'autocrop', 'upscale', 'bw', 'detail', 'sharpen']
 
 class Thumbnail:
 
@@ -60,6 +61,9 @@ class Thumbnail:
                 im = im.convert("L")
             else:
                 im = im.convert("RGB")
+        
+        if self.autocrop:
+            im = autocrop(im)
 
         x, y   = [float(v) for v in im.size]
         xr, yr = [float(v) for v in self.size]

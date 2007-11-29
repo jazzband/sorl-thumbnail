@@ -1,6 +1,6 @@
 import re, os
 from django.template import Library
-from sorl.thumbnail import Thumbnail, METHOD_LIST
+from sorl.thumbnail.main import Thumbnail, METHOD_LIST
 from django.conf import settings
 
 register = Library()
@@ -27,7 +27,7 @@ def get_thumbnail(filename, arg=""):
     kwargs.update({'filename': filename, 'size': (80,80)})
      
     for m in METHOD_LIST:
-        kwargs.update({m: arg.find(m) != -1})
+        kwargs.update({m: arg.find(" %s " % m) != -1})
     quality_pat = re.compile(r'q(\d+)')
     m = quality_pat.search(arg)
     if m:
