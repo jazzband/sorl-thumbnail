@@ -1,8 +1,9 @@
 import os
 from PIL import Image, ImageFilter
 from django.conf import settings
-from django.template.defaultfilters import slugify
+from django.utils.encoding import iri_to_uri
 from sorl.thumbnail.methods import autocrop
+
 
 METHOD_LIST = ['crop', 'autocrop', 'upscale', 'bw', 'detail', 'sharpen']
 
@@ -12,7 +13,8 @@ class Thumbnail:
         for k,v in kwargs.items():
             setattr(self, k, v)
 
-        self.filename_abs = os.path.join(settings.MEDIA_ROOT, self.filename)
+        self.filename_abs = os.path.join(settings.MEDIA_ROOT, self.filename)\
+            .encode(self.filename_encoding)
         if os.path.isfile(self.filename_abs):
             self.set_thumbnail_filename()
 
@@ -27,7 +29,8 @@ class Thumbnail:
 
 
     def get_url(self):
-        return "%s%s" % (settings.MEDIA_URL, "/".join(self.thumbnail_filename.split(os.path.sep)))
+        return iri_to_uri("%s%s" % (settings.MEDIA_URL,\
+            "/".join(self.thumbnail_filename.split(os.path.sep))))
 
 
     def set_thumbnail_filename(self):
@@ -37,9 +40,7 @@ class Thumbnail:
         if not os.path.isdir(thumbs_dir):
             os.mkdir(thumbs_dir)
         
-        #anyone got a better idea than slugify?
-        #hopefully the filename is already ascii so we don't get collisions
-        name_list = [slugify(basename), "%sx%s" % self.size]
+        name_list = [basename, "%sx%s" % self.size]
         for m in METHOD_LIST:
             if getattr(self, m):
                 name_list.append(m)
@@ -47,7 +48,8 @@ class Thumbnail:
 
         self.thumbnail_filename = \
             os.path.join(filehead, self.subdir, '%s%s.jpg' % (self.prefix, "_".join(name_list)))
-        self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)
+        self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)\
+            .encode(self.filename_encoding)
 
     
     def make_thumbnail(self):
