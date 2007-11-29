@@ -33,10 +33,7 @@ def get_thumbnail(filename, arg=""):
     kwargs.update({'filename': filename, 'size': (80,80)})
      
     for m in METHOD_LIST:
-        if arg.find(m) != -1:
-            kwargs.update({m: True})
-        else:
-            kwargs.update({m: False})
+        kwargs.update({m: arg.find(m) != -1})
     quality_pat = re.compile(r'q(\d+)')
     m = quality_pat.search(arg)
     if m:
