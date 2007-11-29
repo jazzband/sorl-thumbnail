@@ -26,8 +26,9 @@ def get_thumbnail(filename, arg=""):
             kwargs.update({a: getattr(settings, 'THUMBNAIL_%s' % a.upper())})
     kwargs.update({'filename': filename, 'size': (80,80)})
      
+    arg_list = arg.split()
     for m in METHOD_LIST:
-        kwargs.update({m: arg.find(" %s" % m) != -1})
+        kwargs.update({m: m in arg_list})
     quality_pat = re.compile(r'q(\d+)')
     m = quality_pat.search(arg)
     if m:
