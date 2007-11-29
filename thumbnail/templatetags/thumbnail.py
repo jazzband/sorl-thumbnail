@@ -30,17 +30,13 @@ def get_thumbnail(filename, arg=""):
         if hasattr(settings, 'THUMBNAIL_%s' % a.upper()):
             kwargs.update({a: getattr(settings, 'THUMBNAIL_%s' % a.upper())})
     
-    kwargs.update({\
-        'filename': filename,
-        'size': (80,80),
-        'crop': False,
-        'upscale': False,
-        'bw': False,
-    })
+    kwargs.update({'filename': filename, 'size': (80,80)})
      
     for m in METHOD_LIST:
         if arg.find(m) != -1:
             kwargs.update({m: True})
+        else:
+            kwargs.update({m: False})
     quality_pat = re.compile(r'q(\d+)')
     m = quality_pat.search(arg)
     if m:
