@@ -1,9 +1,9 @@
 import os
-from PIL import Image
+from PIL import Image, ImageFilter
 from django.conf import settings
 from django.template.defaultfilters import slugify
 
-METHOD_LIST = ['crop', 'upscale', 'bw']
+METHOD_LIST = ['crop', 'upscale', 'bw', 'detail', 'sharpen']
 
 class Thumbnail:
 
@@ -78,6 +78,11 @@ class Thumbnail:
             ex, ey = (x-min(x, xr))/2, (y-min(y, yr))/2
             im = im.crop((int(ex), int(ey), int(x-ex), int(y-ey)))
 
+        if self.detail:
+            im = im.filter(ImageFilter.DETAIL)
+        if self.sharpen:
+            im = im.filter(ImageFilter.SHARPEN)
+        
         try:
             im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality, optimize=1)
         except:
