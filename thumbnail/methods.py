@@ -12,12 +12,12 @@ def autocrop(im):
         return True
 
     def col_is_white(x):
-        for i in xrange(0,im.size[0]):
+        for i in xrange(0,im.size[1]):
             if not pixel_is_white(pix[x,i]): return False
         return True
     
     def row_is_white(y):
-        for i in xrange(0,im.size[1]):
+        for i in xrange(0,im.size[0]):
             if not pixel_is_white(pix[i,y]): return False
         return True
 
