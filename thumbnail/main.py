@@ -17,8 +17,8 @@ class Thumbnail:
             self.set_thumbnail_filename()
 
             if os.path.isfile(self.thumbnail_filename_abs):
-                if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
-                    self.make_thumbnail()
+                #if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
+                self.make_thumbnail()
             else:
                 self.make_thumbnail()
         
@@ -64,7 +64,7 @@ class Thumbnail:
         
         if self.autocrop:
             im = autocrop(im)
-
+        
         x, y   = [float(v) for v in im.size]
         xr, yr = [float(v) for v in self.size]
 

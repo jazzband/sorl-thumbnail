@@ -1,30 +1,23 @@
 def autocrop(im):
 
-    THRESHOLD_WHITE = 240
-    ROW_RATIO = 0.8
+    WHITE_RATIO = 0.9
 
-    if im.mode != "RGB":
-        im = im.convert("RGB")
-    pix = im.load()
+    bw = im.convert("1")
+    pix = bw.load()
     
     x0, x1, y0, y1 = 0, im.size[0], 0, im.size[1]
     
-    def pixel_is_white(pixel):
-        for c in pixel:
-            if c < THRESHOLD_WHITE: return 0
-        return 1
-
     def col_is_white(x):
         s = 0.0
         for i in xrange(0,im.size[1]):
-            s += pixel_is_white(pix[x,i])
-        return s/float(im.size[1]) > ROW_RATIO
+            s += pix[x,i]/255
+        return s/float(im.size[1]) > WHITE_RATIO
     
     def row_is_white(y):
         s = 0.0
         for i in xrange(0,im.size[0]):
-            s += pixel_is_white(pix[i,y])
-        return s/float(im.size[0]) > ROW_RATIO
+            s += pix[i,y]/255
+        return s/float(im.size[0]) > WHITE_RATIO
 
     for i in xrange(0,im.size[0]):
         if not col_is_white(i):
