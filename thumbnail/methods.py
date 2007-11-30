@@ -16,7 +16,7 @@ def autocrop(im):
     def row_is_white(y):
         s = 0
         for i in xrange(0,im.size[0]):
-            s += pix[i,y]/255
+            s += pix[i,y]
         return float(s)/float(im.size[0])/255 > WHITE_RATIO
 
     for i in xrange(0,im.size[0]):
