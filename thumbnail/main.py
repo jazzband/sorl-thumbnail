@@ -5,29 +5,50 @@ from django.utils.encoding import iri_to_uri
 from sorl.thumbnail.methods import autocrop
 
 
-METHOD_LIST = ['crop', 'autocrop', 'upscale', 'bw', 'detail', 'sharpen']
+OPTIONS = ['crop', 'autocrop', 'upscale', 'bw', 'detail', 'sharpen']
 
 class Thumbnail:
 
-    def __init__(self, **kwargs):
-        for k,v in kwargs.items():
-            setattr(self, k, v)
-
-        self.filename_abs = os.path.join(settings.MEDIA_ROOT, self.filename)\
-            .encode(self.filename_encoding)
-        if os.path.isfile(self.filename_abs):
-            self.set_thumbnail_filename()
-
-            if os.path.isfile(self.thumbnail_filename_abs):
-                if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
-                    self.make_thumbnail()
-            else:
-                self.make_thumbnail()
+    def __init__(self, filename='', prefix='', subdir='_thumbs', quality=85,\
+        filename_encoding='utf-8',size=(80.80), options=[]):
         
+        self.filename_abs = os.path.join(settings.MEDIA_ROOT, filename)\
+            .encode(filename_encoding)
+        if not os.path.isfile(self.filename_abs):
+            raise ThumbnailException("File does not exist.")
+
+        self.filename = filename
+        self.prefix   = prefix
+        self.subdir   = subdir
+        self.size     = size
+
+        #invalid quality setting will just reset to default
+        if quality > 1 and quality < 100:
+            self.quality = quality
         else:
-            raise Exception("File does not exist.")
+            self.quality = 85
+
+        #invalid options silently ignored
+        for o in OPTIONS:
+            if o in options:
+                setattr(self, o, True)
+            else:
+                setattr(self, o, False)
+                
+        self.filename_encoding = filename_encoding
+        self.set_thumbnail_filename()
+
+        if os.path.isfile(self.thumbnail_filename_abs):
+            if os.path.getmtime(self.filename_abs) > os.path.getmtime(self.thumbnail_filename_abs):
+                self.make_thumbnail()
+        else:
+            self.make_thumbnail()
 
 
+    def __unicode__(self):
+        return self.thumbnail_filename
+    
+   
     def get_url(self):
         return iri_to_uri("%s%s" % (settings.MEDIA_URL,\
             "/".join(self.thumbnail_filename.split(os.path.sep))))
@@ -41,9 +62,9 @@ class Thumbnail:
             os.mkdir(thumbs_dir)
         
         name_list = [basename, "%sx%s" % self.size]
-        for m in METHOD_LIST:
-            if getattr(self, m):
-                name_list.append(m)
+        for o in OPTIONS:
+            if getattr(self, o):
+                name_list.append(o)
         name_list.append("q%s" % self.quality)
 
         self.thumbnail_filename = \
@@ -56,7 +77,7 @@ class Thumbnail:
         try:
             im = Image.open(self.filename_abs)
         except IOError, detail:
-            raise Exception(detail)
+            raise ThumbnailException(detail)
 
         if self.bw or im.mode not in ("L", "RGB"):
             if self.bw:
@@ -95,4 +116,7 @@ class Thumbnail:
             try:
                 im.save(self.thumbnail_filename_abs, "JPEG", quality=self.quality)
             except IOError, detail:
-                raise Exception(detail)
+                raise ThumbnailException(detail)
+
+class ThumbnailException(Exception):
+    pass
