@@ -23,7 +23,7 @@ def debug():
 def get_thumbnail(filename, arg=""):
 
     kwargs = {'filename': filename, 'options': arg.split()}
-    attr = ['prefix', 'subdir', 'quality', 'filename_encoding']
+    attr = ['prefix', 'subdir', 'quality']
     for a in attr:
         if hasattr(settings, 'THUMBNAIL_%s' % a.upper()):
             kwargs.update({a: getattr(settings, 'THUMBNAIL_%s' % a.upper())})

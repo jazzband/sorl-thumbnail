@@ -9,11 +9,11 @@ OPTIONS = ['crop', 'autocrop', 'upscale', 'bw', 'detail', 'sharpen']
 
 class Thumbnail:
 
-    def __init__(self, filename='', prefix='', subdir='_thumbs', quality=85,\
-        filename_encoding='utf-8',size=(80.80), options=[]):
+    def __init__(self, filename='', prefix='', subdir='_thumbs',\
+        quality=85,size=(80.80), options=[]):
         
         self.filename_abs = os.path.join(settings.MEDIA_ROOT, filename)\
-            .encode(filename_encoding)
+            .encode(settings.FILE_CHARSET)
         if not os.path.isfile(self.filename_abs):
             raise ThumbnailException("File does not exist.")
 
@@ -30,7 +30,6 @@ class Thumbnail:
             else:
                 setattr(self, o, False)
                 
-        self.filename_encoding = filename_encoding
         self.set_thumbnail_filename()
 
         if os.path.isfile(self.thumbnail_filename_abs):
@@ -61,7 +60,7 @@ class Thumbnail:
         self.thumbnail_filename = \
             os.path.join(filehead, self.subdir, '%s%s.jpg' % (self.prefix, "_".join(name_list)))
         self.thumbnail_filename_abs = os.path.join(settings.MEDIA_ROOT, self.thumbnail_filename)\
-            .encode(self.filename_encoding)
+            .encode(settings.FILE_CHARSET)
 
     
     def make_thumbnail(self):
