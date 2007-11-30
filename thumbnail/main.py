@@ -64,9 +64,6 @@ class Thumbnail:
             else:
                 im = im.convert("RGB")
         
-        if self.autocrop:
-            im = autocrop(im)
-        
         x, y   = [float(v) for v in im.size]
         xr, yr = [float(v) for v in self.size]
 
@@ -84,6 +81,9 @@ class Thumbnail:
             ex, ey = (x-min(x, xr))/2, (y-min(y, yr))/2
             im = im.crop((int(ex), int(ey), int(x-ex), int(y-ey)))
 
+        if self.autocrop:
+            im = autocrop(im)
+        
         if self.detail:
             im = im.filter(ImageFilter.DETAIL)
         if self.sharpen:

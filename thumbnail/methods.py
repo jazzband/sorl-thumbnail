@@ -8,16 +8,16 @@ def autocrop(im):
     x0, x1, y0, y1 = 0, im.size[0], 0, im.size[1]
     
     def col_is_white(x):
-        s = 0.0
+        s = 0
         for i in xrange(0,im.size[1]):
-            s += pix[x,i]/255
-        return s/float(im.size[1]) > WHITE_RATIO
+            s += pix[x,i]
+        return float(s)/float(im.size[1])/255 > WHITE_RATIO
     
     def row_is_white(y):
-        s = 0.0
+        s = 0
         for i in xrange(0,im.size[0]):
             s += pix[i,y]/255
-        return s/float(im.size[0]) > WHITE_RATIO
+        return float(s)/float(im.size[0])/255 > WHITE_RATIO
 
     for i in xrange(0,im.size[0]):
         if not col_is_white(i):
