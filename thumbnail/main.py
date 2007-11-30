@@ -21,12 +21,7 @@ class Thumbnail:
         self.prefix   = prefix
         self.subdir   = subdir
         self.size     = size
-
-        #invalid quality setting will just reset to default
-        if quality > 1 and quality < 100:
-            self.quality = quality
-        else:
-            self.quality = 85
+        self.quality = quality
 
         #invalid options silently ignored
         for o in OPTIONS:
