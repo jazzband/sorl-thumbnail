@@ -40,10 +40,6 @@ class Thumbnail:
             self.make_thumbnail()
 
 
-    def __unicode__(self):
-        return self.thumbnail_filename
-    
-   
     def get_url(self):
         return iri_to_uri("%s%s" % (settings.MEDIA_URL,\
             "/".join(self.thumbnail_filename.split(os.path.sep))))
