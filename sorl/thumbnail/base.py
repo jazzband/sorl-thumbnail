@@ -1,7 +1,17 @@
 from os import makedirs
-from os.path import isfile, isdir, getmtime, dirname, splitext
+from os.path import isfile, isdir, getmtime, dirname, splitext, getsize
 from PIL import Image, ImageFilter
 from methods import autocrop, resize_and_crop
+
+def byteprefix(b):
+    """
+    Given an integer as number of bytes it returns a tuple of
+    (bytes, kilobytes, megabytes).
+    """
+    mb = round(float(b)/1000000,1)
+    kb = b/1000
+    return (b, kb, mb)
+
 
 # Valid options for the Thumbnail class.
 VALID_OPTIONS = ['crop', 'autocrop', 'upscale', 'bw', 'detail', 'sharpen']
@@ -143,6 +153,7 @@ class Thumbnail(object):
                 im.save(self.dest, "JPEG", quality=self.quality)
             except IOError, detail:
                 raise ThumbnailException(detail)
+
     
     # Some helpful methods
 
@@ -159,7 +170,7 @@ class Thumbnail(object):
     def filesize(self):
         if not self.dest:
             return None
-        return getsize(self.dest)
+        return byteprefix(getsize(self.dest))
 
     def source_width(self):
         return self.source_data.size[0]
@@ -168,4 +179,5 @@ class Thumbnail(object):
         return self.source_data.size[1]
 
     def source_filesize(self):
-        return getsize(self.source)
+        return byteprefix(getsize(self.source))
+

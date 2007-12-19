@@ -88,13 +88,13 @@ following useful properties:
       The width/height of the thumbnail image.
 
     ``filesize``
-      The file size (as an integer in bytes) of the thumbnail image.
+      The file size as a tuple (b, kb, mb) of the thumbnail image.
 
     ``source_width`` and ``source_height``
       The width/height of the source image.
 
     ``source_filesize``
-      The file size (as an integer in bytes) of the source image.
+      The file size as a tuple (b, kb, mb) of the source image.
 
 An example of advanced usage::
 
