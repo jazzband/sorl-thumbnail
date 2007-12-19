@@ -11,17 +11,17 @@ from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME, THU
 class ThumbnailTest(BaseTest):
     def testThumbnails(self):
         # Thumbnail
-        thumb = Thumbnail(source=PIC_NAME, thumbnail=THUMB_NAME % 1,
+        thumb = Thumbnail(source=PIC_NAME, dest=THUMB_NAME % 1,
                           requested_size=(240, 240))
         self.verify_thumbnail((240, 180), thumb)
 
         # Cropped thumbnail
-        thumb = Thumbnail(source=PIC_NAME, thumbnail=THUMB_NAME % 2,
+        thumb = Thumbnail(source=PIC_NAME, dest=THUMB_NAME % 2,
                           requested_size=(240, 240), opts=['crop'])
         self.verify_thumbnail((240, 240), thumb)
 
         # Thumbnail with altered JPEG quality
-        thumb = Thumbnail(source=PIC_NAME, thumbnail=THUMB_NAME % 3,
+        thumb = Thumbnail(source=PIC_NAME, dest=THUMB_NAME % 3,
                           requested_size=(240, 240), quality=95)
         self.verify_thumbnail((240, 180), thumb)
 
@@ -29,20 +29,20 @@ class ThumbnailTest(BaseTest):
         # Create thumbnail
         thumb_name = THUMB_NAME % 4
         thumb_size = (240, 240)
-        thumb = Thumbnail(source=PIC_NAME, thumbnail=thumb_name,
+        thumb = Thumbnail(source=PIC_NAME, dest=thumb_name,
                           requested_size=thumb_size)
         self.images_to_delete.add(thumb_name)
         thumb_mtime = os.path.getmtime(thumb_name)
         time.sleep(1)
 
         # Create another instance, shouldn't generate a new thumb
-        thumb = Thumbnail(source=PIC_NAME, thumbnail=thumb_name,
+        thumb = Thumbnail(source=PIC_NAME, dest=thumb_name,
                           requested_size=thumb_size)
         self.assertEqual(os.path.getmtime(thumb_name), thumb_mtime)
         
         # Recreate the source image, then see if a new thumb is generated
         Image.new('RGB', PIC_SIZE).save(PIC_NAME, 'JPEG')
-        thumb = Thumbnail(source=PIC_NAME, thumbnail=thumb_name,
+        thumb = Thumbnail(source=PIC_NAME, dest=thumb_name,
                           requested_size=thumb_size)
         self.assertNotEqual(os.path.getmtime(thumb_name), thumb_mtime)
 

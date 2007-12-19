@@ -15,7 +15,7 @@ class DjangoThumbnail(Thumbnail):
         quality = get_thumbnail_setting('QUALITY', quality)
 
         # Call super().__init__ now to set the opts attribute. generate() won't
-        # get called because we are not setting the thumbnail attribute yet.
+        # get called because we are not setting the dest attribute yet.
         super(DjangoThumbnail, self).__init__(source, requested_size, 
                                               opts=opts, quality=quality)
       
@@ -26,7 +26,7 @@ class DjangoThumbnail(Thumbnail):
                                         subdir=subdir, prefix=prefix)
         self.dest = self._absolute_path(relative_thumbnail)
         
-        # Call generate now that the thumbnail attribute has been set
+        # Call generate now that the dest attribute has been set
         self.generate()
 
         # Set the absolute url to the thumbnail
