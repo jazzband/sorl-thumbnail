@@ -158,17 +158,17 @@ class Thumbnail(object):
     # Some helpful methods
 
     def width(self):
-        if not self.dest:
+        if self.dest is None:
             return None
         return self.data.size[0]
 
     def height(self):
-        if not self.dest:
+        if self.dest is None:
             return None
         return self.data.size[1]
 
     def filesize(self):
-        if not self.dest:
+        if self.dest is None:
             return None
         return byteprefix(getsize(self.dest))
 
