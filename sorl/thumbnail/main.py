@@ -29,10 +29,10 @@ class DjangoThumbnail(Thumbnail):
         # Call generate now that the dest attribute has been set
         self.generate()
 
-        # Set the absolute url to the thumbnail
-        relative_url = '/'.join(relative_thumbnail.split(os.sep))
-        self.absolute_url = iri_to_uri('%s%s' % 
-                                       (settings.MEDIA_URL, relative_url))
+        # Set the relative & absolute url to the thumbnail
+        self.relative_url = \
+            iri_to_uri('/'.join(relative_thumbnail.split(os.sep)))
+        self.absolute_url = '%s%s' % (settings.MEDIA_URL, self.relative_url)
     
     def _get_relative_thumbnail(self, relative_source, 
                                 basedir=None, subdir=None, prefix=None):
