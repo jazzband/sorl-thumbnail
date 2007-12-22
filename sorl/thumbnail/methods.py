@@ -34,8 +34,3 @@ def autocrop(im):
     if bbox:
         return im.crop(bbox)
     return im
-
-
-
-
-

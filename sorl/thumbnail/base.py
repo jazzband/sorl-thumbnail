@@ -3,15 +3,6 @@ from os.path import isfile, isdir, getmtime, dirname, splitext, getsize
 from PIL import Image, ImageFilter
 from methods import autocrop, resize_and_crop
 
-def byteprefix(b):
-    """
-    Given an integer as number of bytes it returns a tuple of
-    (bytes, kilobytes, megabytes).
-    """
-    mb = round(float(b)/1000000,1)
-    kb = b/1000
-    return (b, kb, mb)
-
 
 # Valid options for the Thumbnail class.
 VALID_OPTIONS = ['crop', 'autocrop', 'upscale', 'bw', 'detail', 'sharpen']
@@ -170,7 +161,7 @@ class Thumbnail(object):
     def filesize(self):
         if self.dest is None:
             return None
-        return byteprefix(getsize(self.dest))
+        return self.byteprefix(getsize(self.dest))
 
     def source_width(self):
         return self.source_data.size[0]
@@ -179,5 +170,13 @@ class Thumbnail(object):
         return self.source_data.size[1]
 
     def source_filesize(self):
-        return byteprefix(getsize(self.source))
-
+        return self.byteprefix(getsize(self.source))
+    
+    def byteprefix(self, b):
+        """
+        Given an integer as number of bytes it returns a tuple of
+        (bytes, kilobytes, megabytes).
+        """
+        mb = round(float(b)/1000000,1)
+        kb = b/1000
+        return (b, kb, mb)
