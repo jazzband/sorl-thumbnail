@@ -80,10 +80,13 @@ thumbnail. The variable (containing the ``DjangoThumbnail`` object) has the
 following useful properties:
 
     ``absolute_url``
+      The relative url (to MEDIA_URL) of the thumbnail.
+
+    ``relative_url``
       The absolute url of the thumbnail (the ``__unicode__`` method of this
       object also returns the absolute url, so you can also just do
       ``{{ thumbnail_variable }}``).
-
+    
     ``width`` and ``height``
       The width/height of the thumbnail image.
 
