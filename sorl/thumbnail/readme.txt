@@ -99,7 +99,9 @@ following useful properties:
       The width/height of the source image.
 
     ``source_filesize``
-      The file size as a tuple (b, kb, mb) of the source image.
+      The file size of the source image as a dict::
+      {'b': Bytes, 'kb': Kilobytes, 'kib': Kibibytes,
+       'mb': Megabytes, 'mib': Mebibytes}
 
 An example of advanced usage::
 
