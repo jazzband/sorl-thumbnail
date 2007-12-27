@@ -168,15 +168,17 @@ class Thumbnail(object):
 
     def source_height(self):
         return self.source_data.size[1]
-
+    
     def source_filesize(self):
         return self.byteprefix(getsize(self.source))
     
     def byteprefix(self, b):
         """
-        Given an integer as number of bytes it returns a tuple of
-        (bytes, kilobytes, megabytes).
+        Given an integer as number of bytes it returns a dict of
+        Bytes, Kilobytes, Kibibytes, Megabytes and Mebibytes.
         """
-        mb = round(float(b)/1000000,1)
-        kb = b/1000
-        return (b, kb, mb)
+        kb  = int(round(float(b)/1000.0,0))
+        kib = int(round(float(b)/1024.0,0))
+        mb  = round(float(b)/1000000.0,1)
+        mib = round(float(b)/1048576.0,1)
+        return {'b': b, 'kb': kb, 'kib': kib, 'mb': mb, 'mib': mib}

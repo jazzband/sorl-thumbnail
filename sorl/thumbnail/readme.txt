@@ -91,7 +91,9 @@ following useful properties:
       The width/height of the thumbnail image.
 
     ``filesize``
-      The file size as a tuple (b, kb, mb) of the thumbnail image.
+      The file size of the thumbnail image as a dict::
+      {'b': Bytes, 'kb': Kilobytes, 'kib': Kibibytes,
+       'mb': Megabytes, 'mib': Mebibytes}
 
     ``source_width`` and ``source_height``
       The width/height of the source image.
