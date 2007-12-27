@@ -12,6 +12,21 @@ class ThumbnailException(Exception):
     pass
 
 
+class FileSize(object):
+    def __init__(self,b):
+        self.b = b
+    def __unicode__(self):
+        return u"%s" % self.kib()
+    def kb(self):
+        return int(round(float(self.b)/1000.0,0))
+    def kib(self):
+        return int(round(float(self.b)/1024.0,0))
+    def mb(self):
+        return round(float(self.b)/1000000.0,1)
+    def mib(self):
+        return round(float(self.b)/1048576.0,1)
+
+
 class Thumbnail(object):
     def __init__(self, source, requested_size, opts=None, quality=85,
                  dest=None):
@@ -158,27 +173,22 @@ class Thumbnail(object):
             return None
         return self.data.size[1]
 
-    def filesize(self):
+    def _get_filesize(self):
         if self.dest is None:
             return None
-        return self.byteprefix(getsize(self.dest))
-
+        if not hasattr(self, '_filesize'):
+            self._filesize = FileSize(getsize(self.dest))
+        return self._filesize
+    filesize = property(_get_filesize)
+    
     def source_width(self):
         return self.source_data.size[0]
 
     def source_height(self):
         return self.source_data.size[1]
     
-    def source_filesize(self):
-        return self.byteprefix(getsize(self.source))
-    
-    def byteprefix(self, b):
-        """
-        Given an integer as number of bytes it returns a dict of
-        Bytes, Kilobytes, Kibibytes, Megabytes and Mebibytes.
-        """
-        kb  = int(round(float(b)/1000.0,0))
-        kib = int(round(float(b)/1024.0,0))
-        mb  = round(float(b)/1000000.0,1)
-        mib = round(float(b)/1048576.0,1)
-        return {'b': b, 'kb': kb, 'kib': kib, 'mb': mb, 'mib': mib}
+    def _get_source_filesize(self):
+        if not hasattr(self, '_source_filesize'):
+            self._source_filesize = FileSize(getsize(self.source))
+        return self._source_filesize
+    sorce_filesize = property(_get_source_filesize)

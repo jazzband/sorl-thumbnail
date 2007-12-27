@@ -77,7 +77,7 @@ width::
 
 When ``as [variable]`` is used, the tag does not return the absolute url of the
 thumbnail. The variable (containing the ``DjangoThumbnail`` object) has the
-following useful properties:
+following useful methods and properties:
 
     ``absolute_url``
       The absolute url of the thumbnail (the ``__unicode__`` method of this
@@ -91,17 +91,21 @@ following useful properties:
       The width/height of the thumbnail image.
 
     ``filesize``
-      The file size of the thumbnail image as a dict::
-      {'b': Bytes, 'kb': Kilobytes, 'kib': Kibibytes,
-       'mb': Megabytes, 'mib': Mebibytes}
+      The file size of the thumbnail.
+      this class returns Kibibytes as __unicode__ method but also includes
+      following methods::
+      * ``b`` Bytes
+      * ``kb`` Kilobytes
+      * ``kib`` Kibibytes
+      * ``mb`` Megabytes
+      * ``mib`` Mebibytes
 
     ``source_width`` and ``source_height``
       The width/height of the source image.
 
     ``source_filesize``
-      The file size of the source image as a dict::
-      {'b': Bytes, 'kb': Kilobytes, 'kib': Kibibytes,
-       'mb': Megabytes, 'mib': Mebibytes}
+      The file size of the source. Has same methods as ``filesize``.
+
 
 An example of advanced usage::
 
