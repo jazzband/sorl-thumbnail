@@ -191,4 +191,4 @@ class Thumbnail(object):
         if not hasattr(self, '_source_filesize'):
             self._source_filesize = FileSize(getsize(self.source))
         return self._source_filesize
-    sorce_filesize = property(_get_source_filesize)
+    source_filesize = property(_get_source_filesize)
