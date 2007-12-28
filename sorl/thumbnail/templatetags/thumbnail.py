@@ -81,7 +81,7 @@ def get_thumbnail_node(token):
     source_var = args[1]
 
     # Get the requested size.
-    if (args[2][0] in [ "'", '"']) and args[2][0] == args[2][-1]:
+    if args[2][0] in [ "'", '"'] and args[2][0] == args[2][-1]:
         args[2] = args[2][1:-1]
     m = size_pat.match(args[2])
     if not m:
