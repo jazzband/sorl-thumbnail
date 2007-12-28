@@ -11,7 +11,8 @@ DEFAULT_THUMBNAIL_SETTINGS = {
     'PREFIX': '',
     'QUALITY': 85,
     'CONVERT': '/usr/bin/convert',
-} 
+    'WVPS': '/usr/bin/wvPS',
+}
 
 
 def get_thumbnail_setting(setting, override=None):

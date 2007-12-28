@@ -41,6 +41,8 @@ class Thumbnail(object):
         # Ensure the source file exists
         if not isfile(self.source):
             raise ThumbnailException('Source file does not exist')
+
+        self.source_type = splitext(self.source)[1].lower().replace('.', '')
         
         # Thumbnail settings
         self.requested_size = requested_size
@@ -103,42 +105,51 @@ class Thumbnail(object):
     # source_data property is the image data from the source file
     def _get_source_data(self):
         if not hasattr(self, '_source_data'):
-            basename, ext = splitext(self.source)
-            ext = ext.lower()
-            if ext == '.pdf':
-                tmp = mkstemp('.png')[1]
-                if self.opts['crop']:
-                    x,y = [d*3 for d in self.requested_size]
-                else:
-                    x,y = self.requested_size
+            if self.source_type == 'doc':
+                tmp = mkstemp('.ps')[1]
                 try:
-                    p = Popen((get_thumbnail_setting('CONVERT'), '-size',
-                        '%sx%s' % (x,y), '-antialias',
-                        '-colorspace', 'rgb', '-format', 'PNG32',
-                        '%s[0]' % self.source,
-                        tmp), stdout=PIPE)
+                    p = Popen((get_thumbnail_setting('WVPS'), self.source,
+                              tmp), stdout=PIPE)
                     p.wait()
-                except OSError:
-                    raise ThumbnailException('ImageMagick error.')
-                image = tmp
+                except OSError, detail:
+                    raise ThumbnailException('wvPS error: %s' % detail)
+                self._convert(tmp)
+                os.remove(tmp)
+            elif self.source_type == 'pdf':
+                self._convert(self.source)
             else:
-                image = self.source
-
+                self.source_data = self.source
+            
+        return self._source_data
+    
+    def _set_source_data(self, image):
+        if isinstance(image, Image.Image):
+            self._source_data = image
+        else: 
             try:
                 self._source_data = Image.open(image)
             except IOError, detail:
                 raise ThumbnailException(detail)
-            
-            # try to remove tempfile
-            try:
-                os.remove(tmp)
-            except:
-                pass
-        return self._source_data
-    def _set_source_data(self, im):
-        self._source_data = im
     source_data = property(_get_source_data, _set_source_data)
 
+    def _convert(self, filename):
+        tmp = mkstemp('.png')[1]
+        if self.opts['crop']:
+            x,y = [d*3 for d in self.requested_size]
+        else:
+            x,y = self.requested_size
+        try:
+            p = Popen((get_thumbnail_setting('CONVERT'), '-size',
+                '%sx%s' % (x,y), '-antialias',
+                '-colorspace', 'rgb', '-format', 'PNG32',
+                '%s[0]' % filename,
+                tmp), stdout=PIPE)
+            p.wait()
+        except OSError, detail:
+            raise ThumbnailException('ImageMagick error: %s' % detail)
+        self.source_data = tmp
+        os.remove(tmp)
+    
     def _do_generate(self):
         """
         Generates the thumbnail image.
@@ -180,15 +191,16 @@ class Thumbnail(object):
     
     # Some helpful methods
 
-    def width(self):
+    def _dimension(self, axis):
         if self.dest is None:
             return None
-        return self.data.size[0]
+        return self.data.size[axis]
+
+    def width(self):
+        return self._dimension(0)
 
     def height(self):
-        if self.dest is None:
-            return None
-        return self.data.size[1]
+        return self._dimension(1)
 
     def _get_filesize(self):
         if self.dest is None:
@@ -197,12 +209,18 @@ class Thumbnail(object):
             self._filesize = FileSize(getsize(self.dest))
         return self._filesize
     filesize = property(_get_filesize)
-    
+   
+    def _source_dimension(self, axis):
+        if self.source_type in ['pdf', 'doc']:
+            return None
+        else:
+            return self.source_data.size[axis]
+
     def source_width(self):
-        return self.source_data.size[0]
+        return self._source_dimension(0)
 
     def source_height(self):
-        return self.source_data.size[1]
+        return self._source_dimension(1)
     
     def _get_source_filesize(self):
         if not hasattr(self, '_source_filesize'):
