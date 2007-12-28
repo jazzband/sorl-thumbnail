@@ -112,13 +112,8 @@ class Thumbnail(object):
                         '%s.png' % self.source), stdout=PIPE)
                     p.wait()
                 except OSError:
-                    raise ThumbnailException('ImageMagick installation incomplete.')
+                    raise ThumbnailException('ImageMagick error.')
                 self.source = "%s.png" % self.source
-
-            #    # do imagemagick stuff if possible
-            #    try:
-            #        from PythonMagick import *
-            #        from cStringIO import StringIO
             #    except:
             #        # just fetch a pdf icon
             #        pass
