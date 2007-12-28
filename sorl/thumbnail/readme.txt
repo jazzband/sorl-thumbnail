@@ -8,6 +8,15 @@ It requires the Python Imaging Library (PIL_).
 
 .. _PIL: http://www.pythonware.com/products/pil/
 
+To enable pdf support you need (ImageMagick_).
+
+.. _ImageMagick: http://www.imagemagick.org/
+
+For Word doc you need (wvWare_) and (ImageMagick_).
+
+.. _wvWare: http://wvware.sourceforge.net/
+
+
 {% thumbnail %} template tag
 ============================
 
