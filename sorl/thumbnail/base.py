@@ -1,9 +1,10 @@
+import os
 from os import makedirs
 from os.path import isfile, isdir, getmtime, dirname, splitext, getsize
 from PIL import Image, ImageFilter
 from methods import autocrop, resize_and_crop
 from utils import get_thumbnail_setting
-import os
+from subprocess import Popen, PIPE
 
 
 # Valid options for the Thumbnail class.
@@ -104,23 +105,18 @@ class Thumbnail(object):
             basename, ext = splitext(self.source)
             ext = ext.lower()
             if ext == '.pdf':
-                from subprocess import Popen, PIPE
+                image = "%s.png" % self.dest
                 try:
                     p = Popen((get_thumbnail_setting('CONVERT'), '-size',
                         '%sx%s' % self.requested_size, '-antialias',
+                        '-colorspace', 'rgb', '-format', 'PNG32',
                         '%s[0]' % self.source,
-                        '%s.png' % self.source), stdout=PIPE)
+                        image), stdout=PIPE)
                     p.wait()
                 except OSError:
                     raise ThumbnailException('ImageMagick error.')
-                self.source = "%s.png" % self.source
-            #    except:
-            #        # just fetch a pdf icon
-            #        pass
-            #elif ext == '.doc':
-            #    # try and use wvPS else just fetch an icon
-            #    pass
-            #else:
+                self.source = image
+            
             try:
                 self._source_data = Image.open(self.source)
             except IOError, detail:
