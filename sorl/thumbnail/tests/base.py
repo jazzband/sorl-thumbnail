@@ -60,7 +60,7 @@ class BaseTest(unittest.TestCase):
         if thumbnail is not None:
             # Verify that the templatetag method returned a Thumbnail instance
             self.assertTrue(isinstance(thumbnail, Thumbnail))
-            thumb_name = thumbnail.thumbnail
+            thumb_name = thumbnail.dest
         else:
             thumb_name = expected_filename
 
@@ -72,7 +72,7 @@ class BaseTest(unittest.TestCase):
 
         # If we got an expected_filename, check that it is right
         if expected_filename is not None and thumbnail is not None:
-            self.assertEqual(thumbnail.thumbnail, expected_filename)
+            self.assertEqual(thumbnail.dest, expected_filename)
 
         # Verify the thumbnail has the expected dimensions
         self.assertEqual(Image.open(thumb_name).size, expected_size)
