@@ -5,6 +5,7 @@ from PIL import Image, ImageFilter
 from methods import autocrop, resize_and_crop
 from utils import get_thumbnail_setting
 from subprocess import Popen, PIPE
+from tempfile import mkstemp
 
 
 # Valid options for the Thumbnail class.
@@ -105,22 +106,34 @@ class Thumbnail(object):
             basename, ext = splitext(self.source)
             ext = ext.lower()
             if ext == '.pdf':
-                image = "%s.png" % self.dest
+                tmp = mkstemp('.png')[1]
+                if self.opts['crop']:
+                    x,y = [d*3 for d in self.requested_size]
+                else:
+                    x,y = self.requested_size
                 try:
                     p = Popen((get_thumbnail_setting('CONVERT'), '-size',
-                        '%sx%s' % self.requested_size, '-antialias',
+                        '%sx%s' % (x,y), '-antialias',
                         '-colorspace', 'rgb', '-format', 'PNG32',
                         '%s[0]' % self.source,
-                        image), stdout=PIPE)
+                        tmp), stdout=PIPE)
                     p.wait()
                 except OSError:
                     raise ThumbnailException('ImageMagick error.')
-                self.source = image
-            
+                image = tmp
+            else:
+                image = self.source
+
             try:
-                self._source_data = Image.open(self.source)
+                self._source_data = Image.open(image)
             except IOError, detail:
                 raise ThumbnailException(detail)
+            
+            # try to remove tempfile
+            try:
+                os.remove(tmp)
+            except:
+                pass
         return self._source_data
     def _set_source_data(self, im):
         self._source_data = im
