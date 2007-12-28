@@ -42,7 +42,19 @@ class Thumbnail(object):
         if not isfile(self.source):
             raise ThumbnailException('Source file does not exist')
 
-        self.source_type = splitext(self.source)[1].lower().replace('.', '')
+        try:
+            import magic
+            m = magic.open(magic.MAGIC_NONE)
+            m.load()
+            ftype = m.file(self.source)
+            if ftype.find('Microsoft Office Document') != -1:
+                self.source_type = 'doc'
+            elif ftype.find('PDF document') != -1:
+                self.source_type = 'pdf'
+            else:
+                self.source_type = ftype
+        except:
+            self.source_type = splitext(self.source)[1].lower().replace('.', '')
         
         # Thumbnail settings
         self.requested_size = requested_size
