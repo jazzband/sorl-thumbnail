@@ -28,8 +28,8 @@ url). The basic usage is::
 
     {% thumbnail [source-filename] [size] [options] %}
 
-``source-filename`` must be an existing image, including the path relative to
-``MEDIA_ROOT``.
+``source-filename`` must be an existing image or other sopported format,
+including the path relative to``MEDIA_ROOT``.
 
 ``size`` must be with the size in the format
 ``[width]x[height]`` (for example, ``250x250``). Then other options

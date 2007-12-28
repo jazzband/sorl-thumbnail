@@ -10,6 +10,7 @@ DEFAULT_THUMBNAIL_SETTINGS = {
     'SUBDIR': '',
     'PREFIX': '',
     'QUALITY': 85,
+    'CONVERT': '/usr/bin/convert',
 } 
 
 
