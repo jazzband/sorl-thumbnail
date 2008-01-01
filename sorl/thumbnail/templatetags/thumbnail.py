@@ -9,12 +9,6 @@ register = Library()
 
 size_pat = re.compile(r'(\d+)x(\d+)$')
 quality_pat = re.compile(r'quality=([1-9]\d?|100)$')
-DEBUG = get_thumbnail_setting('DEBUG')
-
-
-@register.tag
-def thumbnail(parser, token):
-    return get_thumbnail_node(token)
 
 
 class ThumbnailNode(Node):
@@ -34,11 +28,11 @@ class ThumbnailNode(Node):
             thumbnail = DjangoThumbnail(relative_source, self.requested_size,
                                         opts=self.opts, **self.kwargs)
         except VariableDoesNotExist:
-            if DEBUG:
+            if get_thumbnail_setting('DEBUG'):
                 raise VariableDoesNotExist("Variable %s does not exist." %
                                            self.source_var)
         except:
-            if DEBUG:
+            if get_thumbnail_setting('DEBUG'):
                 raise
             
         if self.context_name is None:
@@ -47,7 +41,7 @@ class ThumbnailNode(Node):
         return ''
 
 
-def get_thumbnail_node(token):
+def thumbnail(parser, token):
     """
     To just output the absolute url to the thumbnail::
 
@@ -109,3 +103,6 @@ def get_thumbnail_node(token):
             kwargs['quality'] = int(m.group(1))
     return ThumbnailNode(source_var, requested_size, opts=opts,
                          context_name=context_name, **kwargs)
+
+
+register.tag(thumbnail)
