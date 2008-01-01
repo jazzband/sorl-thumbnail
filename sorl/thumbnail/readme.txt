@@ -6,8 +6,8 @@ The ``sorl.thumbnail`` package, provides a way of thumbnailing images.
 
 It requires the Python Imaging Library (PIL_).
 
-To enable PDF support you need ImageMagick_ and to enable Word document support
-you need both wvWare_ and ImageMagick_.
+To enable PDF thumbnails you need ImageMagick_ and to enable Word document
+thumbnails you need both wvWare_ and ImageMagick_.
 
 .. _PIL: http://www.pythonware.com/products/pil/
 .. _ImageMagick: http://www.imagemagick.org/
@@ -127,6 +127,24 @@ To display those errors rather than failing silently, add a ``THUMBNAIL_DEBUG``
 property to your settings module and set it to ``True``::
 
 	THUMBNAIL_DEBUG = True
+
+PDF and Word document thumbnails
+--------------------------------
+
+PDF conversion is done with ImageMagick's `convert` program. The default
+location where ``sorl.thumbnail`` will look for this program is
+`/usr/bin/convert`.
+
+Word documents are converted to a PostScript file with wvWare's `wvps` program.
+The default location where ``sorl.thumbnail`` will look for this program is
+`/usr/bin/wvPS`. This file is then converted to an image with ImageMagick's
+`convert` program.
+
+To specify an alternate location for either of these programs, add the relevant
+property to your settings module::
+
+	THUMBNAIL_CONVERT = '/path/to/imagemagick/convert'
+	THUMBNAIL_WVPS = '/path/to/wvPS'
 
 
 Thumbnail filenames

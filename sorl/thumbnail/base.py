@@ -3,7 +3,6 @@ from os import makedirs
 from os.path import isfile, isdir, getmtime, dirname, splitext, getsize
 from PIL import Image, ImageFilter
 from methods import autocrop, resize_and_crop
-from utils import get_thumbnail_setting
 from subprocess import Popen, PIPE
 from tempfile import mkstemp
 
@@ -18,7 +17,11 @@ class ThumbnailException(Exception):
 
 class Thumbnail(object):
     def __init__(self, source, requested_size, opts=None, quality=85,
-                 dest=None):
+                 dest=None, imagemagick_path='/usr/bin/convert',
+                 wvps_path='/usr/bin/wvPS'):
+        # Converter paths
+        self.imagemagick_path = imagemagick_path
+        self.wvps_path = wvps_path
         # Absolute paths to files
         self.source = source
         self.dest = dest
@@ -27,6 +30,7 @@ class Thumbnail(object):
         if not isfile(self.source):
             raise ThumbnailException('Source file does not exist')
 
+        # Set the source type
         try:
             import magic
             m = magic.open(magic.MAGIC_NONE)
@@ -103,17 +107,9 @@ class Thumbnail(object):
     def _get_source_data(self):
         if not hasattr(self, '_source_data'):
             if self.source_type == 'doc':
-                tmp = mkstemp('.ps')[1]
-                try:
-                    p = Popen((get_thumbnail_setting('WVPS'), self.source,
-                              tmp), stdout=PIPE)
-                    p.wait()
-                except OSError, detail:
-                    raise ThumbnailException('wvPS error: %s' % detail)
-                self._convert(tmp)
-                os.remove(tmp)
+                self._convert_wvps(self.source)
             elif self.source_type == 'pdf':
-                self._convert(self.source)
+                self._convert_imagemagick(self.source)
             else:
                 self.source_data = self.source
         return self._source_data
@@ -128,18 +124,26 @@ class Thumbnail(object):
                 raise ThumbnailException(detail)
     source_data = property(_get_source_data, _set_source_data)
 
-    def _convert(self, filename):
+    def _convert_wvps(self, filename):
+        tmp = mkstemp('.ps')[1]
+        try:
+            p = Popen((self.wvps_path, filename, tmp), stdout=PIPE)
+            p.wait()
+        except OSError, detail:
+            raise ThumbnailException('wvPS error: %s' % detail)
+        self._convert_image_imagemagick(tmp)
+        os.remove(tmp)
+
+    def _convert_imagemagick(self, filename):
         tmp = mkstemp('.png')[1]
         if self.opts['crop']:
             x,y = [d*3 for d in self.requested_size]
         else:
             x,y = self.requested_size
         try:
-            p = Popen((get_thumbnail_setting('CONVERT'), '-size',
-                '%sx%s' % (x,y), '-antialias',
-                '-colorspace', 'rgb', '-format', 'PNG32',
-                '%s[0]' % filename,
-                tmp), stdout=PIPE)
+            p = Popen((self.imagemagick_path, '-size', '%sx%s' % (x,y),
+                '-antialias', '-colorspace', 'rgb', '-format', 'PNG32',
+                '%s[0]' % filename, tmp), stdout=PIPE)
             p.wait()
         except OSError, detail:
             raise ThumbnailException('ImageMagick error: %s' % detail)

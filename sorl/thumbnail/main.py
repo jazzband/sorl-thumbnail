@@ -6,18 +6,20 @@ from utils import get_thumbnail_setting
 
 
 class DjangoThumbnail(Thumbnail):
-
     def __init__(self, relative_source, requested_size, opts=None,
                  quality=None, basedir=None, subdir=None, prefix=None):
         # Set the absolute filename for the source file
         source = self._absolute_path(relative_source)
 
         quality = get_thumbnail_setting('QUALITY', quality)
+        imagemagick_path = get_thumbnail_setting('CONVERT')
+        wvps_path = get_thumbnail_setting('WVPS')
 
         # Call super().__init__ now to set the opts attribute. generate() won't
         # get called because we are not setting the dest attribute yet.
-        super(DjangoThumbnail, self).__init__(source, requested_size, 
-                                              opts=opts, quality=quality)
+        super(DjangoThumbnail, self).__init__(source, requested_size,
+            opts=opts, quality=quality, imagemagick_path=imagemagick_path,
+            wvps_path=wvps_path)
       
         # Get the relative filename for the thumbnail image, then set the
         # destination filename
