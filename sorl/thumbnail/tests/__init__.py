@@ -8,6 +8,8 @@ from sorl.thumbnail.tests.templatetags import ThumbnailTagTest
 
 # Doc tests:
 from sorl.thumbnail.tests.utils import utils_tests
+from sorl.thumbnail.tests.templatetags import byteunit_tests
 __test__ = {
     'utils_tests': utils_tests,
+    'byteunit_tests': byteunit_tests,
 }

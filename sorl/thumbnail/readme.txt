@@ -6,14 +6,11 @@ The ``sorl.thumbnail`` package, provides a way of thumbnailing images.
 
 It requires the Python Imaging Library (PIL_).
 
+To enable PDF support you need ImageMagick_ and to enable Word document support
+you need both wvWare_ and ImageMagick_.
+
 .. _PIL: http://www.pythonware.com/products/pil/
-
-To enable pdf support you need (ImageMagick_).
-
 .. _ImageMagick: http://www.imagemagick.org/
-
-For Word doc you need (wvWare_) and (ImageMagick_).
-
 .. _wvWare: http://wvware.sourceforge.net/
 
 
@@ -100,14 +97,8 @@ following useful methods and properties:
       The width/height of the thumbnail image.
 
     ``filesize``
-      The file size of the thumbnail.
-      this class returns Kibibytes as __unicode__ method but also includes
-      following methods::
-      * ``b`` Bytes
-      * ``kb`` Kilobytes
-      * ``kib`` Kibibytes
-      * ``mb`` Megabytes
-      * ``mib`` Mebibytes
+      The file size (in bytes) of the thumbnail.
+      To output user-friendly file sizes, use the included `byteunit filter`_.
 
     ``source_width`` and ``source_height``
       The width/height of the source image.
@@ -188,6 +179,46 @@ For example::
 
 This will only affect images which have not be explicitly given a quality
 option.
+
+
+``byteunit`` filter
+===================
+
+This filter returns the number of bytes in either the nearest unit or a specific
+unit (depending on the chosen format method).
+    
+Use this filter to output user-friendly file sizes. For example::
+
+	{% thumbnail source 200x200 as thumb %}
+	Thumbnail file size: {{ thumb.size|byteunit }}
+
+If the generated thumbnail size came to 2000 bytes, this would output
+"Thumbnail file size: 1.9 KiB" (the filter's default format is ``auto1024``).
+You can specify a different format like so:
+
+	{{ thumb.size|byteunit:"auto1000long" }}
+
+Which would output "2 kilobytes".
+
+Acceptable formats are:
+
+auto1024, auto1000
+  convert to the nearest unit, appending the abbreviated unit name to the string
+  (e.g. '2 KiB' or '2 kB').
+  auto1024 is the default format.
+
+auto1024long, auto1000long
+  convert to the nearest multiple of 1024 or 1000, appending the correctly
+  pluralized unit name to the string (e.g. '2 kibibytes' or '2 kilobytes').
+
+kB, MB, GB, TB, PB, EB, ZB or YB
+  convert to the exact unit (using multiples of 1000).
+
+KiB, MiB, GiB, TiB, PiB, EiB, ZiB or YiB
+  convert to the exact unit (using multiples of 1024).
+
+The auto1024 and auto1000 formats return a string, appending the correct unit to
+the value. All other formats return the floating point value.
 
 
 Advanced usage

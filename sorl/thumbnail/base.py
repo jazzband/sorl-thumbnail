@@ -16,21 +16,6 @@ class ThumbnailException(Exception):
     pass
 
 
-class FileSize(object):
-    def __init__(self,b):
-        self.b = b
-    def __unicode__(self):
-        return u"%s" % self.kib()
-    def kb(self):
-        return int(round(float(self.b)/1000.0,0))
-    def kib(self):
-        return int(round(float(self.b)/1024.0,0))
-    def mb(self):
-        return round(float(self.b)/1000000.0,1)
-    def mib(self):
-        return round(float(self.b)/1048576.0,1)
-
-
 class Thumbnail(object):
     def __init__(self, source, requested_size, opts=None, quality=85,
                  dest=None):
@@ -131,7 +116,6 @@ class Thumbnail(object):
                 self._convert(self.source)
             else:
                 self.source_data = self.source
-            
         return self._source_data
     
     def _set_source_data(self, image):
@@ -200,7 +184,6 @@ class Thumbnail(object):
             except IOError, detail:
                 raise ThumbnailException(detail)
 
-    
     # Some helpful methods
 
     def _dimension(self, axis):
@@ -218,7 +201,7 @@ class Thumbnail(object):
         if self.dest is None:
             return None
         if not hasattr(self, '_filesize'):
-            self._filesize = FileSize(getsize(self.dest))
+            self._filesize = getsize(self.dest)
         return self._filesize
     filesize = property(_get_filesize)
    
@@ -236,6 +219,6 @@ class Thumbnail(object):
     
     def _get_source_filesize(self):
         if not hasattr(self, '_source_filesize'):
-            self._source_filesize = FileSize(getsize(self.source))
+            self._source_filesize = getsize(self.source)
         return self._source_filesize
     source_filesize = property(_get_source_filesize)
