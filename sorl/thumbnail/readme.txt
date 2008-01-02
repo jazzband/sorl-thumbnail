@@ -34,14 +34,20 @@ url). The basic usage is::
 
     {% thumbnail [source-filename] [size] [options] %}
 
-``source-filename`` must be an existing image or other sopported format,
-including the path relative to``MEDIA_ROOT``.
+``source-filename`` must a variable containing the path of an existing image (or
+other supported format), relative to``MEDIA_ROOT``.
 
-``size`` must be with the size in the format
-``[width]x[height]`` (for example, ``250x250``). Then other options
+``size`` can either be:
 
-``options`` are optional (obviously) and should be comma separated (without a space
-between them - for example, ``crop,bw,quality=95``). Valid options are:
+    - the size in the format ``[width]x[height]`` (for example,
+      ``{% thumbnail source 100x50 %}``) or
+    
+    - a variable containing a two element list of the width and height (for
+      example, ``{% thumbnail source size %}`` will look for a template context
+      variable named ``size`` containing something like ``[100, 50]``).
+
+``options`` are optional (obviously) and should be comma separated (without a
+space between them - for example, ``crop,bw,quality=95``). Valid options are:
 
     ``quality=[1-100]``
       Alter the quality of the JPEG thumbnail (the default is 85).

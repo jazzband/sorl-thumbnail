@@ -19,32 +19,53 @@ byteunit_long_formats = {
 
 
 class ThumbnailNode(Node):
-
-    def __init__(self, source_var, requested_size, opts=None,
+    def __init__(self, source_var, size_var, opts=None,
                  context_name=None, **kwargs):
         self.source_var = Variable(source_var)
-        self.requested_size = requested_size
+        m = size_pat.match(size_var)
+        if m:
+            self.requested_size = (int(m.group(1)), int(m.group(2)))
+        else:
+            self.size_var = Variable(size_var)
+            self.requested_size = None
         self.opts = opts
         self.context_name = context_name
         self.kwargs = kwargs
     
     def render(self, context):
-        thumbnail = ''
+        DEBUG = get_thumbnail_setting('DEBUG')
+        # Resolve variables
         try:
             relative_source = self.source_var.resolve(context)
-            thumbnail = DjangoThumbnail(relative_source, self.requested_size,
-                                        opts=self.opts, **self.kwargs)
+            size = self.requested_size or self.size_var.resolve(context)
         except VariableDoesNotExist:
-            if get_thumbnail_setting('DEBUG'):
+            if DEBUG:
                 raise VariableDoesNotExist("Variable %s does not exist." %
                                            self.source_var)
+            return ''
+        # Check size
+        try:
+            size = tuple([int(v) for v in size])
+        except (TypeError, ValueError):
+            size = ()
+        if len(size) != 2:
+            if DEBUG:
+                raise TemplateSyntaxError("Variable %s found but was not a"
+                    "valid size" % self.size_var)
+            return ''
+        # Get thumbnail class
+        try:
+            thumbnail = DjangoThumbnail(relative_source, size, opts=self.opts,
+                                        **self.kwargs)
         except:
-            if get_thumbnail_setting('DEBUG'):
+            if DEBUG:
                 raise
-            
+            return ''
+        # Return the thumbnail class, or put it on the context
         if self.context_name is None:
             return thumbnail
-        context[self.context_name] = thumbnail
+        if thumbnail:
+            context[self.context_name] = thumbnail
         return ''
 
 
@@ -78,17 +99,9 @@ def thumbnail(parser, token):
             "'{%% %s source size [options] %%}' or "
             "'{%% %s source size [options] as variable %%}'" % (tag, tag)) 
 
-    # Get the source image path.
+    # Get the source image path and requested size.
     source_var = args[1]
-
-    # Get the requested size.
-    if args[2][0] in [ "'", '"'] and args[2][0] == args[2][-1]:
-        args[2] = args[2][1:-1]
-    m = size_pat.match(args[2])
-    if not m:
-        raise TemplateSyntaxError("'%s' tag received invalid requested size. "
-            "Expected something like 80x80 but got: '%s'" % (tag, args[2]))
-    requested_size = (int(m.group(1)), int(m.group(2)))
+    size_var = args[2]
 
     # Get the options.
     if len(args) == 4:
@@ -108,7 +121,7 @@ def thumbnail(parser, token):
                 raise TemplateSyntaxError(
                     "'%s' tag received a bad argument: '%s'" % (tag, arg))
             kwargs['quality'] = int(m.group(1))
-    return ThumbnailNode(source_var, requested_size, opts=opts,
+    return ThumbnailNode(source_var, size_var, opts=opts,
                          context_name=context_name, **kwargs)
 
 
