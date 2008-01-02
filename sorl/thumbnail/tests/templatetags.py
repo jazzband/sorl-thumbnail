@@ -123,54 +123,54 @@ class ThumbnailTagTest(BaseTest):
             'width:{{ thumb.width }}, url:{{ thumb }}')
         self.assertEqual(output, 'width:240, url:%s' % expected_url)
 
-byteunit_tests = """
->>> from sorl.thumbnail.templatetags.thumbnail import byteunit
+filesize_tests = """
+>>> from sorl.thumbnail.templatetags.thumbnail import filesize
 
->>> byteunit('abc')
+>>> filesize('abc')
 'abc'
->>> byteunit(100, 'invalid')
+>>> filesize(100, 'invalid')
 100
 
 >>> bytes = 20
->>> byteunit(bytes)
+>>> filesize(bytes)
 '20 B'
->>> byteunit(bytes, 'auto1000')
+>>> filesize(bytes, 'auto1000')
 '20 B'
 
 >>> bytes = 1001
->>> byteunit(bytes)
+>>> filesize(bytes)
 '1001 B'
->>> byteunit(bytes, 'auto1000')
+>>> filesize(bytes, 'auto1000')
 '1 kB'
 
 >>> bytes = 10100
->>> byteunit(bytes)
+>>> filesize(bytes)
 '9.9 KiB'
 
 # Note that the decimal place is only used if < 10
->>> byteunit(bytes, 'auto1000')
+>>> filesize(bytes, 'auto1000')
 '10 kB'
 
 >>> bytes = 190000000
->>> byteunit(bytes)
+>>> filesize(bytes)
 '181 MiB'
->>> byteunit(bytes, 'auto1000')
+>>> filesize(bytes, 'auto1000')
 '190 MB'
 
 # 'auto*long' methods use pluralisation:
->>> byteunit(1, 'auto1024long')
+>>> filesize(1, 'auto1024long')
 '1 byte'
->>> byteunit(1, 'auto1000long')
+>>> filesize(1, 'auto1000long')
 '1 byte'
->>> byteunit(2, 'auto1024long')
+>>> filesize(2, 'auto1024long')
 '2 bytes'
->>> byteunit(0, 'auto1000long')
+>>> filesize(0, 'auto1000long')
 '0 bytes'
 
 # Test all 'auto*long' output:
 >>> for i in range(1,10):
-...     print '%s, %s' % (byteunit(1024**i, 'auto1024long'), 
-...                       byteunit(1000**i, 'auto1000long'))
+...     print '%s, %s' % (filesize(1024**i, 'auto1024long'), 
+...                       filesize(1000**i, 'auto1000long'))
 1 kibibyte, 1 kilobyte
 1 mebibyte, 1 megabyte
 1 gibibyte, 1 gigabyte
@@ -182,12 +182,12 @@ byteunit_tests = """
 1024 yobibytes, 1000 yottabytes
 
 # Test all fixed outputs (eg 'kB' or 'MiB')
->>> from sorl.thumbnail.templatetags.thumbnail import byteunit_formats, byteunit_long_formats
->>> for f in byteunit_formats:
-...     print '%s (%siB, %sB):' % (byteunit_long_formats[f], f.upper(), f)
+>>> from sorl.thumbnail.templatetags.thumbnail import filesize_formats, filesize_long_formats
+>>> for f in filesize_formats:
+...     print '%s (%siB, %sB):' % (filesize_long_formats[f], f.upper(), f)
 ...     for i in range(0, 10):
-...         print ' %s, %s' % (byteunit(1024**i, '%siB' % f.upper()),
-...                            byteunit(1000**i, '%sB' % f))
+...         print ' %s, %s' % (filesize(1024**i, '%siB' % f.upper()),
+...                            filesize(1000**i, '%sB' % f))
 kilo (KiB, kB):
  0.0009765625, 0.001
  1.0, 1.0

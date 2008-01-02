@@ -11,8 +11,8 @@ register = Library()
 size_pat = re.compile(r'(\d+)x(\d+)$')
 quality_pat = re.compile(r'quality=([1-9]\d?|100)$')
 
-byteunit_formats = ['k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
-byteunit_long_formats = {
+filesize_formats = ['k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+filesize_long_formats = {
     'k': 'kilo', 'M': 'mega', 'G': 'giga', 'T': 'tera', 'P': 'peta',
     'E': 'exa', 'Z': 'zetta', 'Y': 'yotta'
 }
@@ -125,7 +125,7 @@ def thumbnail(parser, token):
                          context_name=context_name, **kwargs)
 
 
-def byteunit(bytes, format='auto1024'):
+def filesize(bytes, format='auto1024'):
     """
     Returns the number of bytes in either the nearest unit or a specific unit
     (depending on the chosen format method).
@@ -154,7 +154,7 @@ def byteunit(bytes, format='auto1024'):
     if format_len in (2, 3):
         if format_len == 3 and format[0] == 'K':
             format = 'k%s' % format[1:]
-        if not format[-1] == 'B' or format[0] not in byteunit_formats:
+        if not format[-1] == 'B' or format[0] not in filesize_formats:
             return bytes
         if format_len == 3 and format[1] != 'i':
             return bytes
@@ -174,14 +174,14 @@ def byteunit(bytes, format='auto1024'):
         else:
             base = 1024
         logarithm = bytes and math.log(bytes, base) or 0
-        index = min(int(logarithm)-1, len(byteunit_formats)-1)
+        index = min(int(logarithm)-1, len(filesize_formats)-1)
         if index >= 0:
             if base == 1000:
                 bytes = bytes and bytes / math.pow(1000, index+1)
             else:
                 bytes = bytes >> (10*(index))
                 bytes = bytes and bytes / 1024.0
-            unit = byteunit_formats[index]
+            unit = filesize_formats[index]
         else:
             # Change the base to 1000 so the unit will just output 'B' not 'iB'
             base = 1000
@@ -191,7 +191,7 @@ def byteunit(bytes, format='auto1024'):
         else:
             bytes = '%.1f' % bytes
         if format.endswith('long'):
-            unit = byteunit_long_formats.get(unit, '')
+            unit = filesize_long_formats.get(unit, '')
             if base == 1024 and unit:
                 unit = '%sbi' % unit[:2]
             unit = '%sbyte%s' % (unit, bytes!='1' and 's' or '')
@@ -203,7 +203,7 @@ def byteunit(bytes, format='auto1024'):
 
     if bytes == 0:
         return bytes
-    base = byteunit_formats.index(format[0]) + 1
+    base = filesize_formats.index(format[0]) + 1
     # Exact multiple of 1000
     if format_len == 2:
         return bytes / (1000.0**base)
@@ -214,4 +214,4 @@ def byteunit(bytes, format='auto1024'):
 
 
 register.tag(thumbnail)
-register.filter(byteunit)
+register.filter(filesize)

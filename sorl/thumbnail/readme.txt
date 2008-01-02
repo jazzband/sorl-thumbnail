@@ -104,7 +104,8 @@ following useful methods and properties:
 
     ``filesize``
       The file size (in bytes) of the thumbnail.
-      To output user-friendly file sizes, use the included `byteunit filter`_.
+      To output user-friendly file sizes, use the included `filesize filter`_
+      (or Django's built-in more simplistic ``filesizeformat`` filter).
 
     ``source_width`` and ``source_height``
       The width/height of the source image.
@@ -205,7 +206,7 @@ This will only affect images which have not be explicitly given a quality
 option.
 
 
-``byteunit`` filter
+``filesize`` filter
 ===================
 
 This filter returns the number of bytes in either the nearest unit or a specific
@@ -214,13 +215,13 @@ unit (depending on the chosen format method).
 Use this filter to output user-friendly file sizes. For example::
 
 	{% thumbnail source 200x200 as thumb %}
-	Thumbnail file size: {{ thumb.size|byteunit }}
+	Thumbnail file size: {{ thumb.size|filesize }}
 
 If the generated thumbnail size came to 2000 bytes, this would output
 "Thumbnail file size: 1.9 KiB" (the filter's default format is ``auto1024``).
 You can specify a different format like so:
 
-	{{ thumb.size|byteunit:"auto1000long" }}
+	{{ thumb.size|filesize:"auto1000long" }}
 
 Which would output "2 kilobytes".
 
