@@ -215,13 +215,13 @@ unit (depending on the chosen format method).
 Use this filter to output user-friendly file sizes. For example::
 
 	{% thumbnail source 200x200 as thumb %}
-	Thumbnail file size: {{ thumb.size|filesize }}
+	Thumbnail file size: {{ thumb.filesize|filesize }}
 
 If the generated thumbnail size came to 2000 bytes, this would output
 "Thumbnail file size: 1.9 KiB" (the filter's default format is ``auto1024``).
 You can specify a different format like so:
 
-	{{ thumb.size|filesize:"auto1000long" }}
+	{{ thumb.filesize|filesize:"auto1000long" }}
 
 Which would output "2 kilobytes".
 
