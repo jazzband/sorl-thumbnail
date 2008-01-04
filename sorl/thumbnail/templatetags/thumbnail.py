@@ -51,7 +51,7 @@ class ThumbnailNode(Node):
         if len(size) != 2:
             if DEBUG:
                 raise TemplateSyntaxError("Variable %s found but was not a"
-                    "valid size" % self.size_var)
+                    " valid size" % self.size_var)
             return ''
         # Get thumbnail class
         try:

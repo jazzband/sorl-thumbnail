@@ -121,20 +121,23 @@ class Thumbnail(object):
             try:
                 self._source_data = Image.open(image)
             except IOError, detail:
-                raise ThumbnailException(detail)
+                raise ThumbnailException("%s: %s" % (detail, image))
     source_data = property(_get_source_data, _set_source_data)
 
     def _convert_wvps(self, filename):
         tmp = mkstemp('.ps')[1]
         try:
+            print (self.wvps_path, filename, tmp)
             p = Popen((self.wvps_path, filename, tmp), stdout=PIPE)
             p.wait()
         except OSError, detail:
+            os.remove(tmp)
             raise ThumbnailException('wvPS error: %s' % detail)
-        self._convert_image_imagemagick(tmp)
+        self._convert_imagemagick(tmp)
         os.remove(tmp)
 
     def _convert_imagemagick(self, filename):
+        print filename
         tmp = mkstemp('.png')[1]
         if self.opts['crop']:
             x,y = [d*3 for d in self.requested_size]
@@ -146,6 +149,7 @@ class Thumbnail(object):
                 '%s[0]' % filename, tmp), stdout=PIPE)
             p.wait()
         except OSError, detail:
+            os.remove(tmp)
             raise ThumbnailException('ImageMagick error: %s' % detail)
         self.source_data = tmp
         os.remove(tmp)
