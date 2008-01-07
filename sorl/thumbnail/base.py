@@ -127,7 +127,6 @@ class Thumbnail(object):
     def _convert_wvps(self, filename):
         tmp = mkstemp('.ps')[1]
         try:
-            print (self.wvps_path, filename, tmp)
             p = Popen((self.wvps_path, filename, tmp), stdout=PIPE)
             p.wait()
         except OSError, detail:
@@ -137,7 +136,6 @@ class Thumbnail(object):
         os.remove(tmp)
 
     def _convert_imagemagick(self, filename):
-        print filename
         tmp = mkstemp('.png')[1]
         if self.opts['crop']:
             x,y = [d*3 for d in self.requested_size]
