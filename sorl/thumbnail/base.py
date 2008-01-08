@@ -30,21 +30,6 @@ class Thumbnail(object):
         if not isfile(self.source):
             raise ThumbnailException('Source file does not exist')
 
-        # Set the source type
-        try:
-            import magic
-            m = magic.open(magic.MAGIC_NONE)
-            m.load()
-            ftype = m.file(self.source)
-            if ftype.find('Microsoft Office Document') != -1:
-                self.source_type = 'doc'
-            elif ftype.find('PDF document') != -1:
-                self.source_type = 'pdf'
-            else:
-                self.source_type = ftype
-        except:
-            self.source_type = splitext(self.source)[1].lower().replace('.', '')
-        
         # Thumbnail settings
         self.requested_size = requested_size
         if not 0 < quality <= 100:
@@ -90,6 +75,30 @@ class Thumbnail(object):
                 makedirs(directory)
             
             self._do_generate()
+   
+    def _get_source_filetype(self):
+        """
+        Set the source filetype. First it tries to use magic and
+        if import error it will just use the extension
+        """
+        if not hasattr(self, '_source_filetype'):
+            try:
+                import magic
+            except ImportError:
+                self._source_filetype = \
+                    splitext(self.source)[1].lower().replace('.', '')
+            else:
+                m = magic.open(magic.MAGIC_NONE)
+                m.load()
+                ftype = m.file(self.source)
+                if ftype.find('Microsoft Office Document') != -1:
+                    self._source_filetype = 'doc'
+                elif ftype.find('PDF document') != -1:
+                    self._source_filetype = 'pdf'
+                else:
+                    self._source_filetype = ftype
+        return self._source_filetype
+    source_filetype = property(_get_source_filetype) 
 
     # data property is the image data of the (generated) thumbnail
     def _get_data(self):
@@ -106,9 +115,9 @@ class Thumbnail(object):
     # source_data property is the image data from the source file
     def _get_source_data(self):
         if not hasattr(self, '_source_data'):
-            if self.source_type == 'doc':
+            if self.source_filetype == 'doc':
                 self._convert_wvps(self.source)
-            elif self.source_type == 'pdf':
+            elif self.source_filetype == 'pdf':
                 self._convert_imagemagick(self.source)
             else:
                 self.source_data = self.source
@@ -136,14 +145,14 @@ class Thumbnail(object):
         os.remove(tmp)
 
     def _convert_imagemagick(self, filename):
-        tmp = mkstemp('.png')[1]
-        if self.opts['crop']:
+        tmp = mkstemp('.tiff')[1]
+        if self.opts['crop'] or self.opts['autocrop']:
             x,y = [d*3 for d in self.requested_size]
         else:
             x,y = self.requested_size
         try:
             p = Popen((self.imagemagick_path, '-size', '%sx%s' % (x,y),
-                '-antialias', '-colorspace', 'rgb', '-format', 'PNG32',
+                '-antialias', '-colorspace', 'rgb', '-format', 'TIFF',
                 '%s[0]' % filename, tmp), stdout=PIPE)
             p.wait()
         except OSError, detail:
@@ -212,7 +221,7 @@ class Thumbnail(object):
     filesize = property(_get_filesize)
    
     def _source_dimension(self, axis):
-        if self.source_type in ['pdf', 'doc']:
+        if self.source_filetype in ['pdf', 'doc']:
             return None
         else:
             return self.source_data.size[axis]
