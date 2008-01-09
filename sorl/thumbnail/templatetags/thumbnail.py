@@ -34,38 +34,46 @@ class ThumbnailNode(Node):
     
     def render(self, context):
         DEBUG = get_thumbnail_setting('DEBUG')
-        # Resolve variables
+        # Resolve source variable
         try:
             relative_source = self.source_var.resolve(context)
-            size = self.requested_size or self.size_var.resolve(context)
         except VariableDoesNotExist:
             if DEBUG:
-                raise VariableDoesNotExist("Variable %s does not exist." %
+                raise VariableDoesNotExist("Variable '%s' does not exist." %
                                            self.source_var)
-            return ''
-        # Check size
+            else:
+                relative_source = None
+        # Resolve and check size variable
+        if self.requested_size is None:
+            try:
+                size = self.size_var.resolve(context)
+            except VariableDoesNotExist:
+                if DEBUG:
+                    raise VariableDoesNotExist("Size argument '%s' is not a"
+                        " valid size nor a valid variable." % self.size_var)
+            else:
+                m = size_pat.match(size)
+                if m:
+                    self.requested_size = (int(m.group(1)), int(m.group(2)))
+                elif DEBUG:
+                    raise TemplateSyntaxError("Variable '%s' found but '%s' is"
+                        " not a valid size." % (self.size_var, size))
+        # Get thumbnail instance
         try:
-            size = tuple([int(v) for v in size])
-        except (TypeError, ValueError):
-            size = ()
-        if len(size) != 2:
-            if DEBUG:
-                raise TemplateSyntaxError("Variable %s found but was not a"
-                    " valid size" % self.size_var)
-            return ''
-        # Get thumbnail class
-        try:
-            thumbnail = DjangoThumbnail(relative_source, size, opts=self.opts,
-                                        **self.kwargs)
+            thumbnail = DjangoThumbnail(relative_source, self.requested_size,
+                                        opts=self.opts, **self.kwargs)
         except:
             if DEBUG:
                 raise
-            return ''
+            else:
+                thumbnail = ''
+        
         # Return the thumbnail class, or put it on the context
         if self.context_name is None:
             return thumbnail
-        if thumbnail:
-            context[self.context_name] = thumbnail
+        # We need to get here so we don't have old values in the context
+        # variable.
+        context[self.context_name] = thumbnail
         return ''
 
 
