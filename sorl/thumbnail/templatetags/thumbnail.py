@@ -44,20 +44,20 @@ class ThumbnailNode(Node):
             else:
                 relative_source = None
         # Resolve and check size variable
+        # If that doesn't work out raise an error regardless of debug setting.
         if self.requested_size is None:
             try:
                 size = self.size_var.resolve(context)
             except VariableDoesNotExist:
-                if DEBUG:
-                    raise VariableDoesNotExist("Size argument '%s' is not a"
-                        " valid size nor a valid variable." % self.size_var)
+                raise TemplateSyntaxError("Size argument '%s' is not a"
+                    " valid size nor a valid variable." % self.size_var)
             else:
                 m = size_pat.match(size)
                 if m:
                     self.requested_size = (int(m.group(1)), int(m.group(2)))
-                elif DEBUG:
-                    raise TemplateSyntaxError("Variable '%s' found but '%s' is"
-                        " not a valid size." % (self.size_var, size))
+                else:
+                    raise TemplateSyntaxError("Variable '%s' was resolved but"
+                        " '%s' is not a valid size." % (self.size_var, size))
         # Get thumbnail instance
         try:
             thumbnail = DjangoThumbnail(relative_source, self.requested_size,
