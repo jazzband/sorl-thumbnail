@@ -42,9 +42,8 @@ other supported format), relative to``MEDIA_ROOT``.
     - the size in the format ``[width]x[height]`` (for example,
       ``{% thumbnail source 100x50 %}``) or
     
-    - a variable containing a two element list of the width and height (for
-      example, ``{% thumbnail source size %}`` will look for a template context
-      variable named ``size`` containing something like ``[100, 50]``).
+    - a variable containing a valid size:
+      ``{% thumbnail source size_string %}``.
 
 ``options`` are optional (obviously) and should be comma separated (without a
 space between them - for example, ``crop,bw,quality=95``). Valid options are:
