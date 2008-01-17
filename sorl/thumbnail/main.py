@@ -7,7 +7,8 @@ from utils import get_thumbnail_setting
 
 class DjangoThumbnail(Thumbnail):
     def __init__(self, relative_source, requested_size, opts=None,
-                 quality=None, basedir=None, subdir=None, prefix=None):
+                 quality=None, basedir=None, subdir=None, prefix=None,
+                 relative_dest=None):
         # Set the absolute filename for the source file
         source = self._absolute_path(relative_source)
 
@@ -23,9 +24,12 @@ class DjangoThumbnail(Thumbnail):
       
         # Get the relative filename for the thumbnail image, then set the
         # destination filename
-        self.relative_dest = \
-           self._get_relative_thumbnail(relative_source, basedir=basedir,
-                                        subdir=subdir, prefix=prefix)
+        if relative_dest is None:
+            self.relative_dest = \
+               self._get_relative_thumbnail(relative_source, basedir=basedir,
+                                            subdir=subdir, prefix=prefix)
+        else:
+            self.relative_dest = relative_dest
         self.dest = self._absolute_path(self.relative_dest)
         
         # Call generate now that the dest attribute has been set
