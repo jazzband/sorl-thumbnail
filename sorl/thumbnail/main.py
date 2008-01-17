@@ -23,17 +23,17 @@ class DjangoThumbnail(Thumbnail):
       
         # Get the relative filename for the thumbnail image, then set the
         # destination filename
-        relative_thumbnail = \
+        self.relative_dest = \
            self._get_relative_thumbnail(relative_source, basedir=basedir,
                                         subdir=subdir, prefix=prefix)
-        self.dest = self._absolute_path(relative_thumbnail)
+        self.dest = self._absolute_path(self.relative_dest)
         
         # Call generate now that the dest attribute has been set
         self.generate()
 
         # Set the relative & absolute url to the thumbnail
         self.relative_url = \
-            iri_to_uri('/'.join(relative_thumbnail.split(os.sep)))
+            iri_to_uri('/'.join(self.relative_dest.split(os.sep)))
         self.absolute_url = '%s%s' % (settings.MEDIA_URL, self.relative_url)
     
     def _get_relative_thumbnail(self, relative_source, 
