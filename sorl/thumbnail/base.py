@@ -1,6 +1,7 @@
 import os
 from os import makedirs
 from os.path import isfile, isdir, getmtime, dirname, splitext, getsize
+from shutil import copyfile
 from PIL import Image, ImageFilter
 from methods import autocrop, resize_and_crop
 from subprocess import Popen, PIPE
@@ -95,6 +96,8 @@ class Thumbnail(object):
                     self._source_filetype = 'doc'
                 elif ftype.find('PDF document') != -1:
                     self._source_filetype = 'pdf'
+                elif ftype.find('JPEG') != -1:
+                    self._source_filetype = 'jpg'
                 else:
                     self._source_filetype = ftype
         return self._source_filetype
@@ -188,16 +191,20 @@ class Thumbnail(object):
             im = im.filter(ImageFilter.SHARPEN)
         
         self.data = im
-        try:
-            im.save(self.dest, "JPEG", quality=self.quality, optimize=1)
-        except IOError:
-            # Try again, without optimization (the JPEG library can't optimize
-            # an image which is larger than ImageFile.MAXBLOCK which is 64k by
-            # default)
+
+        if self.source_filetype == 'jpg' and self.source_data == self.data:
+            copyfile(self.source, self.dest)
+        else:
             try:
-                im.save(self.dest, "JPEG", quality=self.quality)
-            except IOError, detail:
-                raise ThumbnailException(detail)
+                im.save(self.dest, "JPEG", quality=self.quality, optimize=1)
+            except IOError:
+                # Try again, without optimization (the JPEG library can't
+                # optimize an image which is larger than ImageFile.MAXBLOCK
+                # which is 64k by default)
+                try:
+                    im.save(self.dest, "JPEG", quality=self.quality)
+                except IOError, detail:
+                    raise ThumbnailException(detail)
 
     # Some helpful methods
 
