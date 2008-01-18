@@ -86,8 +86,8 @@ class Thumbnail(object):
             try:
                 import magic
             except ImportError:
-                self._source_filetype = \
-                    splitext(self.source)[1].lower().replace('.', '')
+                self._source_filetype = splitext(self.source)[1].lower().\
+                   replace('.', '').replace('jpeg', 'jpg')
             else:
                 m = magic.open(magic.MAGIC_NONE)
                 m.load()
