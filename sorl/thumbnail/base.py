@@ -192,7 +192,7 @@ class Thumbnail(object):
         
         self.data = im
 
-        if self.source_filetype == 'jpg' and self.source_data == self.data:
+        if self.source_data == self.data and self.source_filetype == 'jpg':
             copyfile(self.source, self.dest)
         else:
             try:
