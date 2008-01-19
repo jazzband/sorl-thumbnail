@@ -148,14 +148,14 @@ class Thumbnail(object):
         os.remove(tmp)
 
     def _convert_imagemagick(self, filename):
-        tmp = mkstemp('.tiff')[1]
+        tmp = mkstemp('.png')[1]
         if self.opts['crop'] or self.opts['autocrop']:
             x,y = [d*3 for d in self.requested_size]
         else:
             x,y = self.requested_size
         try:
             p = Popen((self.imagemagick_path, '-size', '%sx%s' % (x,y),
-                '-antialias', '-colorspace', 'rgb', '-format', 'TIFF',
+                '-antialias', '-colorspace', 'rgb', '-format', 'PNG24',
                 '%s[0]' % filename, tmp), stdout=PIPE)
             p.wait()
         except OSError, detail:
