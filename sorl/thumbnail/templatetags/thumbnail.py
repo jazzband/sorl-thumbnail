@@ -31,7 +31,7 @@ class ThumbnailNode(Node):
         self.opts = opts
         self.context_name = context_name
         self.kwargs = kwargs
-    
+
     def render(self, context):
         DEBUG = get_thumbnail_setting('DEBUG')
         # Resolve source variable
@@ -52,12 +52,16 @@ class ThumbnailNode(Node):
                     raise TemplateSyntaxError("Size argument '%s' is not a"
                         " valid size nor a valid variable." % self.size_var)
             else:
-                m = size_pat.match(size)
-                if m:
-                    self.requested_size = (int(m.group(1)), int(m.group(2)))
-                elif DEBUG:
-                    raise TemplateSyntaxError("Variable '%s' was resolved but"
-                        " '%s' is not a valid size." % (self.size_var, size))
+                if isinstance(size, basestring):
+                    m = size_pat.match(size)
+                    if m:
+                        size = (int(m.group(1)), int(m.group(2)))
+                    elif DEBUG:
+                        msg = "Variable '%s' was resolved but '%s' is not a "\
+                              "valid size." % (self.size_var, size)
+                        raise TemplateSyntaxError(msg)
+                self.requested_size = size
+
         # Get thumbnail instance
         try:
             thumbnail = DjangoThumbnail(relative_source, self.requested_size,
@@ -67,7 +71,7 @@ class ThumbnailNode(Node):
                 raise
             else:
                 thumbnail = ''
-        
+
         # Return the thumbnail class, or put it on the context
         if self.context_name is None:
             return thumbnail
@@ -105,7 +109,7 @@ def thumbnail(parser, token):
     if len(args) not in (3, 4):
         raise TemplateSyntaxError("Invalid syntax. Expected "
             "'{%% %s source size [options] %%}' or "
-            "'{%% %s source size [options] as variable %%}'" % (tag, tag)) 
+            "'{%% %s source size [options] as variable %%}'" % (tag, tag))
 
     # Get the source image path and requested size.
     source_var = args[1]
@@ -137,9 +141,9 @@ def filesize(bytes, format='auto1024'):
     """
     Returns the number of bytes in either the nearest unit or a specific unit
     (depending on the chosen format method).
-    
+
     Acceptable formats are:
-    
+
     auto1024, auto1000
       convert to the nearest unit, appending the abbreviated unit name to the
       string (e.g. '2 KiB' or '2 kB').
@@ -154,7 +158,7 @@ def filesize(bytes, format='auto1024'):
 
     The auto1024 and auto1000 formats return a string, appending the correct
     unit to the value. All other formats return the floating point value.
-    
+
     If an invalid format is specified, the bytes are returned unchanged.
     """
     format_len = len(format)
@@ -206,7 +210,7 @@ def filesize(bytes, format='auto1024'):
         else:
             unit = '%s%s' % (base == 1024 and unit.upper() or unit,
                              base == 1024 and 'iB' or 'B')
-    
+
         return '%s %s' % (bytes, unit)
 
     if bytes == 0:
@@ -215,7 +219,7 @@ def filesize(bytes, format='auto1024'):
     # Exact multiple of 1000
     if format_len == 2:
         return bytes / (1000.0**base)
-    # Exact multiple of 1024 
+    # Exact multiple of 1024
     elif format_len == 3:
         bytes = bytes >> (10*(base-1))
         return bytes / 1024.0

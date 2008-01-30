@@ -53,33 +53,33 @@ utils_tests = """
 #===============================================================================
 
 >>> for thumb in thumbs['test.jpg']:
-...     thumb['rel_fn'] = thumb['filename'][len(settings.MEDIA_ROOT)+1:]
+...     thumb['rel_fn'] = strip_media_root(thumb['filename'])
 ...     print '%(x)sx%(y)s %(quality)s %(rel_fn)s' % thumb
 80x80 85 test-thumbnail-utils/test_jpg_80x80_q85.jpg
 80x80 95 test-thumbnail-utils/test_jpg_80x80_q95.jpg
 
 # Thumbnails for file
 >>> for thumb in thumbnails_for_file('test-thumbnail-utils/test.jpg'):
-...    print thumb['filename'][len(settings.MEDIA_ROOT)+1:]
+...    print strip_media_root(thumb['filename'])
 test-thumbnail-utils/test_jpg_80x80_q85.jpg
 test-thumbnail-utils/test_jpg_80x80_q95.jpg
 
 # Thumbnails for file, with basedir setting
 >>> change_settings.change({'BASEDIR': 'test-thumbnail-basedir'})
 >>> for thumb in thumbnails_for_file('test-thumbnail-utils/test.jpg'):
-...    print thumb['filename'][len(settings.MEDIA_ROOT)+1:]
+...    print strip_media_root(thumb['filename'])
 test-thumbnail-basedir/test-thumbnail-utils/test_jpg_100x100_q85.jpg
 
 # Thumbnails for file, with subdir setting
 >>> change_settings.change({'SUBDIR': 'subdir', 'BASEDIR': ''})
 >>> for thumb in thumbnails_for_file('test-thumbnail-utils/test.jpg'):
-...    print thumb['filename'][len(settings.MEDIA_ROOT)+1:]
+...    print strip_media_root(thumb['filename'])
 test-thumbnail-utils/subdir/test_jpg_110x110_q85.jpg
 
 # Thumbnails for file, with prefix setting
 >>> change_settings.change({'PREFIX': 'prefix-', 'SUBDIR': ''})
 >>> for thumb in thumbnails_for_file('test-thumbnail-utils/test.jpg'):
-...    print thumb['filename'][len(settings.MEDIA_ROOT)+1:]
+...    print strip_media_root(thumb['filename'])
 test-thumbnail-utils/prefix-test_jpg_120x120_q85.jpg
 
 #===============================================================================
@@ -112,4 +112,11 @@ def clean_up():
     for image in images_to_delete:
         os.remove(image)
     for path in dirs_to_delete:
-        os.rmdir(path) 
+        os.rmdir(path)
+
+MEDIA_ROOT_LENGTH = len(os.path.normpath(settings.MEDIA_ROOT))
+def strip_media_root(path):
+    path = os.path.normpath(path)
+    # chop off the MEDIA_ROOT and strip any leading os.sep
+    path = path[MEDIA_ROOT_LENGTH:].lstrip(os.sep)
+    return path
