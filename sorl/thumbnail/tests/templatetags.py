@@ -13,7 +13,9 @@ class ThumbnailTagTest(BaseTest):
             'source': RELATIVE_PIC_NAME,
             'invalid_source': 'not%s' % RELATIVE_PIC_NAME,
             'size': (90, 100),
-            'invalid_size': (90, 'fish')})
+            'invalid_size': (90, 'fish'),
+            'strsize': '80x90',
+            'invalid_strsize': ('1notasize2')})
         source = '{% load thumbnail %}' + source
         return Template(source).render(context)
 
@@ -59,8 +61,16 @@ class ThumbnailTagTest(BaseTest):
         self.change_settings.change({'DEBUG': True})
         self.assertRaises(TemplateSyntaxError, self.render_template, src)
 
-        # Invalid size
+        # Invalid size as a tuple:
         src = '{% thumbnail source invalid_size %}'
+        # ...with THUMBNAIL_DEBUG = False
+        self.change_settings.change({'DEBUG': False})
+        self.assertEqual(self.render_template(src), '')
+        # ...and THUMBNAIL_DEBUG = True
+        self.change_settings.change({'DEBUG': True})
+        self.assertRaises(TemplateSyntaxError, self.render_template, src)
+        # Invalid size as a string:
+        src = '{% thumbnail source invalid_strsize %}'
         # ...with THUMBNAIL_DEBUG = False
         self.change_settings.change({'DEBUG': False})
         self.assertEqual(self.render_template(src), '')
@@ -92,11 +102,20 @@ class ThumbnailTagTest(BaseTest):
         self.assertEqual(output, 'src="%s"' % expected_url)
 
         # Size from context variable
+        # as a tuple:
         output = self.render_template('src="'
             '{% thumbnail source size %}"')
         expected = '%s_90x100_q85.jpg' % expected_base
         expected_fn = os.path.join(settings.MEDIA_ROOT, expected)
         self.verify_thumbnail((90, 67), expected_filename=expected_fn)
+        expected_url = ''.join((settings.MEDIA_URL, expected))
+        self.assertEqual(output, 'src="%s"' % expected_url)
+        # as a string:
+        output = self.render_template('src="'
+            '{% thumbnail source strsize %}"')
+        expected = '%s_80x90_q85.jpg' % expected_base
+        expected_fn = os.path.join(settings.MEDIA_ROOT, expected)
+        self.verify_thumbnail((80, 60), expected_filename=expected_fn)
         expected_url = ''.join((settings.MEDIA_URL, expected))
         self.assertEqual(output, 'src="%s"' % expected_url)
 
@@ -169,7 +188,7 @@ filesize_tests = """
 
 # Test all 'auto*long' output:
 >>> for i in range(1,10):
-...     print '%s, %s' % (filesize(1024**i, 'auto1024long'), 
+...     print '%s, %s' % (filesize(1024**i, 'auto1024long'),
 ...                       filesize(1000**i, 'auto1000long'))
 1 kibibyte, 1 kilobyte
 1 mebibyte, 1 megabyte
