@@ -41,8 +41,9 @@ other supported format), relative to``MEDIA_ROOT``.
 
     - the size in the format ``[width]x[height]`` (for example,
       ``{% thumbnail source 100x50 %}``) or
-    
-    - a variable containing a valid size:
+
+    - a variable containing a valid size (i.e. either a string in the
+      ``[width]x[height]`` format or a tuple containing two integers):
       ``{% thumbnail source size_string %}``.
 
 ``options`` are optional (obviously) and should be comma separated (without a
@@ -97,7 +98,7 @@ following useful methods and properties:
 
     ``relative_url``
       The relative url (to MEDIA_URL) of the thumbnail.
-    
+
     ``width`` and ``height``
       The width/height of the thumbnail image.
 
@@ -210,7 +211,7 @@ option.
 
 This filter returns the number of bytes in either the nearest unit or a specific
 unit (depending on the chosen format method).
-    
+
 Use this filter to output user-friendly file sizes. For example::
 
 	{% thumbnail source 200x200 as thumb %}
