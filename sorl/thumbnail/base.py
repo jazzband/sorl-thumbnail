@@ -26,10 +26,6 @@ class Thumbnail(object):
         # Absolute paths to files
         self.source = source
         self.dest = dest
-        
-        # Ensure the source file exists
-        if not isfile(self.source):
-            raise ThumbnailException('Source file does not exist')
 
         # Thumbnail settings
         self.requested_size = requested_size
@@ -54,7 +50,7 @@ class Thumbnail(object):
                 self.opts_list.append(opt) # cheap sorted list with options
             else:
                 self.opts[opt] = False
-                
+
         if self.dest is not None:
             self.generate()
 
@@ -67,16 +63,23 @@ class Thumbnail(object):
         if not self.dest:
             raise ThumbnailException("No destination filename set.")
 
-        if not isfile(self.dest) or \
-           getmtime(self.source) > getmtime(self.dest):
-            
+        if not isfile(self.dest) or (self.source_exists and
+            getmtime(self.source) > getmtime(self.dest)):
+
             # Ensure the directory exists
             directory = dirname(self.dest)
             if not isdir(directory):
                 makedirs(directory)
-            
+
             self._do_generate()
-   
+
+    def _check_source_exists(self):
+        " Ensure the source file exists "
+        if not hasattr(self, '_source_exists'):
+            self._source_exists = isfile(self.source)
+        return self._source_exists
+    source_exists = property(_check_source_exists)
+
     def _get_source_filetype(self):
         """
         Set the source filetype. First it tries to use magic and
@@ -101,7 +104,7 @@ class Thumbnail(object):
                 else:
                     self._source_filetype = ftype
         return self._source_filetype
-    source_filetype = property(_get_source_filetype) 
+    source_filetype = property(_get_source_filetype)
 
     # data property is the image data of the (generated) thumbnail
     def _get_data(self):
@@ -118,6 +121,8 @@ class Thumbnail(object):
     # source_data property is the image data from the source file
     def _get_source_data(self):
         if not hasattr(self, '_source_data'):
+            if not self.source_exists:
+                raise ThumbnailException('Source file does not exist')
             if self.source_filetype == 'doc':
                 self._convert_wvps(self.source)
             elif self.source_filetype == 'pdf':
@@ -125,11 +130,11 @@ class Thumbnail(object):
             else:
                 self.source_data = self.source
         return self._source_data
-    
+
     def _set_source_data(self, image):
         if isinstance(image, Image.Image):
             self._source_data = image
-        else: 
+        else:
             try:
                 self._source_data = Image.open(image)
             except IOError, detail:
@@ -163,11 +168,11 @@ class Thumbnail(object):
             raise ThumbnailException('ImageMagick error: %s' % detail)
         self.source_data = tmp
         os.remove(tmp)
-    
+
     def _do_generate(self):
         """
         Generates the thumbnail image.
-        
+
         This a semi-private method so it isn't directly available to template
         authors if this object is passed to the template context.
         """
@@ -189,7 +194,7 @@ class Thumbnail(object):
 
         if self.opts['sharpen']:
             im = im.filter(ImageFilter.SHARPEN)
-        
+
         self.data = im
 
         if self.source_data == self.data and self.source_filetype == 'jpg':
@@ -226,7 +231,7 @@ class Thumbnail(object):
             self._filesize = getsize(self.dest)
         return self._filesize
     filesize = property(_get_filesize)
-   
+
     def _source_dimension(self, axis):
         if self.source_filetype in ['pdf', 'doc']:
             return None
@@ -238,7 +243,7 @@ class Thumbnail(object):
 
     def source_height(self):
         return self._source_dimension(1)
-    
+
     def _get_source_filesize(self):
         if not hasattr(self, '_source_filesize'):
             self._source_filesize = getsize(self.source)
