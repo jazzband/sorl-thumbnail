@@ -90,7 +90,7 @@ test-thumbnail-utils/prefix-test_jpg_120x120_q85.jpg
 """
 
 images_to_delete = set()
-dirs_to_delete = set()
+dirs_to_delete = []
 
 def make_image(relative_image):
     absolute_image = os.path.join(settings.MEDIA_ROOT, relative_image)
@@ -104,7 +104,8 @@ def make_dirs(relative_path):
     absolute_path = os.path.join(settings.MEDIA_ROOT, relative_path)
     if os.path.isdir(absolute_path):
         return
-    dirs_to_delete.add(absolute_path)
+    if absolute_path not in dirs_to_delete:
+        dirs_to_delete.append(absolute_path)
     make_dirs(os.path.dirname(relative_path))
     os.mkdir(absolute_path)
 
