@@ -35,7 +35,7 @@ class ImageWithThumbnailsField(ImageField):
     )
     """
     def __init__(self, thumbnail, extra_thumbnails=None, **kwargs):
-        super(ImageField, self).__init__(**kwargs)
+        super(ImageWithThumbnailsField, self).__init__(**kwargs)
         _verify_thumbnail_attrs(thumbnail)
         if extra_thumbnails:
             for extra, attrs in extra_thumbnails.items():
@@ -44,11 +44,14 @@ class ImageWithThumbnailsField(ImageField):
         self.thumbnail = thumbnail
         self.extra_thumbnails = extra_thumbnails
 
+    def get_internal_type(self):
+        return "ImageField"
+
     def get_manipulator_field_objs(self):
         return [oldforms.ImageUploadField, oldforms.HiddenField]
 
     def contribute_to_class(self, cls, name):
-        super(ImageField, self).contribute_to_class(cls, name)
+        super(ImageWithThumbnailsField, self).contribute_to_class(cls, name)
         self._contribute_thumbnail(cls, name, self.thumbnail)
         if self.extra_thumbnails:
             for extra, thumbnail in self.extra_thumbnails.items():
