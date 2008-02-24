@@ -21,12 +21,12 @@ utils_tests = """
 # Set up test images
 #===============================================================================
 
+>>> make_image('test-thumbnail-utils/subdir/test_jpg_110x110_q85.jpg')
 >>> make_image('test-thumbnail-utils/test_jpg_80x80_q85.jpg')
 >>> make_image('test-thumbnail-utils/test_jpg_80x80_q95.jpg')
 >>> make_image('test-thumbnail-utils/another_test_jpg_80x80_q85.jpg')
 >>> make_image('test-thumbnail-utils/test_with_opts_jpg_80x80_crop_bw_q85.jpg')
 >>> make_image('test-thumbnail-basedir/test-thumbnail-utils/test_jpg_100x100_q85.jpg')
->>> make_image('test-thumbnail-utils/subdir/test_jpg_110x110_q85.jpg')
 >>> make_image('test-thumbnail-utils/prefix-test_jpg_120x120_q85.jpg')
 
 #===============================================================================
