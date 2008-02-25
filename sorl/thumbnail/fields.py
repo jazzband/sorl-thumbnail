@@ -1,12 +1,13 @@
 import os.path
 
 from django.db.models.fields import ImageField
-from django.utils.html import urlquote
 from django.utils.safestring import mark_safe
 from django.utils.functional import curry
+from django.utils.html import escape
 from django.conf import settings
 
 from main import DjangoThumbnail
+#from utils import delete_thumbnails  (TODO:)
 
 REQUIRED_ARGS = ('size',)
 ALL_ARGS = {
@@ -68,12 +69,17 @@ class ImageWithThumbnailsField(ImageField):
         setattr(cls, 'get_%s_thumbnail' % name, func)
         setattr(cls, 'get_%s_thumbnail_tag' % name, tag_func)
 
-    def save_file(self, *args, **kwargs):
-        super(ImageField, self).save_file(*args, **kwargs)
-        self._get_thumbnail()
+    # TODO: saving the file should generate thumbnails.
+    #def save_file(self, *args, **kwargs):
+    #    super(ImageWithThumbnailField, self).save_file(*args, **kwargs)
+    #    _get_thumbnail()
 
-    def delete_file(self, *args, **kwargs):
-        super(ImageField, self).delete_file(*args, **kwargs)
+    # TODO: deleting the image should delete its thumbnails too.
+    # Note that  http://code.google.com/p/sorl-thumbnail/issues/detail?id=23
+    # mentions a problem with using *args, **kwargs, so test that too.
+    #def delete_file(self, *args, **kwargs):
+    #    super(ImageWithThumbnailField, self).delete_file(*args, **kwargs)
+    #    delete_thumbnails()
 
 def _verify_thumbnail_attrs(attrs, name="'thumbnail'"):
     for arg in REQUIRED_ARGS:
@@ -98,7 +104,6 @@ def _get_thumbnail(model_instance, field, attrs):
 
 def _get_thumbnail_tag(model_instance, field, attrs):
     thumb = _get_thumbnail(model_instance, field, attrs)
-    url = urlquote(unicode(thumb))
     tag = '<img src="%s" width="%s" height="%s" alt="" />' % (
-        url, thumb.width(), thumb.height())
+        escape(thumb), thumb.width(), thumb.height())
     return mark_safe(tag)
