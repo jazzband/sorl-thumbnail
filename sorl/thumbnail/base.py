@@ -24,7 +24,7 @@ class Thumbnail(object):
         # Absolute paths to files
         self.source = source
         self.dest = dest
-        
+
         # Thumbnail settings
         self.requested_size = requested_size
         if not 0 < quality <= 100:
@@ -59,7 +59,11 @@ class Thumbnail(object):
         if not self.dest:
             raise ThumbnailException("No destination filename set.")
 
-        if not isfile(self.dest) or (self.source_exists and
+        if self.dest and not isinstance(self.dest, basestring):
+            # We'll assume dest is a file-like instance if it exists but isn't
+            # a string.
+            self._do_generate()
+        elif not isfile(self.dest) or (self.source_exists and
             getmtime(self.source) > getmtime(self.dest)):
 
             # Ensure the directory exists
@@ -70,9 +74,14 @@ class Thumbnail(object):
             self._do_generate()
 
     def _check_source_exists(self):
-        " Ensure the source file exists "
+        """
+        Ensure the source file exists. If source is not a string then it is
+        assumed to be a file-like instance which "exists".
+        """
         if not hasattr(self, '_source_exists'):
-            self._source_exists = isfile(self.source)
+            self._source_exists = (self.source and
+                                   (not isinstance(self.source, basestring) or
+                                    isfile(self.source)))
         return self._source_exists
     source_exists = property(_check_source_exists)
 
@@ -82,6 +91,9 @@ class Thumbnail(object):
         if import error it will just use the extension
         """
         if not hasattr(self, '_source_filetype'):
+            if not isinstance(self.source, basestring):
+                # Assuming a file-like object - we won't know it's type.
+                return None
             try:
                 import magic
             except ImportError:
