@@ -59,7 +59,7 @@ class Thumbnail(object):
         if not self.dest:
             raise ThumbnailException("No destination filename set.")
 
-        if self.dest and not isinstance(self.dest, basestring):
+        if not isinstance(self.dest, basestring):
             # We'll assume dest is a file-like instance if it exists but isn't
             # a string.
             self._do_generate()
