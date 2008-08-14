@@ -32,9 +32,9 @@ image was modified more recently than the existing thumbnail) and then returns
 the absolute url of the thumbnail (``MEDIA_URL`` + relative thumbnail
 url). The basic usage is::
 
-    {% thumbnail [source-filename] [size] [options] %}
+    {% thumbnail [source-filename-relative-to-media-root] [size] [options] %}
 
-``source-filename`` must a variable containing the path of an existing image (or
+``source-filename-relative-to-media-root`` must a variable containing the path of an existing image (or
 other supported format), relative to``MEDIA_ROOT``.
 
 ``size`` can either be:
