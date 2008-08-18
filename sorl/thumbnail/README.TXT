@@ -27,15 +27,17 @@ template access to the tag.
 Basic usage
 -----------
 
-The thumbnail tag creates the thumbnail if it didn't exist (or if the source
-image was modified more recently than the existing thumbnail) and then returns
-the absolute url of the thumbnail (``MEDIA_URL`` + relative thumbnail
-url). The basic usage is::
+The thumbnail tag creates a thumbnail if it doesn't exist or if the source
+was modified more recently than the existing thumbnail. The resulting
+thumbnail object contains the generated thumbnail image along with some other
+potentially useful data. Syntax::
 
-    {% thumbnail [source-filename-relative-to-media-root] [size] [options] %}
+    {% thumbnail [source] [size] [options] %}
 
-``source-filename-relative-to-media-root`` must a variable containing the path of an existing image (or
-other supported format), relative to``MEDIA_ROOT``.
+``source`` must an object where force_unicode(object) returns a path to a file
+relative to ``MEDIA_ROOT``. This means an Image/FileField or string/unicode
+object containing the relative path to a file.
+
 
 ``size`` can either be:
 
