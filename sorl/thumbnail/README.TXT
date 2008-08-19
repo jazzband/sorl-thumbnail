@@ -145,14 +145,16 @@ ImageWithThumbnailsField
 ``ImageWithThumbnailsField`` (which you import from ``sorl.thumbnail.fields``)
 works very similar to Django's ``ImageField``.
 
-The basic two arguments to use field are:
-
-``thumbnail_size`` (required)
+A new ``thumbnail`` argument is required for this field. Pass in a dictionary
+with the following values (all optional except for ``size``):
+``size`` (required)
   A 2-length tuple of the thumbnail width and height.
-``thumbnail_options`` (optional)
+``options``
   A list of options for this thumbnail.
+``quality``, ``basedir``, ``subdir`` and ``prefix``
+  See the options of the template tag (above) for details.
 
-Your model instance's ``photo`` descriptor will have two new properties:
+Your model instance's field will have two new properties:
 
 ``thumbnail``
   Returns a ``DjangoThumbnail`` instance for your pleasure (if you use this in
@@ -165,7 +167,7 @@ Let's look at an example. Here is a model with an ``ImageWithThumbnailsField``::
     MyModel(models.Model):
         name = models.TextField(max_length=50)
         photo = ImageWithThumbnailsField(upload_to='profiles',
-                                         thumbnail_size=(50, 50))
+                                         thumbnail={'size': (50, 50)})
 
 A template (passed an instance of ``MyModel``) would simply use something like:
 ``<img src="{{ my_model.photo.thumbnail }}" alt="{{ my_model.name }}" />`` or
@@ -180,7 +182,7 @@ If you want to use multiple thumbnails for a single field, you can use the
 
     photo = ImageWithThumbnailsField(
         upload_to='profiles',
-        thumbnail_size=(50, 50),
+        thumbnail={'size': (50, 50)},
         extra_thumbnails={
             'icon': {'size': (16, 16), 'options': ['crop', 'upscale']},
             'large': {'size': (200, 400)},
