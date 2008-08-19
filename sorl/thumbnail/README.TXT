@@ -2,7 +2,10 @@
 sorl.thumbnail
 ==============
 
-The ``sorl.thumbnail`` package, provides a way of thumbnailing images.
+The ``sorl.thumbnail`` package provides an easy way to generate image
+thumbnails by using either the `{% thumbnail %} template tag`_ or the
+`ImageWithThumbnailsField`_.
+or the
 
 It requires the Python Imaging Library (PIL_).
 
@@ -16,9 +19,6 @@ thumbnails you need both wvWare_ and ImageMagick_.
 
 {% thumbnail %} template tag
 ============================
-
-The usual way to use thumbnails with this package is to use the
-``{% thumbnail %}`` template tag.
 
 To use this tag, add ``'sorl.thumbnail'`` to your ``INSTALLED_APPS`` setting.
 Once you've done that, use ``{% load thumbnail %}`` in a template to give your
@@ -138,8 +138,77 @@ property to your settings module and set it to ``True``::
 
 	THUMBNAIL_DEBUG = True
 
+
+ImageWithThumbnailsField
+========================
+
+``ImageWithThumbnailsField`` (which you import from ``sorl.thumbnail.fields``)
+works very similar to Django's ``ImageField``.
+
+The basic two arguments to use field are:
+
+``thumbnail_size`` (required)
+  A 2-length tuple of the thumbnail width and height.
+``thumbnail_options`` (optional)
+  A list of options for this thumbnail.
+
+Your model instance's ``photo`` descriptor will have two new properties:
+
+``thumbnail``
+  Returns a ``DjangoThumbnail`` instance for your pleasure (if you use this in
+  a template, it'll return the full URL to the thumbnail).
+``thumbnail_tag``
+  Returns an HTML like ``<img src="..." width="..." height="..." alt="" />``.
+
+Let's look at an example. Here is a model with an ``ImageWithThumbnailsField``::
+
+    MyModel(models.Model):
+        name = models.TextField(max_length=50)
+        photo = ImageWithThumbnailsField(upload_to='profiles',
+                                         thumbnail_size=(50, 50))
+
+A template (passed an instance of ``MyModel``) would simply use something like:
+``<img src="{{ my_model.photo.thumbnail }}" alt="{{ my_model.name }}" />`` or
+even simpler for just a basic ``IMG`` tag:
+``{{ my_model.photo.thumbnail_tag }}``.
+
+Multiple Thumbnails
+-------------------
+
+If you want to use multiple thumbnails for a single field, you can use the
+``extra_thumbnails`` argument, passing it a dictionary like so::
+
+    photo = ImageWithThumbnailsField(
+        upload_to='profiles',
+        thumbnail_size=(50, 50),
+        extra_thumbnails={
+            'icon': {'size': (16, 16), 'options': ['crop', 'upscale']},
+            'large': {'size': (200, 400)},
+        },
+    )
+
+This would allow you to access the extra thumbnails like this:
+``my_model.photo.extra_thumbnails['icon']`` (or in a template,
+``{{ my_model.photo.extra_thumbnails.icon }}``).
+
+You can use the simple template tags by using the ``extra_thumbnails_tag``
+property: ``my_model.photo.extra_thumbnails_tag['large']``.
+
+Changing the thumbnail tag HTML
+-------------------------------
+
+If you don't like the default HTML output by the thumbnail tag shortcuts
+provided by this field, you can use the ``thumbnail_tag`` argument. For
+example, to use HTML4.0 compliant tags, you would do the following::
+
+    photo = ImageWithThumbnailsField(
+        upload_to='profiles', thumbnail_size=(50, 50),
+        template_tag='<img src="%(src)s" width="%(width)s" height="%(height)s">'
+    )
+
+
 PDF and Word document thumbnails
---------------------------------
+================================
 
 PDF conversion is done with ImageMagick's `convert` program. The default
 location where ``sorl.thumbnail`` will look for this program is

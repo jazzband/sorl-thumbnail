@@ -22,18 +22,27 @@ class TestThumbnailFieldModel(models.Model):
                                      extra_thumbnails=extra_thumbnails)
 
 class FieldTest(BaseTest):
-    def test_model(self):
-        m = TestThumbnailFieldModel(photo=RELATIVE_PIC_NAME)
-        self.assertTrue(hasattr(m, 'get_photo_thumbnail'))
-        self.assertTrue(hasattr(m, 'get_photo_thumbnail_tag'))
-        self.assertTrue(hasattr(m, 'get_photo_admin_thumbnail'))
-        self.assertTrue(hasattr(m, 'get_photo_admin_thumbnail_tag'))
-        thumb = m.get_photo_thumbnail()
+    def test_thumbnail(self):
+        model = TestThumbnailFieldModel(photo=RELATIVE_PIC_NAME)
+        thumb = model.photo.thumbnail
+        tag = model.photo.thumbnail_tag
         expected_filename = os.path.join(settings.MEDIA_ROOT,
             'sorl-thumbnail-test_source_jpg_50x50_q85.jpg')
         self.verify_thumbnail((50, 37), thumb, expected_filename)
-        admin_tag = m.get_photo_admin_thumbnail_tag()
+        expected_tag = '<img src="%s" width="50" height="37" alt="" />' % \
+            '/'.join((settings.MEDIA_URL.rstrip('/'),
+                      'sorl-thumbnail-test_source_jpg_50x50_q85.jpg'))
+        self.assertEqual(tag, expected_tag)
+
+    def test_extra_thumbnails(self):
+        model = TestThumbnailFieldModel(photo=RELATIVE_PIC_NAME)
+        self.assertTrue('admin' in model.photo.extra_thumbnails)
+        thumb = model.photo.extra_thumbnails['admin']
+        tag = model.photo.extra_thumbnails_tag['admin']
+        expected_filename = os.path.join(settings.MEDIA_ROOT,
+            'sorl-thumbnail-test_source_jpg_30x30_crop_q85.jpg')
+        self.verify_thumbnail((30, 30), thumb, expected_filename)
         expected_tag = '<img src="%s" width="30" height="30" alt="" />' % \
             '/'.join((settings.MEDIA_URL.rstrip('/'),
                       'sorl-thumbnail-test_source_jpg_30x30_crop_q85.jpg'))
-        self.assertEqual(admin_tag, expected_tag)
+        self.assertEqual(tag, expected_tag)
