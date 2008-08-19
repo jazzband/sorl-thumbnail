@@ -88,7 +88,7 @@ The thumbnail tag can also place a ``DjangoThumbnail`` object on the context,
 providing access to the properties of the thumbnail such as the height and
 width::
 
-    {% thumbnail [source-filename] [size] [options] as [variable] %}
+    {% thumbnail [source] [size] [options] as [variable] %}
 
 When ``as [variable]`` is used, the tag does not return the absolute url of the
 thumbnail. The variable (containing the ``DjangoThumbnail`` object) has the
