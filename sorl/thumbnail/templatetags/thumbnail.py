@@ -2,7 +2,6 @@ import re
 import math
 from django.template import Library, Node, Variable, VariableDoesNotExist, TemplateSyntaxError
 from django.conf import settings
-from django.utils.encoding import force_unicode
 from sorl.thumbnail.main import DjangoThumbnail, get_thumbnail_setting
 from sorl.thumbnail.processors import dynamic_import, get_valid_options
 
@@ -48,7 +47,7 @@ class ThumbnailNode(Node):
         DEBUG = get_thumbnail_setting('DEBUG')
         # Resolve source variable
         try:
-            relative_source = force_unicode(self.source_var.resolve(context))
+            relative_source = self.source_var.resolve(context)
         except VariableDoesNotExist:
             if DEBUG:
                 raise VariableDoesNotExist("Variable '%s' does not exist." %
