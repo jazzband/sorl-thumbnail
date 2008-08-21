@@ -27,7 +27,7 @@ class DjangoThumbnail(Thumbnail):
     def __init__(self, relative_source, requested_size, opts=None,
                  quality=None, basedir=None, subdir=None, prefix=None,
                  relative_dest=None, processors=None):
-        relative_source = force_unicode(relative_source))
+        relative_source = force_unicode(relative_source)
         # Set the absolute filename for the source file
         source = self._absolute_path(relative_source)
 
