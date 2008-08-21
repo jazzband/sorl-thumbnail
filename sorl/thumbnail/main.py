@@ -1,7 +1,7 @@
 import os
 
 from django.conf import settings
-from django.utils.encoding import iri_to_uri, force_unicode
+from django.utils.encoding import iri_to_uri
 
 from sorl.thumbnail.base import Thumbnail
 from sorl.thumbnail.processors import dynamic_import
@@ -27,7 +27,6 @@ class DjangoThumbnail(Thumbnail):
     def __init__(self, relative_source, requested_size, opts=None,
                  quality=None, basedir=None, subdir=None, prefix=None,
                  relative_dest=None, processors=None):
-        relative_source = force_unicode(relative_source)
         # Set the absolute filename for the source file
         source = self._absolute_path(relative_source)
 
