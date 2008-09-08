@@ -72,7 +72,7 @@ class DjangoThumbnail(Thumbnail):
         path, filename = os.path.split(relative_source)
         basename, ext = os.path.splitext(filename)
         name = '%s%s' % (basename, ext.replace(".", "_"))
-        size = '%sx%s' % self.requested_size
+        size = '%sx%s' % tuple(self.requested_size)
         opts = self.opts and ('%s_' % '_'.join(self.opts)) or ''
         thumbnail_filename = '%s%s_%s_%sq%s.jpg' % (prefix, name, size,
                                                     opts, self.quality)

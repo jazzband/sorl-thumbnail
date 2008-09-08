@@ -27,17 +27,11 @@ except:
         PROCESSORS = []
         VALID_OPTIONS = []
 
-
 class ThumbnailNode(Node):
     def __init__(self, source_var, size_var, opts=None,
                  context_name=None, **kwargs):
-        self.source_var = Variable(source_var)
-        m = size_pat.match(size_var)
-        if m:
-            self.requested_size = (int(m.group(1)), int(m.group(2)))
-        else:
-            self.size_var = Variable(size_var)
-            self.requested_size = None
+        self.source_var = source_var
+        self.size_var = size_var
         self.opts = opts
         self.context_name = context_name
         self.kwargs = kwargs
@@ -46,45 +40,46 @@ class ThumbnailNode(Node):
         # Note that this isn't a global constant because we need to change the
         # value for tests.
         DEBUG = get_thumbnail_setting('DEBUG')
-        # Resolve source variable
         try:
-            relative_source = force_unicode(self.source_var.resolve(context))
+            # A file object will be allowed in DjangoThumbnail class
+            relative_source = self.source_var.resolve(context)
         except VariableDoesNotExist:
             if DEBUG:
                 raise VariableDoesNotExist("Variable '%s' does not exist." %
-                                           self.source_var)
+                        self.source_var)
             else:
                 relative_source = None
-        # Resolve and check size variable
-        if self.requested_size is None:
-            try:
-                size = self.size_var.resolve(context)
-            except VariableDoesNotExist:
-                if DEBUG:
-                    raise TemplateSyntaxError("Size argument '%s' is not a"
+        try:
+            requested_size = self.size_var.resolve(context)
+        except VariableDoesNotExist:
+            if DEBUG:
+                raise TemplateSyntaxError("Size argument '%s' is not a"
                         " valid size nor a valid variable." % self.size_var)
             else:
-                if isinstance(size, basestring):
-                    m = size_pat.match(size)
-                    if m:
-                        size = (int(m.group(1)), int(m.group(2)))
-                    elif DEBUG:
-                        msg = "Variable '%s' was resolved but '%s' is not a "\
-                              "valid size." % (self.size_var, size)
-                        raise TemplateSyntaxError(msg)
-                self.requested_size = size
-
-        # Get thumbnail instance
-        try:
-            thumbnail = DjangoThumbnail(relative_source, self.requested_size,
-                                        opts=self.opts, processors=PROCESSORS,
-                                        **self.kwargs)
-        except:
-            if DEBUG:
-                raise
-            else:
-                thumbnail = ''
-
+                requested_size = None
+        # Size variable can be either a tuple/list of two integers or a valid
+        # string, only the string is checked.
+        else:
+            if isinstance(requested_size, basestring):
+                m = size_pat.match(requested_size)
+                if m:
+                    requested_size = (int(m.group(1)), int(m.group(2)))
+                elif DEBUG:
+                    raise TemplateSyntaxError("Variable '%s' was resolved but "
+                            "'%s' is not a valid size." % (self.size_var, requested_size))
+                else:
+                    requested_size = None
+        if relative_source is None or requested_size is None:
+            thumbnail = ''
+        else:
+            try:
+                thumbnail = DjangoThumbnail(relative_source, requested_size,
+                        opts=self.opts, processors=PROCESSORS, **self.kwargs)
+            except:
+                if DEBUG:
+                    raise
+                else:
+                    thumbnail = ''
         # Return the thumbnail class, or put it on the context
         if self.context_name is None:
             return thumbnail
@@ -121,12 +116,12 @@ def thumbnail(parser, token):
 
     if len(args) not in (3, 4):
         raise TemplateSyntaxError("Invalid syntax. Expected "
-            "'{%% %s source size [options] %%}' or "
-            "'{%% %s source size [options] as variable %%}'" % (tag, tag))
+            "'{%% %s source size [option#1,option#2,...] %%}' or "
+            "'{%% %s source size [option#1,option#2,...] as variable %%}'" % (tag, tag))
 
     # Get the source image path and requested size.
-    source_var = args[1]
-    size_var = args[2]
+    source_var = parser.compile_filter(args[1])
+    size_var = parser.compile_filter(args[2])
 
     # Get the options.
     if len(args) == 4:
@@ -144,11 +139,11 @@ def thumbnail(parser, token):
         else:
             m = quality_pat.match(arg)
             if not m:
-                raise TemplateSyntaxError(
-                    "'%s' tag received a bad argument: '%s'" % (tag, arg))
+                raise TemplateSyntaxError("'%s' tag received a bad argument: "
+                        "'%s'" % (tag, arg))
             kwargs['quality'] = int(m.group(1))
     return ThumbnailNode(source_var, size_var, opts=opts,
-                         context_name=context_name, **kwargs)
+            context_name=context_name, **kwargs)
 
 
 def filesize(bytes, format='auto1024'):
