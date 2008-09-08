@@ -66,7 +66,8 @@ class ThumbnailNode(Node):
                     requested_size = (int(m.group(1)), int(m.group(2)))
                 elif DEBUG:
                     raise TemplateSyntaxError("Variable '%s' was resolved but "
-                            "'%s' is not a valid size." % (self.size_var, requested_size))
+                            "'%s' is not a valid size." %
+                            (self.size_var, requested_size))
                 else:
                     requested_size = None
         if relative_source is None or requested_size is None:
