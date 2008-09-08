@@ -122,8 +122,11 @@ def thumbnail(parser, token):
 
     # Get the source image path and requested size.
     source_var = parser.compile_filter(args[1])
-    size_var = parser.compile_filter(args[2])
-
+    m = size_pat.match(args[2])
+    if m:
+        size_var = (int(m.group(1)), int(m.group(2)))
+    else:
+        size_var = parser.compile_filter(args[2])
     # Get the options.
     if len(args) == 4:
         args_list = args[3].split(',')
