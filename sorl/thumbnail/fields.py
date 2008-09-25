@@ -101,24 +101,19 @@ class ImageWithThumbnailsField(ImageField):
     """
     photo = ImageWithThumbnailsField(
         upload_to='uploads',
-        thumbnail={
-            'size': (80, 80),
-            'options': ('crop', 'upscale'),
-        },
+        thumbnail={'size': (80, 80), 'options': ('crop', 'upscale')},
         extra_thumbnails={
-            'admin': {
-                'size': (70, 50),
-                'options': ('sharpen',),
-            }
+            'admin': {'size': (70, 50), 'options': ('sharpen',)},
         }
     )
     """
     attr_class = ImageWithThumbnailsFieldFile
 
-    def __init__(self, thumbnail, extra_thumbnails=None,
+    def __init__(self, thumbnail=None, extra_thumbnails=None,
                  thumbnail_tag=TAG_HTML, **kwargs):
         super(ImageWithThumbnailsField, self).__init__(**kwargs)
-        _verify_thumbnail_attrs(thumbnail)
+        if thumbnail:
+            _verify_thumbnail_attrs(thumbnail)
         if extra_thumbnails:
             for extra, attrs in extra_thumbnails.items():
                 name = "%r of 'extra_thumbnails'"
