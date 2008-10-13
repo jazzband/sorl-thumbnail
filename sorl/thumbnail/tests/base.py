@@ -90,6 +90,9 @@ class BaseTest(unittest.TestCase):
     def tearDown(self):
         # Remove all the files that have been created
         for image in self.images_to_delete:
-            os.remove(image)
+            try:
+                os.remove(image)
+            except:
+                pass
         # Change settings back to original
         self.change_settings.revert()

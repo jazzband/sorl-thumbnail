@@ -174,6 +174,9 @@ A template (passed an instance of ``MyModel``) would simply use something like:
 even simpler for just a basic ``IMG`` tag:
 ``{{ my_model.photo.thumbnail_tag }}``.
 
+Note that when the source image is deleted, any related thumbnails are also
+automatically deleted.
+
 Multiple Thumbnails
 -------------------
 
@@ -382,9 +385,9 @@ described in the above example.
 Advanced usage
 ==============
 
-Some helpful methods are provided in the ``sorl.thumbnail.utils`` module. One
-example of using these could be to clean up any thumbnails belonging solely to
-a model in its ``delete()`` method.
+Some helpful methods are provided in the ``sorl.thumbnail.utils`` module which
+can find (and delete) any thumbnails matching a source file name or all
+thumbnail files.
 
 Use the ``DjangoThumbnail`` class in ``sorl.thumbnail.main`` if you want
 behaviour similar to the ``{% thumbnail %}`` tag (i.e. using the ``MEDIA_ROOT``

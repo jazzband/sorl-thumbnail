@@ -109,9 +109,16 @@ def delete_thumbnails(relative_source_path, root=None, basedir=None,
 
 
 def _delete_using_thumbs_list(thumbs):
+    deleted = 0
     for thumb_dict in thumbs:
-        os.remove(thumb_dict['filename'])
-    return len(thumbs)
+        filename = thumb_dict['filename']
+        try:
+            os.remove(filename)
+        except:
+            pass
+        else:
+            deleted += 1
+    return deleted
 
 
 def delete_all_thumbnails(path, recursive=True):

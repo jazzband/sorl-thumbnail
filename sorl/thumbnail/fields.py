@@ -8,7 +8,7 @@ from django.utils.html import escape
 from django.conf import settings
 
 from sorl.thumbnail.main import DjangoThumbnail
-#from sorl.thumbnail.utils import delete_thumbnails  (TODO:)
+from sorl.thumbnail.utils import delete_thumbnails
 
 
 REQUIRED_ARGS = ('size',)
@@ -61,13 +61,9 @@ class ImageWithThumbnailsFieldFile(ImageFieldFile):
         kwargs = {}
         for k, v in args.items():
             kwargs[ALL_ARGS[k]] = v
-        # Build relative source path
-        filename = getattr(self.instance, self.field.name).path
-        media_root_len = len(os.path.normpath(settings.MEDIA_ROOT))
-        filename = os.path.normpath(filename)
-        filename = filename[media_root_len:].lstrip(os.path.sep)
         # Return thumbnail
-        return DjangoThumbnail(filename, **kwargs)
+        relative_source_path = getattr(self.instance, self.field.name).name
+        return DjangoThumbnail(relative_source_path, **kwargs)
 
     def _build_thumbnail_tag(self, thumb):
         opts = dict(src=escape(thumb), width=thumb.width(),
@@ -96,6 +92,18 @@ class ImageWithThumbnailsFieldFile(ImageFieldFile):
         return ThumbTags(self)
     extra_thumbnails_tag = property(_get_extra_thumbnails_tag)
 
+# TODO: Should thumbnails be generated when image is saved?
+#    def save(self, name, content, save=True):
+#        # Generate the thumbnails when the image is saved.
+#        super(ImageWithThumbnailsFieldFile, self).save(name, content, save)
+
+    def delete(self, save=True):
+        # Delete any thumbnails too (and not just ones defined here in case
+        # the {% thumbnail %} tag was used or the thumbnail sizes changed).
+        relative_source_path = getattr(self.instance, self.field.name).name
+        delete_thumbnails(relative_source_path)
+        super(ImageWithThumbnailsFieldFile, self).delete(save)
+
 
 class ImageWithThumbnailsField(ImageField):
     """
@@ -122,17 +130,6 @@ class ImageWithThumbnailsField(ImageField):
         self.extra_thumbnails = extra_thumbnails
         self.thumbnail_tag = thumbnail_tag
 
-    # TODO: saving the file should generate thumbnails.
-    #def save_file(self, *args, **kwargs):
-    #    super(ImageWithThumbnailField, self).save_file(*args, **kwargs)
-    #    _get_thumbnail()
-
-    # TODO: deleting the image should delete its thumbnails too.
-    # Note that  http://code.google.com/p/sorl-thumbnail/issues/detail?id=23
-    # mentions a problem with using *args, **kwargs, so test that too.
-    #def delete_file(self, *args, **kwargs):
-    #    super(ImageWithThumbnailField, self).delete_file(*args, **kwargs)
-    #    delete_thumbnails()
 
 def _verify_thumbnail_attrs(attrs, name="'thumbnail'"):
     for arg in REQUIRED_ARGS:

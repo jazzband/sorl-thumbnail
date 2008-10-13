@@ -46,3 +46,12 @@ class FieldTest(BaseTest):
             '/'.join((settings.MEDIA_URL.rstrip('/'),
                       'sorl-thumbnail-test_source_jpg_30x30_crop_q85.jpg'))
         self.assertEqual(tag, expected_tag)
+
+    def test_delete_thumbnails(self):
+        model = TestThumbnailFieldModel(photo=RELATIVE_PIC_NAME)
+        thumb_file = model.photo.thumbnail.dest
+        open(thumb_file, 'wb').close()
+        self.assert_(os.path.exists(thumb_file))
+        model.photo.delete(save=False)
+        self.assert_(not os.path.exists(thumb_file))
+
