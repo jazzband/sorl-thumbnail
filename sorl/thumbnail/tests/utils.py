@@ -68,6 +68,10 @@ utils_tests = """
 >>> output
 ['test-thumbnail-utils/test_jpg_80x80_q85.jpg', 'test-thumbnail-utils/test_jpg_80x80_q95.jpg']
 
+# Thumbnails for file - shouldn't choke on non-existant file
+>>> thumbnails_for_file('test-thumbnail-utils/non-existant.jpg')
+[]
+
 # Thumbnails for file, with basedir setting
 >>> change_settings.change({'BASEDIR': 'test-thumbnail-basedir'})
 >>> for thumb in thumbnails_for_file('test-thumbnail-utils/test.jpg'):
