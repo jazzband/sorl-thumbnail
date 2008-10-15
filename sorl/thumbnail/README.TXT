@@ -147,6 +147,7 @@ works very similar to Django's ``ImageField``.
 
 A new ``thumbnail`` argument is required for this field. Pass in a dictionary
 with the following values (all optional except for ``size``):
+
 ``size`` (required)
   A 2-length tuple of the thumbnail width and height.
 ``options``
@@ -357,7 +358,7 @@ Default processors
 ``colorspace``
     This processor is best kept at the top of the list since it will convert
     the image to RGB color space needed by most of following processors. It is
-    also responsible for converting an image to grayscale if ``bw``option is
+    also responsible for converting an image to grayscale if ``bw`` option is
     specified.
 
 ``autocrop``
