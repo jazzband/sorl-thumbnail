@@ -117,9 +117,14 @@ class ImageWithThumbnailsField(ImageField):
     """
     attr_class = ImageWithThumbnailsFieldFile
 
-    def __init__(self, thumbnail=None, extra_thumbnails=None,
-                 thumbnail_tag=TAG_HTML, **kwargs):
-        super(ImageWithThumbnailsField, self).__init__(**kwargs)
+    def __init__(self, *args, **kwargs):
+        # The new arguments for this field aren't explicitly defined so that
+        # users can still use normal ImageField positional arguments.
+        thumbnail=kwargs.pop('thumbnail', None)
+        extra_thumbnails=kwargs.pop('extra_thumbnails', None)
+        thumbnail_tag=kwargs.pop('thumbnail_tag', TAG_HTML)
+
+        super(ImageWithThumbnailsField, self).__init__(*args, **kwargs)
         if thumbnail:
             _verify_thumbnail_attrs(thumbnail)
         if extra_thumbnails:
