@@ -2,7 +2,7 @@ import re
 import os
 
 
-re_thumbnail_file = re.compile(r'(?P<source_filename>.+)_(?P<x>\d+)x(?P<y>\d+)(?:_(?P<options>\w+))?_q(?P<quality>\d+).jpg$')
+re_thumbnail_file = re.compile(r'(?P<source_filename>.+)_(?P<x>\d+)x(?P<y>\d+)(?:_(?P<options>\w+))?_q(?P<quality>\d+)(?:.[^.]+)?$')
 
 
 def all_thumbnails(path, recursive=True, prefix=None, subdir=None):

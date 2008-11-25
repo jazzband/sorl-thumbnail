@@ -15,11 +15,20 @@ extra_thumbnails = {
         'options': ('crop',),
     }
 }
+extension_thumbnail = thumbnail.copy()
+extension_thumbnail['extension'] = 'png'
 
-# Temporary model for field_tests
+# Temporary models for field_tests
 class TestThumbnailFieldModel(models.Model):
     photo = ImageWithThumbnailsField(upload_to='test', thumbnail=thumbnail,
                                      extra_thumbnails=extra_thumbnails)
+
+
+class TestThumbnailFieldExtensionModel(models.Model):
+    photo = ImageWithThumbnailsField(upload_to='test',
+                                     thumbnail=extension_thumbnail,
+                                     extra_thumbnails=extra_thumbnails)
+
 
 class FieldTest(BaseTest):
     def test_thumbnail(self):
@@ -45,6 +54,18 @@ class FieldTest(BaseTest):
         expected_tag = '<img src="%s" width="30" height="30" alt="" />' % \
             '/'.join((settings.MEDIA_URL.rstrip('/'),
                       'sorl-thumbnail-test_source_jpg_30x30_crop_q85.jpg'))
+        self.assertEqual(tag, expected_tag)
+
+    def test_extension(self):
+        model = TestThumbnailFieldExtensionModel(photo=RELATIVE_PIC_NAME)
+        thumb = model.photo.thumbnail
+        tag = model.photo.thumbnail_tag
+        expected_filename = os.path.join(settings.MEDIA_ROOT,
+            'sorl-thumbnail-test_source_jpg_50x50_q85.png')
+        self.verify_thumbnail((50, 37), thumb, expected_filename)
+        expected_tag = '<img src="%s" width="50" height="37" alt="" />' % \
+            '/'.join((settings.MEDIA_URL.rstrip('/'),
+                      'sorl-thumbnail-test_source_jpg_50x50_q85.png'))
         self.assertEqual(tag, expected_tag)
 
     def test_delete_thumbnails(self):

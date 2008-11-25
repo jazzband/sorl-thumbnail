@@ -24,6 +24,7 @@ class Thumbnail(object):
         # Absolute paths to files
         self.source = source
         self.dest = dest
+        self.type = type
 
         # Thumbnail settings
         self.requested_size = requested_size
@@ -192,17 +193,18 @@ class Thumbnail(object):
 
         self.data = im
 
-        if self.source_data == self.data and self.source_filetype == 'jpg':
+        dest_extension = os.path.splitext(self.dest)[1][1:]
+        if (self.source_data == self.data and
+                self.source_filetype == dest_extension):
             copyfile(self.source, self.dest)
         else:
             try:
-                im.save(self.dest, "JPEG", quality=self.quality, optimize=1)
+                im.save(self.dest, quality=self.quality, optimize=1)
             except IOError:
-                # Try again, without optimization (the JPEG library can't
-                # optimize an image which is larger than ImageFile.MAXBLOCK
-                # which is 64k by default)
+                # Try again, without optimization (PIL can't optimize an image
+                # larger than ImageFile.MAXBLOCK, which is 64k by default)
                 try:
-                    im.save(self.dest, "JPEG", quality=self.quality)
+                    im.save(self.dest, quality=self.quality)
                 except IOError, detail:
                     raise ThumbnailException(detail)
 

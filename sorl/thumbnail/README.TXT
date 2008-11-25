@@ -208,8 +208,21 @@ provided by this field, you can use the ``thumbnail_tag`` argument. For
 example, to use HTML4.0 compliant tags, you would do the following::
 
     photo = ImageWithThumbnailsField(
-        upload_to='profiles', thumbnail_size=(50, 50),
+        upload_to='profiles',
+        thumbnail={'size': (50, 50)},
         template_tag='<img src="%(src)s" width="%(width)s" height="%(height)s">'
+    )
+
+Generate a different image type than JPEG
+-----------------------------------------
+
+PIL chooses which type of image to save as based on the extension so you can
+use the ``extension`` argument to save as a different image type that the
+default JPEG format. For example, to make the generated thumbnail a PNG file::
+
+    photo = ImageWithThumbnailsField(
+        upload_to='profiles',
+        thumbnail={'size': (50, 50), 'extension': 'png'}
     )
 
 
@@ -282,6 +295,22 @@ For example::
 
 This will only affect images which have not be explicitly given a quality
 option.
+
+
+Change the default thumbnail image file type
+============================================
+
+By default, generated thumbnails are saved as JPEG files (with the extension
+``.jpg``).
+
+PIL chooses which type of image to save as based on the extension so you can
+change the default image file type by adding a ``THUMBNAIL_EXTENSION`` property
+to your settings module. For example::
+
+    THUMBNAIL_EXTENSION = 'png'
+
+Obviously, if you change the extension, the ``THUMBNAIL_QUALITY`` JPEG setting
+will have no effect.
 
 
 ``filesize`` filter

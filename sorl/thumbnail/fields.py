@@ -19,6 +19,7 @@ ALL_ARGS = {
     'basedir': 'basedir',
     'subdir': 'subdir',
     'prefix': 'prefix',
+    'extension': 'extension',
 }
 TAG_HTML = '<img src="%(src)s" width="%(width)s" height="%(height)s" alt="" />'
 
@@ -109,10 +110,11 @@ class ImageWithThumbnailsField(ImageField):
     """
     photo = ImageWithThumbnailsField(
         upload_to='uploads',
-        thumbnail={'size': (80, 80), 'options': ('crop', 'upscale')},
+        thumbnail={'size': (80, 80), 'options': ('crop', 'upscale'),
+                   'extension': 'png'},
         extra_thumbnails={
             'admin': {'size': (70, 50), 'options': ('sharpen',)},
-        }
+        },
     )
     """
     attr_class = ImageWithThumbnailsFieldFile

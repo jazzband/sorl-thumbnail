@@ -117,6 +117,26 @@ class DjangoThumbnailTest(BaseTest):
         expected += '_240x120_q85.jpg'
         self.verify_thumbnail((160, 120), thumb, expected_filename=expected)
 
+    def testAlternateExtension(self):
+        basename = RELATIVE_PIC_NAME.replace('.', '_')
+        # Control JPG
+        thumb = DjangoThumbnail(relative_source=RELATIVE_PIC_NAME,
+                                requested_size=(240, 120))
+        expected = os.path.join(settings.MEDIA_ROOT, basename)
+        expected += '_240x120_q85.jpg'
+        expected_jpg = expected
+        self.verify_thumbnail((160, 120), thumb, expected_filename=expected)
+        # Test PNG
+        thumb = DjangoThumbnail(relative_source=RELATIVE_PIC_NAME,
+                                requested_size=(240, 120), extension='png')
+        expected = os.path.join(settings.MEDIA_ROOT, basename)
+        expected += '_240x120_q85.png'
+        self.verify_thumbnail((160, 120), thumb, expected_filename=expected)
+        # Compare the file size to make sure it's not just saving as a JPG with
+        # a different extension.
+        self.assertNotEqual(os.path.getsize(expected_jpg),
+                            os.path.getsize(expected))
+
     def tearDown(self):
         super(DjangoThumbnailTest, self).tearDown()
         subdir = os.path.join(self.sub_dir, 'subdir')
