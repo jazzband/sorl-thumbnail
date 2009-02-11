@@ -11,7 +11,8 @@ from sorl.thumbnail.processors import get_valid_options, dynamic_import
 
 
 class ThumbnailException(Exception):
-    pass
+    # Stop Django templates from choking if something goes wrong.
+    silent_variable_failure = True
 
 
 class Thumbnail(object):
