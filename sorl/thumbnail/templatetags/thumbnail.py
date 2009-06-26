@@ -92,6 +92,8 @@ class ThumbnailNode(Node):
 
 def thumbnail(parser, token):
     """
+    Creates a thumbnail of for an ImageField.
+
     To just output the absolute url to the thumbnail::
 
         {% thumbnail image 80x80 %}
