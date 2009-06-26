@@ -103,7 +103,7 @@ def thumbnail(parser, token):
         {% thumbnail image 80x80 quality=95,crop %}
 
     To put the DjangoThumbnail class on the context instead of just rendering
-    the absolute url, finish the tag with "as [context_var_name]"::
+    the absolute url, finish the tag with ``as [context_var_name]``::
 
         {% thumbnail image 80x80 as thumb %}
         {{ thumb.width }} x {{ thumb.height }}
