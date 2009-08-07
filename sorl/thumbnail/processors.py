@@ -26,7 +26,7 @@ def get_valid_options(processors):
 def colorspace(im, requested_size, opts):
     if 'bw' in opts and im.mode != "L":
         im = im.convert("L")
-    elif im.mode not in ("L", "RGB"):
+    elif im.mode not in ("L", "RGB", "RGBA"):
         im = im.convert("RGB")
     return im
 colorspace.valid_options = ('bw',)
