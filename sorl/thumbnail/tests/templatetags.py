@@ -28,13 +28,15 @@ class ThumbnailTagTest(BaseTest):
         self.assertRaises(TemplateSyntaxError, self.render_template, src)
         src = '{% thumbnail source %}'
         self.assertRaises(TemplateSyntaxError, self.render_template, src)
-        src = '{% thumbnail source 80x80 Xas variable %}'
-        self.assertRaises(TemplateSyntaxError, self.render_template, src)
-        src = '{% thumbnail source 80x80 as variable X %}'
+        src = '{% thumbnail source 80x80 as variable crop %}'
         self.assertRaises(TemplateSyntaxError, self.render_template, src)
 
         # Invalid option
         src = '{% thumbnail source 240x200 invalid %}'
+        self.assertRaises(TemplateSyntaxError, self.render_template, src)
+
+        # Old comma separated options format can only have an = for quality
+        src = '{% thumbnail source 80x80 crop=1,quality=1 %}'
         self.assertRaises(TemplateSyntaxError, self.render_template, src)
 
         # Invalid quality
@@ -137,9 +139,8 @@ class ThumbnailTagTest(BaseTest):
 
         # With options and quality
         output = self.render_template('src="'
-            '{% thumbnail source 240x240 sharpen,crop,quality=95 %}"')
-        # Note that the order of opts comes from VALID_OPTIONS to ensure a
-        # consistent filename.
+            '{% thumbnail source 240x240 sharpen crop quality=95 %}"')
+        # Note that the opts are sorted to ensure a consistent filename.
         expected = '%s_240x240_crop_sharpen_q95.jpg' % expected_base
         expected_fn = os.path.join(settings.MEDIA_ROOT, expected)
         self.verify_thumbnail((240, 240), expected_filename=expected_fn)
@@ -148,6 +149,12 @@ class ThumbnailTagTest(BaseTest):
 
         # With option and quality on context (also using its unicode method to
         # display the url)
+        output = self.render_template(
+            '{% thumbnail source 240x240 sharpen crop quality=95 as thumb %}'
+            'width:{{ thumb.width }}, url:{{ thumb }}')
+        self.assertEqual(output, 'width:240, url:%s' % expected_url)
+
+        # Old comma separated format for options is still supported.
         output = self.render_template(
             '{% thumbnail source 240x240 sharpen,crop,quality=95 as thumb %}'
             'width:{{ thumb.width }}, url:{{ thumb }}')
