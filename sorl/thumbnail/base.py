@@ -25,7 +25,6 @@ class Thumbnail(object):
         # Absolute paths to files
         self.source = source
         self.dest = dest
-        self.type = type
 
         # Thumbnail settings
         self.requested_size = requested_size
@@ -208,9 +207,9 @@ class Thumbnail(object):
             format = None
         else:
             dest_extension = None
-            format = 'jpeg'
-        if (self.source_data == self.data and
-                self.source_filetype == dest_extension):
+            format = 'JPEG'
+        if (self.source_filetype and self.source_filetype == dest_extension and
+                self.source_data == self.data):
             copyfile(self.source, self.dest)
         else:
             try:
