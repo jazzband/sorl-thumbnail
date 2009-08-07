@@ -168,11 +168,11 @@ class Thumbnail(object):
     def _convert_imagemagick(self, filename):
         tmp = mkstemp('.png')[1]
         if 'crop' in self.opts or 'autocrop' in self.opts:
-            x,y = [d*3 for d in self.requested_size]
+            x, y = [d * 3 for d in self.requested_size]
         else:
-            x,y = self.requested_size
+            x, y = self.requested_size
         try:
-            p = Popen((self.convert_path, '-size', '%sx%s' % (x,y),
+            p = Popen((self.convert_path, '-size', '%sx%s' % (x, y),
                 '-antialias', '-colorspace', 'rgb', '-format', 'PNG24',
                 '%s[0]' % filename, tmp), stdout=PIPE)
             p.wait()
@@ -196,20 +196,30 @@ class Thumbnail(object):
 
         self.data = im
 
-        dest_extension = os.path.splitext(self.dest)[1][1:]
+        filelike = not isinstance(self.dest, basestring)
+        if not filelike:
+            dest_extension = os.path.splitext(self.dest)[1][1:]
+            format = None
+        else:
+            dest_extension = None
+            format = 'jpeg'
         if (self.source_data == self.data and
                 self.source_filetype == dest_extension):
             copyfile(self.source, self.dest)
         else:
             try:
-                im.save(self.dest, quality=self.quality, optimize=1)
+                im.save(self.dest, format=format, quality=self.quality,
+                        optimize=1)
             except IOError:
                 # Try again, without optimization (PIL can't optimize an image
                 # larger than ImageFile.MAXBLOCK, which is 64k by default)
                 try:
-                    im.save(self.dest, quality=self.quality)
+                    im.save(self.dest, format=format, quality=self.quality)
                 except IOError, detail:
                     raise ThumbnailException(detail)
+
+        if filelike:
+            self.dest.seek(0)
 
     # Some helpful methods
 

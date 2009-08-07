@@ -74,18 +74,21 @@ class BaseTest(unittest.TestCase):
         else:
             thumb_name = expected_filename
 
-        # Verify that the thumbnail file exists
-        self.assert_(os.path.isfile(thumb_name), 'Thumbnail file not found')
+        if isinstance(thumb_name, basestring):
+            # Verify that the thumbnail file exists
+            self.assert_(os.path.isfile(thumb_name),
+                         'Thumbnail file not found')
 
-        # Remember to delete the file
-        self.images_to_delete.add(thumb_name)
+            # Remember to delete the file
+            self.images_to_delete.add(thumb_name)
 
-        # If we got an expected_filename, check that it is right
-        if expected_filename is not None and thumbnail is not None:
-            self.assertEqual(thumbnail.dest, expected_filename)
+            # If we got an expected_filename, check that it is right
+            if expected_filename is not None and thumbnail is not None:
+                self.assertEqual(thumbnail.dest, expected_filename)
 
         # Verify the thumbnail has the expected dimensions
-        self.assertEqual(Image.open(thumb_name).size, expected_size)
+        self.assertEqual(Image.open(thumb_name).size,
+                         expected_size)
 
     def tearDown(self):
         # Remove all the files that have been created
@@ -96,3 +99,4 @@ class BaseTest(unittest.TestCase):
                 pass
         # Change settings back to original
         self.change_settings.revert()
+

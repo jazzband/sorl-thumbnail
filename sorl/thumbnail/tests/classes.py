@@ -1,6 +1,7 @@
 import unittest
 import os
 import time
+from StringIO import StringIO
 
 from PIL import Image
 from django.conf import settings
@@ -52,6 +53,13 @@ class ThumbnailTest(BaseTest):
         thumb = Thumbnail(source=PIC_NAME, dest=thumb_name,
                           requested_size=thumb_size)
         self.assertNotEqual(os.path.getmtime(thumb_name), thumb_mtime)
+
+    def testFilelikeDest(self):
+        # Thumbnail
+        filelike_dest = StringIO() 
+        thumb = Thumbnail(source=PIC_NAME, dest=filelike_dest,
+                          requested_size=(240, 240))
+        self.verify_thumbnail((240, 180), thumb)
 
 
 class DjangoThumbnailTest(BaseTest):
