@@ -56,10 +56,23 @@ class ThumbnailTest(BaseTest):
 
     def testFilelikeDest(self):
         # Thumbnail
-        filelike_dest = StringIO() 
+        filelike_dest = StringIO()
         thumb = Thumbnail(source=PIC_NAME, dest=filelike_dest,
                           requested_size=(240, 240))
         self.verify_thumbnail((240, 180), thumb)
+
+    def testRGBA(self):
+        # RGBA image
+        rgba_pic_name = os.path.join(settings.MEDIA_ROOT,
+                                     'sorl-thumbnail-test_rgba_source.png')
+        Image.new('RGBA', PIC_SIZE).save(rgba_pic_name)
+        self.images_to_delete.add(rgba_pic_name)
+        # Create thumb and verify it's still RGBA
+        rgba_thumb_name = os.path.join(settings.MEDIA_ROOT,
+                                       'sorl-thumbnail-test_rgba_dest.png')
+        thumb = Thumbnail(source=rgba_pic_name, dest=rgba_thumb_name,
+                          requested_size=(240, 240))
+        self.verify_thumbnail((240, 180), thumb, expected_mode='RGBA')
 
 
 class DjangoThumbnailTest(BaseTest):
@@ -121,7 +134,7 @@ class DjangoThumbnailTest(BaseTest):
         self.change_settings.change({'SUBDIR': '', 'PREFIX': 'prefix-'})
         thumb = DjangoThumbnail(relative_source=self.pic_subdir,
                                 requested_size=(240, 120))
-        expected = os.path.join(self.sub_dir, 'prefix-'+basename)
+        expected = os.path.join(self.sub_dir, 'prefix-' + basename)
         expected += '_240x120_q85.jpg'
         self.verify_thumbnail((160, 120), thumb, expected_filename=expected)
 

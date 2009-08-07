@@ -62,7 +62,7 @@ class BaseTest(unittest.TestCase):
         self.change_settings.change()
 
     def verify_thumbnail(self, expected_size, thumbnail=None,
-                         expected_filename=None):
+                         expected_filename=None, expected_mode=None):
         assert thumbnail is not None or expected_filename is not None, \
             'verify_thumbnail should be passed at least a thumbnail or an' \
             'expected filename.'
@@ -86,9 +86,13 @@ class BaseTest(unittest.TestCase):
             if expected_filename is not None and thumbnail is not None:
                 self.assertEqual(thumbnail.dest, expected_filename)
 
+        image = Image.open(thumb_name)
+
         # Verify the thumbnail has the expected dimensions
-        self.assertEqual(Image.open(thumb_name).size,
-                         expected_size)
+        self.assertEqual(image.size, expected_size)
+
+        if expected_mode is not None:
+            self.assertEqual(image.mode, expected_mode)
 
     def tearDown(self):
         # Remove all the files that have been created
