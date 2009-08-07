@@ -150,6 +150,8 @@ class Thumbnail(object):
                 self._source_data = Image.open(image)
             except IOError, detail:
                 raise ThumbnailException("%s: %s" % (detail, image))
+            except MemoryError:
+                raise ThumbnailException("Memory Error: %s" % image)
     source_data = property(_get_source_data, _set_source_data)
 
     def _convert_wvps(self, filename):
