@@ -5,11 +5,11 @@ from django.conf import settings
 from django.utils.encoding import force_unicode
 from sorl.thumbnail.main import DjangoThumbnail, get_thumbnail_setting
 from sorl.thumbnail.processors import dynamic_import, get_valid_options
+from sorl.thumbnail.utils import split_args
 
 register = Library()
 
 size_pat = re.compile(r'(\d+)x(\d+)$')
-quality_pat = re.compile(r'quality=([1-9]\d?|100)$')
 
 filesize_formats = ['k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
 filesize_long_formats = {
@@ -26,6 +26,7 @@ except:
     else:
         PROCESSORS = []
         VALID_OPTIONS = []
+TAG_SETTINGS = ['quality'] 
 
 class ThumbnailNode(Node):
     def __init__(self, source_var, size_var, opts=None,
@@ -74,8 +75,11 @@ class ThumbnailNode(Node):
             thumbnail = ''
         else:
             try:
+                kwargs = {}
+                for key, value in self.kwargs.items():
+                    kwargs[key] = value.resolve(context)
                 thumbnail = DjangoThumbnail(relative_source, requested_size,
-                        opts=self.opts, processors=PROCESSORS, **self.kwargs)
+                        opts=self.opts, processors=PROCESSORS, **kwargs)
             except:
                 if DEBUG:
                     raise
@@ -100,7 +104,7 @@ def thumbnail(parser, token):
 
     After the image path and dimensions, you can put any options::
 
-        {% thumbnail image 80x80 quality=95,crop %}
+        {% thumbnail image 80x80 quality=95 crop %}
 
     To put the DjangoThumbnail class on the context instead of just rendering
     the absolute url, finish the tag with ``as [context_var_name]``::
@@ -111,16 +115,17 @@ def thumbnail(parser, token):
     args = token.split_contents()
     tag = args[0]
     # Check to see if we're setting to a context variable.
-    if len(args) in (5, 6) and args[-2] == 'as':
+    if len(args) > 4 and args[-2] == 'as':
         context_name = args[-1]
         args = args[:-2]
     else:
         context_name = None
 
-    if len(args) not in (3, 4):
+    if len(args) < 3:
         raise TemplateSyntaxError("Invalid syntax. Expected "
-            "'{%% %s source size [option#1,option#2,...] %%}' or "
-            "'{%% %s source size [option#1,option#2,...] as variable %%}'" % (tag, tag))
+            "'{%% %s source size [option1 option2 ...] %%}' or "
+            "'{%% %s source size [option1 option2 ...] as variable %%}'" %
+            (tag, tag))
 
     # Get the source image path and requested size.
     source_var = parser.compile_filter(args[1])
@@ -131,24 +136,22 @@ def thumbnail(parser, token):
     size_var = parser.compile_filter(args[2])
 
     # Get the options.
-    if len(args) == 4:
-        args_list = args[3].split(',')
-    else:
-        args_list = []
+    args_list = split_args(args[3:]).items()
 
     # Check the options.
-    opts = []
+    opts = {}
     kwargs = {} # key,values here override settings and defaults
 
-    for arg in args_list:
+    for arg, value in args_list:
+        value = value and parser.compile_filter(value)
+        if arg in TAG_SETTINGS and value is not None:
+            kwargs[str(arg)] = value
+            continue
         if arg in VALID_OPTIONS:
-            opts.append(arg)
+            opts[arg] = value
         else:
-            m = quality_pat.match(arg)
-            if not m:
-                raise TemplateSyntaxError("'%s' tag received a bad argument: "
-                        "'%s'" % (tag, arg))
-            kwargs['quality'] = int(m.group(1))
+            raise TemplateSyntaxError("'%s' tag received a bad argument: "
+                                      "'%s'" % (tag, arg))
     return ThumbnailNode(source_var, size_var, opts=opts,
             context_name=context_name, **kwargs)
 

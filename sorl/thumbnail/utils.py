@@ -3,6 +3,7 @@ import os
 
 
 re_thumbnail_file = re.compile(r'(?P<source_filename>.+)_(?P<x>\d+)x(?P<y>\d+)(?:_(?P<options>\w+))?_q(?P<quality>\d+)(?:.[^.]+)?$')
+re_new_args = re.compile('(?<!quality)=')
 
 
 def all_thumbnails(path, recursive=True, prefix=None, subdir=None):
@@ -132,3 +133,25 @@ def delete_all_thumbnails(path, recursive=True):
     for thumbs in all_thumbnails(path, recursive=recursive).values():
         total += _delete_using_thumbs_list(thumbs)
     return total
+
+
+def split_args(args):
+    """
+    Split a list of argument strings into a dictionary where each key is an
+    argument name.
+    
+    An argument looks like ``crop``, ``crop="some option"`` or ``crop=my_var``.
+    Arguments which provide no value get a value of ``None``.
+    """
+    if not args:
+        return {}
+    # Handle the old comma separated argument format.
+    if len(args) == 1 and not re_new_args.search(args[0]):
+        args = args[0].split(',')
+    # Separate out the key and value for each argument.
+    args_dict = {}
+    for arg in args:
+        split_arg = arg.split('=', 1)
+        value = len(split_arg) > 1 and split_arg[1] or None
+        args_dict[split_arg[0]] = value
+    return args_dict

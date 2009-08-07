@@ -77,7 +77,11 @@ class DjangoThumbnail(Thumbnail):
         name = '%s%s' % (basename, ext.replace(".", "_"))
         size = '%sx%s' % tuple(self.requested_size)
 
-        opts = self.opts and ('%s_' % '_'.join(self.opts)) or ''
+        opts = self.opts.items()
+        opts.sort()   # options are sorted so the filename is consistent
+        opts = ['%s_' % (v is not None and '%s-%s' % (k, v) or k)
+                for k, v in opts]
+        opts = ''.join(opts)
         extension = extension and '.%s' % extension
         thumbnail_filename = '%s%s_%s_%sq%s%s' % (prefix, name, size,
                                                   opts, self.quality,

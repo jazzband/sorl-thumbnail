@@ -15,7 +15,8 @@ class ThumbnailTagTest(BaseTest):
             'size': (90, 100),
             'invalid_size': (90, 'fish'),
             'strsize': '80x90',
-            'invalid_strsize': ('1notasize2')})
+            'invalid_strsize': ('1notasize2'),
+            'invalid_q': 'notanumber'})
         source = '{% load thumbnail %}' + source
         return Template(source).render(context)
 
@@ -37,13 +38,23 @@ class ThumbnailTagTest(BaseTest):
         self.assertRaises(TemplateSyntaxError, self.render_template, src)
 
         # Invalid quality
-        src = '{% thumbnail source 240x200 quality=a %}'
-        self.assertRaises(TemplateSyntaxError, self.render_template, src)
+        src_invalid = '{% thumbnail source 240x200 quality=invalid_q %}'
+        src_missing = '{% thumbnail source 240x200 quality=missing_q %}'
+        # ...with THUMBNAIL_DEBUG = False
+        self.assertEqual(self.render_template(src_invalid), '')
+        self.assertEqual(self.render_template(src_missing), '')
+        # ...and with THUMBNAIL_DEBUG = True
+        self.change_settings.change({'DEBUG': True})
+        self.assertRaises(TemplateSyntaxError, self.render_template,
+                          src_invalid)
+        self.assertRaises(TemplateSyntaxError, self.render_template,
+                          src_missing)
 
         # Invalid source
         src = '{% thumbnail invalid_source 80x80 %}'
         src_on_context = '{% thumbnail invalid_source 80x80 as thumb %}'
         # ...with THUMBNAIL_DEBUG = False
+        self.change_settings.change({'DEBUG': False})
         self.assertEqual(self.render_template(src), '')
         # ...and with THUMBNAIL_DEBUG = True
         self.change_settings.change({'DEBUG': True})

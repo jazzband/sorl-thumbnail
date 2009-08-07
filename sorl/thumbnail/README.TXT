@@ -48,9 +48,11 @@ object containing the relative path to a file.
       ``[width]x[height]`` format or a tuple containing two integers):
       ``{% thumbnail source size_string %}``.
 
-``options`` are optional (obviously) and should be comma separated (without a
-space between them - for example, ``crop,bw,quality=95``). Unless you change
-the `thumbnail processors`_, valid options are:
+``options`` are optional (obviously) and should be a space separated. The older
+format of comma separated options is still supported (with the limitation that
+``quality`` is the only option to which you can pass an argument to).
+
+Unless you change the `thumbnail processors`_, valid options are:
 
 ``quality=[1-100]``
       Alter the quality of the JPEG thumbnail (the default is 85).
@@ -79,7 +81,7 @@ the `thumbnail processors`_, valid options are:
 
 An example of basic usage::
 
-    <img src="{% thumbnail person.photo 80x80 crop,upscale %}" />
+    <img src="{% thumbnail person.photo 80x80 crop upscale %}" />
 
 Advanced usage
 --------------
@@ -119,7 +121,7 @@ following useful methods and properties:
 
 An example of advanced usage::
 
-    {% thumbnail person.photo 250x250 bw,autocrop as thumb %}
+    {% thumbnail person.photo 250x250 bw autocrop as thumb %}
     <img src="{{ thumb }}" width="{{ thumb.width }}" height="{{ thumb.height }}" />
 
 Debugging the thumbnail tag
@@ -251,10 +253,10 @@ Thumbnail filenames
 The thumbnail filename is generated from the source filename, the target size,
 any options provided and the quality.
 
-For example, ``{% thumbnail "1.jpg" 80x80 crop,bw %}`` will save the
+For example, ``{% thumbnail "1.jpg" 80x80 crop bw %}`` will save the
 thumbnail image as::
 
-    MEDIA_ROOT + '1_jpg_80x80_crop_bw_q85.jpg'
+    MEDIA_ROOT + '1_jpg_80x80_bw_crop_q85.jpg'
 
 By default, thumbnails are saved in the same directory as the source image.
 You can override this behaviour by adding one or more of the following
@@ -359,7 +361,9 @@ Thumbnail Processors
 By specifying a list of ``THUMBNAIL_PROCESSORS`` in your settings module, you
 can change (or add to) the processors which are run when you create a
 thumbnail. Note that the order of the processors is the order in which they
-are called to process the image.
+are called to process the image. Each processor is passed the requested size
+and a dictionary containing all options which the thumbnail was called with
+(except for ``quality``, because that's just used internally for saving).
 
 For example, to add your own processor to the list of possible, you would
 create a processor like this::

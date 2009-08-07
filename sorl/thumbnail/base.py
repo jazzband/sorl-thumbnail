@@ -29,25 +29,31 @@ class Thumbnail(object):
 
         # Thumbnail settings
         self.requested_size = requested_size
-        if not 0 < quality <= 100:
+        try:
+            self.quality = int(quality) 
+            if not 0 < quality <= 100:
+                raise ValueError
+        except (TypeError, ValueError):
             raise TypeError('Thumbnail received invalid value for quality '
-                            'argument: %s' % quality)
-        self.quality = quality
+                            'argument: %r' % quality)
 
         # Processors
         if processors is None:
             processors = dynamic_import(defaults.PROCESSORS)
         self.processors = processors
 
+        # Handle old list format for opts.
+        opts = opts or {}
+        if isinstance(opts, (list, tuple)):
+            opts = dict([(opt, None) for opt in opts])
+
         # Set Thumbnail opt(ion)s
         VALID_OPTIONS = get_valid_options(processors)
-        opts = opts or []
-        # Check that all options received are valid
         for opt in opts:
             if not opt in VALID_OPTIONS:
                 raise TypeError('Thumbnail received an invalid option: %s'
                                 % opt)
-        self.opts = [opt for opt in VALID_OPTIONS if opt in opts]
+        self.opts = opts
 
         if self.dest is not None:
             self.generate()
