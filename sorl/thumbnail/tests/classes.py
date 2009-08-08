@@ -1,3 +1,4 @@
+#! -*- coding: utf-8 -*-
 import unittest
 import os
 import time
@@ -156,6 +157,18 @@ class DjangoThumbnailTest(BaseTest):
         # a different extension.
         self.assertNotEqual(os.path.getsize(expected_jpg),
                             os.path.getsize(expected))
+
+    def testUnicodeName(self):
+        unicode_name = 'sorl-thumbnail-ążśź_source.jpg'
+        unicode_path = os.path.join(settings.MEDIA_ROOT, unicode_name)
+        Image.new('RGB', PIC_SIZE).save(unicode_path)
+        self.images_to_delete.add(unicode_path)
+        thumb = DjangoThumbnail(relative_source=unicode_name,
+                                requested_size=(240, 120))
+        base_name = 'sorl-thumbnail-ążśź_source.jpg'.replace('.', '_')
+        expected = os.path.join(settings.MEDIA_ROOT,
+                                base_name + '_240x120_q85.jpg')
+        self.verify_thumbnail((160, 120), thumb, expected_filename=expected)
 
     def tearDown(self):
         super(DjangoThumbnailTest, self).tearDown()
