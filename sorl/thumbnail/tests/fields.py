@@ -4,11 +4,11 @@ from django.db import models
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from sorl.thumbnail.fields import ImageWithThumbnailsField
+from sorl.thumbnail.fields import ImageWithThumbnailsField, ThumbnailField
 from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME
 
 thumbnail = {
-    'size': (50,50)
+    'size': (50, 50)
 }
 extra_thumbnails = {
     'admin': {
@@ -21,6 +21,7 @@ extension_thumbnail['extension'] = 'png'
 
 # Temporary models for field_tests
 class TestThumbnailFieldModel(models.Model):
+    avatar = ThumbnailField(upload_to='test', size=(300, 300))
     photo = ImageWithThumbnailsField(upload_to='test', thumbnail=thumbnail,
                                      extra_thumbnails=extra_thumbnails)
 
@@ -38,18 +39,10 @@ class TestThumbnailFieldGenerateModel(models.Model):
 
 
 class FieldTest(BaseTest):
-    def test_thumbnail(self):
-        model = TestThumbnailFieldModel(photo=RELATIVE_PIC_NAME)
-        thumb = model.photo.thumbnail
-        tag = model.photo.thumbnail_tag
-        expected_filename = os.path.join(settings.MEDIA_ROOT,
-            'sorl-thumbnail-test_source_jpg_50x50_q85.jpg')
-        self.verify_thumbnail((50, 37), thumb, expected_filename)
-        expected_tag = '<img src="%s" width="50" height="37" alt="" />' % \
-            '/'.join((settings.MEDIA_URL.rstrip('/'),
-                      'sorl-thumbnail-test_source_jpg_50x50_q85.jpg'))
-        self.assertEqual(tag, expected_tag)
-
+    """
+    Test the base field functionality. These use an ImageWithThumbnailsField
+    but all the functionality tested is from BaseThumbnailField.
+    """
     def test_extra_thumbnails(self):
         model = TestThumbnailFieldModel(photo=RELATIVE_PIC_NAME)
         self.assertTrue('admin' in model.photo.extra_thumbnails)
@@ -104,3 +97,35 @@ class FieldTest(BaseTest):
         model.photo.save(RELATIVE_PIC_NAME, source, save=False)
         self.assert_(os.path.exists(main_thumb))
         self.assert_(os.path.exists(admin_thumb))
+
+
+class ImageWithThumbnailsFieldTest(BaseTest):
+    def test_thumbnail(self):
+        model = TestThumbnailFieldModel(photo=RELATIVE_PIC_NAME)
+        thumb = model.photo.thumbnail
+        tag = model.photo.thumbnail_tag
+        base_name = RELATIVE_PIC_NAME.replace('.', '_')
+        expected_filename = os.path.join(settings.MEDIA_ROOT,
+                                         '%s_50x50_q85.jpg' % base_name)
+        self.verify_thumbnail((50, 37), thumb, expected_filename)
+        expected_tag = ('<img src="%s" width="50" height="37" alt="" />' %
+                        '/'.join([settings.MEDIA_URL.rstrip('/'),
+                                  '%s_50x50_q85.jpg' % base_name]))
+        self.assertEqual(tag, expected_tag)
+
+
+class ThumbnailFieldTest(BaseTest):
+    def test_thumbnail(self):
+        model = TestThumbnailFieldModel()
+        source = SimpleUploadedFile('_', open(PIC_NAME).read())
+        dest_name = 'sorl-thumbnail-test_dest.jpg'
+        model.avatar.save(dest_name, source, save=False)
+        expected_filename = os.path.join(model.avatar.path)
+        self.verify_thumbnail((300, 225), expected_filename=expected_filename)
+
+        tag = model.avatar.thumbnail_tag
+        base_name = RELATIVE_PIC_NAME.replace('.', '_')
+        expected_tag = ('<img src="%s" width="300" height="225" alt="" />' %
+                        '/'.join([settings.MEDIA_URL.rstrip('/'), 'test',
+                                  dest_name]))
+        self.assertEqual(tag, expected_tag)

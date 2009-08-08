@@ -48,14 +48,14 @@ object containing the relative path to a file.
       ``[width]x[height]`` format or a tuple containing two integers):
       ``{% thumbnail source size_string %}``.
 
+Options
+-------
+
 ``options`` are optional (obviously) and should be a space separated. The older
 format of comma separated options is still supported (with the limitation that
 ``quality`` is the only option to which you can pass an argument to).
 
 Unless you change the `thumbnail processors`_, valid options are:
-
-``quality=[1-100]``
-      Alter the quality of the JPEG thumbnail (the default is 85).
 
 ``crop``
       Crop the source image height or width to exactly match the requested
@@ -78,6 +78,11 @@ Unless you change the `thumbnail processors`_, valid options are:
 ``detail``
       Add detail to the image, like a mild ``sharpen`` (using the PIL detail
       filter)
+
+One further special option is also available to the template tag:
+
+``quality=[1-100]``
+      Alter the quality of the JPEG thumbnail (the default is 85).
 
 An example of basic usage::
 
@@ -141,11 +146,46 @@ property to your settings module and set it to ``True``::
 	THUMBNAIL_DEBUG = True
 
 
-ImageWithThumbnailsField
-========================
+Thumbnail Fields
+================
 
-``ImageWithThumbnailsField`` (which you import from ``sorl.thumbnail.fields``)
-works very similar to Django's ``ImageField``.
+Two field classes (based on Django's ``ImageField``) are provided for use in
+your Django models. They can be imported from ``sorl.thumbnail.fields``.
+
+    * `ThumbnailField`_ resizes the source image before saving.
+    
+    * `ImageWithThumbnailsField`_ keeps the original source image but
+      provides an easy interface for accessing a predefined thumbnail.
+
+Both fields also allow for `multiple thumbnails`_, and when the source image is
+deleted, any related thumbnails are also automatically deleted.
+
+ThumbnailField
+--------------
+
+A new ``size`` argument is required for this field.
+
+``size``
+  A 2-length tuple used to size down the width and height of the source image.
+
+Several new optional arguments can also be used:
+
+``options``
+  A list of `options`_ to use when thumbnailing the source image.
+``quality``
+  Alter the quality of the JPEG thumbnail.
+``basedir``, ``subdir`` and ``prefix``
+  Used to override the default `thumbnail filenames`_ settings.
+
+Here is an example model with a ``ThumbnailField``::
+
+    MyModel(models.Model):
+        name = models.TextField(max_length=50)
+        photo = ThumbnailField(upload_to='profiles',
+                               thumbnail={'size': (50, 50)})
+
+ImageWithThumbnailsField
+------------------------
 
 A new ``thumbnail`` argument is required for this field. Pass in a dictionary
 with the following values (all optional except for ``size``):
@@ -157,13 +197,9 @@ with the following values (all optional except for ``size``):
 ``quality``, ``basedir``, ``subdir`` and ``prefix``
   See the options of the template tag (above) for details.
 
-Your model instance's field will have two new properties:
-
-``thumbnail``
-  Returns a ``DjangoThumbnail`` instance for your pleasure (if you use this in
-  a template, it'll return the full URL to the thumbnail).
-``thumbnail_tag``
-  Returns an HTML like ``<img src="..." width="..." height="..." alt="" />``.
+Your model instance's field will have a new property, ``thumbnail``, which
+returns a ``DjangoThumbnail`` instance for your pleasure (if you use this in a
+template, it'll return the full URL to the thumbnail).
 
 Let's look at an example. Here is a model with an ``ImageWithThumbnailsField``::
 
@@ -174,7 +210,16 @@ Let's look at an example. Here is a model with an ``ImageWithThumbnailsField``::
 
 A template (passed an instance of ``MyModel``) would simply use something like:
 ``<img src="{{ my_model.photo.thumbnail }}" alt="{{ my_model.name }}" />`` or
-even simpler for just a basic ``IMG`` tag:
+it could use the `simple HTML tag`_.
+
+Simple HTML tag
+---------------
+
+Your model instance's field (for both thumbnail field types) has a new
+``thumbnail_tag`` property which can be used to return HTML like
+``<img src="..." width="..." height="..." alt="" />``.
+
+Now, even simpler for just a basic ``IMG`` tag:
 ``{{ my_model.photo.thumbnail_tag }}``.
 
 Note that when the source image is deleted, any related thumbnails are also
@@ -199,8 +244,12 @@ This would allow you to access the extra thumbnails like this:
 ``my_model.photo.extra_thumbnails['icon']`` (or in a template,
 ``{{ my_model.photo.extra_thumbnails.icon }}``).
 
-You can use the simple template tags by using the ``extra_thumbnails_tag``
-property: ``my_model.photo.extra_thumbnails_tag['large']``.
+This is available to both thumbnail field types.
+
+Similar to how the `simple HTML tag`_ works, you can using the
+``extra_thumbnails_tag`` property:
+``my_model.photo.extra_thumbnails_tag['large']`` (or in a template,
+``{{ my_model.photo.extra_thumbnails_tag.large }}``).
 
 When thumbnails are generated
 -----------------------------
@@ -234,6 +283,11 @@ default JPEG format. For example, to make the generated thumbnail a PNG file::
     photo = ImageWithThumbnailsField(
         upload_to='profiles',
         thumbnail={'size': (50, 50), 'extension': 'png'}
+    )
+    avatar = ThumbnailField(
+        upload_to='profiles',
+        size=(50, 50),
+        extension='png'
     )
 
 

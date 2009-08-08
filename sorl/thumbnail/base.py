@@ -75,7 +75,7 @@ class Thumbnail(object):
 
             # Ensure the directory exists
             directory = dirname(self.dest)
-            if not isdir(directory):
+            if directory and not isdir(directory):
                 os.makedirs(directory)
 
             self._do_generate()

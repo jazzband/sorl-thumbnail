@@ -5,8 +5,7 @@
 # Unit tests:
 from sorl.thumbnail.tests.classes import ThumbnailTest, DjangoThumbnailTest
 from sorl.thumbnail.tests.templatetags import ThumbnailTagTest
-from sorl.thumbnail.tests.fields import FieldTest
-
+from sorl.thumbnail.tests.fields import FieldTest, ImageWithThumbnailsFieldTest, ThumbnailFieldTest
 # Doc tests:
 from sorl.thumbnail.tests.utils import utils_tests
 from sorl.thumbnail.tests.templatetags import filesize_tests
