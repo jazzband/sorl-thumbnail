@@ -102,10 +102,7 @@ class ImageWithThumbnailsFieldFile(ImageFieldFile):
         # Optionally generate the thumbnails after the image is saved.
         super(ImageWithThumbnailsFieldFile, self).save(*args, **kwargs)
         if self.field.generate_on_save:
-            # Getting the thumbs builds them.
-            self.thumbnail.generate()
-            if self.extra_thumbnails:
-                self.extra_thumbnails.values()
+            self.generate_thumbnails()
 
     def delete(self, *args, **kwargs):
         # Delete any thumbnails too (and not just ones defined here in case
@@ -113,6 +110,12 @@ class ImageWithThumbnailsFieldFile(ImageFieldFile):
         relative_source_path = getattr(self.instance, self.field.name).name
         delete_thumbnails(relative_source_path)
         super(ImageWithThumbnailsFieldFile, self).delete(*args, **kwargs)
+
+    def generate_thumbnails(self):
+        # Getting the thumbs generates them.
+        self.thumbnail.generate()
+        if self.extra_thumbnails:
+            self.extra_thumbnails.values()
 
 
 class ImageWithThumbnailsField(ImageField):
