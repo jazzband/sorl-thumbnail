@@ -2,9 +2,10 @@ import os.path
 
 from django.db import models
 from django.conf import settings
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from sorl.thumbnail.fields import ImageWithThumbnailsField
-from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME
+from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME
 
 thumbnail = {
     'size': (50,50)
@@ -28,6 +29,12 @@ class TestThumbnailFieldExtensionModel(models.Model):
     photo = ImageWithThumbnailsField(upload_to='test',
                                      thumbnail=extension_thumbnail,
                                      extra_thumbnails=extra_thumbnails)
+
+
+class TestThumbnailFieldGenerateModel(models.Model):
+    photo = ImageWithThumbnailsField(upload_to='test', thumbnail=thumbnail,
+                                     extra_thumbnails=extra_thumbnails,
+                                     generate_on_save=True)
 
 
 class FieldTest(BaseTest):
@@ -74,5 +81,26 @@ class FieldTest(BaseTest):
         open(thumb_file, 'wb').close()
         self.assert_(os.path.exists(thumb_file))
         model.photo.delete(save=False)
-        self.assert_(not os.path.exists(thumb_file))
+        self.assertFalse(os.path.exists(thumb_file))
 
+    def test_generate_on_save(self):
+        main_thumb = os.path.join(settings.MEDIA_ROOT, 'test',
+                        'sorl-thumbnail-test_source_jpg_50x50_q85.jpg')
+        admin_thumb = os.path.join(settings.MEDIA_ROOT, 'test',
+                        'sorl-thumbnail-test_source_jpg_30x30_crop_q85.jpg')
+        self.images_to_delete.add(main_thumb)
+        self.images_to_delete.add(admin_thumb)
+        # Default setting is to only generate when the thumbnail is used.
+        model = TestThumbnailFieldModel()
+        source = SimpleUploadedFile('_', open(PIC_NAME).read())
+        model.photo.save(RELATIVE_PIC_NAME, source, save=False)
+        self.images_to_delete.add(model.photo.path)
+        self.assertFalse(os.path.exists(main_thumb))
+        self.assertFalse(os.path.exists(admin_thumb))
+        os.remove(model.photo.path)
+        # But it's easy to set it up the other way...
+        model = TestThumbnailFieldGenerateModel()
+        source = SimpleUploadedFile('_', open(PIC_NAME).read())
+        model.photo.save(RELATIVE_PIC_NAME, source, save=False)
+        self.assert_(os.path.exists(main_thumb))
+        self.assert_(os.path.exists(admin_thumb))

@@ -202,6 +202,15 @@ This would allow you to access the extra thumbnails like this:
 You can use the simple template tags by using the ``extra_thumbnails_tag``
 property: ``my_model.photo.extra_thumbnails_tag['large']``.
 
+When thumbnails are generated
+-----------------------------
+
+The normal behaviour is that thumbnails are only generated when they are
+first accessed.
+
+To have them generated as soon as the source image is saved, you can set the
+field's ``generate_on_save`` attribute to ``True``.
+
 Changing the thumbnail tag HTML
 -------------------------------
 

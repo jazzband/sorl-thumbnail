@@ -7,7 +7,7 @@ from django.utils.functional import curry
 from django.utils.html import escape
 from django.conf import settings
 
-from sorl.thumbnail.main import DjangoThumbnail
+from sorl.thumbnail.main import DjangoThumbnail, build_thumbnail_name
 from sorl.thumbnail.utils import delete_thumbnails
 
 
@@ -63,8 +63,13 @@ class ImageWithThumbnailsFieldFile(ImageFieldFile):
         for k, v in args.items():
             kwargs[ALL_ARGS[k]] = v
         # Return thumbnail
-        relative_source_path = getattr(self.instance, self.field.name).name
-        return DjangoThumbnail(relative_source_path, **kwargs)
+        source = getattr(self.instance, self.field.name)
+        name_kwargs = {}
+        for key in ['size', 'options', 'quality', 'basedir', 'subdir',
+                    'prefix', 'extension']:
+            name_kwargs[key] = args.get(key)
+        name = build_thumbnail_name(source.name, **name_kwargs)
+        return DjangoThumbnail(source, relative_dest=name, **kwargs)
 
     def _build_thumbnail_tag(self, thumb):
         opts = dict(src=escape(thumb), width=thumb.width(),
@@ -93,17 +98,21 @@ class ImageWithThumbnailsFieldFile(ImageFieldFile):
         return ThumbTags(self)
     extra_thumbnails_tag = property(_get_extra_thumbnails_tag)
 
-# TODO: Should thumbnails be generated when image is saved?
-#    def save(self, name, content, save=True):
-#        # Generate the thumbnails when the image is saved.
-#        super(ImageWithThumbnailsFieldFile, self).save(name, content, save)
+    def save(self, *args, **kwargs):
+        # Optionally generate the thumbnails after the image is saved.
+        super(ImageWithThumbnailsFieldFile, self).save(*args, **kwargs)
+        if self.field.generate_on_save:
+            # Getting the thumbs builds them.
+            self.thumbnail.generate()
+            if self.extra_thumbnails:
+                self.extra_thumbnails.values()
 
-    def delete(self, save=True):
+    def delete(self, *args, **kwargs):
         # Delete any thumbnails too (and not just ones defined here in case
         # the {% thumbnail %} tag was used or the thumbnail sizes changed).
         relative_source_path = getattr(self.instance, self.field.name).name
         delete_thumbnails(relative_source_path)
-        super(ImageWithThumbnailsFieldFile, self).delete(save)
+        super(ImageWithThumbnailsFieldFile, self).delete(*args, **kwargs)
 
 
 class ImageWithThumbnailsField(ImageField):
@@ -122,9 +131,10 @@ class ImageWithThumbnailsField(ImageField):
     def __init__(self, *args, **kwargs):
         # The new arguments for this field aren't explicitly defined so that
         # users can still use normal ImageField positional arguments.
-        thumbnail=kwargs.pop('thumbnail', None)
-        extra_thumbnails=kwargs.pop('extra_thumbnails', None)
-        thumbnail_tag=kwargs.pop('thumbnail_tag', TAG_HTML)
+        thumbnail = kwargs.pop('thumbnail', None)
+        extra_thumbnails = kwargs.pop('extra_thumbnails', None)
+        self.thumbnail_tag = kwargs.pop('thumbnail_tag', TAG_HTML)
+        self.generate_on_save = kwargs.pop('generate_on_save', False)
 
         super(ImageWithThumbnailsField, self).__init__(*args, **kwargs)
         if thumbnail:
@@ -135,7 +145,6 @@ class ImageWithThumbnailsField(ImageField):
                 _verify_thumbnail_attrs(attrs, name)
         self.thumbnail = thumbnail
         self.extra_thumbnails = extra_thumbnails
-        self.thumbnail_tag = thumbnail_tag
 
 
 def _verify_thumbnail_attrs(attrs, name="'thumbnail'"):
