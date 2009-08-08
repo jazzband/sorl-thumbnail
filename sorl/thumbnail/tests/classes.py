@@ -165,7 +165,7 @@ class DjangoThumbnailTest(BaseTest):
         self.images_to_delete.add(unicode_path)
         thumb = DjangoThumbnail(relative_source=unicode_name,
                                 requested_size=(240, 120))
-        base_name = 'sorl-thumbnail-ążśź_source.jpg'.replace('.', '_')
+        base_name = unicode_name.replace('.', '_')
         expected = os.path.join(settings.MEDIA_ROOT,
                                 base_name + '_240x120_q85.jpg')
         self.verify_thumbnail((160, 120), thumb, expected_filename=expected)
