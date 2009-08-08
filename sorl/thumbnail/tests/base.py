@@ -12,9 +12,9 @@ except NameError:
 def get_default_settings():
     from sorl.thumbnail import defaults
     def_settings = {}
-    settings = dir(defaults)[0:-4]
-    for key in settings:
-        def_settings[key] = getattr(defaults, key)
+    for key in dir(defaults):
+        if key == key.upper() and key not in ['WVPS', 'CONVERT']:
+            def_settings[key] = getattr(defaults, key)
     return def_settings
 
 

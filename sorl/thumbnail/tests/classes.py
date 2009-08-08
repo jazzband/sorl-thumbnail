@@ -12,10 +12,6 @@ from sorl.thumbnail.processors import dynamic_import, get_valid_options
 from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME, THUMB_NAME, PIC_SIZE
 
 
-PROCESSORS = dynamic_import(get_thumbnail_setting('PROCESSORS'))
-VALID_OPTIONS = get_valid_options(PROCESSORS)
-
-
 class ThumbnailTest(BaseTest):
     def testThumbnails(self):
         # Thumbnail
@@ -107,8 +103,11 @@ class DjangoThumbnailTest(BaseTest):
         self.verify_thumbnail((240, 120), thumb, expected_filename=expected)
 
         # All options on
+        processors = dynamic_import(get_thumbnail_setting('PROCESSORS'))
+        valid_options = get_valid_options(processors)
+
         thumb = DjangoThumbnail(relative_source=RELATIVE_PIC_NAME,
-                                requested_size=(240, 120), opts=VALID_OPTIONS)
+                                requested_size=(240, 120), opts=valid_options)
         expected = os.path.join(settings.MEDIA_ROOT, basename)
         expected += '_240x120_autocrop_bw_crop_detail_sharpen_upscale_q85.jpg'
         self.verify_thumbnail((240, 120), thumb, expected_filename=expected)
