@@ -1,0 +1,4 @@
+sorl-thumbnail is a simple to use thumbnailing application for Django.
+
+All documentation is in the "docs" directory and online at
+http://thumbnail.sorl.net/docs/

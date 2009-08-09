@@ -58,7 +58,7 @@ file relative to ``MEDIA_ROOT``. This means an Image/FileField or
 string/unicode object containing the relative path to a file.
 
 
-``size`` can either be:
+*size* can either be:
 
 * the size in the format ``[width]x[height]`` (for example,
   ``{% thumbnail source 100x50 %}``) or
@@ -74,40 +74,38 @@ Options are optional and should be a space separated.
 
 *Note to sorl-thumbnail
 vetarans: The older format of comma separated options is still supported
-(with the limitation that ``quality`` is the only option to which you can pass
+(with the limitation that *quality* is the only option to which you can pass
 an argument to).*
 
 Unless you change the :ref:`thumbnail-processors`, valid options are:
 
-**crop**
+crop
     Crop the source image height or width to exactly match the requested
     thumbnail size (the default is to proportionally resize the source image
     to fit within the requested thumbnail size).
 
-**max**
-    Will resize the image to the same size as the ``crop`` option but it
+max
+    Will resize the image to the same size as the *crop* option but it
     does not crop.
 
-**autocrop**
+autocrop
     Remove any unnecessary whitespace from the edges of the source image.
     This occurs before the crop or propotional resize.
 
-**bw**
+bw
     Make the thumbnail grayscale (not really just black & white).
 
-**upscale**
+upscale
     Allow upscaling of the source image during scaling.
 
-**sharpen**
+sharpen
     Sharpen the thumbnail image (using the PIL sharpen filter)
 
-**detail**
-    Add detail to the image, like a mild ``sharpen`` (using the PIL detail
+detail
+    Add detail to the image, like a mild *sharpen* (using the PIL detail
     filter)
 
-One further special option is also available to the template tag:
-
-**quality=[1-100]**
+quality=[1-100]
     Alter the quality of the JPEG thumbnail (the default is 85).
 
 An example of basic usage::
@@ -117,37 +115,37 @@ An example of basic usage::
 
 DjangoThumbnail class
 ---------------------
-The thumbnail tag can also place a 'DjangoThumbnail' object in the context,
+The thumbnail tag can also place a ``DjangoThumbnail`` object in the context,
 providing access to the properties of the thumbnail such as the height and
 width::
 
     {% thumbnail [source] [size] [options] as [variable] %}
 
-When ``as [variable]`` is used, the tag does not return the absolute url of the
-thumbnail. The variable (containing the 'DjangoThumbnail' object) has the
+When *"as [variable]"* is used, the tag does not return the absolute url of the
+thumbnail. The variable (containing the ``DjangoThumbnail`` object) has the
 following useful methods and properties:
 
-**absolute_url**
-    The absolute url of the thumbnail (the ``__unicode__`` method of this
+absolute_url
+    The absolute url of the thumbnail (the *__unicode__* method of this
     object also returns the absolute url, so you can also just do
     ``{{ thumbnail_variable }}`` in your template).
 
-**relative_url**
+relative_url
     The relative url (to ``MEDIA_URL``) of the thumbnail.
 
-**width and height**
+width and height
     The width/height of the thumbnail image.
 
-**filesize**
+filesize
     The file size (in bytes) of the thumbnail.
     To output user-friendly file sizes, use the included :ref:`filesize-filter`
-    (or Django's built-in more simplistic 'filesizeformat' filter).
+    (or Django's built-in more simplistic *filesizeformat* filter).
 
-**source_width** and **source_height**
+source_width and source_height
     The width/height of the source image.
 
-**source_filesize**
-    The file size of the source. Has same methods as ``filesize``.
+source_filesize
+    The file size of the source. Has same methods as *filesize*.
 
 
 An example of advanced usage::
@@ -159,11 +157,12 @@ Debugging the thumbnail tag
 ---------------------------
 
 By default, if there is an error creating the thumbnail or resolving the image
-variable (1st argument) then the thumbnail tag will just return an empty string.
-And if there was a context variable to be set it will also be set to an empty
-string. For example, you will not see an error if the thumbnail could not be written
-to directory because of permissions error. To display those errors rather than failing silently, add a ``THUMBNAIL_DEBUG``
-property to your settings module and set it to ``True``::
+variable (1st argument) then the thumbnail tag will just return an empty
+string. And if there was a context variable to be set it will also be set to an
+empty string. For example, you will not see an error if the thumbnail could not
+be written to directory because of permissions error. To display those errors
+rather than failing silently, add a ``THUMBNAIL_DEBUG`` property to your
+settings module and set it to ``True``::
 
 	THUMBNAIL_DEBUG = True
 
@@ -255,7 +254,7 @@ can change (or add to) the processors which are run when you create a
 thumbnail. Note that the order of the processors is the order in which they
 are called to process the image. Each processor is passed the requested size
 and a dictionary containing all options which the thumbnail was called with
-(except for ``quality``, because that's just used internally for saving).
+(except for *quality*, because that's just used internally for saving).
 
 For example, to add your own processor to the list of possible, you would
 create a processor like this::
@@ -280,20 +279,20 @@ And add the following to your settings module::
 Default processors
 ------------------
 
-**colorspace**
+colorspace
     This processor is best kept at the top of the list since it will convert
     the image to RGB color space needed by most of following processors. It is
-    also responsible for converting an image to grayscale if ``bw`` option is
+    also responsible for converting an image to grayscale if *bw* option is
     specified.
 
-**autocrop**
+autocrop
     This will crop the image of white edges and is still pretty experimental.
 
-**scale_and_crop**
+scale_and_crop
     This will correctly scale and crop your image as indicated.
 
-**filters**
-    This provides the ``sharpen`` and ``detail`` options described in the
+filters
+    This provides the *sharpen* and *detail* options described in the
     options section
 
 Writing a custom processor
@@ -347,20 +346,16 @@ image is deleted, any related thumbnails are also automatically deleted.
 ThumbnailField
 --------------
 
-A new ``size`` argument is required for this field.
-
-**size**
+size (required)
     A 2-length tuple used to size down the width and height of the source image.
 
-Several new optional arguments can also be used:
-
-**options**
+options
     A list of options to use when thumbnailing the source image.
 
-**quality**
+quality
     Alter the quality of the JPEG thumbnail.
 
-**basedir**, **subdir** and **prefix**
+basedir, subdir and prefix
     Used to override the default :ref:`thumbnail-filenames` settings.
 
 Here is an example model with a ``ThumbnailField``::
@@ -373,20 +368,20 @@ Here is an example model with a ``ThumbnailField``::
 ImageWithThumbnailsField
 ------------------------
 
-A new ``thumbnail`` argument is required for this field. Pass in a dictionary
-with the following values (all optional except for ``size``):
+A *thumbnail* argument is required for this field. Pass in a dictionary
+with the following values (all optional except for *size*):
 
-**size** (required)
+size
     A 2-length tuple of the thumbnail width and height.
 
-**options**
+options
     A list of options for this thumbnail.
 
-**quality**, **basedir**, **subdir** and **prefix**
-    See the options of the template tag (above) for details.
+quality, basedir, subdir and prefix
+    Used to override the default :ref:`thumbnail-filenames` settings.
 
-Your model instance's field will have a new property, ``thumbnail``, which
-returns a 'DjangoThumbnail' instance for your pleasure (if you use this in a
+Your model instance's field will have a new property, *thumbnail*, which
+returns a ``DjangoThumbnail`` instance for your pleasure (if you use this in a
 template, it'll return the full URL to the thumbnail).
 
 Let's look at an example. Here is a model with an ``ImageWithThumbnailsField``::
@@ -396,7 +391,7 @@ Let's look at an example. Here is a model with an ``ImageWithThumbnailsField``::
         photo = ImageWithThumbnailsField(upload_to='profiles',
                                          thumbnail={'size': (50, 50)})
 
-A template (passed an instance of 'MyModel') would simply use something like:
+A template (passed an instance of *MyModel*) would simply use something like:
 ``<img src="{{ my_model.photo.thumbnail }}" alt="{{ my_model.name }}" />`` or
 it could use the :ref:`simple-html-tag`.
 
@@ -406,10 +401,10 @@ Simple HTML tag
 ---------------
 
 Your model instance's field (for both thumbnail field types) has a new
-``thumbnail_tag`` property which can be used to return HTML like
+*thumbnail_tag* property which can be used to return HTML like
 ``<img src="..." width="..." height="..." alt="" />``.
 
-Now, even simpler for just a basic ``img`` tag:
+Now, even simpler for just a basic *img* tag:
 ``{{ my_model.photo.thumbnail_tag }}``.
 
 Note that when the source image is deleted, any related thumbnails are also
@@ -422,7 +417,7 @@ Multiple Thumbnails
 -------------------
 
 If you want to use multiple thumbnails for a single field, you can use the
-``extra_thumbnails`` argument, passing it a dictionary like so::
+*extra_thumbnails* argument, passing it a dictionary like so::
 
     photo = ImageWithThumbnailsField(
         upload_to='profiles',
@@ -440,7 +435,7 @@ This would allow you to access the extra thumbnails like this:
 This is available to both thumbnail field types.
 
 Similar to how the :ref:`simple-html-tag` works, you can using the
-``extra_thumbnails_tag`` property:
+*extra_thumbnails_tag* property:
 ``my_model.photo.extra_thumbnails_tag['large']`` (or in a template,
 ``{{ my_model.photo.extra_thumbnails_tag.large }}``).
 
@@ -449,13 +444,13 @@ When thumbnails are generated
 
 The normal behaviour is that thumbnails are only generated when they are
 first accessed. To have them generated as soon as the source image is saved,
-you can set the field's ``generate_on_save`` attribute to ``True``.
+you can set the field's *generate_on_save* attribute to ``True``.
 
 Changing the thumbnail tag HTML
 -------------------------------
 
 If you don't like the default HTML output by the thumbnail tag shortcuts
-provided by this field, you can use the ``thumbnail_tag`` argument. For
+provided by this field, you can use the *thumbnail_tag* argument. For
 example, to use HTML4.0 compliant tags, you would do the following::
 
     photo = ImageWithThumbnailsField(
@@ -468,7 +463,7 @@ Generate a different image type than JPEG
 -----------------------------------------
 
 PIL chooses which type of image to save as based on the extension so you can
-use the ``extension`` argument to save as a different image type that the
+use the *extension* argument to save as a different image type that the
 default JPEG format. For example, to make the generated thumbnail a PNG file::
 
     photo = ImageWithThumbnailsField(
@@ -485,10 +480,10 @@ default JPEG format. For example, to make the generated thumbnail a PNG file::
 This just doesn't cover my cravings!
 ====================================
 
-1. Use the 'DjangoThumbnail' class in ``sorl.thumbnail.main`` if you want
+1. Use the ``DjangoThumbnail`` class in ``sorl.thumbnail.main`` if you want
    behaviour similar to :ref:`template-tag`. If you want to use a
    different file naming method, just subclass and override the
-   ``_get_relative_thumbnail`` method.
+   *_get_relative_thumbnail* method.
 
 2. Go for the ``Thumbnail`` class in ``sorl.thumbnail.base`` for more
    low-level creation of thumbnails. This class doesn't have any
@@ -508,7 +503,7 @@ output user-friendly file sizes. For example::
 	Thumbnail file size: {{ thumb.filesize|filesize }}
 
 If the generated thumbnail size came to 2000 bytes, this would output
-"Thumbnail file size: 1.9 KiB" (the filter's default format is ``auto1024``).
+"Thumbnail file size: 1.9 KiB" (the filter's default format is *auto1024*).
 You can specify a different format like so::
 
 	{{ thumb.filesize|filesize:"auto1000long" }}
@@ -517,19 +512,19 @@ Which would output "2 kilobytes".
 
 Acceptable formats are:
 
-**auto1024**, **auto1000**
+auto1024, auto1000
     convert to the nearest unit, appending the abbreviated unit name to the
-    string (e.g. '2 KiB' or '2 kB'). ``auto1024`` is the default format.
+    string (e.g. '2 KiB' or '2 kB'). *auto1024* is the default format.
 
-**auto1024long**, **auto1000long**
+auto1024long, auto1000long
     convert to the nearest multiple of 1024 or 1000, appending the correctly
     pluralized unit name to the string (e.g. '2 kibibytes' or '2 kilobytes').
 
-**kB, MB, GB, TB, PB, EB, ZB, YB**
+kB, MB, GB, TB, PB, EB, ZB, YB
     convert to the exact unit (using multiples of 1000).
 
-**KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB**
+KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB
     convert to the exact unit (using multiples of 1024).
 
-The ``auto1024`` and ``auto1000`` formats return a string, appending the
+The *auto1024* and *auto1000* formats return a string, appending the
 correct unit to the value. All other formats return the floating point value.
