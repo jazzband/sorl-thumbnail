@@ -53,9 +53,9 @@ Basic tag Syntax::
 
     {% thumbnail [source] [size] [options] %}
 
-source must an object where force_unicode(object) returns a path to a file
-relative to ``MEDIA_ROOT``. This means an Image/FileField or string/unicode
-object containing the relative path to a file.
+source must be an object where ``force_unicode(object)`` returns a path to a
+file relative to ``MEDIA_ROOT``. This means an Image/FileField or
+string/unicode object containing the relative path to a file.
 
 
 ``size`` can either be:
