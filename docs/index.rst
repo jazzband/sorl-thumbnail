@@ -6,7 +6,7 @@ The sorl-thumbnail package provides an easy way to generate image
 thumbnails.
 
 Requirements
-------------
+============
 
 * Python 2.4+ and the Python Imaging Library (PIL_).
 * It does not require Django_, but most features are Django specific.
@@ -21,7 +21,7 @@ Requirements
 .. _Django: http://www.djangoproject.com/
 
 Installation
-------------
+============
 
 #. Download the source.
 #. Put the ``sorl`` directory in your python path (I keep it in site-packages
