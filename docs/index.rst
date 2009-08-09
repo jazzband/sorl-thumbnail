@@ -2,36 +2,54 @@
 sorl-thumbnail
 ==============
 
-The **sorl-thumbnail** package provides an easy way to generate image
+The sorl-thumbnail package provides an easy way to generate image
 thumbnails.
 
-* It requires the Python Imaging Library (PIL_).
-* To enable PDF thumbnails you need ImageMagick_ and to enable Word document
-  thumbnails you need both wvWare_ and ImageMagick_.
+Requirements
+------------
+
+* Python 2.4+ and the Python Imaging Library (PIL_).
+* It does not require Django_, but most features are Django specific.
+  sorl-thumbnail should be compatible with all versions of Django
+  (let us know if not).
+* To enable PDF thumbnails you need ImageMagick_
+* For Word document thumbnail handling you need ImageMagick_ and wvWare_.
 
 .. _PIL: http://www.pythonware.com/products/pil/
 .. _ImageMagick: http://www.imagemagick.org/
 .. _wvWare: http://wvware.sourceforge.net/
+.. _Django: http://www.djangoproject.com/
+
+Installation
+------------
+
+#. Download the source.
+#. Put the ``sorl`` directory in your python path (I keep it in site-packages
+   directory).
+#. Include the thumbnail app in your ``settings.py``.
+
+Like this::
+    
+    INSTALLED_APPS = (
+        ...
+        'sorl.thumbnail',
+    )
 
 
 .. _template-tag:
 
-Template tag
-============
-
-To use this tag:
-
-1. Add ``'sorl.thumbnail'`` to your ``INSTALLED_APPS`` setting.
-2. Once you've done that, use ``{% load thumbnail %}`` in a template to give your
-   template access to the tag.
-
-Quick start
------------
+The {% thumbnail %} template tag
+================================
 
 The thumbnail tag creates a thumbnail if it doesn't exist or if the source
 was modified more recently than the existing thumbnail. The resulting
 thumbnail object contains the generated thumbnail image along with some other
-potentially useful data. Syntax::
+potentially useful data. To use the sorl-thumbnail template tags you need to
+load them in your template::
+    
+    {% load thumbnail %}
+
+Basic tag Syntax::
 
     {% thumbnail [source] [size] [options] %}
 
@@ -52,10 +70,12 @@ object containing the relative path to a file.
 Options
 -------
 
-Options are optional and should be a space separated. Note to sorl-thumbnail
+Options are optional and should be a space separated.
+
+*Note to sorl-thumbnail
 vetarans: The older format of comma separated options is still supported
 (with the limitation that ``quality`` is the only option to which you can pass
-an argument to).
+an argument to).*
 
 Unless you change the :ref:`thumbnail-processors`, valid options are:
 
@@ -141,12 +161,8 @@ Debugging the thumbnail tag
 By default, if there is an error creating the thumbnail or resolving the image
 variable (1st argument) then the thumbnail tag will just return an empty string.
 And if there was a context variable to be set it will also be set to an empty
-string.
-
-For example, you will not see an error if the thumbnail could not be written
-to directory because of permissions error.
-
-To display those errors rather than failing silently, add a ``THUMBNAIL_DEBUG``
+string. For example, you will not see an error if the thumbnail could not be written
+to directory because of permissions error. To display those errors rather than failing silently, add a ``THUMBNAIL_DEBUG``
 property to your settings module and set it to ``True``::
 
 	THUMBNAIL_DEBUG = True
@@ -158,10 +174,8 @@ Thumbnail filenames
 ===================
 
 The thumbnail filename is generated from the source filename, the target size,
-any options provided and the quality.
-
-For example, ``{% thumbnail "1.jpg" 80x80 crop bw %}`` will save the
-thumbnail image as::
+any options provided and the quality. For example,
+``{% thumbnail "1.jpg" 80x80 crop bw %}`` will save the thumbnail image as::
 
     MEDIA_ROOT + '1_jpg_80x80_bw_crop_q85.jpg'
 
@@ -175,8 +189,8 @@ properties to your settings module::
 
 Eaxmples using the tag as follows: ``{% thumbnail "photos/1.jpg" 150x150 %}``::
 
-    # Save thumbnail images to a directory called directly off MEDIA_ROOT,
-    # still keeping the relative directory structure of the source image.
+    # Save thumbnail images to a directory directly off MEDIA_ROOT, still
+    # keeping the relative directory structure of the source image.
     # Result: MEDIA_ROOT + 'thumbs/photos/1_jpg_150x150_q85.jpg'
     THUMBNAIL_BASEDIR = 'thumbs'
     
@@ -199,13 +213,15 @@ For example::
     THUMBNAIL_QUALITY = 95
 
 This will only affect images which have not be explicitly given a quality
-option.  By default, generated thumbnails are saved as JPEG files (with the extension
-'.jpg').
+option.  By default, generated thumbnails are saved as JPEG files
+(with the extension '.jpg').
 
 PIL chooses which type of image to save as based on the extension so you can
 change the default image file type by adding a ``THUMBNAIL_EXTENSION`` property
 to your settings module. Note that If you change the extension, the
-``THUMBNAIL_QUALITY`` will have no effect. Example::
+``THUMBNAIL_QUALITY`` will have no effect.
+
+Example::
 
     THUMBNAIL_EXTENSION = 'png'
 
@@ -217,10 +233,10 @@ PDF conversion is done with ImageMagick's ``convert`` program. The default
 location where ``sorl.thumbnail`` will look for this program is
 ``/usr/bin/convert``.
 
-Word documents are converted to a PostScript file with wvWare's ``wvps`` program.
-The default location where ``sorl.thumbnail`` will look for this program is
-``/usr/bin/wvPS``. This file is then converted to an image with ImageMagick's
-``convert`` program.
+Word documents are converted to a PostScript file with wvWare's ``wvps``
+program. The default location where ``sorl.thumbnail`` will look for this
+program is ``/usr/bin/wvPS``. This file is then converted to an image with
+ImageMagick's ``convert`` program.
 
 To specify an alternate location for either of these programs, add the relevant
 property to your settings module::
@@ -295,7 +311,8 @@ described in the above example.
 Clean-up management command
 ===========================
 
-This management command is used to delete thumbnails that no longer have an original file.
+This management command is used to delete thumbnails that no longer have an
+original file.
 
 How it works
 ------------
@@ -324,8 +341,8 @@ your Django models. They can be imported from ``sorl.thumbnail.fields``.
 * ``ImageWithThumbnailsField`` keeps the original source image but
   provides an easy interface for accessing a predefined thumbnail.
 
-Both fields also allow for :ref:`multiple-thumbnails`, and when the source image is
-deleted, any related thumbnails are also automatically deleted.
+Both fields also allow for :ref:`multiple-thumbnails`, and when the source
+image is deleted, any related thumbnails are also automatically deleted.
 
 ThumbnailField
 --------------
@@ -431,10 +448,8 @@ When thumbnails are generated
 -----------------------------
 
 The normal behaviour is that thumbnails are only generated when they are
-first accessed.
-
-To have them generated as soon as the source image is saved, you can set the
-field's ``generate_on_save`` attribute to ``True``.
+first accessed. To have them generated as soon as the source image is saved,
+you can set the field's ``generate_on_save`` attribute to ``True``.
 
 Changing the thumbnail tag HTML
 -------------------------------
@@ -471,12 +486,13 @@ This just doesn't cover my cravings!
 ====================================
 
 1. Use the 'DjangoThumbnail' class in ``sorl.thumbnail.main`` if you want
-   behaviour similar to the :ref:`template-tag`. If you want to use a
+   behaviour similar to :ref:`template-tag`. If you want to use a
    different file naming method, just subclass and override the
    ``_get_relative_thumbnail`` method.
 
 2. Go for the ``Thumbnail`` class in ``sorl.thumbnail.base`` for more
-   low-level creation of thumbnails. This class doesn't have any Django-specific ties.
+   low-level creation of thumbnails. This class doesn't have any
+   Django-specific ties.
 
 
 .. _filesize-filter:
@@ -484,10 +500,9 @@ This just doesn't cover my cravings!
 Filesize filter
 ===============
 
-This filter returns the number of bytes in either the nearest unit or a specific
-unit (depending on the chosen format method).
-
-Use this filter to output user-friendly file sizes. For example::
+This filter returns the number of bytes in either the nearest unit or a
+specific unit (depending on the chosen format method). Use this filter to
+output user-friendly file sizes. For example::
 
 	{% thumbnail source 200x200 as thumb %}
 	Thumbnail file size: {{ thumb.filesize|filesize }}
@@ -516,5 +531,5 @@ Acceptable formats are:
 **KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB**
     convert to the exact unit (using multiples of 1024).
 
-The ``auto1024`` and ``auto1000`` formats return a string, appending the correct unit to
-the value. All other formats return the floating point value.
+The ``auto1024`` and ``auto1000`` formats return a string, appending the
+correct unit to the value. All other formats return the floating point value.
