@@ -1,0 +1,9 @@
+syntax: glob
+
+*.swp
+*.swo
+*.pyc
+.DS_Store
+._*
+.git*
+docs/_build
