@@ -38,7 +38,7 @@ utils_tests = """
 >>> thumbs = all_thumbnails(thumb_dir)
 >>> k = thumbs.keys()
 >>> k.sort()
->>> k
+>>> [consistent_slash(path) for path in k]
 ['another_test.jpg', 'prefix-test.jpg', 'subdir/test.jpg', 'test.jpg', 'test_with_opts.jpg']
 
 # Find all thumbs, no recurse
@@ -128,4 +128,13 @@ def strip_media_root(path):
     path = os.path.normpath(path)
     # chop off the MEDIA_ROOT and strip any leading os.sep
     path = path[MEDIA_ROOT_LENGTH:].lstrip(os.sep)
+    return consistent_slash(path)
+
+def consistent_slash(path):
+    """
+    Ensure we're always testing against the '/' os separator (otherwise tests
+    fail against Windows).
+    """
+    if os.sep != '/':
+        path = path.replace(os.sep, '/')
     return path
