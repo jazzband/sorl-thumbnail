@@ -62,6 +62,10 @@ Unless you change the `thumbnail processors`_, valid options are:
       thumbnail size (the default is to proportionally resize the source image
       to fit within the requested thumbnail size).
 
+``max``
+      Will resize the image to the same size as the ``crop`` option but it
+      does not crop.
+
 ``autocrop``
       Remove any unnecessary whitespace from the edges of the source image.
       This occurs before the crop or propotional resize.
