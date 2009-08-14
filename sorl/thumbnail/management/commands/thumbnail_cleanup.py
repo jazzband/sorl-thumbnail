@@ -11,7 +11,7 @@ try:
 except NameError:
     from sets import Set as set     # For Python 2.3
 
-THUMB_RE = re.compile(r'^%s(.*)_\d{1,}x\d{1,}_[-\w]*q([1-9]\d?|100)\.jpg' %
+thumb_re = re.compile(r'^%s(.*)_\d{1,}x\d{1,}_[-\w]*q([1-9]\d?|100)\.jpg' %
                       get_thumbnail_setting('PREFIX'))
 
 
@@ -42,7 +42,7 @@ def clean_up():
         except OSError:
             continue # Dir doesn't exists, no thumbnails here.
         for fn in file_list:
-            m = THUMB_RE.match(fn)
+            m = thumb_re.match(fn)
             if m:
                 # Due to that the naming of thumbnails replaces the dot before
                 # extension with an underscore we have 2 possibilities for the

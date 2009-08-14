@@ -495,10 +495,10 @@ method.
 Use the ``Thumbnail`` class in ``sorl.thumbnail.base`` for more low-level
 creation of thumbnails. This class doesn't have any Django-specific ties.
 
-Clean-up script ``bin/thumbnail_cleanup.py``
---------------------------------------------
+Clean-up management command ``thumbnail_cleanup``
+-------------------------------------------------
 
-This script is used to delete thumbnails that no longer have an original file.
+This management command is used to delete thumbnails that no longer have an original file.
 
 How it works
 ~~~~~~~~~~~~
@@ -513,5 +513,5 @@ Limitations
 
 - It will not even try to delete thumbnails in date formatted directories.
 - There can occur name collisions if a file name matches that of a potential
-  thumbnail (THUMB_RE).
+  thumbnail (thumb_re).
 
