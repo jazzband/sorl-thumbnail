@@ -310,8 +310,10 @@ described in the above example.
 Clean-up management command
 ===========================
 
-This management command is used to delete thumbnails that no longer have an
-original file.
+The ``thumbnail_cleanup`` management command is used to delete thumbnails that
+no longer have an original file. Running it is simple::
+
+    ./manage.py thumbnail_cleanup
 
 How it works
 ------------
