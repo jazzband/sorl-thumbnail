@@ -78,8 +78,10 @@ class ThumbnailNode(Node):
                 kwargs = {}
                 for key, value in self.kwargs.items():
                     kwargs[key] = value.resolve(context)
+                opts = dict([(k, v and v.resolve(context))
+                             for k, v in self.opts.items()])
                 thumbnail = DjangoThumbnail(relative_source, requested_size,
-                        opts=self.opts, processors=PROCESSORS, **kwargs)
+                                opts=opts, processors=PROCESSORS, **kwargs)
             except:
                 if DEBUG:
                     raise
