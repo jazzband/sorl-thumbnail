@@ -2,9 +2,9 @@ from distutils.core import setup
  
 setup(
     name = 'sorl-thumbnail',
-    version = '3.2.1',
+    version = '3.2.2',
     url = 'http://code.google.com/p/sorl-thumbnail/',
-    download_url = 'http://sorl-thumbnail.googlecode.com/files/sorl-thumbnail-3.2.1.tar.gz',
+    download_url = 'http://sorl-thumbnail.googlecode.com/files/sorl-thumbnail-3.2.2.tar.gz',
     description = 'Thumbnails for Django',
     packages = [
         'sorl',

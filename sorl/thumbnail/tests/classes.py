@@ -109,8 +109,8 @@ class DjangoThumbnailTest(BaseTest):
 
         thumb = DjangoThumbnail(relative_source=RELATIVE_PIC_NAME,
                                 requested_size=(240, 120), opts=valid_options)
-        expected = os.path.join(settings.MEDIA_ROOT, basename)
-        expected += '_240x120_autocrop_bw_crop_detail_sharpen_upscale_q85.jpg'
+        expected = (os.path.join(settings.MEDIA_ROOT, basename) + '_240x120_'
+                    'autocrop_bw_crop_detail_max_sharpen_upscale_q85.jpg')
         self.verify_thumbnail((240, 120), thumb, expected_filename=expected)
 
         # Different basedir

@@ -27,7 +27,13 @@ class Thumbnail(object):
         self.dest = dest
 
         # Thumbnail settings
-        self.requested_size = requested_size
+        try:
+            x, y = [int(v) for v in requested_size]
+        except (TypeError, ValueError):
+            raise TypeError('Thumbnail received invalid value for size '
+                            'argument: %s' % repr(requested_size))
+        else:
+            self.requested_size = (x, y)
         try:
             self.quality = int(quality) 
             if not 0 < quality <= 100:
