@@ -171,6 +171,14 @@ class BaseThumbnailField(ImageField):
             for extra, attrs in self.extra_thumbnails.items():
                 name = "%r of 'extra_thumbnails'"
                 _verify_thumbnail_attrs(attrs, name)
+    def south_field_triple(self):
+        "Returns a suitable description of this field for South."
+        # We'll just introspect ourselves, since we inherit.
+        from south.modelsinspector import introspector
+        field_class = "django.db.models.fields.files.ImageField"
+        args, kwargs = introspector(self)
+        # That's our definition!
+        return (field_class, args, kwargs)
 
 
 class ImageWithThumbnailsField(BaseThumbnailField):
