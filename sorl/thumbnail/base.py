@@ -15,6 +15,8 @@ class ThumbnailException(Exception):
 
 
 class Thumbnail(object):
+    imagemagick_file_types = defaults.IMAGEMAGICK_FILE_TYPES
+
     def __init__(self, source, requested_size, opts=None, quality=85,
                  dest=None, convert_path=defaults.CONVERT,
                  wvps_path=defaults.WVPS, processors=None):
@@ -146,7 +148,7 @@ class Thumbnail(object):
                                          self.source)
             if self.source_filetype == 'doc':
                 self._convert_wvps(self.source)
-            elif self.source_filetype == 'pdf':
+            elif self.source_filetype in self.imagemagick_file_types:
                 self._convert_imagemagick(self.source)
             else:
                 self.source_data = self.source

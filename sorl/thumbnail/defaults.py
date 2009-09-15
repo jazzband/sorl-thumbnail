@@ -12,3 +12,4 @@ PROCESSORS = (
     'sorl.thumbnail.processors.scale_and_crop',
     'sorl.thumbnail.processors.filters',
 )
+IMAGEMAGICK_FILE_TYPES = ('eps', 'pdf', 'psd')

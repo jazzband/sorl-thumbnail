@@ -225,11 +225,11 @@ Example::
     THUMBNAIL_EXTENSION = 'png'
 
 
-PDF and Word document thumbnails
-================================
+Thumbnails for other document types
+===================================
 
-PDF conversion is done with ImageMagick's ``convert`` program. The default
-location where ``sorl.thumbnail`` will look for this program is
+PDF, EPS and PSD conversion are done with ImageMagick's ``convert`` program.
+The default location where ``sorl.thumbnail`` will look for this program is
 ``/usr/bin/convert``.
 
 Word documents are converted to a PostScript file with wvWare's ``wvps``
@@ -242,6 +242,11 @@ property to your settings module::
 
 	THUMBNAIL_CONVERT = '/path/to/imagemagick/convert'
 	THUMBNAIL_WVPS = '/path/to/wvPS'
+
+To specify which document types should be converted with ImageMagick, use the
+``THUMBNAIL_IMAGEMAGICK_FILE_TYPES`` setting. The default setting is::
+
+	THUMBNAIL_IMAGEMAGICK_FILE_TYPES = ('eps', 'pdf', 'psd')
 
 
 .. _thumbnail-processors:
