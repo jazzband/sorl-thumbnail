@@ -364,8 +364,7 @@ Here is an example model with a ``ThumbnailField``::
 
     MyModel(models.Model):
         name = models.TextField(max_length=50)
-        photo = ThumbnailField(upload_to='profiles',
-                               thumbnail={'size': (50, 50)})
+        photo = ThumbnailField(upload_to='profiles', size=(200, 200))
 
 ImageWithThumbnailsField
 ------------------------
