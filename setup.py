@@ -11,9 +11,9 @@ finally:
  
 setup(
     name='sorl-thumbnail',
-    version='3.2.2',
+    version='3.2.3',
     url='http://code.google.com/p/sorl-thumbnail/',
-    download_url='http://sorl-thumbnail.googlecode.com/files/sorl-thumbnail-3.2.2.tar.gz',
+    download_url='http://sorl-thumbnail.googlecode.com/files/sorl-thumbnail-3.2.3.tar.gz',
     description='Thumbnails for Django',
     long_description=long_description,
     author='Mikko Hellsing, Chris Beaven',
