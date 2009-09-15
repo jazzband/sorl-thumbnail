@@ -48,8 +48,10 @@ class ThumbnailTagTest(BaseTest):
         self.assertEqual(self.render_template(src_missing), '')
         # ...and with THUMBNAIL_DEBUG = True
         self.change_settings.change({'DEBUG': True})
-        self.assertRaises(TypeError, self.render_template, src_invalid)
-        self.assertRaises(TypeError, self.render_template, src_missing)
+        self.assertRaises(TemplateSyntaxError, self.render_template,
+                          src_invalid)
+        self.assertRaises(TemplateSyntaxError, self.render_template,
+                          src_missing)
 
         # Invalid source
         src = '{% thumbnail invalid_source 80x80 %}'
@@ -59,8 +61,8 @@ class ThumbnailTagTest(BaseTest):
         self.assertEqual(self.render_template(src), '')
         # ...and with THUMBNAIL_DEBUG = True
         self.change_settings.change({'DEBUG': True})
-        self.assertRaises(ThumbnailException, self.render_template, src)
-        self.assertRaises(ThumbnailException, self.render_template,
+        self.assertRaises(TemplateSyntaxError, self.render_template, src)
+        self.assertRaises(TemplateSyntaxError, self.render_template,
                           src_on_context)
 
         # Non-existant source
@@ -71,7 +73,7 @@ class ThumbnailTagTest(BaseTest):
         self.assertEqual(self.render_template(src), '')
         # ...and with THUMBNAIL_DEBUG = True
         self.change_settings.change({'DEBUG': True})
-        self.assertRaises(ThumbnailException, self.render_template, src)
+        self.assertRaises(TemplateSyntaxError, self.render_template, src)
 
         # Invalid size as a tuple:
         src = '{% thumbnail source invalid_size %}'
@@ -80,7 +82,7 @@ class ThumbnailTagTest(BaseTest):
         self.assertEqual(self.render_template(src), '')
         # ...and THUMBNAIL_DEBUG = True
         self.change_settings.change({'DEBUG': True})
-        self.assertRaises(TypeError, self.render_template, src)
+        self.assertRaises(TemplateSyntaxError, self.render_template, src)
         # Invalid size as a string:
         src = '{% thumbnail source invalid_strsize %}'
         # ...with THUMBNAIL_DEBUG = False
