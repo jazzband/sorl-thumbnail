@@ -2,7 +2,6 @@ import os
 from os.path import isfile, isdir, getmtime, dirname, splitext, getsize
 from tempfile import mkstemp
 from shutil import copyfile
-from subprocess import Popen, PIPE
 
 from PIL import Image, ImageFilter
 
@@ -35,7 +34,7 @@ class Thumbnail(object):
         else:
             self.requested_size = (x, y)
         try:
-            self.quality = int(quality) 
+            self.quality = int(quality)
             if not 0 < quality <= 100:
                 raise ValueError
         except (TypeError, ValueError):
@@ -166,9 +165,15 @@ class Thumbnail(object):
     source_data = property(_get_source_data, _set_source_data)
 
     def _convert_wvps(self, filename):
+        try:
+            import subprocess
+        except ImportError:
+            raise ThumbnailException('wvps requires the Python 2.4 subprocess '
+                                     'package.')
         tmp = mkstemp('.ps')[1]
         try:
-            p = Popen((self.wvps_path, filename, tmp), stdout=PIPE)
+            p = subprocess.Popen((self.wvps_path, filename, tmp),
+                                 stdout=subprocess.PIPE)
             p.wait()
         except OSError, detail:
             os.remove(tmp)
@@ -177,15 +182,20 @@ class Thumbnail(object):
         os.remove(tmp)
 
     def _convert_imagemagick(self, filename):
+        try:
+            import subprocess
+        except ImportError:
+            raise ThumbnailException('imagemagick requires the Python 2.4 '
+                                     'subprocess package.')
         tmp = mkstemp('.png')[1]
         if 'crop' in self.opts or 'autocrop' in self.opts:
             x, y = [d * 3 for d in self.requested_size]
         else:
             x, y = self.requested_size
         try:
-            p = Popen((self.convert_path, '-size', '%sx%s' % (x, y),
+            p = subprocess.Popen((self.convert_path, '-size', '%sx%s' % (x, y),
                 '-antialias', '-colorspace', 'rgb', '-format', 'PNG24',
-                '%s[0]' % filename, tmp), stdout=PIPE)
+                '%s[0]' % filename, tmp), stdout=subprocess.PIPE)
             p.wait()
         except OSError, detail:
             os.remove(tmp)

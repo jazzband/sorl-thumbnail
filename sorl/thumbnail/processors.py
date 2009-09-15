@@ -4,7 +4,9 @@ from PIL import Image, ImageFilter, ImageChops
 def dynamic_import(names):
     imported = []
     for name in names:
-        modname, attrname = name.rsplit('.', 1)
+        # Use rfind rather than rsplit for Python 2.3 compatibility.
+        lastdot = name.rfind('.')
+        modname, attrname = name[:lastdot], name[lastdot+1:]
         mod = __import__(modname, {}, {}, [''])
         imported.append(getattr(mod, attrname))
     return imported
