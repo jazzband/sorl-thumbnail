@@ -11,7 +11,7 @@ finally:
  
 setup(
     name='sorl-thumbnail',
-    version='3.2.3',
+    version='3.2.4',
     url='http://code.google.com/p/sorl-thumbnail/',
     download_url='http://sorl-thumbnail.googlecode.com/files/sorl-thumbnail-3.2.3.tar.gz',
     description='Thumbnails for Django',
