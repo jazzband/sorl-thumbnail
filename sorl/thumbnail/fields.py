@@ -6,7 +6,7 @@ except ImportError:
     from StringIO import StringIO
 
 from django.db.models.fields.files import ImageField, ImageFieldFile
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.base import ContentFile
 from django.utils.safestring import mark_safe
 from django.utils.functional import curry
 from django.utils.html import escape
@@ -145,8 +145,7 @@ class ThumbnailFieldFile(BaseThumbnailFieldFile):
                 continue
             thumbnail_kwargs[argk] = self.field.thumbnail[k]
         Thumbnail(source=content, dest=new_content, **thumbnail_kwargs)
-        new_content = SimpleUploadedFile(name, new_content.read(),
-                                         content.content_type)
+        new_content = ContentFile(new_content.read())
         super(ThumbnailFieldFile, self).save(name, new_content, *args,
                                              **kwargs)
 

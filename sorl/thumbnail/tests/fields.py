@@ -2,7 +2,7 @@ import os.path
 
 from django.db import models
 from django.conf import settings
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.base import ContentFile
 
 from sorl.thumbnail.fields import ImageWithThumbnailsField, ThumbnailField
 from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME
@@ -86,7 +86,7 @@ class FieldTest(BaseTest):
         self.images_to_delete.add(admin_thumb)
         # Default setting is to only generate when the thumbnail is used.
         model = TestThumbnailFieldModel()
-        source = SimpleUploadedFile('_', open(PIC_NAME).read())
+        source = ContentFile(open(PIC_NAME).read())
         model.photo.save(RELATIVE_PIC_NAME, source, save=False)
         self.images_to_delete.add(model.photo.path)
         self.assertFalse(os.path.exists(main_thumb))
@@ -94,7 +94,7 @@ class FieldTest(BaseTest):
         os.remove(model.photo.path)
         # But it's easy to set it up the other way...
         model = TestThumbnailFieldGenerateModel()
-        source = SimpleUploadedFile('_', open(PIC_NAME).read())
+        source = ContentFile(open(PIC_NAME).read())
         model.photo.save(RELATIVE_PIC_NAME, source, save=False)
         self.assert_(os.path.exists(main_thumb))
         self.assert_(os.path.exists(admin_thumb))
@@ -118,7 +118,7 @@ class ImageWithThumbnailsFieldTest(BaseTest):
 class ThumbnailFieldTest(BaseTest):
     def test_thumbnail(self):
         model = TestThumbnailFieldModel()
-        source = SimpleUploadedFile('_', open(PIC_NAME).read())
+        source = ContentFile(open(PIC_NAME).read())
         dest_name = 'sorl-thumbnail-test_dest.jpg'
         model.avatar.save(dest_name, source, save=False)
         expected_filename = os.path.join(model.avatar.path)
