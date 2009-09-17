@@ -54,7 +54,7 @@ def build_thumbnail_name(source_name, size, options=None,
 
 class DjangoThumbnail(Thumbnail):
     imagemagick_file_types = get_thumbnail_setting('IMAGEMAGICK_FILE_TYPES')
-    
+
     def __init__(self, relative_source, requested_size, opts=None,
                  quality=None, basedir=None, subdir=None, prefix=None,
                  relative_dest=None, processors=None, extension=None):
@@ -84,7 +84,7 @@ class DjangoThumbnail(Thumbnail):
         filelike = not isinstance(relative_dest, basestring)
         if filelike:
             self.dest = relative_dest
-        else: 
+        else:
             self.dest = self._absolute_path(relative_dest)
 
         # Call generate now that the dest attribute has been set

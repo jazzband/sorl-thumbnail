@@ -10,7 +10,8 @@ from django.conf import settings
 from sorl.thumbnail.base import Thumbnail
 from sorl.thumbnail.main import DjangoThumbnail, get_thumbnail_setting
 from sorl.thumbnail.processors import dynamic_import, get_valid_options
-from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME, THUMB_NAME, PIC_SIZE
+from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME,\
+    THUMB_NAME, PIC_SIZE
 
 
 class ThumbnailTest(BaseTest):

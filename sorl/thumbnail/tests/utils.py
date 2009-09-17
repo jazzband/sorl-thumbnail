@@ -7,7 +7,9 @@ try:
 except NameError:
     from sets import Set as set     # For Python 2.3
 
-utils_tests = """
+MEDIA_ROOT_LENGTH = len(os.path.normpath(settings.MEDIA_ROOT))
+
+utils_tests = r"""
 >>> from sorl.thumbnail.tests.utils import *
 >>> from sorl.thumbnail.tests.base import ChangeSettings
 >>> from django.conf import settings
@@ -17,21 +19,22 @@ utils_tests = """
 
 >>> media_root = settings.MEDIA_ROOT.rstrip('/')
 
-#===============================================================================
+#==============================================================================
 # Set up test images
-#===============================================================================
+#==============================================================================
 
 >>> make_image('test-thumbnail-utils/subdir/test_jpg_110x110_q85.jpg')
 >>> make_image('test-thumbnail-utils/test_jpg_80x80_q85.jpg')
 >>> make_image('test-thumbnail-utils/test_jpg_80x80_q95.jpg')
 >>> make_image('test-thumbnail-utils/another_test_jpg_80x80_q85.jpg')
 >>> make_image('test-thumbnail-utils/test_with_opts_jpg_80x80_crop_bw_q85.jpg')
->>> make_image('test-thumbnail-basedir/test-thumbnail-utils/test_jpg_100x100_q85.jpg')
+>>> make_image('test-thumbnail-basedir/test-thumbnail-utils/test_jpg_100x100_'
+...            'q85.jpg')
 >>> make_image('test-thumbnail-utils/prefix-test_jpg_120x120_q85.jpg')
 
-#===============================================================================
+#==============================================================================
 # all_thumbnails()
-#===============================================================================
+#==============================================================================
 
 # Find all thumbs
 >>> thumb_dir = os.path.join(settings.MEDIA_ROOT, 'test-thumbnail-utils')
@@ -39,7 +42,8 @@ utils_tests = """
 >>> k = thumbs.keys()
 >>> k.sort()
 >>> [consistent_slash(path) for path in k]
-['another_test.jpg', 'prefix-test.jpg', 'subdir/test.jpg', 'test.jpg', 'test_with_opts.jpg']
+['another_test.jpg', 'prefix-test.jpg', 'subdir/test.jpg', 'test.jpg',
+ 'test_with_opts.jpg']
 
 # Find all thumbs, no recurse
 >>> thumbs = all_thumbnails(thumb_dir, recursive=False)
@@ -48,9 +52,9 @@ utils_tests = """
 >>> k
 ['another_test.jpg', 'prefix-test.jpg', 'test.jpg', 'test_with_opts.jpg']
 
-#===============================================================================
+#==============================================================================
 # thumbnails_for_file()
-#===============================================================================
+#==============================================================================
 
 >>> output = []
 >>> for thumb in thumbs['test.jpg']:
@@ -58,7 +62,8 @@ utils_tests = """
 ...     output.append('%(x)sx%(y)s %(quality)s %(rel_fn)s' % thumb)
 >>> output.sort()
 >>> output
-['80x80 85 test-thumbnail-utils/test_jpg_80x80_q85.jpg', '80x80 95 test-thumbnail-utils/test_jpg_80x80_q95.jpg']
+['80x80 85 test-thumbnail-utils/test_jpg_80x80_q85.jpg',
+ '80x80 95 test-thumbnail-utils/test_jpg_80x80_q95.jpg']
 
 # Thumbnails for file
 >>> output = []
@@ -66,7 +71,8 @@ utils_tests = """
 ...    output.append(strip_media_root(thumb['filename']))
 >>> output.sort()
 >>> output
-['test-thumbnail-utils/test_jpg_80x80_q85.jpg', 'test-thumbnail-utils/test_jpg_80x80_q95.jpg']
+['test-thumbnail-utils/test_jpg_80x80_q85.jpg',
+ 'test-thumbnail-utils/test_jpg_80x80_q95.jpg']
 
 # Thumbnails for file - shouldn't choke on non-existant file
 >>> thumbnails_for_file('test-thumbnail-utils/non-existant.jpg')
@@ -90,9 +96,9 @@ test-thumbnail-utils/subdir/test_jpg_110x110_q85.jpg
 ...    print strip_media_root(thumb['filename'])
 test-thumbnail-utils/prefix-test_jpg_120x120_q85.jpg
 
-#===============================================================================
+#==============================================================================
 # Clean up images / directories
-#===============================================================================
+#==============================================================================
 
 >>> clean_up()
 """
@@ -100,11 +106,13 @@ test-thumbnail-utils/prefix-test_jpg_120x120_q85.jpg
 images_to_delete = set()
 dirs_to_delete = []
 
+
 def make_image(relative_image):
     absolute_image = os.path.join(settings.MEDIA_ROOT, relative_image)
     make_dirs(os.path.dirname(relative_image))
     open(absolute_image, 'w').close()
     images_to_delete.add(absolute_image)
+
 
 def make_dirs(relative_path):
     if not relative_path:
@@ -117,18 +125,20 @@ def make_dirs(relative_path):
     make_dirs(os.path.dirname(relative_path))
     os.mkdir(absolute_path)
 
+
 def clean_up():
     for image in images_to_delete:
         os.remove(image)
     for path in dirs_to_delete:
         os.rmdir(path)
 
-MEDIA_ROOT_LENGTH = len(os.path.normpath(settings.MEDIA_ROOT))
+
 def strip_media_root(path):
     path = os.path.normpath(path)
     # chop off the MEDIA_ROOT and strip any leading os.sep
     path = path[MEDIA_ROOT_LENGTH:].lstrip(os.sep)
     return consistent_slash(path)
+
 
 def consistent_slash(path):
     """

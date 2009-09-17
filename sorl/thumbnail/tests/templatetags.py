@@ -161,7 +161,7 @@ class ThumbnailTagTest(BaseTest):
             'width:{{ thumb.width }}, url:{{ thumb }}')
         self.assertEqual(output, 'width:240, url:%s' % expected_url)
 
-filesize_tests = """
+filesize_tests = r"""
 >>> from sorl.thumbnail.templatetags.thumbnail import filesize
 
 >>> filesize('abc')
@@ -220,7 +220,8 @@ filesize_tests = """
 1024 yobibytes, 1000 yottabytes
 
 # Test all fixed outputs (eg 'kB' or 'MiB')
->>> from sorl.thumbnail.templatetags.thumbnail import filesize_formats, filesize_long_formats
+>>> from sorl.thumbnail.templatetags.thumbnail import filesize_formats,\
+...    filesize_long_formats
 >>> for f in filesize_formats:
 ...     print '%s (%siB, %sB):' % (filesize_long_formats[f], f.upper(), f)
 ...     for i in range(0, 10):

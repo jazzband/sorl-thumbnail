@@ -136,6 +136,7 @@ class Thumbnail(object):
             except IOError, detail:
                 raise ThumbnailException(detail)
         return self._data
+
     def _set_data(self, im):
         self._data = im
     data = property(_get_data, _set_data)

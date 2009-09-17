@@ -6,7 +6,7 @@ def dynamic_import(names):
     for name in names:
         # Use rfind rather than rsplit for Python 2.3 compatibility.
         lastdot = name.rfind('.')
-        modname, attrname = name[:lastdot], name[lastdot+1:]
+        modname, attrname = name[:lastdot], name[lastdot + 1:]
         mod = __import__(modname, {}, {}, [''])
         imported.append(getattr(mod, attrname))
     return imported
@@ -49,22 +49,22 @@ autocrop.valid_options = ('autocrop',)
 
 
 def scale_and_crop(im, requested_size, opts):
-    x, y   = [float(v) for v in im.size]
+    x, y = [float(v) for v in im.size]
     xr, yr = [float(v) for v in requested_size]
 
     if 'crop' in opts or 'max' in opts:
-        r = max(xr/x, yr/y)
+        r = max(xr / x, yr / y)
     else:
-        r = min(xr/x, yr/y)
+        r = min(xr / x, yr / y)
 
     if r < 1.0 or (r > 1.0 and 'upscale' in opts):
-        im = im.resize((int(x*r), int(y*r)), resample=Image.ANTIALIAS)
+        im = im.resize((int(x * r), int(y * r)), resample=Image.ANTIALIAS)
 
     if 'crop' in opts:
-        x, y   = [float(v) for v in im.size]
-        ex, ey = (x-min(x, xr))/2, (y-min(y, yr))/2
+        x, y = [float(v) for v in im.size]
+        ex, ey = (x - min(x, xr)) / 2, (y - min(y, yr)) / 2
         if ex or ey:
-            im = im.crop((int(ex), int(ey), int(x-ex), int(y-ey)))
+            im = im.crop((int(ex), int(ey), int(x - ex), int(y - ey)))
     return im
 scale_and_crop.valid_options = ('crop', 'upscale', 'max')
 

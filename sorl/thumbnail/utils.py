@@ -2,7 +2,9 @@ import re
 import os
 
 
-re_thumbnail_file = re.compile(r'(?P<source_filename>.+)_(?P<x>\d+)x(?P<y>\d+)(?:_(?P<options>\w+))?_q(?P<quality>\d+)(?:.[^.]+)?$')
+re_thumbnail_file = re.compile(r'(?P<source_filename>.+)_(?P<x>\d+)x(?P<y>\d+)'
+                               r'(?:_(?P<options>\w+))?_q(?P<quality>\d+)'
+                               r'(?:.[^.]+)?$')
 re_new_args = re.compile('(?<!quality)=')
 
 
@@ -55,7 +57,7 @@ def all_thumbnails(path, recursive=True, prefix=None, subdir=None):
             # '.'.
             m = re.match(r'(.*)_(.*)', source_filename)
             if m:
-                 source_filename = '%s.%s' % m.groups()
+                source_filename = '%s.%s' % m.groups()
             filename = os.path.join(rel_dir, source_filename)
             thumbnail_file = thumbnail_files.setdefault(filename, [])
             d['filename'] = os.path.join(dir_, file)
@@ -139,7 +141,7 @@ def split_args(args):
     """
     Split a list of argument strings into a dictionary where each key is an
     argument name.
-    
+
     An argument looks like ``crop``, ``crop="some option"`` or ``crop=my_var``.
     Arguments which provide no value get a value of ``None``.
     """

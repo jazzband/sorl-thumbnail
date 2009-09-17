@@ -9,6 +9,7 @@ try:
 except NameError:
     from sets import Set as set     # For Python 2.3
 
+
 def get_default_settings():
     from sorl.thumbnail import defaults
     def_settings = {}
@@ -23,7 +24,6 @@ RELATIVE_PIC_NAME = "sorl-thumbnail-test_source.jpg"
 PIC_NAME = os.path.join(settings.MEDIA_ROOT, RELATIVE_PIC_NAME)
 THUMB_NAME = os.path.join(settings.MEDIA_ROOT, "sorl-thumbnail-test_%02d.jpg")
 PIC_SIZE = (800, 600)
-
 
 
 class ChangeSettings:
@@ -103,4 +103,3 @@ class BaseTest(unittest.TestCase):
                 pass
         # Change settings back to original
         self.change_settings.revert()
-

@@ -8,7 +8,7 @@ from sorl.thumbnail.fields import ImageWithThumbnailsField, ThumbnailField
 from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME
 
 thumbnail = {
-    'size': (50, 50)
+    'size': (50, 50),
 }
 extra_thumbnails = {
     'admin': {
@@ -18,6 +18,7 @@ extra_thumbnails = {
 }
 extension_thumbnail = thumbnail.copy()
 extension_thumbnail['extension'] = 'png'
+
 
 # Temporary models for field_tests
 class TestThumbnailFieldModel(models.Model):
