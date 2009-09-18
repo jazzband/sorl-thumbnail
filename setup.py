@@ -2,6 +2,8 @@
 from distutils.core import setup
 
 
+VERSION = '3.2.4' 
+
 README_FILE = open('README')
 try:
     long_description = README_FILE.read()
@@ -11,9 +13,10 @@ finally:
  
 setup(
     name='sorl-thumbnail',
-    version='3.2.4',
+    version=VERSION,
     url='http://code.google.com/p/sorl-thumbnail/',
-    download_url='http://sorl-thumbnail.googlecode.com/files/sorl-thumbnail-3.2.3.tar.gz',
+    download_url='http://sorl-thumbnail.googlecode.com/files/sorl-thumbnail-'
+        '%s.tar.gz'  % VERSION,
     description='Thumbnails for Django',
     long_description=long_description,
     author='Mikko Hellsing, Chris Beaven',
