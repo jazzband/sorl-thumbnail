@@ -89,12 +89,13 @@ crop
     percentage offsets (negative values go from the right/bottom). Some
     examples follow:
     
-    * ``crop="0,0"`` will crop from the top and right.
+    * ``crop="0,0"`` will crop from the left and top edges.
 
-    * ``crop="-0,-10"`` will crop from bottom with a 10% offset and the right.
+    * ``crop="-10,-0"`` will crop from the right edge (with a 10% offset) and
+      the bottom edge.
     
-    * ``crop=",0"`` will crop from the top, keeping the default centering for
-      the x axis.
+    * ``crop=",0"`` will keep the default behavior for the x axis (horizontally
+      centering the image) and crop from the top edge.
 
 max
     Will resize the image to the same size as the *crop* option but it
