@@ -83,6 +83,18 @@ crop
     Crop the source image height or width to exactly match the requested
     thumbnail size (the default is to proportionally resize the source image
     to fit within the requested thumbnail size).
+    
+    By default, the image is centered before being cropped. To crop from the
+    edges, pass a comma separated string containing the ``x`` and ``y``
+    percentage offsets (negative values go from the right/bottom). Some
+    examples follow:
+    
+    * ``crop="0,0"`` will crop from the top and right.
+
+    * ``crop="-0,-10"`` will crop from bottom with a 10% offset and the right.
+    
+    * ``crop=",0"`` will crop from the top, keeping the default centering for
+      the x axis.
 
 max
     Will resize the image to the same size as the *crop* option but it

@@ -1,4 +1,5 @@
 from PIL import Image, ImageFilter, ImageChops
+import re
 
 
 def dynamic_import(names):
@@ -60,11 +61,38 @@ def scale_and_crop(im, requested_size, opts):
     if r < 1.0 or (r > 1.0 and 'upscale' in opts):
         im = im.resize((int(x * r), int(y * r)), resample=Image.ANTIALIAS)
 
-    if 'crop' in opts:
+    crop = opts.get('crop') or 'crop' in opts
+    if crop:
+        # Difference (for x and y) between new image size and requested size.
         x, y = [float(v) for v in im.size]
-        ex, ey = (x - min(x, xr)) / 2, (y - min(y, yr)) / 2
-        if ex or ey:
-            im = im.crop((int(ex), int(ey), int(x - ex), int(y - ey)))
+        dx, dy = (x - min(x, xr)), (y - min(y, yr))
+        if dx or dy:
+            # Center cropping (default).
+            ex, ey = dx / 2, dy / 2
+            box = [ex, ey, x - ex, y - ey]
+            # See if an edge cropping argument was provided. 
+            edge_crop = (isinstance(crop, basestring) and
+                           re.match(r'(?:(-?)(\d+))?,(?:(-?)(\d+))?$', crop))
+            if edge_crop and filter(None, edge_crop.groups()):
+                x_right, x_crop, y_bottom, y_crop = edge_crop.groups()
+                if x_crop:
+                    offset = min(x * int(x_crop) / 100, dx)
+                    if x_right:
+                        box[0] = dx - offset
+                        box[2] = x - offset
+                    else:
+                        box[0] = offset
+                        box[2] = x - (dx - offset)
+                if y_crop:
+                    offset = min(y * int(y_crop) / 100, dy)
+                    if y_bottom:
+                        box[1] = dy - offset
+                        box[3] = y - offset
+                    else:
+                        box[1] = offset
+                        box[3] = y - (dy - offset)
+            #assert False, (box, (dx, dy), (xr, yr))
+            im = im.crop([int(v) for v in box])
     return im
 scale_and_crop.valid_options = ('crop', 'upscale', 'max')
 
