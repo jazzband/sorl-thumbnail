@@ -1,5 +1,6 @@
-import re
+import math
 import os
+import re
 
 
 re_thumbnail_file = re.compile(r'(?P<source_filename>.+)_(?P<x>\d+)x(?P<y>\d+)'
@@ -157,3 +158,13 @@ def split_args(args):
         value = len(split_arg) > 1 and split_arg[1] or None
         args_dict[split_arg[0]] = value
     return args_dict
+
+
+def image_entropy(im):
+    """
+    Calculate the entropy of an image. Used for "smart cropping".
+    """
+    hist = im.histogram()
+    hist_size = float(sum(hist))
+    hist = [h / hist_size for h in hist]
+    return -sum([p * math.log(p, 2) for p in hist if p != 0])

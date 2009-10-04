@@ -96,6 +96,10 @@ crop
     
     * ``crop=",0"`` will keep the default behavior for the x axis (horizontally
       centering the image) and crop from the top edge.
+    
+    The image can also be "smart cropped" by using ``crop="smart"``. The image
+    is incrementally cropped down to the requested size by removing slices
+    from edges with the least entropy. 
 
 max
     Will resize the image to the same size as the *crop* option but it

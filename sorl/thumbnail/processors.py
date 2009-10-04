@@ -1,4 +1,5 @@
 from PIL import Image, ImageFilter, ImageChops
+from sorl.thumbnail import utils
 import re
 
 
@@ -70,7 +71,7 @@ def scale_and_crop(im, requested_size, opts):
             # Center cropping (default).
             ex, ey = dx / 2, dy / 2
             box = [ex, ey, x - ex, y - ey]
-            # See if an edge cropping argument was provided. 
+            # See if an edge cropping argument was provided.
             edge_crop = (isinstance(crop, basestring) and
                            re.match(r'(?:(-?)(\d+))?,(?:(-?)(\d+))?$', crop))
             if edge_crop and filter(None, edge_crop.groups()):
@@ -91,7 +92,30 @@ def scale_and_crop(im, requested_size, opts):
                     else:
                         box[1] = offset
                         box[3] = y - (dy - offset)
-            #assert False, (box, (dx, dy), (xr, yr))
+            # See if the image should be "smart cropped".
+            elif crop == 'smart':
+                left = top = 0
+                right, bottom = x, y
+                while dx:
+                    slice = min(dx, 10)
+                    l_sl = im.crop((0, 0, slice, y))
+                    r_sl = im.crop((x - slice, 0, x, y))
+                    if utils.image_entropy(l_sl) >= utils.image_entropy(r_sl):
+                        right -= slice
+                    else:
+                        left += slice
+                    dx -= slice
+                while dy:
+                    slice = min(dy, 10)
+                    t_sl = im.crop((0, 0, x, slice))
+                    b_sl = im.crop((0, y - slice, x, y))
+                    if utils.image_entropy(t_sl) >= utils.image_entropy(b_sl):
+                        bottom -= slice
+                    else:
+                        top += slice
+                    dy -= slice
+                box = (left, top, right, bottom)
+            # Finally, crop the image!
             im = im.crop([int(v) for v in box])
     return im
 scale_and_crop.valid_options = ('crop', 'upscale', 'max')
