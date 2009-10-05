@@ -1,4 +1,3 @@
-import os.path
 from UserDict import DictMixin
 try:
     from cStringIO import StringIO
@@ -8,9 +7,7 @@ except ImportError:
 from django.db.models.fields.files import ImageField, ImageFieldFile
 from django.core.files.base import ContentFile
 from django.utils.safestring import mark_safe
-from django.utils.functional import curry
 from django.utils.html import escape
-from django.conf import settings
 
 from sorl.thumbnail.base import Thumbnail
 from sorl.thumbnail.main import DjangoThumbnail, build_thumbnail_name

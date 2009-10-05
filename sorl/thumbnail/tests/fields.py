@@ -125,7 +125,6 @@ class ThumbnailFieldTest(BaseTest):
         self.verify_thumbnail((300, 225), expected_filename=expected_filename)
 
         tag = model.avatar.thumbnail_tag
-        base_name = RELATIVE_PIC_NAME.replace('.', '_')
         expected_tag = ('<img src="%s" width="300" height="225" alt="" />' %
                         '/'.join([settings.MEDIA_URL.rstrip('/'), 'test',
                                   dest_name]))

@@ -24,7 +24,6 @@ def get_thumbnail_path(path):
 def clean_up():
     paths = set()
     for app in models.get_apps():
-        app_name = app.__name__.split('.')[-2]
         model_list = models.get_models(app)
         for model in model_list:
             for field in model._meta.fields:

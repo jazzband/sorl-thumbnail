@@ -1,5 +1,4 @@
 #! -*- coding: utf-8 -*-
-import unittest
 import os
 import time
 from StringIO import StringIO
@@ -35,21 +34,18 @@ class ThumbnailTest(BaseTest):
         # Create thumbnail
         thumb_name = THUMB_NAME % 4
         thumb_size = (240, 240)
-        thumb = Thumbnail(source=PIC_NAME, dest=thumb_name,
-                          requested_size=thumb_size)
+        Thumbnail(source=PIC_NAME, dest=thumb_name, requested_size=thumb_size)
         self.images_to_delete.add(thumb_name)
         thumb_mtime = os.path.getmtime(thumb_name)
         time.sleep(1)
 
         # Create another instance, shouldn't generate a new thumb
-        thumb = Thumbnail(source=PIC_NAME, dest=thumb_name,
-                          requested_size=thumb_size)
+        Thumbnail(source=PIC_NAME, dest=thumb_name, requested_size=thumb_size)
         self.assertEqual(os.path.getmtime(thumb_name), thumb_mtime)
 
         # Recreate the source image, then see if a new thumb is generated
         Image.new('RGB', PIC_SIZE).save(PIC_NAME, 'JPEG')
-        thumb = Thumbnail(source=PIC_NAME, dest=thumb_name,
-                          requested_size=thumb_size)
+        Thumbnail(source=PIC_NAME, dest=thumb_name, requested_size=thumb_size)
         self.assertNotEqual(os.path.getmtime(thumb_name), thumb_mtime)
 
     def testFilelikeDest(self):

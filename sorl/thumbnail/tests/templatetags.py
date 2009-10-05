@@ -1,10 +1,6 @@
-import unittest
 import os
-import time
-from PIL import Image
 from django.conf import settings
 from django.template import Template, Context, TemplateSyntaxError
-from sorl.thumbnail.base import ThumbnailException
 from sorl.thumbnail.tests.classes import BaseTest, RELATIVE_PIC_NAME
 
 
@@ -22,8 +18,6 @@ class ThumbnailTagTest(BaseTest):
         return Template(source).render(context)
 
     def testTagInvalid(self):
-        basename = RELATIVE_PIC_NAME.replace('.', '_')
-
         # No args, or wrong number of args
         src = '{% thumbnail %}'
         self.assertRaises(TemplateSyntaxError, self.render_template, src)

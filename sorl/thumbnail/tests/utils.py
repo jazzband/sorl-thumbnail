@@ -1,4 +1,3 @@
-import os
 from django.conf import settings
 from sorl.thumbnail.utils import *
 
