@@ -60,7 +60,7 @@ def scale_and_crop(im, requested_size, opts):
         r = min(xr / x, yr / y)
 
     if r < 1.0 or (r > 1.0 and 'upscale' in opts):
-        im = im.resize((int(x * r), int(y * r)), resample=Image.ANTIALIAS)
+        im = im.resize((int(round(x * r)), int(round(y * r))), resample=Image.ANTIALIAS)
 
     crop = opts.get('crop') or 'crop' in opts
     if crop:
@@ -116,7 +116,7 @@ def scale_and_crop(im, requested_size, opts):
                     dy -= slice
                 box = (left, top, right, bottom)
             # Finally, crop the image!
-            im = im.crop([int(v) for v in box])
+            im = im.crop([int(round(v)) for v in box])
     return im
 scale_and_crop.valid_options = ('crop', 'upscale', 'max')
 
