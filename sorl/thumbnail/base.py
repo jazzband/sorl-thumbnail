@@ -114,9 +114,14 @@ class Thumbnail(object):
                 self._source_filetype = splitext(self.source)[1].lower().\
                    replace('.', '').replace('jpeg', 'jpg')
             else:
-                m = magic.open(magic.MAGIC_NONE)
-                m.load()
-                ftype = m.file(self.source)
+                if hasattr(magic, 'from_file'):
+                    # Adam Hupp's ctypes-based magic library
+                    ftype = magic.from_file(self.source)
+                else:
+                    # Brett Funderburg's older python magic bindings
+                    m = magic.open(magic.MAGIC_NONE)
+                    m.load()
+                    ftype = m.file(self.source)
                 if ftype.find('Microsoft Office Document') != -1:
                     self._source_filetype = 'doc'
                 elif ftype.find('PDF document') != -1:
