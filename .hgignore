@@ -1,0 +1,13 @@
+syntax: glob
+
+*.pyc
+.DS_Store
+._*
+.~*#
+*.swp
+*.swo
+*.swn
+.svn
+local_settings.py
+*.orig
+_build
