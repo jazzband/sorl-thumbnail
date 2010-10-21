@@ -7,7 +7,12 @@ from sorl.thumbnail.helpers import get_unique_key
 
 class ThumbnailDataManager(models.Manager):
     def get(self, source_name, source_storage, options):
-        cache_key = get_unique_key(source_name, source_storage, options)
+        cache_key = get_unique_key(
+            source_name,
+            source_storage,
+            options,
+            prefix=settings.THUMBNAIL_CACHE_PREFIX,
+            )
         data = cache.get(cache_key)
         if not data:
             obj = self.get_query_set.get(source_name=source_name,
@@ -16,6 +21,7 @@ class ThumbnailDataManager(models.Manager):
             data = obj.__dict__
             cache.set(cache_key, data, settings.THUMBNAIL_CACHE_TIMEOUT)
         return data
+
 
 class Thumbnail(models.Model):
     source_name = models.CharField(max_length=1000, db_index=True)
@@ -32,7 +38,12 @@ class Thumbnail(models.Model):
 
     @property
     def cache_key(self):
-        return get_unique_key(self.source_name, self.source_storage, self.options)
+        return get_unique_key(
+            self.source_name,
+            self.source_storage,
+            self.options,
+            prefix=settings.THUMBNAIL_CACHE_PREFIX,
+            )
 
     class Meta:
         unique_together = (('source_name', 'source_storage', 'options'),)

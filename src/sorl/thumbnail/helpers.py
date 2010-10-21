@@ -118,11 +118,11 @@ class SimpleFile(object):
         return '%s.%s' % (cls.__module__, cls.__name__)
 
 
-def get_unique_key(*args):
+def get_unique_key(*args, prefix='')
     """
     Computes a (hopefully :D) unique key from arguments given.
     """
-    salt = '-'.join([force_unicode(arg) for arg in args])
-    hash_ = hashlib.md5(salt)
+    hash_ = hashlib.md5(prefix)
+    hash_.update('-'.join([force_unicode(arg) for arg in args]))
     return hash_.hexdigest()
 

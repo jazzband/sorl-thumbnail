@@ -1,8 +1,10 @@
+from abs import ABCMeta, abstractmethod, abstractproperty
 from django.utils.encoding import force_unicode
-from sorl.thumbnail.helpers import get_unique_key
 
 
 class ThumbnailBackendBase(object):
+    __metaclass__ = ABCMeta
+
     extensions = {
         'JPEG': 'jpg',
         'PNG': 'png',
@@ -11,20 +13,21 @@ class ThumbnailBackendBase(object):
     def __init__(self, fobj):
         self.fobj = fobj
 
-    @property
+    @abstractproperty
     def width(self):
         """
         Should return the width of the image after `process`
         """
-        raise NotImplemented
+        pass
 
-    @property
+    @abstractproperty
     def height(self):
         """
         Should return the height of the image after `process`
         """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def resize(self, geometry, crop=None):
         """
         `geometry` should be a sorl.thumbnail.helpers.Geometry instance
@@ -40,8 +43,9 @@ class ThumbnailBackendBase(object):
             SouthEast.
 
         """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def colorspace(self, value):
         """
         `Valid colorspaces
@@ -50,14 +54,16 @@ class ThumbnailBackendBase(object):
 
             RGB, GRAY
         """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def sharpen(self, value):
         """
         Sharpens the image, `value` should be between 1 and 100
         """
-        raise NotImplemented
+        pass
 
+    @abstractmethod
     def write(self, fobj, format=None, quality=None):
         """
         Writes the processed image data to File object
