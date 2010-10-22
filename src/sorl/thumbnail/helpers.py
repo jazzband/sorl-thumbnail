@@ -107,7 +107,7 @@ class SimpleFile(object):
                 self.storage = FileSystemStorage()
 
     def read(self):
-        return self.storage.read(self.name)
+        return self.storage.open(self.name).read()
 
     @property
     def storage_string(self):
