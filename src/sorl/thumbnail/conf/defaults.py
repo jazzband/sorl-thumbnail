@@ -7,7 +7,7 @@ from django.conf import settings
 THUMBNAIL_DEBUG = False
 
 # Thumbnail backend
-THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.pil.ThumbnalBackend'
+THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.pil'
 
 # Image format, common formats are: JPEG, PNG
 # Make sure the backend can handle the format you specify
@@ -44,9 +44,6 @@ THUMBNAIL_DUMMY = False
 # True
 THUMBNAIL_DUMMY_EMPTY_P = 0
 
-# Sets the minumum ratio for dummy generation
-THUMBNAIL_DUMMY_PORTRAIT = 2 / 3
-
-# Sets the maximum ratio for dummy generation
-THUMBNAIL_DUMMY_LANDSCAPE = 16 / 9
+# Sets the source image ratio for dummy generation
+THUMBNAIL_DUMMY_RATIO = 3 / 2
 

@@ -1,5 +1,5 @@
-from abs import ABCMeta, abstractmethod, abstractproperty
-from django.utils.encoding import force_unicode
+from abc import ABCMeta, abstractmethod, abstractproperty
+from sorl.thumbnail.helpers import mkhash
 
 
 class ThumbnailBackendBase(object):
@@ -68,7 +68,7 @@ class ThumbnailBackendBase(object):
         """
         Writes the processed image data to File object
         """
-        raise NotImplemented
+        pass
 
     def process(self, geometry, crop=None, colorspace=None, sharpen=None,
                 **kwargs):
@@ -83,8 +83,7 @@ class ThumbnailBackendBase(object):
         """
         Computes the destination filename.
         """
-        base = get_unique_key(self.fobj.name, self.fobj.storage_string, options)
+        base = mkhash(self.fobj.name, self.fobj.storage_string, options)
         ext = self.extensions[format]
         return '%s.%s' % (base, ext)
-
 

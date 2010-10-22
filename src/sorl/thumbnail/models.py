@@ -2,16 +2,15 @@ from django.core.cache import cache
 from django.db import models
 from django.db.models import signals
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import get_unique_key
+from sorl.thumbnail.helpers import get_cache_key
 
 
 class ThumbnailDataManager(models.Manager):
     def get(self, source_name, source_storage, options):
-        cache_key = get_unique_key(
+        cache_key = get_cache_key(
             source_name,
             source_storage,
             options,
-            prefix=settings.THUMBNAIL_CACHE_PREFIX,
             )
         data = cache.get(cache_key)
         if not data:
@@ -38,11 +37,10 @@ class Thumbnail(models.Model):
 
     @property
     def cache_key(self):
-        return get_unique_key(
+        return get_cache_key(
             self.source_name,
             self.source_storage,
             self.options,
-            prefix=settings.THUMBNAIL_CACHE_PREFIX,
             )
 
     class Meta:

@@ -6,29 +6,33 @@ from sorl.thumbnail.models import Thumbnail
 
 def get_thumbnailfile(input_file, geometry_string, **kwargs):
     fobj = SimpleFile(input_file)
-    backend_cls = import_module(settings.THUMBNAIL_BACKEND)
-    backend = backend_cls(fobj)
+    mod = import_module(settings.THUMBNAIL_BACKEND)
+    backend = mod.ThumbnailBackend(fobj)
     options = Options(geometry_string, kwargs)
     try:
         data = Thumbnail.data.get(fobj.name, fobj.storage_string,
                                   unicode(options))
     except Thumbnail.DoesNotExist:
-        name = backend.get_filename(options, options.kwargs['format'])
-        storage_cls = import_module(settings.THUMBNAIL_FILE_STORAGE)
-        storage = storage_cls()
-        backend.process(unicode(options.geometry), **options.kwargs)
-        backend.write(name, storage, **options.kwargs)
-        obj = Thumbnail.objects.create(
-            source_name=fobj.name,
-            source_storage=fobj.storage_string,
-            name=name,
-            url=storage.url(name),
-            path=storage.path(name),
-            width=backend.width,
-            height=backend.height,
-            size=storage.size(name),
-        )
-        data = obj.__dict__
+        if settings.THUMBNAIL_DUMMY:
+            # TODO
+            pass
+        else:
+            name = backend.get_filename(options, options.kwargs['format'])
+            storage_cls = import_module(settings.THUMBNAIL_FILE_STORAGE)
+            storage = storage_cls()
+            backend.process(unicode(options.geometry), **options.kwargs)
+            backend.write(name, storage, **options.kwargs)
+            obj = Thumbnail.objects.create(
+                source_name=fobj.name,
+                source_storage=fobj.storage_string,
+                name=name,
+                url=storage.url(name),
+                path=storage.path(name),
+                width=backend.width,
+                height=backend.height,
+                size=storage.size(name),
+                )
+            data = obj.__dict__
     return ThumbnailFile(data)
 
 
@@ -44,5 +48,4 @@ class ThumbnailFile(object):
     size = property(lambda self: self.data['size'])
     x = width
     y = height
-
 

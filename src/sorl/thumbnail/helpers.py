@@ -69,7 +69,7 @@ class Options(object):
     some defaults if not set.
     """
     defaults = {
-        'format': settings.THUMNBAIL_FORMAT,
+        'format': settings.THUMBNAIL_FORMAT,
         'quality': settings.THUMBNAIL_QUALITY,
     }
 
@@ -118,11 +118,15 @@ class SimpleFile(object):
         return '%s.%s' % (cls.__module__, cls.__name__)
 
 
-def get_unique_key(*args, prefix='')
+def get_cache_key(*args):
+    return '%s%s' % (settings.THUMBNAIL_CACHE_PREFIX, mkhash(*args))
+
+
+def mkhash(*args):
     """
     Computes a (hopefully :D) unique key from arguments given.
     """
-    hash_ = hashlib.md5(prefix)
-    hash_.update('-'.join([force_unicode(arg) for arg in args]))
+    salt = '-'.join([force_unicode(arg) for arg in args])
+    hash_ = hashlib.md5(salf)
     return hash_.hexdigest()
 

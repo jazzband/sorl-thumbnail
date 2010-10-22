@@ -1,12 +1,12 @@
 import re
-from django.template import Library, Node
-from django.utils.encoding import force_unicode, smart_str
+from django.template import Library, Node, TemplateSyntaxError
+from django.utils.encoding import smart_str
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.main import get_thumbnailfile
+from sorl.thumbnail.base import get_thumbnailfile
 
 
 register = Library()
-kw_pat = re.compile(r'^(?P<key>\w+)=(?P<value>.+)$')
+kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
 
 
 @register.tag('thumbnail')
@@ -18,7 +18,7 @@ class ThumbnailNode(Node):
         if len(bits) < 5 or bits[-2] != 'as':
             raise syntax_error()
         self.input_file = parser.compile_filter(bits[1])
-        self.geometry = parser_compile_filter(bits[2])
+        self.geometry = parser.compile_filter(bits[2])
         self.kwargs = {}
         for bit in bits[2:-3]:
             m = kw_pat.match(bit)
