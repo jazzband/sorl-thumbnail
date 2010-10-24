@@ -1,14 +1,17 @@
 from django.utils.importlib import import_module
+from django.core.files.storage import get_storage_class
+from django.core.exceptions import ImproperlyConfigured
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import Options, SimpleFile
+from sorl.thumbnail.helpers import Options, ReadOnlyFile, get_module_attr
 from sorl.thumbnail.models import Thumbnail
 
 
-def get_thumbnailfile(input_file, geometry_string, **kwargs):
-    fobj = SimpleFile(input_file)
-    mod = import_module(settings.THUMBNAIL_BACKEND)
-    backend = mod.ThumbnailBackend(fobj)
-    options = Options(geometry_string, kwargs)
+def get_thumbnailfile(input_file, landscape_string, portrait_string=None,
+                      **kwargs):
+    if portrait_string is None:
+        portrait_string = landscape_string
+    fobj = ReadOnlyFile(input_file)
+    options = Options(landscape_string, portrait_string, **kwargs)
     try:
         data = Thumbnail.data.get(fobj.name, fobj.storage_string,
                                   unicode(options))
@@ -17,10 +20,13 @@ def get_thumbnailfile(input_file, geometry_string, **kwargs):
             # TODO
             pass
         else:
-            name = backend.get_filename(options, options.kwargs['format'])
-            storage_cls = import_module(settings.THUMBNAIL_FILE_STORAGE)
+            backend_cls = get_module_attr(settings.THUMBNAIL_BACKEND)
+            backend = backend_cls(fobj)
+            name = backend.get_filename(options, **options.kwargs)
+            storage_cls = get_module_attr(settings.THUMBNAIL_FILE_STORAGE)
             storage = storage_cls()
-            backend.process(unicode(options.geometry), **options.kwargs)
+            backend.process(options.landscape, options.portrait,
+                            **options.kwargs)
             backend.write(name, storage, **options.kwargs)
             obj = Thumbnail.objects.create(
                 source_name=fobj.name,
@@ -46,6 +52,10 @@ class ThumbnailFile(object):
     width = property(lambda self: self.data['width'])
     height = property(lambda self: self.data['height'])
     size = property(lambda self: self.data['size'])
+    landscape = property(lambda self: self.x >= self.y)
+    portrait = property(lambda self: self.y >= self.x)
+    # TODO
+    margin = property(lambda self: None)
     x = width
     y = height
 

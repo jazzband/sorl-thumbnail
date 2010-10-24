@@ -1,89 +1,44 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
-from sorl.thumbnail.helpers import mkhash
 
 
-class ThumbnailBackendBase(object):
+class ThumbnailProxy(object):
+
+
+
+class ThumbnailBase(ThumbnailProxy):
     __metaclass__ = ABCMeta
 
-    extensions = {
-        'JPEG': 'jpg',
-        'PNG': 'png',
-    }
-
-    def __init__(self, fobj):
-        self.fobj = fobj
-
-    @abstractproperty
-    def width(self):
+    def __init__(self, source, options, engine=None):
         """
-        Should return the width of the image after `process`
+        ``source``
+            This should be a ``sorl.thumbnail.storage.StorageImage`` instance
+        ``options``
+            This should be a ``sorl.thumbnail.helpers.Options`` instance
+        ``engine``
+            This should be a ``sorl.thumbnail.engine.EngineBase`` sub class
+            instance
         """
-        pass
-
-    @abstractproperty
-    def height(self):
-        """
-        Should return the height of the image after `process`
-        """
-        pass
+        self._source = source
+        self._options = options
+        if engine is None:
+            engine_cls = get_module_class(settings.THUMBNAIL_ENGINE)
+            self._engine = engine_cls()
+        else:
+            self._enigne = engine
+        self._prepare()
 
     @abstractmethod
-    def resize(self, geometry, crop=None):
-        """
-        `geometry` should be a sorl.thumbnail.helpers.Geometry instance
-
-        `crop` is used in conjunction with the '^' modifier and will crop the
-        resulting image to the specified width and height. The value of `crop`
-        sets the gravity and should be specified as `GraphicsMagick gravity
-        options
-        <http://www.graphicsmagick.org/GraphicsMagick.html#details-gravity>`_
-        Backends need to implement the following::
-
-            NorthWest, North, NorthEast, West, Center, East, SouthWest, South,
-            SouthEast.
-
-        """
+    def _prepare(self):
         pass
 
-    @abstractmethod
-    def colorspace(self, value):
-        """
-        `Valid colorspaces
-        <http://www.graphicsmagick.org/GraphicsMagick.html#details-colorspace>`_.
-        Backends need to implement the following::
-
-            RGB, GRAY
-        """
-        pass
-
-    @abstractmethod
-    def sharpen(self, value):
-        """
-        Sharpens the image, `value` should be between 1 and 100
-        """
-        pass
-
-    @abstractmethod
-    def write(self, fobj, format=None, quality=None):
-        """
-        Writes the processed image data to File object
-        """
-        pass
-
-    def process(self, geometry, crop=None, colorspace=None, sharpen=None,
-                **kwargs):
-        """
-        Does the processing of the image
-        """
-        self.colorspace(colorspace)
-        self.resize(geometry, crop)
-        self.sharpen(sharpen)
-
-    def get_filename(self, options, format):
-        """
-        Computes the destination filename.
-        """
-        base = mkhash(self.fobj.name, self.fobj.storage_string, options)
-        ext = self.extensions[format]
-        return '%s.%s' % (base, ext)
+    name = abstractproperty()
+    url = abstractproperty()
+    path = abstractproperty()
+    width = abstractproperty()
+    height = abstractproperty()
+    x = property(lambda self: self.width)
+    y = property(lambda self: self.height)
+    is_portrait = lambda self: self.y > self.x
+    size = abstractproperty()
+    margin = abstractproperty()
 

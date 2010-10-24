@@ -1,29 +1,11 @@
-from cStringIO import StringIO
 from PIL import Image, ImageFilter, ImageFile
+from cStringIO import StringIO
+from django.core.files.base import ContentFile
 from sorl.thumbnail.backends.base import ThumbnailBackendBase
 
 
-def rndint(number):
-    if isinstance(number, float):
-        number = round(number, 0)
-    return int(number)
-
 
 class ThumbnailBackend(ThumbnailBackendBase):
-    def __init__(self, fobj):
-        self.fobj = fobj
-        buf = StringIO(fobj.read())
-        self.im = Image.open(buf)
-
-    @property
-    def width(self):
-        return self.im.size[0]
-    x = width
-
-    @property
-    def height(self):
-        return self.im.size[1]
-    y = height
 
     def resize(self, geometry, crop=None):
         x = geometry.x
@@ -38,7 +20,7 @@ class ThumbnailBackend(ThumbnailBackendBase):
         requested_y = rndint(y)
         x = float(x)
         y = float(y)
-        if '!' not in geometry.modifiers:
+        if crop is:
             # keep aspect ratio
             # calculate resizing factor r
             rarg = (x / self.x, y / self.y)
@@ -49,12 +31,8 @@ class ThumbnailBackend(ThumbnailBackendBase):
         x = rndint(x)
         y = rndint(y)
 
-        if '>' in geometry.modifiers and not (self.x > x or self.y > y):
-            return
-        if '<' in geometry.modifiers and not (self.x > x and self.y > y):
-            return
-
-        self.im = self.im.resize((x, y), resample=Image.ANTIALIAS)
+        if should_we_resize():
+            self.im = self.im.resize((x, y), resample=Image.ANTIALIAS)
 
         if '^' in geometry.modifiers and crop:
             if x > requested_x:
@@ -103,6 +81,6 @@ class ThumbnailBackend(ThumbnailBackendBase):
             self.im.save(buf, format=format, quality=quality, optimize=1)
         except IOError:
             self.im.save(buf, format=format, quality=quality)
-        storage.save(buf.getvalue())
+        storage.save(name, ContentFile(buf.getvalue()))
         buf.close()
 

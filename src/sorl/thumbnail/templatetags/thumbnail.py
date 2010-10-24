@@ -18,8 +18,12 @@ class ThumbnailNode(Node):
         if len(bits) < 5 or bits[-2] != 'as':
             raise syntax_error()
         self.input_file = parser.compile_filter(bits[1])
-        self.geometry = parser.compile_filter(bits[2])
+        self.portrait = parser.compile_filter(bits[2])
         self.kwargs = {}
+        if len(bits) > 5 and not kw_pat.match(bits[3]):
+            self.landscape = parser.compile_filter(bits.pop(3))
+        else:
+            self.landscape = None
         for bit in bits[2:-3]:
             m = kw_pat.match(bit)
             if not m:
@@ -41,11 +45,15 @@ class ThumbnailNode(Node):
 
     def _render(self, context):
         input_file = self.input_file.resolve(context)
-        geometry_string = self.geometry.resolve(context)
+        portrait_string = self.portrait.resolve(context)
+        if self.landscape is not None:
+            landscape_string = self.landscape.resolve(context)
+        else:
+            landscape_string = None
         for k, v in self.kwargs.iteritems():
             self.kwargs[k] = v.resolve(context)
-        thumbnail = get_thumbnailfile(input_file, geometry_string,
-                                      **self.kwargs)
+        thumbnail = get_thumbnailfile(input_file, portrait_string,
+                                      landscape_string, **self.kwargs)
         context.push()
         context[self.as_var] = thumbnail
         output = self.nodelist.render(context)

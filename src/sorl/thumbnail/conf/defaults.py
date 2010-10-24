@@ -7,7 +7,7 @@ from django.conf import settings
 THUMBNAIL_DEBUG = False
 
 # Thumbnail backend
-THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.pil'
+THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.pil.ThumbnailBackend'
 
 # Image format, common formats are: JPEG, PNG
 # Make sure the backend can handle the format you specify

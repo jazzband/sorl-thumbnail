@@ -25,5 +25,5 @@ class ThumbnailTestCase(unittest.TestCase):
 
     def testItem(self):
         item = Item.objects.get(image='500x500.jpg')
-        get_thumbnailfile(item, '100x100')
+        t = get_thumbnailfile(item.image, '400x600^>', crop="Center")
 

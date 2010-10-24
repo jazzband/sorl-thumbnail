@@ -1,14 +1,15 @@
-import re
 import hashlib
+import re
+from django.core.exceptions import ImproperlyConfigured
 from django.core.files import File
-from django.utils.encoding import force_unicode
 from django.core.files.storage import FileSystemStorage
-from sorl.thumbnail.storage import UrlStorage
+from django.utils.encoding import force_unicode
+from django.utils.importlib import import_module
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.storage import UrlStorage
 
 
-geometry_pat = re.compile(r'^(?P<x>\d+)?(?:x(?P<y>\d+))?(?P<modifiers>[\^!><]*)$')
-url_pat = re.compile(r'^(https?|ftp):\/\/')
+geometry_pat = re.compile(r'^(?P<x>\d+)?(?:x(?P<y>\d+))?$')
 
 
 class ThumbnailError(Exception):
@@ -20,18 +21,16 @@ class GeometryParseError(ThumbnailError):
 
 class Geometry(object):
     """
-    Object to represent geometry according to the `GraphicsMagick geometry
-    specification
-    <http://www.graphicsmagick.org/GraphicsMagick.html#details-geometry`_
+    Object to represent geometry
     """
     x = None
     y = None
-    modifiers = []
 
     def __init__(self, geometry_string):
         m = geometry_pat.match(geometry_string)
         def syntax_error():
-            return GeometryParseError('geometry does not have the correct syntax.')
+            return GeometryParseError('Geometry string does not have the '
+                    'correct syntax: %s' % geometry_string)
         if not m:
             raise syntax_error()
         x = m.group('x')
@@ -42,24 +41,36 @@ class Geometry(object):
             x = int(x)
         if y is not None:
             y = int(y)
-        modifiers = m.group('modifiers')
-        if modifiers:
-            modifiers = set(modifiers)
-        else:
-            modifiers = set()
         self.x = x
         self.y = y
-        self.modifiers
+
+    width = property(lambda self: self.x)
+    height = property(lambda self: self.y)
+
+    def css_margin(self):
+        if self.x is not None and self.y is not None:
+            margin = [0, 0, 0, 0]
+            ex = self.x - self.x
+            margin[3] = ex / 2
+            marign[1] = ex / 2
+            if ex % 2:
+                marign[1] += 1
+            ey = self.y - self.y
+            margin[0] = ex / 2
+            marign[2] = ex / 2
+            if ex % 2:
+                marign[2] += 1
+            return ' '.join(map(str, marign))
+        else:
+            return 'auto'
 
     def __unicode__(self):
         result = []
         if self.x is not None:
-            result.append(self.x)
+            result.append(unicode(self.x))
         if self.y is not None:
             result.append('x')
-            result.append(self.y)
-        if self.modifiers:
-            result.extend(sorted(list(self.modifiers)))
+            result.append(unicode(self.y))
         return u''.join(result)
 
 
@@ -73,8 +84,9 @@ class Options(object):
         'quality': settings.THUMBNAIL_QUALITY,
     }
 
-    def __init__(self, geometry_string, kwargs):
-        self.geometry = Geometry(geometry_string)
+    def __init__(self, landscape_string, portrait_string, **kwargs):
+        self.landscape = Geometry(landscape_string)
+        self.portrait = Geometry(portrait_string)
         for key, value in self.defaults.iteritems():
             kwargs.setdefault(key, value)
         self.kwargs = kwargs
@@ -84,38 +96,16 @@ class Options(object):
         keys = sorted(self.kwargs.keys())
         for key in keys:
             result.append('%s=%s' % (key, force_unicode(self.kwargs[key])))
-        return '%s %s' % (self.geometry, ', '.join(result))
+        return u'%s %s %s' % (self.landscape, self.portrait, ', '.join(result))
 
 
-class SimpleFile(object):
+def rndint(number):
     """
-    A very simple read-only file wrapper
+    Helper to return best int for a float or just the int it self.
     """
-    def __init__(self, input_file):
-        if not input_file:
-            raise ThumbnailError('Source is empty.')
-        if hasattr(input_file, '__class__') and\
-                issubclass(input_file.__class__, File):
-            self.name = input_file.name
-            self.storage = input_file.storage
-        else:
-            self.name = force_unicode(input_file)
-            m = url_pat.match(self.name)
-            if m:
-                self.storage = UrlStorage()
-            else:
-                self.storage = FileSystemStorage()
-
-    def read(self):
-        return self.storage.open(self.name).read()
-
-    @property
-    def storage_string(self):
-        """
-        Returns the storage instance string representation.
-        """
-        cls = self.storage.__class__
-        return '%s.%s' % (cls.__module__, cls.__name__)
+    if isinstance(number, float):
+        number = round(number, 0)
+    return int(number)
 
 
 def get_cache_key(*args):
@@ -127,6 +117,20 @@ def mkhash(*args):
     Computes a (hopefully :D) unique key from arguments given.
     """
     salt = '-'.join([force_unicode(arg) for arg in args])
-    hash_ = hashlib.md5(salf)
+    hash_ = hashlib.md5(salt)
     return hash_.hexdigest()
+
+
+def get_module_class(class_path):
+    """
+    imports and returns a module class from ``path.to.module.Class``
+    argument
+    """
+    try:
+        mod_name, cls_name = attr_path.rsplit('.', 1)
+        mod = import_module(mod_name)
+    except ImportError, e:
+        raise ImproperlyConfigured(('Error importing module %s: "%s"' %
+                                   (mod_name, e)))
+    return getattr(mod, cls_name)
 
