@@ -9,7 +9,7 @@ from sorl.thumbnail.conf import settings
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 
-class StorageImage(object):
+class SuperImage(object):
     """
     A file (storage + name) wrapper that can do some input introspection and
     get dimensions of images. Alot of these methods are currently not used.

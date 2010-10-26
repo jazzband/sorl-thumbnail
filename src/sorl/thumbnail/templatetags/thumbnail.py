@@ -1,8 +1,10 @@
 import re
+from django.core.cache import cache
 from django.template import Library, Node, TemplateSyntaxError
 from django.utils.encoding import smart_str
-from sorl.thumbnail.helpers import get_thumbnail
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.helpers import get_thumbnail, mkhash, get_or_set_cache
+from sorl.thumbnail.storage import SuperImage
 
 
 register = Library()
@@ -59,4 +61,16 @@ class ThumbnailNode(Node):
 
     def __repr__(self):
         return "<ThumbnailNode>"
+
+
+@register.filter
+def is_portrait(file_):
+    """
+    A very handy filter to determine if an image is portrait or landscape.
+    Caching is used since this operation is not free.
+    """
+    image = SuperImage(file_)
+    key = '%sportrait-%s'(settings.THUMBNAIL_CACHE_PREFIX,
+                          mkhash(image.name, image.storage_path))
+    return get_or_set_cache(key, image.is_portrait)
 

@@ -2,6 +2,7 @@ from django.core.cache import cache
 from django.db import models
 from django.db.models import signals
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.helpers import get_or_set_cache
 
 
 def get_cache_key(key):
@@ -10,13 +11,11 @@ def get_cache_key(key):
 
 class ThumbnailCacheManager(models.Manager):
     def get(self, key):
-        cache_key = get_cache_key(key)
-        obj = cache.get(cache_key)
-        if not obj:
+        def get_thumbnail_from_db():
             sup = super(ThumbnailCacheManager, self)
-            obj = sup.get_query_set().get(pk=key)
-            cache.set(cache_key, obj, settings.THUMBNAIL_CACHE_TIMEOUT)
-        return obj
+            return sup.get_query_set().get(pk=key)
+        cache_key = get_cache_key(key)
+        return get_or_set_cache(cache_key, get_thumbnail_from_db)
 
 
 class Thumbnail(models.Model):

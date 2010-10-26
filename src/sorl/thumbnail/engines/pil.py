@@ -1,7 +1,7 @@
 from PIL import Image, ImageFile
 from cStringIO import StringIO
 from sorl.thumbnail.engines.base import ThumbnailEngineBase
-from sorl.thumbnail.helpers import parse_geometry, toint
+from sorl.thumbnail.helpers import toint
 
 
 class ThumbnailEngine(ThumbnailEngineBase):
@@ -10,7 +10,7 @@ class ThumbnailEngine(ThumbnailEngineBase):
         y = float(image.size[1])
         crop = options['crop']
         upscale = options['upscale']
-        requested_x, requested_y = parse_geometry(geometry)
+        requested_x, requested_y = self.parse_geometry(geometry)
         # set requested_x or requested_y proportionally if not set
         if requested_x is None:
             requested_x = x * requested_y / y
@@ -23,36 +23,11 @@ class ThumbnailEngine(ThumbnailEngineBase):
             new_x = toint(x * factor)
             new_y = toint(y * factor)
             image = image.resize((new_x, new_y), resample=Image.ANTIALIAS)
-        return image
-        # 
-        #if '^' in geometry.modifiers and crop:
-        #    if x > requested_x:
-        #        if crop.endswith('West'):
-        #            carg = (0, 0, requested_x, y)
-        #        elif crop.endswith('East'):
-        #            carg = (x - requested_x, 0, x, y)
-        #        else:
-        #            # center
-        #            x1 = (x - requested_x) / 2
-        #            x2 = x - x1
-        #            if (x - requested_x) % 2:
-        #                x2 -= 1
-        #            carg = (x1, 0, x2, y)
-        #    elif y > requested_y:
-        #        if crop.startswith('North'):
-        #            carg = (0, 0, x, y - requested_y)
-        #        elif crop.endswith('South'):
-        #            carg = (0, y - requested_y, x, y)
-        #        else:
-        #            # center
-        #            y1 = (y - requested_y) / 2
-        #            y2 = y - y1
-        #            if (y - requested_y) % 2:
-        #                y2 -= 1
-        #            carg = (0, y1, x, y2)
-        #    else:
-        #        return
-        #    self.im = self.im.crop(carg)
+        if not crop or crop == 'noop':
+            return image
+        crop_args = self.parse_crop(crop, (new_x, new_y),
+                                    (requested_x, requested_y))
+        return image.crop(crop_args)
 
     def colorspace(self, image, geometry, options):
         colorspace = options['colorspace']

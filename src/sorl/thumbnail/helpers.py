@@ -1,6 +1,6 @@
 import hashlib
-import re
 from django.core.exceptions import ImproperlyConfigured
+from django.core.cache import cache
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.utils.importlib import import_module
@@ -8,14 +8,7 @@ from django.utils import simplejson
 from sorl.thumbnail.conf import settings
 
 
-geometry_pat = re.compile(r'^(?P<x>\d+)?(?:x(?P<y>\d+))?$')
-
-
 class ThumbnailError(Exception):
-    pass
-
-
-class GeometryParseError(ThumbnailError):
     pass
 
 
@@ -27,25 +20,15 @@ def get_thumbnail(file_, geometry, **options):
     return thumbnail_cls(file_, geometry, options)
 
 
-def parse_geometry(geometry):
+def get_or_set_cache(key, callback, timeout=settings.THUMBNAIL_CACHE_TIMEOUT):
     """
-    Parses a geometry string syntax and returns a (width, height) tuple
+    Get value from cache or update with value from callback
     """
-    m = geometry_pat.match(geometry)
-    def syntax_error():
-        return GeometryParseError('Geometry does not have the correct '
-                'syntax: %s' % geometry)
-    if not m:
-        raise syntax_error()
-    x = m.group('x')
-    y = m.group('y')
-    if x is None and y is None:
-        raise syntax_error()
-    if x is not None:
-        x = int(x)
-    if y is not None:
-        y = int(y)
-    return x, y
+    value = cache.get(key)
+    if value is None:
+        value = callback()
+        cache.set(key, value, timeout)
+    return value
 
 
 def dict_serialize(dict_):
