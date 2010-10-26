@@ -115,5 +115,5 @@ class TemplateTestCaseB(unittest.TestCase):
             'source': 'http://www.aino.se/media/i/logo.png',
             'dims': 'x666',
         }).strip()
-        self.assertEqual(val, '<img src="/media/test/cache/51/db/51dbfb4a3f6177917cd86dae19cc4952.jpg" width="1984" height="666" class"landscape">')
+        self.assertEqual(val, '<img src="/media/test/cache/51/db/51dbfb4a3f6177917cd86dae19cc4952.jpg" width="1984" height="666" class="landscape">')
 
