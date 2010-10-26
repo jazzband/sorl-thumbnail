@@ -1,10 +1,7 @@
 from PIL import Image, ImageFile
 from cStringIO import StringIO
-from django.core.files.base import ContentFile
 from sorl.thumbnail.engines.base import ThumbnailEngineBase
-from sorl.thumbnail.helpers import parse_geometry, rndint, get_module_class
-from sorl.thumbnail.conf import settings
-from sorl.thumbnail.storage import StorageImage
+from sorl.thumbnail.helpers import parse_geometry, rndint
 
 
 class ThumbnailEngine(ThumbnailEngineBase):
@@ -19,7 +16,7 @@ class ThumbnailEngine(ThumbnailEngineBase):
             requested_x = x * requested_y / y
         elif requested_y is None:
             requested_y = y * requested_x / x
-        # keep aspect ratio and calculate scaling factor
+        # calculate scaling factor
         factors = (requested_x / x, requested_y / y)
         factor = max(factors) if crop else min(factors)
         if factor <= 1 or upscale:
@@ -65,21 +62,16 @@ class ThumbnailEngine(ThumbnailEngineBase):
             return image.convert('L')
         return image
 
-    def create(self, source, geometry, options):
+    def create(self, source, geometry, options, thumbnail):
         buf = StringIO(source.open().read())
         image = Image.open(buf)
         image = self.colorspace(image, geometry, options)
         image = self.resize(image, geometry, options)
-        name = self.get_filename(source, geometry, options)
-        thumbnail = self.write(image, name, options)
+        self.write(image, options, thumbnail)
         buf.close()
         return thumbnail
 
-    def write(self, image, name, options):
-        storage_cls = get_module_class(settings.THUMBNAIL_STORAGE)
-        thumbnail = StorageImage(name, storage_cls())
-        if thumbnail.exists:
-            return thumbnail
+    def write(self, image, options, thumbnail):
         format_ = options['format']
         quality = options['quality']
         ImageFile.MAXBLOCK = 1024 * 1024

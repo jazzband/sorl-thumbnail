@@ -15,6 +15,9 @@ THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil.ThumbnailEngine'
 # Default storage for the generated thumbnail
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
+# Thumbnail filename prefix
+THUMBNAIL_PREFIX = 'cache/'
+
 # Image format, common formats are: JPEG, PNG
 # Make sure the backend can handle the format you specify
 THUMBNAIL_FORMAT = 'JPEG'

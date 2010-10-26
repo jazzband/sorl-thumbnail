@@ -13,8 +13,8 @@ class Thumbnail(ThumbnailBase):
                 options=dict_serialize(self._options),
                 )
         except models.Thumbnail.DoesNotExist:
-            thumbnail = self._engine.create(self._source, self._geometry,
-                                            self._options)
+            thumbnail = self._engine.get(self._source, self._geometry,
+                                         self._options)
             self._thumbnail = models.Thumbnail.cache.create(
                 source_name=self._source.name,
                 source_storage=self._source.storage_path,

@@ -31,7 +31,6 @@ class StorageImage(object):
             else:
                 self.storage = FileSystemStorage()
 
-    @property
     def exists(self):
         return self.storage.exists(self.name)
 

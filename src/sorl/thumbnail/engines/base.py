@@ -1,8 +1,13 @@
 from abc import ABCMeta, abstractmethod
-from sorl.thumbnail.helpers import mkhash, dict_serialize
+from sorl.thumbnail.conf import settings
+from sorl.thumbnail.helpers import get_module_class, mkhash, dict_serialize
+from sorl.thumbnail.storage import StorageImage
 
 
 class ThumbnailEngineBase(object):
+    """
+    ABC from Thumbnail engines, methods are static
+    """
     __metaclass__ = ABCMeta
 
     extensions = {
@@ -29,7 +34,7 @@ class ThumbnailEngineBase(object):
         pass
 
     @abstractmethod
-    def create(self, source, geometry, options):
+    def create(self, source, geometry, options, thumbnail):
         """
         Should create the thumbnail and return it as a
         ``sorl.thumbnail.storage.StorageImage`` instance
@@ -37,19 +42,36 @@ class ThumbnailEngineBase(object):
         pass
 
     @abstractmethod
-    def write(self, image, name, options):
+    def write(self, image, options, thumbnail):
         """
         Writes the thumbnail to storage
         """
         pass
 
+    def get(self, source, geometry, options):
+        """
+        Should return a ``sorl.thumbnail.storage.StorageImage``
+        instance
+        """
+        name = self.get_filename(source, geometry, options)
+        storage_cls = get_module_class(settings.THUMBNAIL_STORAGE)
+        thumbnail = StorageImage(name, storage_cls())
+        if thumbnail.exists():
+            # We could have an overwrite option passed in to
+            # ThumbnailEngine.get and delete it if existed but I am
+            # that could lead to race conditions. There fore we just
+            # return it.
+            return thumbnail
+        return self.create(source, geometry, options, thumbnail)
+
     def get_filename(self, source, geometry, options):
         """
         Computes the destination filename.
         """
-        base = mkhash(source.name, source.storage_path, geometry,
+        name = mkhash(source.name, source.storage_path, geometry,
                       dict_serialize(options))
         # make some subdirs
-        base = '%s/%s/%s' % (base[:2], base[2:4], base)
-        return '%s.%s' % (base, self.extensions[options['format']])
+        path = '%s/%s/%s' % (name[:2], name[2:4], name)
+        return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
+                            self.extensions[options['format']])
 

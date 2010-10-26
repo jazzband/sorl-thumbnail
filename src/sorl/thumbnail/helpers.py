@@ -21,7 +21,7 @@ class GeometryParseError(ThumbnailError):
 
 def get_thumbnail(file_, geometry, **options):
     """
-    Simple fuction to get a ``thumbnail`` instance
+    Simple function to get a ``sorl.thumbnail.backends.*.Thumbnail`` instance
     """
     thumbnail_cls = get_module_class(settings.THUMBNAIL_BACKEND)
     return thumbnail_cls(file_, geometry, options)
