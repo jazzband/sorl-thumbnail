@@ -12,7 +12,7 @@ class ThumbnailBase(object):
         'quality': settings.THUMBNAIL_QUALITY,
         'colorspace': settings.THUMBNAIL_COLORSPACE,
         'upscale': settings.THUMBNAIL_UPSCALE,
-        'crop': None,
+        'crop': False,
     }
 
     def __init__(self, source, geometry, options, engine=None):
