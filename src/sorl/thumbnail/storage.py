@@ -4,6 +4,7 @@ from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.helpers import ThumbnailError
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
@@ -12,13 +13,14 @@ url_pat = re.compile(r'^(https?|ftp):\/\/')
 class SuperImage(object):
     """
     A file (storage + name) wrapper that can do some input introspection and
-    get dimensions of images. Alot of these methods are currently not used.
+    get dimensions of images. Alot of these methods/properties are currently
+    not used.
     """
     _dimensions = None # dimensions cache
 
     def __init__(self, file_, storage=None):
         if not file_:
-            raise ValueError('File is empty.')
+            raise ThumbnailError('File is empty.')
         # figure out name
         if hasattr(file_, 'name'):
             self.name = file_.name

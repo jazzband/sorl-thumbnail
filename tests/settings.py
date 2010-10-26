@@ -7,6 +7,7 @@ TEMPLATE_DEBUG = DEBUG
 PROJ_ROOT = abspath(dirname(__file__))
 
 THUMBNAIL_PREFIX = 'test/cache/'
+THUMBNAIL_DEBUG = True
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),

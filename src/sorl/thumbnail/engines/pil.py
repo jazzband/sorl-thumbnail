@@ -2,6 +2,7 @@ from PIL import Image, ImageFile
 from cStringIO import StringIO
 from sorl.thumbnail.engines.base import ThumbnailEngineBase
 from sorl.thumbnail.helpers import toint
+from sorl.thumbnail.parsers import parse_geometry, parse_crop
 
 
 class ThumbnailEngine(ThumbnailEngineBase):
@@ -10,7 +11,7 @@ class ThumbnailEngine(ThumbnailEngineBase):
         y = float(image.size[1])
         crop = options['crop']
         upscale = options['upscale']
-        requested_x, requested_y = self.parse_geometry(geometry)
+        requested_x, requested_y = parse_geometry(geometry)
         # set requested_x or requested_y proportionally if not set
         if requested_x is None:
             requested_x = x * requested_y / y
@@ -25,8 +26,8 @@ class ThumbnailEngine(ThumbnailEngineBase):
             image = image.resize((new_x, new_y), resample=Image.ANTIALIAS)
         if not crop or crop == 'noop':
             return image
-        crop_args = self.parse_crop(crop, (new_x, new_y),
-                                    (requested_x, requested_y))
+        crop_args = parse_crop(crop, (new_x, new_y),
+                               (requested_x, requested_y))
         return image.crop(crop_args)
 
     def colorspace(self, image, geometry, options):

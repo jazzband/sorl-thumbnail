@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod, abstractproperty
 from sorl.thumbnail.storage import SuperImage
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
+from sorl.thumbnail.parsers import parse_geometry
 
 
 class ThumbnailBase(object):
@@ -60,14 +61,15 @@ class ThumbnailBase(object):
         Returns the calculated marigin from requested geometry and thumbnail
         """
         margin = [0, 0, 0, 0]
-        if self._geometry.x is not None:
-            ex = self._geometry.x - self.x
+        x, y = parse_geometry(self._geometry)
+        if x is not None:
+            ex = x - self.x
             margin[3] = ex / 2
             margin[1] = ex / 2
             if ex % 2:
                 margin[1] += 1
-        if self._geometry.y is not None:
-            ey = self._geometry.y - self.y
+        if y is not None:
+            ey = y - self.y
             margin[0] = ey / 2
             margin[2] = ey / 2
             if ey % 2:

@@ -1,0 +1,5 @@
+{% load thumbnail %}{% spaceless %}
+{% thumbnail item.image "200x100" crop="50% 50%" as im %}
+    <img style="margin:{{ im.margin }}" src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}">
+{% endthumbnail %}
+{% endspaceless %}
