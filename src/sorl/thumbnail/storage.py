@@ -12,7 +12,7 @@ url_pat = re.compile(r'^(https?|ftp):\/\/')
 class StorageImage(object):
     """
     A file (storage + name) wrapper that can do some input introspection and
-    get dimensions of images
+    get dimensions of images. Alot of these methods are currently not used.
     """
     _dimensions = None # dimensions cache
 
