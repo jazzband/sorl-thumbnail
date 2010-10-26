@@ -58,7 +58,7 @@ def dict_serialize(dict_):
     return simplejson.dumps(result)
 
 
-def rndint(number):
+def toint(number):
     """
     Helper to return best int for a float or just the int it self.
     """

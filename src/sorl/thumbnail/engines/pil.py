@@ -1,7 +1,7 @@
 from PIL import Image, ImageFile
 from cStringIO import StringIO
 from sorl.thumbnail.engines.base import ThumbnailEngineBase
-from sorl.thumbnail.helpers import parse_geometry, rndint
+from sorl.thumbnail.helpers import parse_geometry, toint
 
 
 class ThumbnailEngine(ThumbnailEngineBase):
@@ -20,8 +20,8 @@ class ThumbnailEngine(ThumbnailEngineBase):
         factors = (requested_x / x, requested_y / y)
         factor = max(factors) if crop else min(factors)
         if factor <= 1 or upscale:
-            new_x = rndint(x * factor)
-            new_y = rndint(y * factor)
+            new_x = toint(x * factor)
+            new_y = toint(y * factor)
             image = image.resize((new_x, new_y), resample=Image.ANTIALIAS)
         return image
         # 
