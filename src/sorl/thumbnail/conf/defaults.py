@@ -36,7 +36,7 @@ THUMBNAIL_QUALITY = 95
 # care of already
 THUMBNAIL_CACHE_TIMEOUT = sys.maxint
 
-# DB Cache prefix, make sure this does not collide with other cache keys
+# Cache prefix, this is up to the engine or backend to use.
 THUMBNAIL_CACHE_PREFIX = 'sorl-thumbnail-'
 
 # Return this when an error is raised and THUMBNAIL_DEBUG is False
