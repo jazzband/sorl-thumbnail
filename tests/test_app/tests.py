@@ -4,7 +4,7 @@ import unittest
 from django.conf import settings
 from os.path import join as pjoin
 from test_app.models import Item
-from sorl.thumbnail.base import get_thumbnailfile
+from sorl.thumbnail.helpers import get_thumbnail
 
 
 class ThumbnailTestCase(unittest.TestCase):
@@ -25,5 +25,5 @@ class ThumbnailTestCase(unittest.TestCase):
 
     def testItem(self):
         item = Item.objects.get(image='500x500.jpg')
-        t = get_thumbnailfile(item.image, '400x600^>', crop="Center")
+        t = get_thumbnail(item.image, '400x300')
 

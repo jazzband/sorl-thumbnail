@@ -7,6 +7,8 @@ from sorl.thumbnail.base import get_thumbnailfile
 
 register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
+integer_pat = re.compile(r'^\d+$')
+bool_pat = re.compile(r'^(True|False)$')
 
 
 @register.tag('thumbnail')
@@ -17,13 +19,9 @@ class ThumbnailNode(Node):
         bits = token.split_contents()
         if len(bits) < 5 or bits[-2] != 'as':
             raise syntax_error()
-        self.input_file = parser.compile_filter(bits[1])
-        self.portrait = parser.compile_filter(bits[2])
+        self.file_ = parser.compile_filter(bits[1])
+        self.geometry = parser.compile_filter(bits[2])
         self.kwargs = {}
-        if len(bits) > 5 and not kw_pat.match(bits[3]):
-            self.landscape = parser.compile_filter(bits.pop(3))
-        else:
-            self.landscape = None
         for bit in bits[2:-3]:
             m = kw_pat.match(bit)
             if not m:
@@ -44,16 +42,19 @@ class ThumbnailNode(Node):
             return settings.THUMBNAIL_ERROR
 
     def _render(self, context):
-        input_file = self.input_file.resolve(context)
-        portrait_string = self.portrait.resolve(context)
-        if self.landscape is not None:
-            landscape_string = self.landscape.resolve(context)
-        else:
-            landscape_string = None
-        for k, v in self.kwargs.iteritems():
-            self.kwargs[k] = v.resolve(context)
-        thumbnail = get_thumbnailfile(input_file, portrait_string,
-                                      landscape_string, **self.kwargs)
+        file_ = self.file_.resolve(context)
+        geometry = self.geometry.resolve(context)
+        kwargs = {}
+        for key, value in self.kwargs.iteritems():
+            value = value.resolve(context)
+            # make basestrings with int contents be ints
+            if isinstance(value, basestring) and integer_pat.match(value):
+                value = int(value)
+            # make basestrings with bool contents be bools
+            elif isinstance(value, basestring) and bool_pat.match(value):
+                value = int(value)
+            kwargs[key] = value
+        thumbnail = get_thumbnailfile(file_, geometry, **kwargs)
         context.push()
         context[self.as_var] = thumbnail
         output = self.nodelist.render(context)
@@ -62,5 +63,4 @@ class ThumbnailNode(Node):
 
     def __repr__(self):
         return "<ThumbnailNode>"
-
 

@@ -2,14 +2,15 @@ from django.core.cache import cache
 from django.db import models
 from django.db.models import signals
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import get_cache_key, Options
+from sorl.thumbnail.helpers import get_cache_key
 
 
 class ThumbnailCacheManager(models.Manager):
-    def get(self, source_name, source_storage, options):
+    def get(self, source_name, source_storage, geometry, options):
         cache_key = get_cache_key(
             source_name,
             source_storage,
+            geometry,
             options,
             )
         obj = cache.get(cache_key)
@@ -18,6 +19,7 @@ class ThumbnailCacheManager(models.Manager):
             obj = sup.get_query_set().get(
                 source_name=source_name,
                 source_storage=source_storage,
+                geometry=geometry,
                 options=options,
                 )
             cache.set(cache_key, obj, settings.THUMBNAIL_CACHE_TIMEOUT)
@@ -27,8 +29,7 @@ class ThumbnailCacheManager(models.Manager):
 class Thumbnail(models.Model):
     source_name = models.CharField(max_length=1000, db_index=True)
     source_storage = models.CharField(max_length=200, db_index=True)
-    source_width = models.PositiveIntegerField()
-    source_height = models.PositiveIntegerField()
+    geometry = models.CharField(max_length=11)
     options = models.CharField(max_length=1000, db_index=True)
 
     name = models.CharField(max_length=1000)
@@ -41,17 +42,9 @@ class Thumbnail(models.Model):
     objects = models.Manager()
     cache = ThumbnailCacheManager()
 
+    # x, y aliases
     x = property(lambda self: self.width)
     y = property(lambda self: self.height)
-
-    def css_margin(self):
-        opts_list = self.options.split(' ')
-        if self.source_height > self.source_width:
-            geometry_string = opts_list[1]
-        else:
-            geometry_string = opts_list[0]
-        geometry = Geometry(geometry_string)
-        return geometry.css_margin()
 
     @property
     def cache_key(self):
@@ -62,7 +55,7 @@ class Thumbnail(models.Model):
             )
 
     class Meta:
-        unique_together = (('source_name', 'source_storage', 'options'),)
+        unique_together = (('source_name', 'source_storage', 'geometry', 'options'),)
 
 
 def invalidate_cache(sender, instance, **kwargs):

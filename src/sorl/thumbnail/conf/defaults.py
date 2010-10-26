@@ -7,7 +7,13 @@ from django.conf import settings
 THUMBNAIL_DEBUG = False
 
 # Thumbnail backend
-THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.pil.ThumbnailBackend'
+THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.db.Thumbnail'
+
+# Thumbnail engine
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil.ThumbnailEngine'
+
+# Default storage for the generated thumbnail
+THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
 # Image format, common formats are: JPEG, PNG
 # Make sure the backend can handle the format you specify
@@ -17,11 +23,11 @@ THUMBNAIL_FORMAT = 'JPEG'
 # Setting this to None will keep the original colorspace.
 THUMBNAIL_COLORSPACE = 'RGB'
 
+# Should we upscale images
+THUMBNAIL_UPSCALE = True
+
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
-
-# Default file storage for the generated thumbnail
-THUMBNAIL_FILE_STORAGE = settings.DEFAULT_FILE_STORAGE
 
 # DB Cache timeout. You should keep this at maximum since invalidating is taken
 # care of already

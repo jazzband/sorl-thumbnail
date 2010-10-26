@@ -1,25 +1,29 @@
+from django.core.files.base import File, ContentFile
+from django.core.files.storage import Storage, FileSystemStorage
+from django.utils.encoding import force_unicode
+from sorl.thumbnail.conf import settings
 import re
 import urllib2
-from cStringIO import StringIO
-from PIL import Image
-from django.core.files.storage import Storage
-from django.core.files.base import File, ContentFile
-from sorl.thumbnail.conf import settings
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 
 class StorageImage(object):
-    def __init__(self, file_):
-        self._dimensions = None # dimensions cache
+    _dimensions = None # dimensions cache
+
+    def __init__(self, file_, storage=None):
         if not file_:
-            raise ThumbnailError('File is empty.')
+            raise ValueError('File is empty.')
+        # figure out name
         if hasattr(file_, 'name'):
-            self.name = name
+            self.name = file_.name
         else:
-            self.name = force_unicode(_file)
-        if hasattr(file_, 'storage'):
+            self.name = force_unicode(file_)
+        # figure out storage
+        if storage is not None:
+            self.storage = storage
+        elif hasattr(file_, 'storage'):
             self.storage = file_.storage
         else:
             if url_pat.match(self.name):
@@ -55,9 +59,14 @@ class StorageImage(object):
     def dimensions(self):
         if self._dimensions is None:
             # XXX Loading the whole source into memory, eeeks
+            # Using PIL although it should not be a requirement, hence
+            # the local import until I figure out i I want to keep this at all
+            from cStringIO import StringIO
+            from PIL import Image
             buf = StringIO(self.open().read())
             im = Image.open(buf)
             self._dimensions = im.size
+            buf.close()
         return self._dimensions
 
     @property
