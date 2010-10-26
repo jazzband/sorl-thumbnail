@@ -20,7 +20,7 @@ class ThumbnailCacheManager(models.Manager):
 
 
 class Thumbnail(models.Model):
-    # key this approach should sport a faster lookup when ever we need to reach
+    # This pk approach should sport a faster lookup when ever we need to reach
     # the db.
     key = models.CharField(max_length=32, primary_key=True)
     source_name = models.CharField(max_length=1000)
