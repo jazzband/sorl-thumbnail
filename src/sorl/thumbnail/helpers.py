@@ -82,7 +82,7 @@ def mkhash(*args):
 
 def get_module_class(class_path):
     """
-    imports and returns a module class from ``path.to.module.Class``
+    imports and returns module class from ``path.to.module.Class``
     argument
     """
     try:
