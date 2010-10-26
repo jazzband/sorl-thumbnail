@@ -1,15 +1,19 @@
+import re
+import urllib2
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
 from sorl.thumbnail.conf import settings
-import re
-import urllib2
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 
 class StorageImage(object):
+    """
+    A file (storage + name) wrapper that can do some input introspection and
+    get dimensions of images
+    """
     _dimensions = None # dimensions cache
 
     def __init__(self, file_, storage=None):
@@ -57,9 +61,9 @@ class StorageImage(object):
     @property
     def dimensions(self):
         if self._dimensions is None:
-            # XXX Loading the whole source into memory, eeeks
+            # XXX Loading the whole source into memory, eeeks!
             # Using PIL although it should not be a requirement, hence
-            # the local import until I figure out i I want to keep this at all
+            # the local import until I figure out if I want to keep this at all
             from cStringIO import StringIO
             from PIL import Image
             buf = StringIO(self.open().read())
@@ -107,6 +111,6 @@ class StorageImage(object):
 
 
 class UrlStorage(Storage):
-    def open(self, name, *args, **kwargs):
+    def open(self, name, mode='rb'):
         return urllib2.urlopen(name, timeout=settings.THUMBNAIL_URL_TIMEOUT)
 
