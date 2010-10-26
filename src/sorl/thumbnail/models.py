@@ -2,38 +2,34 @@ from django.core.cache import cache
 from django.db import models
 from django.db.models import signals
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import get_cache_key
+
+
+def get_cache_key(key):
+    return '%s%s' % (settings.THUMBNAIL_CACHE_PREFIX, key)
 
 
 class ThumbnailCacheManager(models.Manager):
-    def get(self, source_name, source_storage, geometry, options):
-        cache_key = get_cache_key(
-            source_name,
-            source_storage,
-            geometry,
-            options,
-            )
+    def get(self, key):
+        cache_key = get_cache_key(key)
         obj = cache.get(cache_key)
         if not obj:
             sup = super(ThumbnailCacheManager, self)
-            obj = sup.get_query_set().get(
-                source_name=source_name,
-                source_storage=source_storage,
-                geometry=geometry,
-                options=options,
-                )
+            obj = sup.get_query_set().get(pk=key)
             cache.set(cache_key, obj, settings.THUMBNAIL_CACHE_TIMEOUT)
         return obj
 
 
 class Thumbnail(models.Model):
-    source_name = models.CharField(max_length=1000, db_index=True)
-    source_storage = models.CharField(max_length=200, db_index=True)
+    # key this approach should sport a faster lookup when ever we need to reach
+    # the db.
+    key = models.CharField(max_length=32, primary_key=True)
+    source_name = models.CharField(max_length=1000)
+    source_storage = models.CharField(max_length=200)
     geometry = models.CharField(max_length=11)
-    options = models.CharField(max_length=1000, db_index=True)
+    options = models.CharField(max_length=1000)
 
     name = models.CharField(max_length=1000)
-    url = models.CharField(max_length=1000, unique=True)
+    url = models.CharField(max_length=1000)
     path = models.CharField(max_length=1000)
     width = models.PositiveIntegerField()
     height = models.PositiveIntegerField()
@@ -42,20 +38,13 @@ class Thumbnail(models.Model):
     objects = models.Manager()
     cache = ThumbnailCacheManager()
 
+    @property
+    def cache_key(self):
+        return get_cache_key(self.key)
+
     # x, y aliases
     x = property(lambda self: self.width)
     y = property(lambda self: self.height)
-
-    @property
-    def cache_key(self):
-        return get_cache_key(
-            self.source_name,
-            self.source_storage,
-            self.options,
-            )
-
-    class Meta:
-        unique_together = (('source_name', 'source_storage', 'geometry', 'options'),)
 
 
 def invalidate_cache(sender, instance, **kwargs):

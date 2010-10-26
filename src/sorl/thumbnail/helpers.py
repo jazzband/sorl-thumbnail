@@ -67,10 +67,6 @@ def toint(number):
     return int(number)
 
 
-def get_cache_key(*args):
-    return '%s%s' % (settings.THUMBNAIL_CACHE_PREFIX, mkhash(*args))
-
-
 def mkhash(*args):
     """
     Computes a (hopefully :D) unique key from arguments given.

@@ -68,10 +68,10 @@ class ThumbnailEngineBase(object):
         """
         Computes the destination filename.
         """
-        name = mkhash(source.name, source.storage_path, geometry,
-                      dict_serialize(options))
+        key = mkhash(source.name, source.storage_path, geometry,
+                     dict_serialize(options))
         # make some subdirs
-        path = '%s/%s/%s' % (name[:2], name[2:4], name)
+        path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             self.extensions[options['format']])
 
