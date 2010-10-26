@@ -14,7 +14,7 @@ class Thumbnail(ThumbnailBase):
             thumbnail = self._engine.get(self._source, self._geometry,
                                          self._options)
             self._thumbnail = models.Thumbnail.cache.create(
-                key = key,
+                key=key,
                 source_name=self._source.name,
                 source_storage=self._source.storage_path,
                 geometry=self._geometry,
