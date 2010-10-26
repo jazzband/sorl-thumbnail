@@ -1,13 +1,9 @@
 #coding=utf-8
-import re
 from abc import ABCMeta, abstractmethod
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class, mkhash, dict_serialize
 from sorl.thumbnail.helpers import ThumbnailError
 from sorl.thumbnail.storage import SuperImage
-
-
-bgpos_pat = re.compile(r'^(?P<value>\d+)(?P<unit>%|px)$')
 
 
 class ThumbnailEngineBase(object):
@@ -75,10 +71,9 @@ class ThumbnailEngineBase(object):
         Computes the destination filename.
         """
         key = mkhash(source.name, source.storage_path, geometry,
-                     dict_serialize(options))
+                     dict_serialize(options)) # we leave the engine path out
         # make some subdirs
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             self.extensions[options['format']])
-
 

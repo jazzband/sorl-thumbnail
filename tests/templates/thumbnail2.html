@@ -1,5 +1,5 @@
 {% load thumbnail %}{% spaceless %}
 {% thumbnail item.image.name "200x100" as im %}
-    <img style="margin:{{ im.margin }}" src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}">
+    <img style="margin:{{ im.margin }}" width="{{ im.x }}" height="{{ im.y }}">
 {% endthumbnail %}
 {% endspaceless %}

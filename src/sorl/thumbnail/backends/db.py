@@ -7,7 +7,7 @@ class Thumbnail(ThumbnailBase):
     def _prepare(self):
         options = dict_serialize(self._options)
         key = mkhash(self._source.name, self._source.storage_path,
-                     self._geometry, options)
+                     self._geometry, options) # we are leaving the engine path out
         try:
             self._thumbnail = models.Thumbnail.cache.get(key)
         except models.Thumbnail.DoesNotExist:

@@ -1,11 +1,11 @@
 {% load thumbnail %}{% spaceless %}
 {% if source|is_portrait %}
     {% thumbnail source '1x1' as im %}
-        <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" class="portrait">
+        <img width="{{ im.x }}" height="{{ im.y }}" class="portrait">
     {% endthumbnail %}
 {% else %}
     {% thumbnail source dims as im %}
-        <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" class"landscape">
+    <img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" class"landscape">
     {% endthumbnail %}
 {% endif %}
 {% endspaceless %}

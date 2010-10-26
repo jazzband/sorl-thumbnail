@@ -95,11 +95,11 @@ class TemplateTestCaseA(SimpleTestCase):
         val = render_to_string('thumbnail1.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, u'<img style="margin:0px 0px 0px 0px" src="/media/test/cache/10/5c/105c16a3c8d74bf8aa15e473a388f217.jpg" width="200" height="100">')
+        self.assertEqual(val, u'<img style="margin:0px 0px 0px 0px" width="200" height="100">')
         val = render_to_string('thumbnail2.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, u'<img style="margin:0px 50px 0px 50px" src="/media/test/cache/26/47/26475b7be74209c0e42191972d94c622.jpg" width="100" height="100">')
+        self.assertEqual(val, u'<img style="margin:0px 50px 0px 50px" width="100" height="100">')
 
 
 class TemplateTestCaseB(unittest.TestCase):
@@ -108,7 +108,7 @@ class TemplateTestCaseB(unittest.TestCase):
 
     def testUrl(self):
         val = render_to_string('thumbnail3.html', {}).strip()
-        self.assertEqual(val, '<img style="margin:0px 0px 0px 0px" src="/media/test/cache/f5/fb/f5fb2aab666f37a9d82d669e4dec0bdd.jpg" width="20" height="20">')
+        self.assertEqual(val, '<img style="margin:0px 0px 0px 0px" width="20" height="20">')
 
     def testPortrait(self):
         val = render_to_string('thumbnail4.html', {
