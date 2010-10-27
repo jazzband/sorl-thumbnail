@@ -13,19 +13,19 @@ from sorl.thumbnail.parsers import parse_crop, parse_geometry
 class ParsersTestCase(unittest.TestCase):
     def testAliasCrop(self):
         crop = parse_crop('center', (500, 500), (400, 400))
-        self.assertEqual(crop, (50, 50, 450, 450))
+        self.assertEqual(crop, (50, 50))
         crop = parse_crop('right', (500, 500), (400, 400))
-        self.assertEqual(crop, (100, 50, 500, 450))
+        self.assertEqual(crop, (100, 50))
 
     def testPercentCrop(self):
         crop = parse_crop('50% 0%', (500, 500), (400, 400))
-        self.assertEqual(crop, (50, 0, 450, 400))
+        self.assertEqual(crop, (50, 0))
         crop = parse_crop('10% 80%', (500, 500), (400, 400))
-        self.assertEqual(crop, (10, 80, 410, 480))
+        self.assertEqual(crop, (10, 80))
 
     def testPxCrop(self):
         crop = parse_crop('200px 33px', (500, 500), (400, 400))
-        self.assertEqual(crop, (100, 33, 500, 433))
+        self.assertEqual(crop, (100, 33))
 
     def testBadCrop(self):
         self.assertRaises(ThumbnailError, parse_crop, '-200px', (500, 500), (400, 400))

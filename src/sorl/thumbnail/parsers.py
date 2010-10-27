@@ -1,6 +1,7 @@
 #coding=utf-8
 import re
 from sorl.thumbnail.helpers import ThumbnailError
+from sorl.thumbnail.helpers import toint
 
 
 bgpos_pat = re.compile(r'^(?P<value>\d+)(?P<unit>%|px)$')
@@ -11,7 +12,7 @@ class ThumbnailParseError(ThumbnailError):
     pass
 
 
-def parse_geometry(geometry):
+def parse_geometry(geometry, image_xy=None):
     """
     Parses a geometry string syntax and returns a (width, height) tuple
     """
@@ -29,19 +30,21 @@ def parse_geometry(geometry):
         x = int(x)
     if y is not None:
         y = int(y)
+    # calculate x or y proportionally if not set
+    # but we need the image size for this
+    if image_xy is not None:
+        image_x, image_y = map(float, image_xy)
+        if x is None:
+            x = toint(image_x * y / image_y)
+        elif y is None:
+            y = toint(image_y * x / image_x)
     return x, y
 
 
-def parse_crop(crop, image, box):
+def parse_crop(crop, image_xy, requested_xy):
     """
-    ``crop``
-        Crop option string
-    ``image``
-        The thumbnail width and hight tuple
-    ``box``
-        The requested width and height tuple
-
-    The box should be smaller than the image but it works out anyway
+    Returns x, y offsets for cropping. The requested area should fit inside
+    image but it works out anyway
     """
     def syntax_error():
         raise ThumbnailParseError('Unrecognized crop option: %s' % crop)
@@ -83,7 +86,7 @@ def parse_crop(crop, image, box):
         # return ∈ [0, epsilon]
         return int(max(0, min(value, epsilon)))
 
-    offset_x = get_offset(crop_x, image[0] - box[0])
-    offset_y = get_offset(crop_y, image[1] - box[1])
-    return (offset_x, offset_y, box[0] + offset_x, box[1] + offset_y)
+    offset_x = get_offset(crop_x, image_xy[0] - requested_xy[0])
+    offset_y = get_offset(crop_y, image_xy[1] - requested_xy[1])
+    return offset_x, offset_y
 
