@@ -12,6 +12,9 @@ THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.db.Thumbnail'
 # Thumbnail engine
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil.ThumbnailEngine'
 
+# Imagemagick or Grapgics magick convert command
+THUMBNAIL_CONVERT = 'convert'
+
 # Default storage for the generated thumbnail
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 

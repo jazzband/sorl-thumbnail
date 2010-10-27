@@ -20,7 +20,7 @@ class ThumbnailEngine(ThumbnailEngineBase):
         # calculate scaling factor
         factors = (requested_x / x, requested_y / y)
         factor = max(factors) if crop else min(factors)
-        if factor <= 1 or upscale:
+        if factor < 1 or upscale:
             new_x = toint(x * factor)
             new_y = toint(y * factor)
             image = image.resize((new_x, new_y), resample=Image.ANTIALIAS)
