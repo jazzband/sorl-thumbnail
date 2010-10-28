@@ -13,8 +13,7 @@ url_pat = re.compile(r'^(https?|ftp):\/\/')
 class SuperImage(object):
     """
     A file (storage + name) wrapper that can do some input introspection and
-    get size of images. Alot of these methods/properties are currently not
-    used.
+    get size of images.
     """
 
     _size = None
