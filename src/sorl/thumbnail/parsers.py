@@ -48,30 +48,30 @@ def parse_crop(crop, xy_image, xy_window):
     """
     def syntax_error():
         raise ThumbnailParseError('Unrecognized crop option: %s' % crop)
-    alias_x_to_percent = {
+    x_alias_percent = {
         'left': '0%',
         'center': '50%',
         'right': '100%',
     }
-    alias_y_to_percent = {
+    y_alias_percent = {
         'top': '0%',
         'center': '50%',
         'bottom': '100%',
     }
     xy_crop = crop.split(' ')
     if len(xy_crop) == 1:
-        if crop in alias_x_to_percent:
-            x_crop = alias_x_to_percent[crop]
+        if crop in x_alias_percent:
+            x_crop = x_alias_percent[crop]
             y_crop = '50%'
-        elif crop in alias_y_to_percent:
-            y_crop = alias_y_to_percent[crop]
+        elif crop in y_alias_percent:
+            y_crop = y_alias_percent[crop]
             x_crop = '50%'
         else:
             x_crop, y_crop = crop, crop
     elif len(xy_crop) == 2:
         x_crop, y_crop = xy_crop
-        x_crop = alias_x_to_percent.get(x_crop, x_crop)
-        y_crop = alias_y_to_percent.get(y_crop, y_crop)
+        x_crop = x_alias_percent.get(x_crop, x_crop)
+        y_crop = y_alias_percent.get(y_crop, y_crop)
     else:
         syntax_error()
 

@@ -32,7 +32,6 @@ class Thumbnail(models.Model):
     path = models.CharField(max_length=1000)
     width = models.PositiveIntegerField()
     height = models.PositiveIntegerField()
-    filesize = models.PositiveIntegerField()
 
     objects = models.Manager()
     cache = ThumbnailCacheManager()

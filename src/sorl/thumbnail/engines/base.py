@@ -36,6 +36,8 @@ class ThumbnailEngineBase(object):
         geometry = parse_geometry(geometry_string, (x_image, y_image))
         image = self.create(image, geometry, options)
         self.write(image, options, thumbnail)
+        # its much cheaper to do this here
+        thumbnail.size = self._get_image_size(image)
         return thumbnail
 
     def create(self, image, geometry, options):

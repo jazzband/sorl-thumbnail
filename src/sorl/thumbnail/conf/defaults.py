@@ -3,14 +3,14 @@ import sys
 from django.conf import settings
 
 
-# When True Thumbnail.render can raise errors
+# When True ThumbnailNode.render can raise errors
 THUMBNAIL_DEBUG = False
 
 # Thumbnail backend
 THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.db.Thumbnail'
 
 # Thumbnail engine
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil.ThumbnailEngine'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.engine_pgmagick.ThumbnailEngine'
 
 # Default storage for the generated thumbnail
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE

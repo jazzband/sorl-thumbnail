@@ -4,7 +4,7 @@ from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError
+from sorl.thumbnail.helpers import ThumbnailError, get_module_class
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
@@ -16,7 +16,8 @@ class SuperImage(object):
     get size of images. Alot of these methods/properties are currently not
     used.
     """
-    _size = None # size cache
+
+    _size = None
 
     def __init__(self, file_, storage=None):
         if not file_:
@@ -44,35 +45,18 @@ class SuperImage(object):
     def path(self):
         return self.storage.path(self.name)
 
-    @property
-    def accessed_time(self):
-        return self.storage.accessed_time(self.name)
-
-    @property
-    def created_time(self):
-        return self.storage.created_time(self.name)
-
-    @property
-    def modified_time(self):
-        return self.storage.modified_time(self.name)
-
-    @property
-    def filesize(self):
-        return self.storage.size(self.name)
-
-    @property
-    def size(self):
+    def _get_size(self):
         if self._size is None:
-            # XXX Loading the whole source into memory, eeeks!
-            # Using PIL although it should not be a requirement, hence
-            # the local import until I figure out if I want to keep this at all
-            from cStringIO import StringIO
-            from PIL import Image
-            buf = StringIO(self.open().read())
-            im = Image.open(buf)
-            self._size = im.size
-            buf.close()
+            # This is the worst case scenario and is currently only used with
+            # the is_portrait filter
+            engine_cls = get_module_class(settings.THUMBNAIL_ENGINE)
+            engine = engine_cls()
+            image = engine._get_image(self)
+            self._size = engine._get_image_size(image)
         return self._size
+    def _set_size(self, size):
+        self._size = size
+    size = property(_get_size, _set_size)
 
     @property
     def width(self):
@@ -97,14 +81,11 @@ class SuperImage(object):
     def read(self):
         return self.open().read()
 
-    def save(self, content):
+    def write(self, content):
         if not isinstance(content, File):
             content = ContentFile(content)
-        self._dimensions = None # reset the dimensions cache
+        self.size = None
         return self.storage.save(self.name, content)
-
-    def delete(self):
-        return self.storage.delete(self.name)
 
     @property
     def storage_path(self):

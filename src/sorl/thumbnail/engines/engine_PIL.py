@@ -22,7 +22,8 @@ class ThumbnailEngine(ThumbnailEngineBase):
         return image.resize((width, height), resample=Image.ANTIALIAS)
 
     def _crop(self, image, width, height, x_offset, y_offset):
-        return image.crop((x_offset, y_offset, width + x_offset, height + y_offset))
+        return image.crop((x_offset, y_offset,
+                           width + x_offset, height + y_offset))
 
     def _write(self, image, format_, quality, thumbnail):
         ImageFile.MAXBLOCK = 1024 * 1024
@@ -31,6 +32,6 @@ class ThumbnailEngine(ThumbnailEngineBase):
             image.save(buf, format=format_, quality=quality, optimize=1)
         except IOError:
             image.save(buf, format=format_, quality=quality)
-        thumbnail.save(buf.getvalue())
+        thumbnail.write(buf.getvalue())
         buf.close()
 

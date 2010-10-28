@@ -22,9 +22,9 @@ class Thumbnail(ThumbnailBase):
                 name=thumbnail.name,
                 url=thumbnail.url,
                 path=thumbnail.path,
+                # these can be expensive
                 width=thumbnail.width,
                 height=thumbnail.height,
-                filesize=thumbnail.filesize,
                 )
 
     name = property(lambda self: self._thumbnail.name)
@@ -32,5 +32,4 @@ class Thumbnail(ThumbnailBase):
     path = property(lambda self: self._thumbnail.path)
     width = property(lambda self: self._thumbnail.width)
     height = property(lambda self: self._thumbnail.height)
-    filesize = property(lambda self: self._thumbnail.size)
 
