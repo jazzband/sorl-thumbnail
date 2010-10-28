@@ -75,11 +75,8 @@ class SuperImage(object):
     def url(self):
         return self.storage.url(self.name)
 
-    def open(self, mode='rb'):
-        return self.storage.open(self.name, mode=mode)
-
     def read(self):
-        return self.open().read()
+        return self.storage.open(self.name).read()
 
     def write(self, content):
         if not isinstance(content, File):

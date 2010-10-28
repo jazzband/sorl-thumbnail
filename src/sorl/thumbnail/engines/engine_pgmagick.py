@@ -3,7 +3,6 @@ from pgmagick import Image, Blob, ColorspaceType, Geometry
 from sorl.thumbnail.engines.base import ThumbnailEngineBase
 
 
-
 class ThumbnailEngine(ThumbnailEngineBase):
     def _get_image(self, source):
         blob = Blob()

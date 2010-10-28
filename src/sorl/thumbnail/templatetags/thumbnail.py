@@ -1,6 +1,6 @@
 import re
 from django.core.cache import cache
-from django.template import Library, Node, TemplateSyntaxError
+from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_thumbnail, mkhash, get_or_set_cache
@@ -15,6 +15,8 @@ kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
 
 @register.tag('thumbnail')
 class ThumbnailNode(Node):
+    child_nodelists = ('nodelist_file', 'nodelist_empty')
+
     def __init__(self, parser, token):
         def syntax_error():
             raise TemplateSyntaxError('Syntax error.')
@@ -32,8 +34,12 @@ class ThumbnailNode(Node):
             value = parser.compile_filter(m.group('value'))
             self.options[key] = value
         self.as_var = bits[-1]
-        self.nodelist = parser.parse(('endthumbnail',))
-        parser.delete_first_token()
+        self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
+        if parser.next_token().contents == 'empty':
+            self.nodelist_empty = parser.parse(('endthumbnail',))
+            parser.delete_first_token()
+        else:
+            self.nodelist_empty = NodeList()
 
     def render(self, context):
         try:
@@ -50,15 +56,23 @@ class ThumbnailNode(Node):
         options = {}
         for key, value in self.options.iteritems():
             options[key] = value.resolve(context)
-        thumbnail = get_thumbnail(file_, geometry, **options)
+        if not file_:
+            return self.nodelist_empty.render(context)
         context.push()
+        thumbnail = get_thumbnail(file_, geometry, **options)
         context[self.as_var] = thumbnail
-        output = self.nodelist.render(context)
+        output = self.nodelist_file.render(context)
         context.pop()
         return output
 
     def __repr__(self):
         return "<ThumbnailNode>"
+
+    def __iter__(self):
+        for node in self.nodelist_file:
+            yield node
+        for node in self.nodelist_empty:
+            yield node
 
 
 @register.filter

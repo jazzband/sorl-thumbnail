@@ -103,8 +103,8 @@ class TemplateTestCaseA(SimpleTestCase):
 
 
 class TemplateTestCaseB(unittest.TestCase):
-    def tearDown(self):
-        shutil.rmtree(settings.MEDIA_ROOT)
+    #def tearDown(self):
+    #    shutil.rmtree(settings.MEDIA_ROOT)
 
     def testUrl(self):
         val = render_to_string('thumbnail3.html', {}).strip()
@@ -116,4 +116,8 @@ class TemplateTestCaseB(unittest.TestCase):
             'dims': 'x666',
         }).strip()
         self.assertEqual(val, '<img src="/media/test/cache/51/db/51dbfb4a3f6177917cd86dae19cc4952.jpg" width="1984" height="666" class="landscape">')
+
+    def testEmpty(self):
+        val = render_to_string('thumbnail5.html', {}).strip()
+        self.assertEqual(val, '<p>empty</p>')
 
