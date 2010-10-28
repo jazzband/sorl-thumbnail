@@ -85,7 +85,7 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(t.margin, '0px -300px 0px -300px')
         t = get_thumbnail(item.image, '200')
         self.assertEqual(t.margin, '0px 0px 0px 0px')
-        t = get_thumbnail(item.image, 'x999')
+        t = get_thumbnail(item.image, 'x999', crop='top')
         self.assertEqual(t.margin, '0px 0px 0px 0px')
 
 
