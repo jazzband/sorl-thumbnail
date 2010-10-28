@@ -13,10 +13,10 @@ url_pat = re.compile(r'^(https?|ftp):\/\/')
 class SuperImage(object):
     """
     A file (storage + name) wrapper that can do some input introspection and
-    get dimensions of images. Alot of these methods/properties are currently
-    not used.
+    get size of images. Alot of these methods/properties are currently not
+    used.
     """
-    _dimensions = None # dimensions cache
+    _size = None # size cache
 
     def __init__(self, file_, storage=None):
         if not file_:
@@ -57,12 +57,12 @@ class SuperImage(object):
         return self.storage.modified_time(self.name)
 
     @property
-    def size(self):
+    def filesize(self):
         return self.storage.size(self.name)
 
     @property
-    def dimensions(self):
-        if self._dimensions is None:
+    def size(self):
+        if self._size is None:
             # XXX Loading the whole source into memory, eeeks!
             # Using PIL although it should not be a requirement, hence
             # the local import until I figure out if I want to keep this at all
@@ -70,18 +70,18 @@ class SuperImage(object):
             from PIL import Image
             buf = StringIO(self.open().read())
             im = Image.open(buf)
-            self._dimensions = im.size
+            self._size = im.size
             buf.close()
-        return self._dimensions
+        return self._size
 
     @property
     def width(self):
-        return self.dimensions[0]
+        return self.size[0]
     x = width
 
     @property
     def height(self):
-        return self.dimensions[1]
+        return self.size[1]
     y = height
 
     def is_portrait(self):

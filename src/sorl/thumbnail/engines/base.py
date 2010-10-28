@@ -2,7 +2,7 @@
 from abc import ABCMeta, abstractmethod
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import dict_serialize, get_module_class, mkhash
-from sorl.thumbnail.helpers import ThumbnailError, toint
+from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_geometry, parse_crop
 from sorl.thumbnail.storage import SuperImage
 
@@ -28,13 +28,12 @@ class ThumbnailEngineBase(object):
         thumbnail = SuperImage(name, storage_cls())
         if thumbnail.exists():
             # We could have an overwrite option passed in to
-            # ThumbnailEngine.get and delete it if existed but I am
-            # that could lead to race conditions. There fore we just
-            # return it.
+            # ThumbnailEngine.get and delete it if existed but I am sure that
+            # could lead to race conditions. There fore we just return it.
             return thumbnail
         image = self._get_image(source)
-        image_x, image_y = self._get_image_dimensions(image)
-        geometry = parse_geometry(geometry_string, (image_x, image_y))
+        x_image, y_image = self._get_image_size(image)
+        geometry = parse_geometry(geometry_string, (x_image, y_image))
         image = self.create(image, geometry, options)
         self.write(image, options, thumbnail)
         return thumbnail
@@ -61,13 +60,13 @@ class ThumbnailEngineBase(object):
         """
         crop = options['crop']
         upscale = options['upscale']
-        image_x, image_y = map(float, self._get_image_dimensions(image))
+        x_image, y_image = map(float, self._get_image_size(image))
         # calculate scaling factor
-        factors = (geometry[0] / image_x, geometry[1] / image_y)
+        factors = (geometry[0] / x_image, geometry[1] / y_image)
         factor = max(factors) if crop else min(factors)
         if factor < 1 or upscale:
-            width = toint(image_x * factor)
-            height = toint(image_y * factor)
+            width = toint(x_image * factor)
+            height = toint(y_image * factor)
             image = self._resize(image, width, height)
         return image
 
@@ -78,9 +77,9 @@ class ThumbnailEngineBase(object):
         crop = options['crop']
         if not crop or crop == 'noop':
             return image
-        image_x, image_y = self._get_image_dimensions(image)
-        offset_x, offset_y = parse_crop(crop, (image_x, image_y), geometry)
-        return self._crop(image, geometry[0], geometry[1], offset_x, offset_y)
+        x_image, y_image = self._get_image_size(image)
+        x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
+        return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
 
     def write(self, image, options, thumbnail):
         """
@@ -113,9 +112,9 @@ class ThumbnailEngineBase(object):
         raise NotImplemented()
 
     @abstractmethod
-    def _get_image_dimensions(self, image):
+    def _get_image_size(self, image):
         """
-        Returns the image width anf height as a tuple
+        Returns the image width and height as a tuple
         """
         raise NotImplemented()
 
@@ -138,7 +137,7 @@ class ThumbnailEngineBase(object):
         raise NotImplemented()
 
     @abstractmethod
-    def _crop(self, image, width, height, offset_x, offset_y):
+    def _crop(self, image, width, height, x_offset, y_offset):
         """
         Crops the image
         """
@@ -150,5 +149,4 @@ class ThumbnailEngineBase(object):
         Writes to the thumbnail which is SuperImage instance
         """
         raise NotImplemented()
-
 

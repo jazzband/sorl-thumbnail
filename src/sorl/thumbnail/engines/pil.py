@@ -8,7 +8,7 @@ class ThumbnailEngine(ThumbnailEngineBase):
         buf = StringIO(source.open().read())
         return Image.open(buf)
 
-    def _get_image_dimensions(self, image):
+    def _get_image_size(self, image):
         return image.size
 
     def _colorspace(self, image, colorspace):
@@ -21,8 +21,8 @@ class ThumbnailEngine(ThumbnailEngineBase):
     def _resize(self, image, width, height):
         return image.resize((width, height), resample=Image.ANTIALIAS)
 
-    def _crop(self, image, width, height, offset_x, offset_y):
-        return image.crop((offset_x, offset_y, width + offset_x, height + offset_y))
+    def _crop(self, image, width, height, x_offset, y_offset):
+        return image.crop((x_offset, y_offset, width + x_offset, height + y_offset))
 
     def _write(self, image, format_, quality, thumbnail):
         ImageFile.MAXBLOCK = 1024 * 1024

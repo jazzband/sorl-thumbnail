@@ -53,7 +53,7 @@ class ThumbnailBase(object):
     x = property(lambda self: self.width)
     y = property(lambda self: self.height)
     is_portrait = lambda self: self.y > self.x
-    size = abstractproperty()
+    filesize = abstractproperty()
 
     @property
     def margin(self):

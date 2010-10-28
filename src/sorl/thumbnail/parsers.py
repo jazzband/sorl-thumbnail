@@ -12,7 +12,7 @@ class ThumbnailParseError(ThumbnailError):
     pass
 
 
-def parse_geometry(geometry, image_xy=None):
+def parse_geometry(geometry, xy_image=None):
     """
     Parses a geometry string syntax and returns a (width, height) tuple
     """
@@ -32,46 +32,46 @@ def parse_geometry(geometry, image_xy=None):
         y = int(y)
     # calculate x or y proportionally if not set
     # but we need the image size for this
-    if image_xy is not None:
-        image_x, image_y = map(float, image_xy)
+    if xy_image is not None:
+        x_image, y_image = map(float, xy_image)
         if x is None:
-            x = toint(image_x * y / image_y)
+            x = toint(x_image * y / y_image)
         elif y is None:
-            y = toint(image_y * x / image_x)
+            y = toint(y_image * x / x_image)
     return x, y
 
 
-def parse_crop(crop, image_xy, requested_xy):
+def parse_crop(crop, xy_image, xy_window):
     """
-    Returns x, y offsets for cropping. The requested area should fit inside
+    Returns x, y offsets for cropping. The window area should fit inside
     image but it works out anyway
     """
     def syntax_error():
         raise ThumbnailParseError('Unrecognized crop option: %s' % crop)
-    ax_to_percent = {
+    alias_x_to_percent = {
         'left': '0%',
         'center': '50%',
         'right': '100%',
     }
-    ay_to_percent = {
+    alias_y_to_percent = {
         'top': '0%',
         'center': '50%',
         'bottom': '100%',
     }
-    crop_xy = crop.split(' ')
-    if len(crop_xy) == 1:
-        if crop in ax_to_percent:
-            crop_x = ax_to_percent[crop]
-            crop_y = '50%'
-        elif crop in ay_to_percent:
-            crop_y = ay_to_percent[crop]
-            crop_x = '50%'
+    xy_crop = crop.split(' ')
+    if len(xy_crop) == 1:
+        if crop in alias_x_to_percent:
+            x_crop = alias_x_to_percent[crop]
+            y_crop = '50%'
+        elif crop in alias_y_to_percent:
+            y_crop = alias_y_to_percent[crop]
+            x_crop = '50%'
         else:
-            crop_x, crop_y = crop, crop
-    elif len(crop_xy) == 2:
-        crop_x, crop_y = crop_xy
-        crop_x = ax_to_percent.get(crop_x, crop_x)
-        crop_y = ay_to_percent.get(crop_y, crop_y)
+            x_crop, y_crop = crop, crop
+    elif len(xy_crop) == 2:
+        x_crop, y_crop = xy_crop
+        x_crop = alias_x_to_percent.get(x_crop, x_crop)
+        y_crop = alias_y_to_percent.get(y_crop, y_crop)
     else:
         syntax_error()
 
@@ -86,7 +86,7 @@ def parse_crop(crop, image_xy, requested_xy):
         # return ∈ [0, epsilon]
         return int(max(0, min(value, epsilon)))
 
-    offset_x = get_offset(crop_x, image_xy[0] - requested_xy[0])
-    offset_y = get_offset(crop_y, image_xy[1] - requested_xy[1])
+    offset_x = get_offset(x_crop, xy_image[0] - xy_window[0])
+    offset_y = get_offset(y_crop, xy_image[1] - xy_window[1])
     return offset_x, offset_y
 
