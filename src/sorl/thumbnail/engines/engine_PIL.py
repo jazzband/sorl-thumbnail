@@ -1,14 +1,14 @@
-from PIL import Image, ImageFile
+from PIL import Image, Image
 from cStringIO import StringIO
 from sorl.thumbnail.engines.base import ThumbnailEngineBase
 
 
 class ThumbnailEngine(ThumbnailEngineBase):
-    def _get_image(self, source):
+    def get_image(self, source):
         buf = StringIO(source.open().read())
         return Image.open(buf)
 
-    def _get_image_size(self, image):
+    def get_image_size(self, image):
         return image.size
 
     def _colorspace(self, image, colorspace):
@@ -26,7 +26,7 @@ class ThumbnailEngine(ThumbnailEngineBase):
                            width + x_offset, height + y_offset))
 
     def _write(self, image, format_, quality, thumbnail):
-        ImageFile.MAXBLOCK = 1024 * 1024
+        Image.MAXBLOCK = 1024 * 1024
         buf = StringIO()
         try:
             image.save(buf, format=format_, quality=quality, optimize=1)

@@ -4,12 +4,12 @@ from sorl.thumbnail.engines.base import ThumbnailEngineBase
 
 
 class ThumbnailEngine(ThumbnailEngineBase):
-    def _get_image(self, source):
+    def get_image(self, source):
         blob = Blob()
         blob.update(source.read())
         return Image(blob)
 
-    def _get_image_size(self, image):
+    def get_image_size(self, image):
         geometry = image.size()
         return geometry.width(), geometry.height()
 

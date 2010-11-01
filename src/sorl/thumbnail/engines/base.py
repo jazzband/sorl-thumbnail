@@ -1,7 +1,7 @@
 #coding=utf-8
 from abc import ABCMeta, abstractmethod
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import dict_serialize, get_module_class, mkhash
+from sorl.thumbnail.helpers import dict_serialize, get_module_class, tokey
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_geometry, parse_crop
 from sorl.thumbnail.storage import SuperImage
@@ -17,28 +17,6 @@ class ThumbnailEngineBase(object):
         'JPEG': 'jpg',
         'PNG': 'png',
     }
-
-    def get(self, source, geometry_string, options):
-        """
-        Entry point. Should return a ``sorl.thumbnail.storage.SuperImage``
-        instance
-        """
-        name = self.get_filename(source, geometry_string, options)
-        storage_cls = get_module_class(settings.THUMBNAIL_STORAGE)
-        thumbnail = SuperImage(name, storage_cls())
-        if thumbnail.exists():
-            # We could have an overwrite option passed in to
-            # ThumbnailEngine.get and delete it if existed but I am sure that
-            # could lead to race conditions. There fore we just return it.
-            return thumbnail
-        image = self._get_image(source)
-        x_image, y_image = self._get_image_size(image)
-        geometry = parse_geometry(geometry_string, (x_image, y_image))
-        image = self.create(image, geometry, options)
-        self.write(image, options, thumbnail)
-        # its much cheaper to do this here
-        thumbnail.size = self._get_image_size(image)
-        return thumbnail
 
     def create(self, image, geometry, options):
         """
@@ -62,7 +40,7 @@ class ThumbnailEngineBase(object):
         """
         crop = options['crop']
         upscale = options['upscale']
-        x_image, y_image = map(float, self._get_image_size(image))
+        x_image, y_image = map(float, self.get_image_size(image))
         # calculate scaling factor
         factors = (geometry[0] / x_image, geometry[1] / y_image)
         factor = max(factors) if crop else min(factors)
@@ -79,7 +57,7 @@ class ThumbnailEngineBase(object):
         crop = options['crop']
         if not crop or crop == 'noop':
             return image
-        x_image, y_image = self._get_image_size(image)
+        x_image, y_image = self.get_image_size(image)
         x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
         return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
 
@@ -95,7 +73,7 @@ class ThumbnailEngineBase(object):
         """
         Computes the destination filename.
         """
-        key = mkhash(source.name, source.storage_path, geometry_string,
+        key = tokey(source.name, source.storage_path, geometry_string,
                      dict_serialize(options)) # we leave the engine path out
         # make some subdirs
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
@@ -107,14 +85,14 @@ class ThumbnailEngineBase(object):
     # The ``image`` argument refers to a backend image object
     #
     @abstractmethod
-    def _get_image(self, source):
+    def get_image(self, source):
         """
         Returns the backend image objects from a SuperImage instance
         """
         raise NotImplemented()
 
     @abstractmethod
-    def _get_image_size(self, image):
+    def get_image_size(self, image):
         """
         Returns the image width and height as a tuple
         """

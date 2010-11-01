@@ -1,6 +1,6 @@
 from sorl.thumbnail.backends.base import ThumbnailBase
 from sorl.thumbnail import models
-from sorl.thumbnail.helpers import dict_serialize, mkhash
+from sorl.thumbnail.helpers import dict_serialize, tokey
 
 
 def delete_cache(file_):
@@ -9,7 +9,7 @@ def delete_cache(file_):
 class Thumbnail(ThumbnailBase):
     def _prepare(self):
         options = dict_serialize(self._options)
-        key = mkhash(self._source.name, self._source.storage_path,
+        key = tokey(self._source.name, self._source.storage_path,
                      self._geometry, options) # we are leaving the engine path out
         try:
             self._thumbnail = models.Thumbnail.cache.get(key)

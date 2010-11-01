@@ -16,14 +16,6 @@ class ThumbnailError(Exception):
     pass
 
 
-def get_thumbnail(file_, geometry, **options):
-    """
-    Simple function to get a ``sorl.thumbnail.backends.*.Thumbnail`` instance
-    """
-    thumbnail_cls = get_module_class(settings.THUMBNAIL_BACKEND)
-    return thumbnail_cls(file_, geometry, options)
-
-
 def get_or_set_cache(key, callback, timeout=settings.THUMBNAIL_CACHE_TIMEOUT):
     """
     Get value from cache or update with value from callback
@@ -54,7 +46,7 @@ def toint(number):
     return int(number)
 
 
-def mkhash(*args):
+def tokey(*args):
     """
     Computes a (hopefully :D) unique key from arguments given.
     """
@@ -77,11 +69,13 @@ def get_module_class(class_path):
     return getattr(mod, cls_name)
 
 
-def get_engine():
+def get_thumbnail_engine():
     return get_module_class(settings.THUMBNAIL_ENGINE)()
 
 
-def get_backend():
+def get_thumbnail_backend():
     return get_module_class(settings.THUMBNAIL_BACKEND)()
 
+def get_thumbnail_storage():
+    return get_module_class(settings.THUMBNAIL_STORAGE)()
 

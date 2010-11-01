@@ -5,57 +5,13 @@ from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError, get_engine
+from sorl.thumbnail.helpers import ThumbnailError, get_thumbnail_engine
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 
-class ImageFileBase(object):
-    __metaclass__ = ABCMeta
-
-    def exists(self):
-        raise NotImplemented()
-
-    @abstractproperty
-    def name(self):
-        raise NotImplemented()
-
-    @abstractproperty
-    def path(self):
-        raise NotImplemented()
-
-    @abstractproperty
-    def url(self):
-        raise NotImplemented()
-
-    @abstractproperty
-    def size(self):
-        raise NotImplemented()
-
-    @property
-    def width(self):
-        return self.size[0]
-    x = width
-
-    @property
-    def height(self):
-        return self.size[1]
-    y = height
-
-    def is_portrait(self):
-        return self.y > self.x
-
-    @abstractmethod
-    def read(self):
-        raise NotImplemented()
-
-    @abstractmethod
-    def write(self, content):
-        raise NotImplemented()
-
-
-class ImageFile(object):
+class Image(object):
     _size = None
 
     def __init__(self, file_, storage=None):
@@ -80,10 +36,6 @@ class ImageFile(object):
     def exists(self):
         return self.storage.exists(self.name)
 
-    @property
-    def path(self):
-        return self.storage.path(self.name)
-
     def _get_size(self):
         if self._size is None:
             # Test if the storage has an `image_size` attribute Storage class can
@@ -93,13 +45,26 @@ class ImageFile(object):
             else:
                 # This is the worst case scenario, we probably need to read the
                 # file contents into memory depending on the engine implementation
-                engine = get_engine()
-                image = engine._get_image(self)
-                self._size = engine._get_image_size(image)
+                engine = get_module_class(settings.THUMBNAIL_ENGINE)()
+                image = engine.get_image(self)
+                self._size = engine.get_image_size(image)
         return self._size
     def _set_size(self, size):
         self._size = size
     size = property(_get_size, _set_size)
+
+    @property
+    def width(self):
+        return self.size[0]
+    x = width
+
+    @property
+    def height(self):
+        return self.size[1]
+    y = height
+
+    def is_portrait(self):
+        return self.y > self.x
 
     @property
     def url(self):
@@ -115,7 +80,7 @@ class ImageFile(object):
         return self.storage.save(self.name, content)
 
     @property
-    def storage_path(self):
+    def serialized_storage(self):
         cls = self.storage.__class__
         return '%s.%s' % (cls.__module__, cls.__name__)
 

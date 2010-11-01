@@ -1,14 +1,12 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
-from sorl.thumbnail.storage import SuperImage
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import get_module_class
-from sorl.thumbnail.parsers import parse_geometry
+from sorl.thumbnail.files import Image
 
 
-class ThumbnailBase(object):
+class ThumbnailBackendBase(object):
     __metaclass__ = ABCMeta
 
-    _default_options = {
+    default_options = {
         'format': settings.THUMBNAIL_FORMAT,
         'quality': settings.THUMBNAIL_QUALITY,
         'colorspace': settings.THUMBNAIL_COLORSPACE,
@@ -16,62 +14,61 @@ class ThumbnailBase(object):
         'crop': False,
     }
 
-    def __init__(self, source, geometry, options, engine=None):
-        """
-        ``source``
-            Should represent a file, will introspected by the
-            ``sorl.thumbnail.storage.SuperImage`` constructor
-        ``geometry``
-            Geometry string
-        ``options``
-            Dictionary with options
-        ``engine``
-            ``sorl.thumbnail.engine.EngineBase`` sub class instance
-        """
-        self._source = SuperImage(source)
-        self._geometry = geometry
-        self._options = options
-        for key, value in self._default_options.iteritems():
-            self._options.setdefault(key, value)
+    extensions = {
+        'JPEG': 'jpg',
+        'PNG': 'png',
+    }
+
+    def get_thumbnail(self, file_, geometry_string, options,
+                      engine=None, storage=None):
         if engine is None:
-            engine_cls = get_module_class(settings.THUMBNAIL_ENGINE)
-            self._engine = engine_cls()
-        else:
-            self._enigne = engine
-        self._prepare()
+            engine = get_module_class(settings.THUMBNAIL_ENGINE)()
+        if storage is None:
+            storage = get_module_class(settings.THUMBNAIL_STORAGE)()
+        source = Image(file_)
+        for key, value in self.default_options.iteritems():
+            options.setdefault(key, value)
+
+        name = self._get_thumbnail_filename(source, geometry_string, options)
+        thumbnail = self._get_thumbnail(name)
+        if thumbnail is not None:
+            return thumbnail
+        thumbnail = Image(name, storage)
+        if thumbnail.exists():
+            # For now we return it, the other option is to overwrite
+            # but this could lead to race conditions so I will just
+            # leave that out for now
+            return thumbnail
+        image = self.engine.get_image(source)
+        x_image, y_image = self.engine.get_image_size(image)
+        geometry = parse_geometry(geometry_string, (x_image, y_image))
+        thumbnail_image = self.engine.create(image, geometry, options)
+        self.engine.write(thumbnail_image, options, thumbnail)
+        # its much cheaper to set the size here since we probably have the
+        # image in memory
+        thumbnail.size = self.engine.get_image_size(thumbnail_image)
+        self._set_thumbnail(source, thumbnail)
+        return thumbnail
+
+    def _get_thumbnail_filename(self, source, geometry_string, options):
+        """
+        Computes the destination filename.
+        """
+        key = tokey(source.name, source.storage_path, geometry_string,
+                    dict_serialize(options))
+        # make some subdirs
+        path = '%s/%s/%s' % (key[:2], key[2:4], key)
+        return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
+                            self.extensions[options['format']])
+    @abstractmethod
+    def _get_thumbnail(self):
+        raise NotImplemented()
 
     @abstractmethod
-    def _prepare(self):
-        pass
+    def get_image_size(self, image):
+        raise NotImplemented()
 
-    name = abstractproperty()
-    url = abstractproperty()
-    path = abstractproperty()
-    width = abstractproperty()
-    height = abstractproperty()
-    # x, y aliases
-    x = property(lambda self: self.width)
-    y = property(lambda self: self.height)
-    is_portrait = lambda self: self.y > self.x
+    def invalidate_cache(self, file_)
+        raise NotImplemented()
 
-    @property
-    def margin(self):
-        """
-        Returns the calculated marigin from requested geometry and thumbnail
-        """
-        margin = [0, 0, 0, 0]
-        x, y = parse_geometry(self._geometry)
-        if x is not None:
-            ex = x - self.x
-            margin[3] = ex / 2
-            margin[1] = ex / 2
-            if ex % 2:
-                margin[1] += 1
-        if y is not None:
-            ey = y - self.y
-            margin[0] = ey / 2
-            margin[2] = ey / 2
-            if ey % 2:
-                margin[2] += 1
-        return ' '.join([ '%spx' % n for n in margin ])
 
