@@ -1,21 +1,61 @@
 import re
 import urllib2
+from abc import ABCMeta, abstractmethod, abstractproperty
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError, get_module_class
+from sorl.thumbnail.helpers import ThumbnailError, get_engine
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 
-class SuperImage(object):
-    """
-    A file (storage + name) wrapper that can do some input introspection and
-    get size of images.
-    """
+class ImageFileBase(object):
+    __metaclass__ = ABCMeta
 
+    def exists(self):
+        raise NotImplemented()
+
+    @abstractproperty
+    def name(self):
+        raise NotImplemented()
+
+    @abstractproperty
+    def path(self):
+        raise NotImplemented()
+
+    @abstractproperty
+    def url(self):
+        raise NotImplemented()
+
+    @abstractproperty
+    def size(self):
+        raise NotImplemented()
+
+    @property
+    def width(self):
+        return self.size[0]
+    x = width
+
+    @property
+    def height(self):
+        return self.size[1]
+    y = height
+
+    def is_portrait(self):
+        return self.y > self.x
+
+    @abstractmethod
+    def read(self):
+        raise NotImplemented()
+
+    @abstractmethod
+    def write(self, content):
+        raise NotImplemented()
+
+
+class ImageFile(object):
     _size = None
 
     def __init__(self, file_, storage=None):
@@ -46,29 +86,20 @@ class SuperImage(object):
 
     def _get_size(self):
         if self._size is None:
-            # This is the worst case scenario and is currently only used with
-            # the is_portrait filter
-            engine_cls = get_module_class(settings.THUMBNAIL_ENGINE)
-            engine = engine_cls()
-            image = engine._get_image(self)
-            self._size = engine._get_image_size(image)
+            # Test if the storage has an `image_size` attribute Storage class can
+            # implement this for a more efficient way to get the image size.
+            if hasattr(self.storage, 'image_size'):
+                self._size = self.storage.image_size(self.name)
+            else:
+                # This is the worst case scenario, we probably need to read the
+                # file contents into memory depending on the engine implementation
+                engine = get_engine()
+                image = engine._get_image(self)
+                self._size = engine._get_image_size(image)
         return self._size
     def _set_size(self, size):
         self._size = size
     size = property(_get_size, _set_size)
-
-    @property
-    def width(self):
-        return self.size[0]
-    x = width
-
-    @property
-    def height(self):
-        return self.size[1]
-    y = height
-
-    def is_portrait(self):
-        return self.y > self.x
 
     @property
     def url(self):

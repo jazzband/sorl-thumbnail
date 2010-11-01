@@ -76,3 +76,12 @@ def get_module_class(class_path):
                                    (mod_name, e)))
     return getattr(mod, cls_name)
 
+
+def get_engine():
+    return get_module_class(settings.THUMBNAIL_ENGINE)()
+
+
+def get_backend():
+    return get_module_class(settings.THUMBNAIL_BACKEND)()
+
+

@@ -7,7 +7,7 @@ from django.conf import settings
 THUMBNAIL_DEBUG = False
 
 # Thumbnail backend
-THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.db.Thumbnail'
+THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.cached_db.Thumbnail'
 
 # Thumbnail engine
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.engine_pgmagick.ThumbnailEngine'

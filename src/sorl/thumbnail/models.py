@@ -5,23 +5,46 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_or_set_cache
 
 
-def get_cache_key(key):
+def prefix_cache_key(key):
     return '%s%s' % (settings.THUMBNAIL_CACHE_PREFIX, key)
 
 
-class ThumbnailCacheManager(models.Manager):
+class CacheManager(models.Manager):
     def get(self, key):
-        def get_thumbnail_from_db():
-            sup = super(ThumbnailCacheManager, self)
+        def get_from_db():
+            sup = super(CacheManager, self)
             return sup.get_query_set().get(pk=key)
-        cache_key = get_cache_key(key)
-        return get_or_set_cache(cache_key, get_thumbnail_from_db)
+        cache_key = prefix_cache_key(key)
+        return get_or_set_cache(cache_key, get_from_db)
 
 
-class Thumbnail(models.Model):
-    # This pk approach should sport a faster lookup when ever we need to reach
-    # the db.
+class DBCacheBase(models.Model):
     key = models.CharField(max_length=32, primary_key=True)
+
+    objects = models.Manager()
+    cache = CacheManager()
+
+    @property
+    def cache_key(self):
+        return prefix_cache_key(self.key)
+
+    class Meta:
+        abstract = True
+
+    def save(self, **kwargs):
+        # XXX invalidate_cache
+        super(DBCacheBase, self).save(**kwargs)
+        # XXX update_cache
+
+    def delete(self):
+        # XXX invalidate_cache
+        super(DBCacheBase, self).delete()
+
+class Portrait(DBCacheBase):
+    is_portrait = models.BooleanField()
+
+
+class Thumbnail(DBCacheBase):
     source_name = models.CharField(max_length=1000)
     source_storage = models.CharField(max_length=200)
     geometry = models.CharField(max_length=11)
@@ -33,14 +56,7 @@ class Thumbnail(models.Model):
     width = models.PositiveIntegerField()
     height = models.PositiveIntegerField()
 
-    objects = models.Manager()
-    cache = ThumbnailCacheManager()
-
-    @property
-    def cache_key(self):
-        return get_cache_key(self.key)
-
-    # x, y aliases
+    # width, height aliases
     x = property(lambda self: self.width)
     y = property(lambda self: self.height)
 

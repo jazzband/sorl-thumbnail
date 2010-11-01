@@ -3,6 +3,9 @@ from sorl.thumbnail import models
 from sorl.thumbnail.helpers import dict_serialize, mkhash
 
 
+def delete_cache(file_):
+    
+
 class Thumbnail(ThumbnailBase):
     def _prepare(self):
         options = dict_serialize(self._options)
