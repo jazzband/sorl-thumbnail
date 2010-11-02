@@ -83,6 +83,10 @@ class ThumbnailBackendBase(object):
                             self.extensions[options['format']])
 
     def store_get(self, image_file):
+        """
+        Gets the `image_file` from store and updates its size. Returns `False`
+        if not found in store.
+        """
         value = self._store_get(image_file.key)
         if value is None:
             return False
@@ -90,6 +94,10 @@ class ThumbnailBackendBase(object):
         return image_file
 
     def store_set(self, image_file, source=None):
+        """
+        Updates store for the `image_file`. Makes sure the `image_file` has a
+        size set.
+        """
         if source is not None:
             # Update the list of thumbnails for source. Storage is not saved,
             # we assume current storage when unpacking.
@@ -109,6 +117,11 @@ class ThumbnailBackendBase(object):
         return image_file
 
     def store_delete(self, image_file, delete_thumbnails=True):
+        """
+        Deletes the store referense to the image_file and deletes store
+        references to thumbnails as well as thumbnail files if
+        `delete_thumbnails` is set to `True`.
+        """
         if delete_thumbnails:
             key = suffix_key(image_file.key)
             thumbnails = self._store_get(key)
@@ -149,13 +162,24 @@ class ThumbnailBackendBase(object):
     #
     @abstractmethod
     def _store_get_raw(self, key):
+        """
+        Gets the value from keystore
+        """
         pass
 
     @abstractmethod
     def _store_set_raw(self, key, value):
+        """
+        Sets value associated to key. Key is expected to be shorter than 200
+        chars. Value is a `basestring` with an unknown length, length depends
+        on how many *different* thumbnails you have created from a source.
+        """
         pass
 
     @abstractmethod
     def _store_delete_raw(self, key):
+        """
+        Deletes the key, value
+        """
         pass
 
