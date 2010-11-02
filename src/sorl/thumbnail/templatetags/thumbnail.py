@@ -3,6 +3,7 @@ from abc import ABCMeta, abstractmethod, abstractproperty
 from django.core.cache import cache
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
+from functools import wraps
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.storage import ImageFile
 from sorl.thumbnail.helpers import get_module_class
@@ -15,10 +16,31 @@ register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
 
 
+def safe_filter(error_output=''):
+    """
+    A safe filter decorator only raising errors when ``THUMBNAIL_DEBUG`` is
+    ``True`` otherwise returning ``error_output``.
+    """
+    def inner(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            try:
+                return f(*args, **kwargs)
+            except Exception:
+                if settings.THUMBNAIL_DEBUG:
+                    raise
+                return error_output
+        return wrapper
+    return inner
+
+
 class ThumbnailNodeBase(Node):
+    """
+    Renders safely and has a simple backend attribute.
+    """
     __metaclass__ = ABCMeta
 
-    error_result = ''
+    error_output = ''
 
     @property
     def backend(self):
@@ -32,12 +54,11 @@ class ThumbnailNodeBase(Node):
         except Exception:
             if settings.THUMBNAIL_DEBUG:
                 raise
-            return self.error_result
+            return self.error_output
 
     @abstractmethod
     def _render(self, context):
         raise NotImplemented()
-
 
 
 @register.tag('thumbnail')
@@ -91,58 +112,42 @@ class ThumbnailNode(ThumbnailNodeBase):
             yield node
 
 
-@register.tag('is_portrait')
-def IsPortraitNode(ThumbnailNodeBase):
+@safe_filter(error_output='auto')
+@register.filter
+def is_portrait(file_):
     """
-    A tag to determine if an image is portrait or landscape.
+    A very handy filter to determine if an image is portrait or landscape.
     """
-    error_result = False
-
-    def __init__(self, parser, token):
-        bits = token.split_contents()
-        if len(bits) != 2:
-            raise TemplateSyntaxError('Syntax error.')
-        self.file_ = parser.compile_filter(bits[1])
-
-    def _render(self, context):
-        file_ = self.file_.resolve(context)
-        image_file = ImageFile(file_)
-        if not self.backend.store_get(image_file):
-            image_file = self.backend.store_set(image_file)
-        return image_file.is_portrait()
+    image_file = ImageFile(file_)
+    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+    if not backend.store_get(image_file):
+        image_file = backend.store_set(image_file)
+    return image_file.is_portrait()
 
 
-@register.tag('margin')
-def MarginNode(ThumbnailNodeBase):
+@safe_filter(error_output=False)
+@register.filter
+def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
-    def __init__(self, parser, token):
-        bits = token.split_contents()
-        if len(bits) != 3:
-            raise TemplateSyntaxError('Syntax error.')
-        self.file_ = parser.compile_filter(bits[1])
-        self.geometry_string = parser.compile_filter(bits[2])
-
-    def _render(self, context):
-        file_ = self.file_.resolve(context)
-        geometry_string = self.geometry_string.resolve(context)
-        margin = [0, 0, 0, 0]
-        image_file = ImageFile(file_)
-        if not backend.store_get(image_file):
-            image_file = backend.store_set(image_file)
-        x, y = parse_geometry(geometry_string)
-        if x is not None:
-            ex = x - image_file.x
-            margin[3] = ex / 2
-            margin[1] = ex / 2
-            if ex % 2:
-                margin[1] += 1
-        if y is not None:
-            ey = y - image_file.y
-            margin[0] = ey / 2
-            margin[2] = ey / 2
-            if ey % 2:
-                margin[2] += 1
-        return ' '.join([ '%spx' % n for n in margin ])
+    margin = [0, 0, 0, 0]
+    image_file = ImageFile(file_)
+    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+    if not backend.store_get(image_file):
+        image_file = backend.store_set(image_file)
+    x, y = parse_geometry(geometry_string)
+    if x is not None:
+        ex = x - image_file.x
+        margin[3] = ex / 2
+        margin[1] = ex / 2
+        if ex % 2:
+            margin[1] += 1
+    if y is not None:
+        ey = y - image_file.y
+        margin[0] = ey / 2
+        margin[2] = ey / 2
+        if ey % 2:
+            margin[2] += 1
+    return ' '.join([ '%spx' % n for n in margin ])
 
