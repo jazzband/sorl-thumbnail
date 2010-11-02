@@ -10,7 +10,7 @@ THUMBNAIL_DEBUG = False
 THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.cached_db.ThumbnailBackend'
 
 # Thumbnail engine
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pgmagick.ThumbnailEngine'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.ThumbnailEngine'
 
 # Default storage for the generated thumbnail
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
@@ -20,8 +20,8 @@ THUMBNAIL_REDIS_HOST = 'localhost'
 THUMBNAIL_REDIS_PORT = 6379
 THUMBNAIL_REDIS_DB = 0
 
-# Cache timeout for `cached_db` backend. You should probably keep this at
-# maximum.
+# Cache timeout for ``cached_db`` backend. You should probably keep this at
+# maximum or ``None`` if your caching backend can handle that as infinate.
 THUMBNAIL_CACHE_TIMEOUT = sys.maxint
 
 # Thumbnail filename prefix

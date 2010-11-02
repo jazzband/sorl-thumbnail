@@ -16,6 +16,17 @@ register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
 
 
+def get_image_file(file_):
+    """
+    Helper that returns and stores an ``ImageFile`` from a file input
+    """
+    image_file = ImageFile(file_)
+    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+    if not backend.store_get(image_file):
+        image_file = backend.store_set(image_file)
+    return image_file
+
+
 def safe_filter(error_output=''):
     """
     A safe filter decorator only raising errors when ``THUMBNAIL_DEBUG`` is
@@ -112,16 +123,14 @@ class ThumbnailNode(ThumbnailNodeBase):
             yield node
 
 
+
 @safe_filter(error_output='auto')
 @register.filter
 def is_portrait(file_):
     """
     A very handy filter to determine if an image is portrait or landscape.
     """
-    image_file = ImageFile(file_)
-    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-    if not backend.store_get(image_file):
-        image_file = backend.store_set(image_file)
+    image_file = get_image_file(file_)
     return image_file.is_portrait()
 
 
@@ -132,10 +141,7 @@ def margin(file_, geometry_string):
     Returns the calculated margin for an image and geometry
     """
     margin = [0, 0, 0, 0]
-    image_file = ImageFile(file_)
-    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-    if not backend.store_get(image_file):
-        image_file = backend.store_set(image_file)
+    image_file = get_image_file(file_)
     x, y = parse_geometry(geometry_string)
     if x is not None:
         ex = x - image_file.x
