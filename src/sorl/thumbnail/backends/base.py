@@ -99,7 +99,7 @@ class ThumbnailBackendBase(object):
             return None
         return deserialize(value)
 
-    def _store_set(key, value):
+    def _store_set(self, key, value):
         """
         Serializing, prefix wrapper for ThumbnailBackendBase._store_set_raw
         """
