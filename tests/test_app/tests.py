@@ -104,8 +104,11 @@ class TemplateTestCaseA(SimpleTestCase):
 
 
 class TemplateTestCaseB(unittest.TestCase):
-    #def tearDown(self):
-    #    shutil.rmtree(settings.MEDIA_ROOT)
+    def tearDown(self):
+        try:
+            shutil.rmtree(settings.MEDIA_ROOT)
+        except Exception:
+            pass
 
     def testUrl(self):
         val = render_to_string('thumbnail3.html', {}).strip()
