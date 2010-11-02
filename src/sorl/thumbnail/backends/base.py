@@ -116,7 +116,7 @@ class ThumbnailBackendBase(object):
         if value is None:
             return False
         image_file.size = value
-        return True
+        return image_file
 
     def store_set(self, image_file, source=None):
         if source is not None:
@@ -135,7 +135,7 @@ class ThumbnailBackendBase(object):
                 image = self.engine.get_image(self)
                 image_file.size = self.engine.get_image_size(image)
         self._store_set(image_file.key, image_file.size)
-        return True
+        return image_file
 
     def store_delete(self, image_file, delete_thumbnails=True):
         if delete_thumbnails:
@@ -151,5 +151,4 @@ class ThumbnailBackendBase(object):
             # Delete the thumbnails key from store
             self._store_delete(key)
         self._store_delete(image_file.key)
-        return True
 
