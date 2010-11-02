@@ -69,7 +69,7 @@ class ThumbnailBackendBase(object):
 
     def _get_thumbnail_filename(self, source, geometry_string, options):
         """
-        Comp_utes the destination filename.
+        Computes the destination filename.
         """
         key = tokey(source.name, source.storage_path, geometry_string,
                     serialize(options))
@@ -92,7 +92,7 @@ class ThumbnailBackendBase(object):
 
     def _store_get(self, key):
         """
-        Deserializing, prefix wrapper for ThumbnailBackendBase._store_set_raw
+        Deserializing, prefix wrapper for ThumbnailBackendBase._store_get_raw
         """
         value = self._store_get(prefix_key(key))
         if value is None:
@@ -107,7 +107,7 @@ class ThumbnailBackendBase(object):
 
     def _store_delete(self, key):
         """
-        Prefix wrapper for ThumbnailBackendBase._store_set_raw
+        Prefix wrapper for ThumbnailBackendBase._store_delete_raw
         """
         self._store_delete_raw(prefix_key(key))
 
@@ -123,7 +123,8 @@ class ThumbnailBackendBase(object):
             # update the list of thumbnails for source
             key = tokey(source.key, THUMBNAILS_KEY_SUFFIX)
             thumbnails = self._store_get(key) or []
-            thumbnails.append(image_file.name)
+            if image_file.name not in thumbnails:
+                thumbnails.append(image_file.name)
             self._store_set(key, thumbnails)
         # now set store for the image_file and make sure it's got a size
         if image_file.size is None:
