@@ -83,35 +83,49 @@ def is_portrait(file_):
     A very handy filter to determine if an image is portrait or landscape.
     Caching is used since this operation is not free.
     """
-    image_file = ImageFile(file_)
-    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-    if not backend.store_get(image_file):
-        image_file = backend.store_set(image_file)
-    return image_file.is_portrait()
+    def render():
+        image_file = ImageFile(file_)
+        backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+        if not backend.store_get(image_file):
+            image_file = backend.store_set(image_file)
+        return image_file.is_portrait()
+    try:
+        return render()
+    except Exception:
+        if settings.THUMBNAIL_DEBUG:
+            raise
+        return ''
 
 
 @register.filter
 def margin(file_, geometry_string):
     """
-    Returns the calculated margin from requested geometry and image
+    Returns the calculated margin for an image and geometry
     """
-    margin = [0, 0, 0, 0]
-    image_file = ImageFile(file_)
-    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-    if not backend.store_get(image_file):
-        image_file = backend.store_set(image_file)
-    x, y = parse_geometry(geometry_string)
-    if x is not None:
-        ex = x - image_file.x
-        margin[3] = ex / 2
-        margin[1] = ex / 2
-        if ex % 2:
-            margin[1] += 1
-    if y is not None:
-        ey = y - image_file.y
-        margin[0] = ey / 2
-        margin[2] = ey / 2
-        if ey % 2:
-            margin[2] += 1
-    return ' '.join([ '%spx' % n for n in margin ])
+    def render():
+        margin = [0, 0, 0, 0]
+        image_file = ImageFile(file_)
+        backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+        if not backend.store_get(image_file):
+            image_file = backend.store_set(image_file)
+        x, y = parse_geometry(geometry_string)
+        if x is not None:
+            ex = x - image_file.x
+            margin[3] = ex / 2
+            margin[1] = ex / 2
+            if ex % 2:
+                margin[1] += 1
+        if y is not None:
+            ey = y - image_file.y
+            margin[0] = ey / 2
+            margin[2] = ey / 2
+            if ey % 2:
+                margin[2] += 1
+        return ' '.join([ '%spx' % n for n in margin ])
+    try:
+        return render()
+    except Exception:
+        if settings.THUMBNAIL_DEBUG:
+            raise
+        return ''
 
