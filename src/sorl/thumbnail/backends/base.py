@@ -6,14 +6,19 @@ from sorl.thumbnail.helpers import serialize, deserialize
 from sorl.thumbnail.parsers import parse_geometry
 
 
-THUMBNAILS_KEY_SUFFIX = 'thumbnails'
 
 
-def prefix_key(key):
+def prefix_key(key, prefix=settings.THUMBNAIL_KEY_PREFIX):
     """
     Adds a prefix to the key
     """
-    return '%s%s' % (settings.THUMBNAIL_KEY_PREFIX, key)
+    return '%s%s' % (prefix, key)
+
+def suffix_key(key, suffix='||thumbnails'):
+    """
+    Appends a suffix to the key
+    """
+    return '%s%s' % (key, suffix)
 
 
 class ThumbnailBackendBase(object):
@@ -121,7 +126,7 @@ class ThumbnailBackendBase(object):
     def store_set(self, image_file, source=None):
         if source is not None:
             # update the list of thumbnails for source
-            key = tokey(source.key, THUMBNAILS_KEY_SUFFIX)
+            key = suffix_key(source.key)
             thumbnails = self._store_get(key) or []
             if image_file.name not in thumbnails:
                 thumbnails.append(image_file.name)
@@ -139,7 +144,7 @@ class ThumbnailBackendBase(object):
 
     def store_delete(self, image_file, delete_thumbnails=True):
         if delete_thumbnails:
-            key = tokey(image_file.key, THUMBNAILS_KEY_SUFFIX)
+            key = suffix_key(image_file.key)
             thumbnails = self._store_get(key)
             if thumbnails:
                 # Delete all thumbnail keys from store and delete the
