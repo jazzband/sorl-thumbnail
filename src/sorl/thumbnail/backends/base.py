@@ -163,7 +163,7 @@ class ThumbnailBackendBase(object):
     @abstractmethod
     def _store_get_raw(self, key):
         """
-        Gets the value from keystore
+        Gets the value from keystore, returns `None` if not found.
         """
         pass
 
@@ -179,7 +179,7 @@ class ThumbnailBackendBase(object):
     @abstractmethod
     def _store_delete_raw(self, key):
         """
-        Deletes the key, value
+        Deletes the key, value. Silent failure for missing key.
         """
         pass
 
