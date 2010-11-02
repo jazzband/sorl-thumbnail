@@ -9,16 +9,13 @@ from django.utils import simplejson
 from sorl.thumbnail.conf import settings
 
 
-geometry_pat = re.compile(r'^(?P<x>\d+)?(?:x(?P<y>\d+))?$')
-
-
 class ThumbnailError(Exception):
     pass
 
 
 def toint(number):
     """
-    Helper to return best int for a float or just the int it self.
+    Helper to return rounded int for a float or just the int it self.
     """
     if isinstance(number, float):
         number = round(number, 0)
