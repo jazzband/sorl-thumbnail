@@ -8,7 +8,7 @@ PROJ_ROOT = abspath(dirname(__file__))
 
 THUMBNAIL_PREFIX = 'test/cache/'
 THUMBNAIL_DEBUG = True
-#THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.imlib.ThumbnailEngine'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.ThumbnailEngine'
 THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.redis.ThumbnailBackend'
 
 ADMINS = (

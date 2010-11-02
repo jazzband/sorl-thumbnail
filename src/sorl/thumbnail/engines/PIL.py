@@ -5,7 +5,7 @@ from sorl.thumbnail.engines.base import ThumbnailEngineBase
 
 class ThumbnailEngine(ThumbnailEngineBase):
     def get_image(self, source):
-        buf = StringIO(source.open().read())
+        buf = StringIO(source.read())
         return Image.open(buf)
 
     def get_image_size(self, image):

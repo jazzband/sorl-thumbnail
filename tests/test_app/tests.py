@@ -8,6 +8,10 @@ from os.path import join as pjoin
 from test_app.models import Item
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
+from sorl.thumbnail.backends.base import suffix_key
+from sorl.thumbnail.engines.PIL import ThumbnailEngine as EnginePil
+from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
+from sorl.thumbnail.storage import ImageFile
 
 
 class ParsersTestCase(unittest.TestCase):
@@ -55,8 +59,8 @@ class SimpleTestCase(unittest.TestCase):
             im.save(fn)
             Item.objects.get_or_create(image=name)
 
-    def tearDown(self):
-        shutil.rmtree(settings.MEDIA_ROOT)
+    #def tearDown(self):
+    #    shutil.rmtree(settings.MEDIA_ROOT)
 
     def testSimple(self):
         item = Item.objects.get(image='500x500.jpg')
@@ -76,18 +80,35 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(t.x, 300)
         self.assertEqual(t.y, 300)
 
-#    def testMargin(self):
-#        item = Item.objects.get(image='100x100.jpg')
-#        t = self.backend.get_thumbnail(item.image, '200x800')
-#        self.assertEqual(t.margin, '300px 0px 300px 0px')
-#        t = self.backend.get_thumbnail(item.image, '200x800', upscale=False)
-#        self.assertEqual(t.margin, '350px 50px 350px 50px')
-#        t = self.backend.get_thumbnail(item.image, '200x800', crop='noop')
-#        self.assertEqual(t.margin, '0px -300px 0px -300px')
-#        t = self.backend.get_thumbnail(item.image, '200')
-#        self.assertEqual(t.margin, '0px 0px 0px 0px')
-#        t = self.backend.get_thumbnail(item.image, 'x999', crop='top')
-#        self.assertEqual(t.margin, '0px 0px 0px 0px')
+    def testStoreThumbnails(self):
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        self.backend.store_delete_thumbnails(im)
+        th1 = self.backend.get_thumbnail(im, '50')
+        th2 = self.backend.get_thumbnail(im, 'x50')
+        th3 = self.backend.get_thumbnail(im, '20x20')
+        self.assertEqual(
+            set([th1.name, th2.name, th3.name]),
+            set(self.backend._store_get(suffix_key(im.key)))
+            )
+        self.backend.store_delete_thumbnails(im)
+        self.assertEqual(
+            None,
+            self.backend._store_get(suffix_key(im.key))
+            )
+
+    def testIsPortrait(self):
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        th = self.backend.get_thumbnail(im, '50x200', crop='center')
+        self.assertEqual(th.is_portrait(), True)
+        th = self.backend.get_thumbnail(im, '500x2', crop='center')
+        self.assertEqual(th.is_portrait(), False)
+
+    def testStoreGetSet(self):
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        self.backend.store_delete(im)
+        self.assertEqual(self.backend.store_get(im), False)
+        self.backend.store_set(im)
+        self.assertEqual(im.size, (500, 500))
 
 
 class TemplateTestCaseA(SimpleTestCase):
@@ -104,11 +125,11 @@ class TemplateTestCaseA(SimpleTestCase):
 
 
 class TemplateTestCaseB(unittest.TestCase):
-    def tearDown(self):
-        try:
-            shutil.rmtree(settings.MEDIA_ROOT)
-        except Exception:
-            pass
+    #def tearDown(self):
+    #    try:
+    #        shutil.rmtree(settings.MEDIA_ROOT)
+    #    except Exception:
+    #        pass
 
     def testUrl(self):
         val = render_to_string('thumbnail3.html', {}).strip()
@@ -124,4 +145,32 @@ class TemplateTestCaseB(unittest.TestCase):
     def testEmpty(self):
         val = render_to_string('thumbnail5.html', {}).strip()
         self.assertEqual(val, '<p>empty</p>')
+
+
+class CropTestCase(unittest.TestCase):
+    def setUp(self):
+        self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+        if not os.path.exists(settings.MEDIA_ROOT):
+            os.makedirs(settings.MEDIA_ROOT)
+        name = 'palette.jpg'
+        fn = pjoin(settings.MEDIA_ROOT, name)
+        im = Image.new('RGB', (300, 300))
+        im.paste((255, 255, 255), (100, 100, 199, 199))
+        im.save(fn)
+        self.palette = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+
+    def testCrop(self):
+        th = self.backend.get_thumbnail(self.palette, '100x100', crop='top')
+        print th.name
+        #engine = EnginePil()
+        #thim = engine.get_image(th)
+        #print thim.getextrema()
+        #print th.name
+
+    def tearDown(self):
+        pass
+        #shutil.rmtree(settings.MEDIA_ROOT)
+
+    def testOne(self):
+        pass
 
