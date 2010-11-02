@@ -123,18 +123,27 @@ class ThumbnailBackendBase(object):
         `delete_thumbnails` is set to `True`.
         """
         if delete_thumbnails:
-            key = suffix_key(image_file.key)
-            thumbnails = self._store_get(key)
-            if thumbnails:
-                # Delete all thumbnail keys from store and delete the
-                # ImageFiles. Storage is assumed to be the same
-                for name in thumbnails:
-                    thumbnail = ImageFile(name, self.storage)
-                    self._store_delete(thumbnail.key)
-                    thumbnail.delete()
-            # Delete the thumbnails key from store
-            self._store_delete(key)
+            self.store_delete_thumbnails(image_file)
         self._store_delete(image_file.key)
+
+    def store_delete_thumbnails(self, image_file, storage=None):
+        """
+        Deletes store references to thumbnails as well as thumbnail
+        image_files.
+        """
+        if storage is not None:
+            storage = self.storage
+        key = suffix_key(image_file.key)
+        thumbnails = self._store_get(key)
+        if thumbnails:
+            # Delete all thumbnail keys from store and delete the
+            # ImageFiles. Storage is assumed to be the same
+            for name in thumbnails:
+                thumbnail = ImageFile(name, storage)
+                self._store_delete(thumbnail.key)
+                thumbnail.delete()
+        # Delete the thumbnails key from store
+        self._store_delete(key)
 
     def _store_get(self, key):
         """

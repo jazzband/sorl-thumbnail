@@ -15,6 +15,15 @@ THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pgmagick.ThumbnailEngine'
 # Default storage for the generated thumbnail
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
+# Redis backend settings
+THUMBNAIL_REDIS_HOST = 'localhost'
+THUMBNAIL_REDIS_PORT = 6379
+THUMBNAIL_REDIS_DB = 0
+
+# Cache timeout for `cached_db` backend. You should probably keep this at
+# maximum.
+THUMBNAIL_CACHE_TIMEOUT = sys.maxint
+
 # Thumbnail filename prefix
 THUMBNAIL_PREFIX = 'cache/'
 
@@ -31,9 +40,6 @@ THUMBNAIL_UPSCALE = True
 
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
-
-# Cache timeout. You should probably keep this at maximum.
-THUMBNAIL_CACHE_TIMEOUT = sys.maxint
 
 # Key prefix, this is up to the engine or backend to use.
 THUMBNAIL_KEY_PREFIX = 'sorl||thumbnail||'
