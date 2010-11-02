@@ -135,6 +135,7 @@ class ThumbnailBackendBase(object):
                 image = self.engine.get_image(self)
                 image_file.size = self.engine.get_image_size(image)
         self._store_set(image_file.key, image_file.size)
+        return True
 
     def store_delete(self, image_file, delete_thumbnails=True):
         if delete_thumbnails:
@@ -150,4 +151,5 @@ class ThumbnailBackendBase(object):
             # Delete the thumbnails key from store
             self._store_delete(key)
         self._store_delete(image_file.key)
+        return True
 
