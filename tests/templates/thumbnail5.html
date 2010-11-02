@@ -1,6 +1,6 @@
 {% load thumbnail %}{% spaceless %}
 {% thumbnail sorl "30x30" crop="50% 50%" as im %}
-    <img style="margin:{{ im.margin }}" width="{{ im.x }}" height="{{ im.y }}">
+    <img style="margin:{{ im|margin:"30x30" }}" width="{{ im.x }}" height="{{ im.y }}">
 {% empty %}
     <p>empty{{ im }}</p>
 {% endthumbnail %}

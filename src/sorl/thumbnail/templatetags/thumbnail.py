@@ -3,8 +3,9 @@ from django.core.cache import cache
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import get_thumbnail, tokey, get_or_set_cache
-from sorl.thumbnail.storage import SuperImage
+from sorl.thumbnail.storage import ImageFile
+from sorl.thumbnail.helpers import get_module_class
+from sorl.thumbnail.parsers import parse_geometry
 
 
 register = Library()
@@ -59,7 +60,8 @@ class ThumbnailNode(Node):
         if not file_:
             return self.nodelist_empty.render(context)
         context.push()
-        thumbnail = get_thumbnail(file_, geometry, **options)
+        backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+        thumbnail = backend.get_thumbnail(file_, geometry, **options)
         context[self.as_var] = thumbnail
         output = self.nodelist_file.render(context)
         context.pop()
@@ -81,28 +83,32 @@ def is_portrait(file_):
     A very handy filter to determine if an image is portrait or landscape.
     Caching is used since this operation is not free.
     """
-    image = SuperImage(file_)
-    key = '%sportrait-%s' % (settings.THUMBNAIL_CACHE_PREFIX,
-                             tokey(image.name, image.storage_path))
-    return get_or_set_cache(key, image.is_portrait)
-
+    image_file = ImageFile(file_)
+    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+    if not backend.store_get(image_file):
+        image_file = backend.store_set(image_file)
+    return image_file.is_portrait()
 
 
 @register.filter
-def margin(file_, geometry):
+def margin(file_, geometry_string):
     """
     Returns the calculated margin from requested geometry and image
     """
     margin = [0, 0, 0, 0]
-    x, y = parse_geometry(self._geometry)
+    image_file = ImageFile(file_)
+    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+    if not backend.store_get(image_file):
+        image_file = backend.store_set(image_file)
+    x, y = parse_geometry(geometry_string)
     if x is not None:
-        ex = x - self.x
+        ex = x - image_file.x
         margin[3] = ex / 2
         margin[1] = ex / 2
         if ex % 2:
             margin[1] += 1
     if y is not None:
-        ey = y - self.y
+        ey = y - image_file.y
         margin[0] = ey / 2
         margin[2] = ey / 2
         if ey % 2:

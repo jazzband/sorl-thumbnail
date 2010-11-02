@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
-from sorl.thumbnail.storage import SuperImage
+from sorl.thumbnail.storage import ImageFile
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.parsers import parse_geometry
@@ -20,7 +20,7 @@ class ThumbnailBase(object):
         """
         ``source``
             Should represent a file, will introspected by the
-            ``sorl.thumbnail.storage.SuperImage`` constructor
+            ``sorl.thumbnail.storage.ImageFile`` constructor
         ``geometry``
             Geometry string
         ``options``
@@ -28,7 +28,7 @@ class ThumbnailBase(object):
         ``engine``
             ``sorl.thumbnail.engine.EngineBase`` sub class instance
         """
-        self._source = SuperImage(source)
+        self._source = ImageFile(source)
         self._geometry = geometry
         self._options = options
         for key, value in self._default_options.iteritems():

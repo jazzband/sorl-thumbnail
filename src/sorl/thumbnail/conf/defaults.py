@@ -7,10 +7,10 @@ from django.conf import settings
 THUMBNAIL_DEBUG = False
 
 # Thumbnail backend
-THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.cached_db.Thumbnail'
+THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.cached_db.ThumbnailBackend'
 
 # Thumbnail engine
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.engine_pgmagick.ThumbnailEngine'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pgmagick.ThumbnailEngine'
 
 # Default storage for the generated thumbnail
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE

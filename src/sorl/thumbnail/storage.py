@@ -33,6 +33,9 @@ class ImageFile(object):
             else:
                 self.storage = FileSystemStorage()
 
+    def __unicode__(self):
+        return self.name
+
     def exists(self):
         return self.storage.exists(self.name)
 

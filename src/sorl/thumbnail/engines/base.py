@@ -65,13 +65,13 @@ class ThumbnailEngineBase(object):
         self._write(image, format_, quality, thumbnail)
 
     #
-    # Methods which backends need to implement
+    # Methods which engines need to implement
     # The ``image`` argument refers to a backend image object
     #
     @abstractmethod
     def get_image(self, source):
         """
-        Returns the backend image objects from a SuperImage instance
+        Returns the backend image objects from a ImageFile instance
         """
         raise NotImplemented()
 
@@ -110,7 +110,7 @@ class ThumbnailEngineBase(object):
     @abstractmethod
     def _write(self, image, format_, quality, thumbnail):
         """
-        Writes to the thumbnail which is SuperImage instance
+        Writes to the thumbnail which is ImageFile instance
         """
         raise NotImplemented()
 

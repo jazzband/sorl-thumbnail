@@ -7,12 +7,12 @@ from sorl.thumbnail.parsers import parse_geometry
 
 
 
-
 def prefix_key(key, prefix=settings.THUMBNAIL_KEY_PREFIX):
     """
     Adds a prefix to the key
     """
     return '%s%s' % (prefix, key)
+
 
 def suffix_key(key, suffix='||thumbnails'):
     """
@@ -45,7 +45,7 @@ class ThumbnailBackendBase(object):
         self.engine = engine
         self.storage = storage
 
-    def get_thumbnail(self, file_, geometry_string, options):
+    def get_thumbnail(self, file_, geometry_string, **options):
         source = ImageFile(file_)
         for key, value in self.default_options.iteritems():
             options.setdefault(key, value)
@@ -76,13 +76,77 @@ class ThumbnailBackendBase(object):
         """
         Computes the destination filename.
         """
-        key = tokey(source.name, source.storage_path, geometry_string,
-                    serialize(options))
+        key = tokey(source.key, geometry_string, serialize(options))
         # make some subdirs
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             self.extensions[options['format']])
 
+    def store_get(self, image_file):
+        value = self._store_get(image_file.key)
+        if value is None:
+            return False
+        image_file.size = value
+        return image_file
+
+    def store_set(self, image_file, source=None):
+        if source is not None:
+            # Update the list of thumbnails for source. Storage is not saved,
+            # we assume current storage when unpacking.
+            key = suffix_key(source.key)
+            thumbnails = set(self._store_get(key) or [])
+            thumbnails.add(image_file.name)
+            self._store_set(key, list(thumbnails))
+        # now set store for the image_file and make sure it's got a size
+        if image_file.size is None:
+            if hasattr(image_file.storage, 'image_size'):
+                image_file.size = image_file.storage.image_size(self.name)
+            else:
+                # This is the worst case scenario
+                image = self.engine.get_image(image_file)
+                image_file.size = self.engine.get_image_size(image)
+        self._store_set(image_file.key, image_file.size)
+        return image_file
+
+    def store_delete(self, image_file, delete_thumbnails=True):
+        if delete_thumbnails:
+            key = suffix_key(image_file.key)
+            thumbnails = self._store_get(key)
+            if thumbnails:
+                # Delete all thumbnail keys from store and delete the
+                # ImageFiles. Storage is assumed to be the same
+                for name in thumbnails:
+                    thumbnail = ImageFile(name, self.storage)
+                    self._store_delete(thumbnail.key)
+                    thumbnail.delete()
+            # Delete the thumbnails key from store
+            self._store_delete(key)
+        self._store_delete(image_file.key)
+
+    def _store_get(self, key):
+        """
+        Deserializing, prefix wrapper for ThumbnailBackendBase._store_get_raw
+        """
+        value = self._store_get_raw(prefix_key(key))
+        if value is None:
+            return None
+        return deserialize(value)
+
+    def _store_set(self, key, value):
+        """
+        Serializing, prefix wrapper for ThumbnailBackendBase._store_set_raw
+        """
+        self._store_set_raw(prefix_key(key), serialize(value))
+
+    def _store_delete(self, key):
+        """
+        Prefix wrapper for ThumbnailBackendBase._store_delete_raw
+        """
+        self._store_delete_raw(prefix_key(key))
+
+    #
+    # Methods which backends need to implement
+    #
     @abstractmethod
     def _store_get_raw(self, key):
         pass
@@ -94,66 +158,4 @@ class ThumbnailBackendBase(object):
     @abstractmethod
     def _store_delete_raw(self, key):
         pass
-
-    def _store_get(self, key):
-        """
-        Deserializing, prefix wrapper for ThumbnailBackendBase._store_get_raw
-        """
-        value = self._store_get(prefix_key(key))
-        if value is None:
-            return None
-        return deserialize(value)
-
-    def _store_set(self, key, value):
-        """
-        Serializing, prefix wrapper for ThumbnailBackendBase._store_set_raw
-        """
-        self._store_set(prefix_key(key), serialize(value))
-
-    def _store_delete(self, key):
-        """
-        Prefix wrapper for ThumbnailBackendBase._store_delete_raw
-        """
-        self._store_delete_raw(prefix_key(key))
-
-    def store_get(self, image_file):
-        value = self._store_get(image_file.key)
-        if value is None:
-            return False
-        image_file.size = value
-        return image_file
-
-    def store_set(self, image_file, source=None):
-        if source is not None:
-            # update the list of thumbnails for source
-            key = suffix_key(source.key)
-            thumbnails = self._store_get(key) or []
-            if image_file.name not in thumbnails:
-                thumbnails.append(image_file.name)
-            self._store_set(key, thumbnails)
-        # now set store for the image_file and make sure it's got a size
-        if image_file.size is None:
-            if hasattr(image_file.storage, 'image_size'):
-                image_file.size = image_file.storage.image_size(self.name)
-            else:
-                # This is the worst case scenario
-                image = self.engine.get_image(self)
-                image_file.size = self.engine.get_image_size(image)
-        self._store_set(image_file.key, image_file.size)
-        return image_file
-
-    def store_delete(self, image_file, delete_thumbnails=True):
-        if delete_thumbnails:
-            key = suffix_key(image_file.key)
-            thumbnails = self._store_get(key)
-            if thumbnails:
-                # Delete all thumbnail keys from store and delete the
-                # ImageFiles
-                for name in thumbnails:
-                    thumbnail = ImageFile(name, self.storage)
-                    self._store_delete(thumbnail.key)
-                    thumbnail.delete()
-            # Delete the thumbnails key from store
-            self._store_delete(key)
-        self._store_delete(image_file.key)
 

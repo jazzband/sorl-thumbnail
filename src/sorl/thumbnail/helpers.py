@@ -16,17 +16,6 @@ class ThumbnailError(Exception):
     pass
 
 
-def get_or_set_cache(key, callback, timeout=settings.THUMBNAIL_CACHE_TIMEOUT):
-    """
-    Get value from cache or update with value from callback
-    """
-    value = cache.get(key)
-    if value is None:
-        value = callback()
-        cache.set(key, value, timeout)
-    return value
-
-
 def toint(number):
     """
     Helper to return best int for a float or just the int it self.
