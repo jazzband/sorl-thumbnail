@@ -1,4 +1,5 @@
 import re
+from abc import ABCMeta, abstractmethod, abstractproperty
 from django.core.cache import cache
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
@@ -14,23 +15,46 @@ register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
 
 
+class ThumbnailNodeBase(Node):
+    __metaclass__ = ABCMeta
+
+    error_result = ''
+
+    @property
+    def backend(self):
+        if not hasattr(self, '_backend'):
+            self._backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+        return self._backend
+
+    def render(self, context):
+        try:
+            return self._render(context)
+        except Exception:
+            if settings.THUMBNAIL_DEBUG:
+                raise
+            return self.error_result
+
+    @abstractmethod
+    def _render(self, context):
+        raise NotImplemented()
+
+
+
 @register.tag('thumbnail')
-class ThumbnailNode(Node):
+class ThumbnailNode(ThumbnailNodeBase):
     child_nodelists = ('nodelist_file', 'nodelist_empty')
 
     def __init__(self, parser, token):
-        def syntax_error():
-            raise TemplateSyntaxError('Syntax error.')
         bits = token.split_contents()
         if len(bits) < 5 or bits[-2] != 'as':
-            syntax_error()
+            raise TemplateSyntaxError('Syntax error.')
         self.file_ = parser.compile_filter(bits[1])
         self.geometry = parser.compile_filter(bits[2])
         self.options = {}
         for bit in bits[3:-2]:
             m = kw_pat.match(bit)
             if not m:
-                syntax_error()
+                raise TemplateSyntaxError('Syntax error.')
             key = smart_str(m.group('key'))
             value = parser.compile_filter(m.group('value'))
             self.options[key] = value
@@ -42,15 +66,6 @@ class ThumbnailNode(Node):
         else:
             self.nodelist_empty = NodeList()
 
-    def render(self, context):
-        try:
-            return self._render(context)
-        except Exception:
-            if settings.THUMBNAIL_DEBUG:
-                raise
-            context[self.as_var] = None # reset in case it was set in a loop
-            return settings.THUMBNAIL_ERROR
-
     def _render(self, context):
         file_ = self.file_.resolve(context)
         geometry = self.geometry.resolve(context)
@@ -60,8 +75,7 @@ class ThumbnailNode(Node):
         if not file_:
             return self.nodelist_empty.render(context)
         context.push()
-        backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-        thumbnail = backend.get_thumbnail(file_, geometry, **options)
+        thumbnail = self.backend.get_thumbnail(file_, geometry, **options)
         context[self.as_var] = thumbnail
         output = self.nodelist_file.render(context)
         context.pop()
@@ -77,35 +91,44 @@ class ThumbnailNode(Node):
             yield node
 
 
-@register.filter
-def is_portrait(file_):
+@register.tag('is_portrait')
+def IsPortraitNode(ThumbnailNodeBase):
     """
-    A very handy filter to determine if an image is portrait or landscape.
-    Caching is used since this operation is not free.
+    A tag to determine if an image is portrait or landscape.
     """
-    def render():
+    error_result = False
+
+    def __init__(self, parser, token):
+        bits = token.split_contents()
+        if len(bits) != 2:
+            raise TemplateSyntaxError('Syntax error.')
+        self.file_ = parser.compile_filter(bits[1])
+
+    def _render(self, context):
+        file_ = self.file_.resolve(context)
         image_file = ImageFile(file_)
-        backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-        if not backend.store_get(image_file):
-            image_file = backend.store_set(image_file)
+        if not self.backend.store_get(image_file):
+            image_file = self.backend.store_set(image_file)
         return image_file.is_portrait()
-    try:
-        return render()
-    except Exception:
-        if settings.THUMBNAIL_DEBUG:
-            raise
-        return ''
 
 
-@register.filter
-def margin(file_, geometry_string):
+@register.tag('margin')
+def MarginNode(ThumbnailNodeBase):
     """
     Returns the calculated margin for an image and geometry
     """
-    def render():
+    def __init__(self, parser, token):
+        bits = token.split_contents()
+        if len(bits) != 3:
+            raise TemplateSyntaxError('Syntax error.')
+        self.file_ = parser.compile_filter(bits[1])
+        self.geometry_string = parser.compile_filter(bits[2])
+
+    def _render(self, context):
+        file_ = self.file_.resolve(context)
+        geometry_string = self.geometry_string.resolve(context)
         margin = [0, 0, 0, 0]
         image_file = ImageFile(file_)
-        backend = get_module_class(settings.THUMBNAIL_BACKEND)()
         if not backend.store_get(image_file):
             image_file = backend.store_set(image_file)
         x, y = parse_geometry(geometry_string)
@@ -122,10 +145,4 @@ def margin(file_, geometry_string):
             if ey % 2:
                 margin[2] += 1
         return ' '.join([ '%spx' % n for n in margin ])
-    try:
-        return render()
-    except Exception:
-        if settings.THUMBNAIL_DEBUG:
-            raise
-        return ''
 
