@@ -1,10 +1,10 @@
 #coding=utf-8
 from abc import ABCMeta, abstractmethod
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import dict_serialize, get_module_class, tokey
+from sorl.thumbnail.helpers import serialize, get_module_class, tokey
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_geometry, parse_crop
-from sorl.thumbnail.storage import SuperImage
+from sorl.thumbnail.storage import ImageFile
 
 
 class ThumbnailEngineBase(object):
@@ -12,11 +12,6 @@ class ThumbnailEngineBase(object):
     ABC from Thumbnail engines, methods are static
     """
     __metaclass__ = ABCMeta
-
-    extensions = {
-        'JPEG': 'jpg',
-        'PNG': 'png',
-    }
 
     def create(self, image, geometry, options):
         """
@@ -68,17 +63,6 @@ class ThumbnailEngineBase(object):
         format_ = options['format']
         quality = options['quality']
         self._write(image, format_, quality, thumbnail)
-
-    def get_filename(self, source, geometry_string, options):
-        """
-        Computes the destination filename.
-        """
-        key = tokey(source.name, source.storage_path, geometry_string,
-                     dict_serialize(options)) # we leave the engine path out
-        # make some subdirs
-        path = '%s/%s/%s' % (key[:2], key[2:4], key)
-        return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
-                            self.extensions[options['format']])
 
     #
     # Methods which backends need to implement

@@ -1,4 +1,4 @@
-from PIL import Image, Image
+from ..PIL import Image, Image
 from cStringIO import StringIO
 from sorl.thumbnail.engines.base import ThumbnailEngineBase
 

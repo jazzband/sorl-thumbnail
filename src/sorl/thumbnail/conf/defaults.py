@@ -32,12 +32,11 @@ THUMBNAIL_UPSCALE = True
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
 
-# DB Cache timeout. You should keep this at maximum since invalidating is taken
-# care of already
+# Cache timeout. You should probably keep this at maximum.
 THUMBNAIL_CACHE_TIMEOUT = sys.maxint
 
-# Cache prefix, this is up to the engine or backend to use.
-THUMBNAIL_CACHE_PREFIX = 'sorl-thumbnail-'
+# Key prefix, this is up to the engine or backend to use.
+THUMBNAIL_KEY_PREFIX = 'sorl||thumbnail||'
 
 # Return this when an error is raised and THUMBNAIL_DEBUG is False
 THUMBNAIL_ERROR = ''

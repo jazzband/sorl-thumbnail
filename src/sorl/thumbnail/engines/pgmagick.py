@@ -1,5 +1,5 @@
 from base64 import b64decode
-from pgmagick import Image, Blob, ColorspaceType, Geometry
+from ..pgmagick import Image, Blob, ColorspaceType, Geometry
 from sorl.thumbnail.engines.base import ThumbnailEngineBase
 
 

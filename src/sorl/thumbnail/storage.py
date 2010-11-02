@@ -5,14 +5,14 @@ from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError, get_thumbnail_engine
+from sorl.thumbnail.helpers import ThumbnailError, tokey
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 
-class Image(object):
-    _size = None
+class ImageFile(object):
+    size = None
 
     def __init__(self, file_, storage=None):
         if not file_:
@@ -35,23 +35,6 @@ class Image(object):
 
     def exists(self):
         return self.storage.exists(self.name)
-
-    def _get_size(self):
-        if self._size is None:
-            # Test if the storage has an `image_size` attribute Storage class can
-            # implement this for a more efficient way to get the image size.
-            if hasattr(self.storage, 'image_size'):
-                self._size = self.storage.image_size(self.name)
-            else:
-                # This is the worst case scenario, we probably need to read the
-                # file contents into memory depending on the engine implementation
-                engine = get_module_class(settings.THUMBNAIL_ENGINE)()
-                image = engine.get_image(self)
-                self._size = engine.get_image_size(image)
-        return self._size
-    def _set_size(self, size):
-        self._size = size
-    size = property(_get_size, _set_size)
 
     @property
     def width(self):
@@ -79,13 +62,26 @@ class Image(object):
         self.size = None
         return self.storage.save(self.name, content)
 
+    def delete(self):
+        return self.storage.delete(self.name)
+
     @property
     def serialized_storage(self):
         cls = self.storage.__class__
         return '%s.%s' % (cls.__module__, cls.__name__)
 
+    @property
+    def key(self):
+        return tokey(self.name, self.serialized_storage)
+
 
 class UrlStorage(Storage):
-    def open(self, name, mode='rb'):
+    def open(self, name):
         return urllib2.urlopen(name, timeout=settings.THUMBNAIL_URL_TIMEOUT)
+
+    def url(self, name):
+        return name
+
+    def delete(self, name):
+        pass
 

@@ -27,16 +27,6 @@ def get_or_set_cache(key, callback, timeout=settings.THUMBNAIL_CACHE_TIMEOUT):
     return value
 
 
-def dict_serialize(dict_):
-    """
-    Serializes a dict to JSON format while sorting the keys
-    """
-    result = SortedDict()
-    for key in sorted(dict_.keys()):
-        result[key]= dict_[key]
-    return simplejson.dumps(result)
-
-
 def toint(number):
     """
     Helper to return best int for a float or just the int it self.
@@ -48,11 +38,24 @@ def toint(number):
 
 def tokey(*args):
     """
-    Computes a (hopefully :D) unique key from arguments given.
+    Computes a (hopefully) unique key from arguments given.
     """
-    salt = '-'.join([force_unicode(arg) for arg in args])
+    salt = '||'.join([force_unicode(arg) for arg in args])
     hash_ = hashlib.md5(salt)
     return hash_.hexdigest()
+
+
+def serialize(obj):
+    if isinstance(obj, dict):
+        result = SortedDict()
+        for key in sorted(obj.keys()):
+            result[key]= obj[key]
+        obj = result
+    return simplejson.dumps(obj)
+
+
+def deserialize(s):
+    return simplejson.loads(s)
 
 
 def get_module_class(class_path):
@@ -67,15 +70,4 @@ def get_module_class(class_path):
         raise ImproperlyConfigured(('Error importing module %s: "%s"' %
                                    (mod_name, e)))
     return getattr(mod, cls_name)
-
-
-def get_thumbnail_engine():
-    return get_module_class(settings.THUMBNAIL_ENGINE)()
-
-
-def get_thumbnail_backend():
-    return get_module_class(settings.THUMBNAIL_BACKEND)()
-
-def get_thumbnail_storage():
-    return get_module_class(settings.THUMBNAIL_STORAGE)()
 
