@@ -2,6 +2,8 @@ import Image
 import os
 import unittest
 import shutil
+import operator
+import random
 from django.conf import settings
 from django.template.loader import render_to_string
 from os.path import join as pjoin
@@ -59,8 +61,8 @@ class SimpleTestCase(unittest.TestCase):
             im.save(fn)
             Item.objects.get_or_create(image=name)
 
-    #def tearDown(self):
-    #    shutil.rmtree(settings.MEDIA_ROOT)
+    def tearDown(self):
+        shutil.rmtree(settings.MEDIA_ROOT)
 
     def testSimple(self):
         item = Item.objects.get(image='500x500.jpg')
@@ -125,11 +127,11 @@ class TemplateTestCaseA(SimpleTestCase):
 
 
 class TemplateTestCaseB(unittest.TestCase):
-    #def tearDown(self):
-    #    try:
-    #        shutil.rmtree(settings.MEDIA_ROOT)
-    #    except Exception:
-    #        pass
+    def tearDown(self):
+        try:
+            shutil.rmtree(settings.MEDIA_ROOT)
+        except Exception:
+            pass
 
     def testUrl(self):
         val = render_to_string('thumbnail3.html', {}).strip()
@@ -152,25 +154,85 @@ class CropTestCase(unittest.TestCase):
         self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
-        name = 'palette.jpg'
+        # portrait
+        name = 'portrait.jpg'
         fn = pjoin(settings.MEDIA_ROOT, name)
-        im = Image.new('RGB', (300, 300))
-        im.paste((255, 255, 255), (100, 100, 199, 199))
+        im = Image.new('L', (100, 200))
+        im.paste(255, (0, 0, 100, 100))
         im.save(fn)
-        self.palette = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+        self.portrait = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+        self.backend.store_delete(self.portrait)
 
-    def testCrop(self):
-        th = self.backend.get_thumbnail(self.palette, '100x100', crop='top')
-        print th.name
-        #engine = EnginePil()
-        #thim = engine.get_image(th)
-        #print thim.getextrema()
-        #print th.name
+        # landscape
+        name = 'landscape.jpg'
+        fn = pjoin(settings.MEDIA_ROOT, name)
+        im = Image.new('L', (200, 100))
+        im.paste(255, (0, 0, 100, 100))
+        im.save(fn)
+        self.landscape = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+        self.backend.store_delete(self.landscape)
+
+    def testPortraitCrop(self):
+        def mean_pixel(x, y):
+            values = im.getpixel((x, y))
+            if not isinstance(values, (tuple, list)):
+                values = [values]
+            return reduce(operator.add, values) / len(values)
+        for crop in ('center', '88% 50%', '50px'):
+            th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
+            engine = EnginePil()
+            im = engine.get_image(th)
+            self.assertEqual(mean_pixel(50,0), 255)
+            self.assertEqual(mean_pixel(50,45), 255)
+            self.assertEqual(250 < mean_pixel(50,49) <= 255, True)
+            self.assertEqual(mean_pixel(50,55), 0)
+            self.assertEqual(mean_pixel(50,99), 0)
+        for crop in ('top', '0%', '0px'):
+            th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
+            engine = EnginePil()
+            im = engine.get_image(th)
+            for x in xrange(0, 99, 10):
+                for y in xrange(0, 99, 10):
+                    self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
+        for crop in ('bottom', '100%', '100px'):
+            th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
+            engine = EnginePil()
+            im = engine.get_image(th)
+            for x in xrange(0, 99, 10):
+                for y in xrange(0, 99, 10):
+                    self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
+
+    def testLandscapeCrop(self):
+        def mean_pixel(x, y):
+            values = im.getpixel((x, y))
+            if not isinstance(values, (tuple, list)):
+                values = [values]
+            return reduce(operator.add, values) / len(values)
+        for crop in ('center', '50% 200%', '50px 700px'):
+            th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
+            engine = EnginePil()
+            im = engine.get_image(th)
+            self.assertEqual(mean_pixel(0, 50), 255)
+            self.assertEqual(mean_pixel(45, 50), 255)
+            self.assertEqual(250 < mean_pixel(49, 50) <= 255, True)
+            self.assertEqual(mean_pixel(55, 50), 0)
+            self.assertEqual(mean_pixel(99, 50), 0)
+        for crop in ('left', '0%', '0px'):
+            th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
+            engine = EnginePil()
+            im = engine.get_image(th)
+            for x in xrange(0, 99, 10):
+                for y in xrange(0, 99, 10):
+                    self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
+        for crop in ('right', '100%', '100px'):
+            th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
+            engine = EnginePil()
+            im = engine.get_image(th)
+            for x in xrange(0, 99, 10):
+                for y in xrange(0, 99, 10):
+                    self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
 
     def tearDown(self):
-        pass
-        #shutil.rmtree(settings.MEDIA_ROOT)
+        shutil.rmtree(settings.MEDIA_ROOT)
 
-    def testOne(self):
-        pass
 
