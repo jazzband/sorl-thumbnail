@@ -11,7 +11,7 @@ from test_app.models import Item
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.engines.PIL import ThumbnailEngine as EnginePil
-from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
+#from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
 from sorl.thumbnail.storage import ImageFile
 from sorl.thumbnail.templatetags.thumbnail import margin
 
@@ -90,12 +90,12 @@ class SimpleTestCase(unittest.TestCase):
         th3 = self.backend.get_thumbnail(im, '20x20')
         self.assertEqual(
             set([th1.name, th2.name, th3.name]),
-            set(self.backend._store_get(im.key, prefix='thumbnails'))
+            set(self.backend._store_get(im.key, identity='thumbnails'))
             )
         self.backend.store_delete_thumbnails(im)
         self.assertEqual(
             None,
-            self.backend._store_get(im.key, prefix='thumbnails')
+            self.backend._store_get(im.key, identity='thumbnails')
             )
 
     def testIsPortrait(self):
@@ -117,11 +117,11 @@ class SimpleTestCase(unittest.TestCase):
     def testStoreGetSet(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         self.backend.store_delete(im)
-        self.assertEqual(self.backend.store_get(im), False)
+        self.assertEqual(self.backend.store_get(im), None)
         self.backend.store_set(im)
         self.assertEqual(im.size, (500, 500))
 
-    def testStoreEmpty(self):
+    def testDeleteOrphans(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         self.backend.store_delete_thumbnails(im)
         th = self.backend.get_thumbnail(im, '3x3')
@@ -130,13 +130,8 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(th.exists(), False)
         self.assertEqual(self.backend.store_get(th).x, 3)
         self.assertEqual(self.backend.store_get(th).y, 3)
-        self.backend._store_empty()
-        self.assertEqual(self.backend.store_get(th), False)
-        self.assertEqual(self.backend._store_get(im.key, prefix='thumbnails'), [th.name])
-        self.backend._store_empty()
-        self.assertEqual(self.backend._store_get(im.key, prefix='thumbnails'), [th.name])
-        self.backend.store_delete_thumbnails(im)
-        self.assertEqual(self.backend._store_get(im.key, prefix='thumbnails'), None)
+        self.backend._store_delete_orphans()
+        self.assertEqual(self.backend.store_get(th), None)
 
 
 class TemplateTestCaseA(SimpleTestCase):

@@ -1,17 +1,18 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.storage import ImageFile
+from sorl.thumbnail.storage import serialize_image_file, deserialize_image_file
 from sorl.thumbnail.helpers import get_module_class, tokey
 from sorl.thumbnail.helpers import serialize, deserialize
 from sorl.thumbnail.parsers import parse_geometry
 
 
 
-def add_prefix(key, prefix='image'):
+def add_prefix(key, identity='image'):
     """
-    Adds prefixes
+    Adds prefixes to the key
     """
-    return '||'.join([settings.THUMBNAIL_KEY_PREFIX, prefix, key])
+    return '||'.join([settings.THUMBNAIL_KEY_PREFIX, identity, key])
 
 
 class ThumbnailBackendBase(object):
@@ -77,14 +78,10 @@ class ThumbnailBackendBase(object):
 
     def store_get(self, image_file):
         """
-        Gets the `image_file` from store and updates its size. Returns `False`
-        if not found in store.
+        Gets the ``image_file`` from store. Returns ``None`` if not found in
+        store.
         """
-        value = self._store_get(image_file.key)
-        if value is None:
-            return False
-        image_file.size = value
-        return image_file
+        return self._store_get(image_file.key)
 
     def store_set(self, image_file, source=None):
         """
@@ -94,10 +91,10 @@ class ThumbnailBackendBase(object):
         if source is not None:
             # Update the list of thumbnails for source. Storage is not saved,
             # we assume current storage when unpacking.
-            thumbnails = self._store_get(source.key, prefix='thumbnails') or []
+            thumbnails = self._store_get(source.key, identity='thumbnails') or []
             thumbnails = set(thumbnails)
             thumbnails.add(image_file.name)
-            self._store_set(source.key, list(thumbnails), prefix='thumbnails')
+            self._store_set(source.key, list(thumbnails), identity='thumbnails')
         # now set store for the image_file and make sure it's got a size
         if image_file.size is None:
             if hasattr(image_file.storage, 'image_size'):
@@ -106,7 +103,7 @@ class ThumbnailBackendBase(object):
                 # This is the worst case scenario
                 image = self.engine.get_image(image_file)
                 image_file.size = self.engine.get_image_size(image)
-        self._store_set(image_file.key, image_file.size)
+        self._store_set(image_file.key, image_file)
         return image_file
 
     def store_delete(self, image_file, delete_thumbnails=True):
@@ -126,7 +123,7 @@ class ThumbnailBackendBase(object):
         """
         if storage is not None:
             storage = self.storage
-        thumbnails = self._store_get(image_file.key, prefix='thumbnails')
+        thumbnails = self._store_get(image_file.key, identity='thumbnails')
         if thumbnails:
             # Delete all thumbnail keys from store and delete the
             # ImageFiles. Storage is assumed to be the same
@@ -135,28 +132,34 @@ class ThumbnailBackendBase(object):
                 self._store_delete(thumbnail.key)
                 thumbnail.delete()
         # Delete the thumbnails key from store
-        self._store_delete(image_file.key, prefix='thumbnails')
+        self._store_delete(image_file.key, identity='thumbnails')
 
-    def _store_get(self, key, prefix='image'):
+    def _store_get(self, key, identity='image'):
         """
         Deserializing, prefix wrapper for ThumbnailBackendBase._store_get_raw
         """
-        value = self._store_get_raw(add_prefix(key, prefix))
+        value = self._store_get_raw(add_prefix(key, identity))
         if value is None:
             return None
+        if identity == 'image':
+            return deserialize_image_file(value)
         return deserialize(value)
 
-    def _store_set(self, key, value, prefix='image'):
+    def _store_set(self, key, value, identity='image'):
         """
         Serializing, prefix wrapper for ThumbnailBackendBase._store_set_raw
         """
-        self._store_set_raw(add_prefix(key, prefix), serialize(value))
+        if identity == 'image':
+            s = serialize_image_file(value)
+        else:
+            s = serialize(value)
+        self._store_set_raw(add_prefix(key, identity), s)
 
-    def _store_delete(self, key, prefix='image'):
+    def _store_delete(self, key, identity='image'):
         """
         Prefix wrapper for ThumbnailBackendBase._store_delete_raw
         """
-        self._store_delete_raw(add_prefix(key, prefix))
+        self._store_delete_raw(add_prefix(key, identity))
 
     #
     # Methods which backends need to implement
@@ -185,10 +188,11 @@ class ThumbnailBackendBase(object):
         raise NotImplemented()
 
     @abstractmethod
-    def _store_empty(self, prefix='image'):
+    def _store_delete_orphans(self):
         """
-        Removes all keys in store with prefix (the THUMBNAIL_KEY_PREFIX is
-        always prepended) This can be used in *emergency* situations
+        Removes all store referneces image_files that do not exist and their
+        referenced thumbnail keys *and* image_fields. This can be used in
+        *emergency* situations.
         """
         raise NotImplemented()
 

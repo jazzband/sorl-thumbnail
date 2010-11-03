@@ -1,7 +1,8 @@
 from django.core.cache import cache
 from sorl.thumbnail.backends.base import ThumbnailBackendBase, add_prefix
-from sorl.thumbnail.models import KeyStore
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.models import KeyStore
+from sorl.thumbnail.storage import deserialize_image_file
 
 
 class EMPTY_VALUE(object):
@@ -32,10 +33,11 @@ class ThumbnailBackend(ThumbnailBackendBase):
         KeyStore.objects.filter(key=key).delete()
         cache.delete(key)
 
-    def _store_empty(self, prefix='image'):
-        start = add_prefix('', prefix)
+    def _store_delete_orphans(self):
+        start = add_prefix('', identity='image')
         qs = KeyStore.objects.filter(key__startswith=start)
         for ks in qs:
-            cache.delete(ks.key)
-        qs.delete()
+            image_file = deserialize_image_file(ks.value)
+            if not image_file.exists():
+                self.store_delete(image_file)
 

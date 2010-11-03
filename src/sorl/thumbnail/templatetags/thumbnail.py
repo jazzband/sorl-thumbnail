@@ -22,9 +22,10 @@ def get_image_file(file_):
     """
     image_file = ImageFile(file_)
     backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-    if not backend.store_get(image_file):
-        image_file = backend.store_set(image_file)
-    return image_file
+    cached = backend.store_get(image_file)
+    if cached is not None:
+        return cached
+    return backend.store_set(image_file)
 
 
 def safe_filter(error_output=''):

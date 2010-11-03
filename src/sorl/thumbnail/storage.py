@@ -4,11 +4,32 @@ from abc import ABCMeta, abstractmethod, abstractproperty
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
+from django.utils import simplejson
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError, tokey
+from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
+
+
+def serialize_image_file(image_file):
+    if image_file.size is None:
+        raise ThumbnailError('Trying to serialize ImageFile ``%s`` with size'
+                             '``None``' % image_file.name)
+    data = {
+        'name': image_file.name,
+        'storage': image_file.serialize_storage(),
+        'size': image_file.size,
+    }
+    return simplejson.dumps(data)
+
+
+def deserialize_image_file(s):
+    data = simplejson.loads(s)
+    storage = get_module_class(data['storage'])()
+    image_file = ImageFile(data['name'], storage)
+    image_file.size = data['size']
+    return image_file
 
 
 class ImageFile(object):
@@ -68,14 +89,16 @@ class ImageFile(object):
     def delete(self):
         return self.storage.delete(self.name)
 
-    @property
-    def serialized_storage(self):
+    def serialize_storage(self):
         cls = self.storage.__class__
         return '%s.%s' % (cls.__module__, cls.__name__)
 
     @property
     def key(self):
-        return tokey(self.name, self.serialized_storage)
+        return tokey(self.name, self.serialize_storage())
+
+    def serialize(self):
+        return serialize_image_file(self)
 
 
 class UrlStorage(Storage):
