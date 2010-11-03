@@ -8,8 +8,9 @@ PROJ_ROOT = abspath(dirname(__file__))
 
 THUMBNAIL_PREFIX = 'test/cache/'
 THUMBNAIL_DEBUG = True
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.ThumbnailEngine'
-THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.cached_db.ThumbnailBackend'
+THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.Engine'
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db.KVStore'
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),

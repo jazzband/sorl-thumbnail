@@ -1,12 +1,9 @@
 import hashlib
-import re
 from django.core.exceptions import ImproperlyConfigured
-from django.core.cache import cache
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.utils.importlib import import_module
 from django.utils import simplejson
-from sorl.thumbnail.conf import settings
 
 
 class ThumbnailError(Exception):

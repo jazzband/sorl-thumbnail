@@ -6,13 +6,16 @@ from django.conf import settings
 # When True ThumbnailNode.render can raise errors
 THUMBNAIL_DEBUG = False
 
-# Thumbnail backend
-THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.cached_db.ThumbnailBackend'
+# Backend
+THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 
-# Thumbnail engine
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.ThumbnailEngine'
+# Key-value store
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db.KVStore'
 
-# Storage for the generated thumbnail
+# Engine
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.Engine'
+
+# Storage for the generated thumbnails
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
 # Redis backend settings
@@ -23,6 +26,9 @@ THUMBNAIL_REDIS_DB = 0
 # Cache timeout for ``cached_db`` backend. You should probably keep this at
 # maximum or ``None`` if your caching backend can handle that as infinate.
 THUMBNAIL_CACHE_TIMEOUT = sys.maxint
+
+# Key prefix used bu the key value store
+THUMBNAIL_KEY_PREFIX = 'sorl.thumbnail'
 
 # Thumbnail filename prefix
 THUMBNAIL_PREFIX = 'cache/'
@@ -41,20 +47,17 @@ THUMBNAIL_UPSCALE = True
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
 
-# Key prefix, this is up to the engine or backend to use.
-THUMBNAIL_KEY_PREFIX = 'sorl.thumbnail'
-
 # Return this when an error is raised and THUMBNAIL_DEBUG is False
 THUMBNAIL_ERROR = ''
 
 # Timeout for fetching remote images
 THUMBNAIL_URL_TIMEOUT = socket._GLOBAL_DEFAULT_TIMEOUT
 
-# This means sorl-thumbnail will generate and serve a generated dummy image
+# This means sorl.thumbnail will generate and serve a generated dummy image
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False
 
-# The probability of returning an empty image when THUMBNAIL_MOCKUP is set to
+# The probability of returning an empty image when THUMBNAIL_DUMMY is set to
 # True
 THUMBNAIL_DUMMY_EMPTY_P = 0
 

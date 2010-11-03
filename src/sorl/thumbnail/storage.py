@@ -1,6 +1,5 @@
 import re
 import urllib2
-from abc import ABCMeta, abstractmethod, abstractproperty
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
@@ -14,8 +13,8 @@ url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 def serialize_image_file(image_file):
     if image_file.size is None:
-        raise ThumbnailError('Trying to serialize ImageFile ``%s`` with size'
-                             '``None``' % image_file.name)
+        raise ThumbnailError('Trying to serialize an ``ImageFile`` with a '
+                             '``None`` size.')
     data = {
         'name': image_file.name,
         'storage': image_file.serialize_storage(),
@@ -28,12 +27,12 @@ def deserialize_image_file(s):
     data = simplejson.loads(s)
     storage = get_module_class(data['storage'])()
     image_file = ImageFile(data['name'], storage)
-    image_file.size = data['size']
+    image_file.set_size(data['size'])
     return image_file
 
 
 class ImageFile(object):
-    size = None
+    _size = None
 
     def __init__(self, file_, storage=None):
         if not file_:
@@ -60,6 +59,29 @@ class ImageFile(object):
     def exists(self):
         return self.storage.exists(self.name)
 
+    def set_size(self, size=None):
+        # set the size if given
+        if size is not None:
+            pass
+        # Don't try to set the size the expensive way if it already has a
+        # value.
+        elif self._size is not None:
+            return
+        elif hasattr(self.storage, 'image_size'):
+            # Storage backends can implement ``image_size`` method that
+            # optimizes this.
+            size = self.storage.image_size(self.name)
+        else:
+            # This is the worst case scenario
+            engine = get_module_class(settings.THUMBNAIL_ENGINE)()
+            image = engine.get_image(self)
+            size = engine.get_image_size(image)
+        self._size = list(size)
+
+    @property
+    def size(self):
+        return self._size
+
     @property
     def width(self):
         return self.size[0]
@@ -83,7 +105,7 @@ class ImageFile(object):
     def write(self, content):
         if not isinstance(content, File):
             content = ContentFile(content)
-        self.size = None
+        self._size = None
         return self.storage.save(self.name, content)
 
     def delete(self):

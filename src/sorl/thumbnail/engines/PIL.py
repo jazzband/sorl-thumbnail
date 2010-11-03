@@ -1,9 +1,9 @@
 from ..PIL import Image, Image
 from cStringIO import StringIO
-from sorl.thumbnail.engines.base import ThumbnailEngineBase
+from sorl.thumbnail.engines.base import EngineBase
 
 
-class ThumbnailEngine(ThumbnailEngineBase):
+class Engine(EngineBase):
     def get_image(self, source):
         buf = StringIO(source.read())
         return Image.open(buf)

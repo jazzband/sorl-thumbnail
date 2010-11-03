@@ -7,7 +7,7 @@ from sorl.thumbnail.parsers import parse_geometry, parse_crop
 from sorl.thumbnail.storage import ImageFile
 
 
-class ThumbnailEngineBase(object):
+class EngineBase(object):
     """
     ABC from Thumbnail engines, methods are static
     """

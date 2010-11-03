@@ -10,7 +10,7 @@ from os.path import join as pjoin
 from test_app.models import Item
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
-from sorl.thumbnail.engines.PIL import ThumbnailEngine as EnginePil
+from sorl.thumbnail.engines.PIL import Engine as EnginePil
 #from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
 from sorl.thumbnail.storage import ImageFile
 from sorl.thumbnail.templatetags.thumbnail import margin
@@ -48,6 +48,8 @@ class ParsersTestCase(unittest.TestCase):
 class SimpleTestCase(unittest.TestCase):
     def setUp(self):
         self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+        self.engine = get_module_class(settings.THUMBNAIL_ENGINE)()
+        self.kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
         dims = [
@@ -82,20 +84,20 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(t.x, 300)
         self.assertEqual(t.y, 300)
 
-    def testStoreThumbnails(self):
+    def testKVStore(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
-        self.backend.store_delete_thumbnails(im)
+        self.kvstore.delete_thumbnails(im)
         th1 = self.backend.get_thumbnail(im, '50')
         th2 = self.backend.get_thumbnail(im, 'x50')
         th3 = self.backend.get_thumbnail(im, '20x20')
         self.assertEqual(
             set([th1.name, th2.name, th3.name]),
-            set(self.backend._store_get(im.key, identity='thumbnails'))
+            set(self.kvstore._get(im.key, identity='thumbnails'))
             )
-        self.backend.store_delete_thumbnails(im)
+        self.kvstore.delete_thumbnails(im)
         self.assertEqual(
             None,
-            self.backend._store_get(im.key, identity='thumbnails')
+            self.kvstore._get(im.key, identity='thumbnails')
             )
 
     def testIsPortrait(self):
@@ -114,24 +116,24 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(margin(im, '503x500'), '0px 2px 0px 1px')
         self.assertEqual(margin(im, '300x300'), '-100px -100px -100px -100px')
 
-    def testStoreGetSet(self):
+    def testKVStoreGetSet(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
-        self.backend.store_delete(im)
-        self.assertEqual(self.backend.store_get(im), None)
-        self.backend.store_set(im)
-        self.assertEqual(im.size, (500, 500))
+        self.kvstore.delete(im)
+        self.assertEqual(self.kvstore.get(im), None)
+        self.kvstore.set(im)
+        self.assertEqual(im.size, [500, 500])
 
     def testDeleteOrphans(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
-        self.backend.store_delete_thumbnails(im)
+        self.kvstore.delete_thumbnails(im)
         th = self.backend.get_thumbnail(im, '3x3')
         self.assertEqual(th.exists(), True)
         th.delete()
         self.assertEqual(th.exists(), False)
-        self.assertEqual(self.backend.store_get(th).x, 3)
-        self.assertEqual(self.backend.store_get(th).y, 3)
-        self.backend._store_delete_orphans()
-        self.assertEqual(self.backend.store_get(th), None)
+        self.assertEqual(self.kvstore.get(th).x, 3)
+        self.assertEqual(self.kvstore.get(th).y, 3)
+        self.kvstore._delete_orphans()
+        self.assertEqual(self.kvstore.get(th), None)
 
 
 class TemplateTestCaseA(SimpleTestCase):
@@ -173,6 +175,8 @@ class TemplateTestCaseB(unittest.TestCase):
 class CropTestCase(unittest.TestCase):
     def setUp(self):
         self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+        self.engine = get_module_class(settings.THUMBNAIL_ENGINE)()
+        self.kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
         # portrait
@@ -182,7 +186,7 @@ class CropTestCase(unittest.TestCase):
         im.paste(255, (0, 0, 100, 100))
         im.save(fn)
         self.portrait = ImageFile(Item.objects.get_or_create(image=name)[0].image)
-        self.backend.store_delete(self.portrait)
+        self.kvstore.delete(self.portrait)
 
         # landscape
         name = 'landscape.jpg'
@@ -191,7 +195,7 @@ class CropTestCase(unittest.TestCase):
         im.paste(255, (0, 0, 100, 100))
         im.save(fn)
         self.landscape = ImageFile(Item.objects.get_or_create(image=name)[0].image)
-        self.backend.store_delete(self.landscape)
+        self.kvstore.delete(self.landscape)
 
     def testPortraitCrop(self):
         def mean_pixel(x, y):

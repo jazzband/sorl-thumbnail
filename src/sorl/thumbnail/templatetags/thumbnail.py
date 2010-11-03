@@ -1,6 +1,5 @@
 import re
-from abc import ABCMeta, abstractmethod, abstractproperty
-from django.core.cache import cache
+from abc import ABCMeta, abstractmethod
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from functools import wraps
@@ -21,11 +20,12 @@ def get_image_file(file_):
     Helper that returns and stores an ``ImageFile`` from a file input
     """
     image_file = ImageFile(file_)
-    backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-    cached = backend.store_get(image_file)
+    kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
+    cached = kvstore.get(image_file)
     if cached is not None:
         return cached
-    return backend.store_set(image_file)
+    kvstore.set(image_file)
+    return image_file
 
 
 def safe_filter(error_output=''):
