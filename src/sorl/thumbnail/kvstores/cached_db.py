@@ -2,7 +2,6 @@ from django.core.cache import cache
 from sorl.thumbnail.kvstores.base import KVStoreBase, add_prefix
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
-from sorl.thumbnail.storage import deserialize_image_file
 
 
 class EMPTY_VALUE(object):

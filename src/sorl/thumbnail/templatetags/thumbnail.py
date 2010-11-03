@@ -124,7 +124,6 @@ class ThumbnailNode(ThumbnailNodeBase):
             yield node
 
 
-
 @safe_filter(error_output='auto')
 @register.filter
 def is_portrait(file_):

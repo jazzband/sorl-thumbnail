@@ -1,7 +1,6 @@
 from ..redis import Redis
 from sorl.thumbnail.kvstores.base import KVStoreBase, add_prefix
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.storage import deserialize_image_file
 
 
 class KVStore(KVStoreBase):

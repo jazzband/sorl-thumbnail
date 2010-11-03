@@ -1,7 +1,6 @@
 #coding=utf-8
 import re
-from sorl.thumbnail.helpers import ThumbnailError
-from sorl.thumbnail.helpers import toint
+from sorl.thumbnail.helpers import ThumbnailError, toint
 
 
 bgpos_pat = re.compile(r'^(?P<value>\d+)(?P<unit>%|px)$')
