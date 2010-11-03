@@ -112,6 +112,11 @@ class SimpleTestCase(unittest.TestCase):
         self.backend.store_set(im)
         self.assertEqual(im.size, (500, 500))
 
+    def testStoreEmptyAll(self):
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        self.backend._store_empty_all()
+        self.assertEqual(self.backend.store_get(im), False)
+
 
 class TemplateTestCaseA(SimpleTestCase):
     def testModel(self):

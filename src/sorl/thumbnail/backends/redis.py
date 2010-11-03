@@ -21,3 +21,7 @@ class ThumbnailBackend(ThumbnailBackendBase):
     def _store_delete_raw(self, key):
         return self.connection.delete(key)
 
+    def _store_empty_all(self):
+        keys = self.connection.keys(pattern='%s*' % settings.THUMBNAIL_KEY_PREFIX)
+        self.connection.delete(keys)
+

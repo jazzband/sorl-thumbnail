@@ -174,7 +174,7 @@ class ThumbnailBackendBase(object):
         """
         Gets the value from keystore, returns `None` if not found.
         """
-        pass
+        raise NotImplemented()
 
     @abstractmethod
     def _store_set_raw(self, key, value):
@@ -183,12 +183,20 @@ class ThumbnailBackendBase(object):
         chars. Value is a `basestring` with an unknown length, length depends
         on how many *different* thumbnails you have created from a source.
         """
-        pass
+        raise NotImplemented()
 
     @abstractmethod
     def _store_delete_raw(self, key):
         """
         Deletes the key, value. Silent failure for missing key.
         """
-        pass
+        raise NotImplemented()
+
+    @abstractmethod
+    def _store_empty_all(self):
+        """
+        Removes all references to all images in store. This can be used in
+        *emergency* situations
+        """
+        raise NotImplemented()
 

@@ -32,3 +32,8 @@ class ThumbnailBackend(ThumbnailBackendBase):
         KeyStore.objects.filter(key=key).delete()
         cache.delete(key)
 
+    def _store_empty_all(self):
+        for ks in KeyStore.objects.all():
+            cache.delete(ks.key)
+        KeyStore.objects.all().delete()
+
