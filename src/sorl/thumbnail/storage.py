@@ -127,6 +127,13 @@ class UrlStorage(Storage):
     def open(self, name):
         return urllib2.urlopen(name, timeout=settings.THUMBNAIL_URL_TIMEOUT)
 
+    def exists(self, name):
+        try:
+            self.open(name)
+        except urllib2.URLError:
+            return False
+        return True
+
     def url(self, name):
         return name
 

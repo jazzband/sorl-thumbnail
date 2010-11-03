@@ -1,10 +1,7 @@
 #coding=utf-8
 from abc import ABCMeta, abstractmethod
-from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import serialize, get_module_class, tokey
 from sorl.thumbnail.helpers import toint
-from sorl.thumbnail.parsers import parse_geometry, parse_crop
-from sorl.thumbnail.storage import ImageFile
+from sorl.thumbnail.parsers import parse_crop
 
 
 class EngineBase(object):
