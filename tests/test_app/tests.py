@@ -10,7 +10,6 @@ from os.path import join as pjoin
 from test_app.models import Item
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
-from sorl.thumbnail.backends.base import suffix_key
 from sorl.thumbnail.engines.PIL import ThumbnailEngine as EnginePil
 from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
 from sorl.thumbnail.storage import ImageFile
@@ -91,12 +90,12 @@ class SimpleTestCase(unittest.TestCase):
         th3 = self.backend.get_thumbnail(im, '20x20')
         self.assertEqual(
             set([th1.name, th2.name, th3.name]),
-            set(self.backend._store_get(suffix_key(im.key)))
+            set(self.backend._store_get(im.key, prefix='thumbnails'))
             )
         self.backend.store_delete_thumbnails(im)
         self.assertEqual(
             None,
-            self.backend._store_get(suffix_key(im.key))
+            self.backend._store_get(im.key, prefix='thumbnails')
             )
 
     def testIsPortrait(self):
@@ -122,10 +121,22 @@ class SimpleTestCase(unittest.TestCase):
         self.backend.store_set(im)
         self.assertEqual(im.size, (500, 500))
 
-    def testStoreEmptyAll(self):
+    def testStoreEmpty(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
-        self.backend._store_empty_all()
-        self.assertEqual(self.backend.store_get(im), False)
+        self.backend.store_delete_thumbnails(im)
+        th = self.backend.get_thumbnail(im, '3x3')
+        self.assertEqual(th.exists(), True)
+        th.delete()
+        self.assertEqual(th.exists(), False)
+        self.assertEqual(self.backend.store_get(th).x, 3)
+        self.assertEqual(self.backend.store_get(th).y, 3)
+        self.backend._store_empty()
+        self.assertEqual(self.backend.store_get(th), False)
+        self.assertEqual(self.backend._store_get(im.key, prefix='thumbnails'), [th.name])
+        self.backend._store_empty()
+        self.assertEqual(self.backend._store_get(im.key, prefix='thumbnails'), [th.name])
+        self.backend.store_delete_thumbnails(im)
+        self.assertEqual(self.backend._store_get(im.key, prefix='thumbnails'), None)
 
 
 class TemplateTestCaseA(SimpleTestCase):

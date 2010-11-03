@@ -1,6 +1,6 @@
 from ..redis import Redis
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.backends.base import ThumbnailBackendBase
+from sorl.thumbnail.backends.base import ThumbnailBackendBase, prefix_key
 
 
 class ThumbnailBackend(ThumbnailBackendBase):
@@ -21,7 +21,9 @@ class ThumbnailBackend(ThumbnailBackendBase):
     def _store_delete_raw(self, key):
         return self.connection.delete(key)
 
-    def _store_empty_all(self):
-        keys = self.connection.keys(pattern='%s*' % settings.THUMBNAIL_KEY_PREFIX)
+    def _store_empty(self, prefix='image'):
+        #TODO something doesnt work here
+        pattern = prefix_key('*', prefix)
+        keys = self.connection.keys(pattern=pattern)
         self.connection.delete(keys)
 

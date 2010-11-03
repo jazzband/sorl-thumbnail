@@ -42,7 +42,7 @@ THUMBNAIL_UPSCALE = True
 THUMBNAIL_QUALITY = 95
 
 # Key prefix, this is up to the engine or backend to use.
-THUMBNAIL_KEY_PREFIX = 'sorl||thumbnail||'
+THUMBNAIL_KEY_PREFIX = 'sorl.thumbnail'
 
 # Return this when an error is raised and THUMBNAIL_DEBUG is False
 THUMBNAIL_ERROR = ''

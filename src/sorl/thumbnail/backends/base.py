@@ -7,18 +7,11 @@ from sorl.thumbnail.parsers import parse_geometry
 
 
 
-def prefix_key(key, prefix=settings.THUMBNAIL_KEY_PREFIX):
+def prefix_key(key, prefix='image'):
     """
-    Adds a prefix to the key
+    Adds prefixes to the key
     """
-    return '%s%s' % (prefix, key)
-
-
-def suffix_key(key, suffix='||thumbnails'):
-    """
-    Appends a suffix to the key
-    """
-    return '%s%s' % (key, suffix)
+    return '||'.join([settings.THUMBNAIL_KEY_PREFIX, prefix, key])
 
 
 class ThumbnailBackendBase(object):
@@ -101,10 +94,10 @@ class ThumbnailBackendBase(object):
         if source is not None:
             # Update the list of thumbnails for source. Storage is not saved,
             # we assume current storage when unpacking.
-            key = suffix_key(source.key)
-            thumbnails = set(self._store_get(key) or [])
+            thumbnails = self._store_get(source.key, prefix='thumbnails') or []
+            thumbnails = set(thumbnails)
             thumbnails.add(image_file.name)
-            self._store_set(key, list(thumbnails))
+            self._store_set(source.key, list(thumbnails), prefix='thumbnails')
         # now set store for the image_file and make sure it's got a size
         if image_file.size is None:
             if hasattr(image_file.storage, 'image_size'):
@@ -133,8 +126,7 @@ class ThumbnailBackendBase(object):
         """
         if storage is not None:
             storage = self.storage
-        key = suffix_key(image_file.key)
-        thumbnails = self._store_get(key)
+        thumbnails = self._store_get(image_file.key, prefix='thumbnails')
         if thumbnails:
             # Delete all thumbnail keys from store and delete the
             # ImageFiles. Storage is assumed to be the same
@@ -143,28 +135,28 @@ class ThumbnailBackendBase(object):
                 self._store_delete(thumbnail.key)
                 thumbnail.delete()
         # Delete the thumbnails key from store
-        self._store_delete(key)
+        self._store_delete(image_file.key, prefix='thumbnails')
 
-    def _store_get(self, key):
+    def _store_get(self, key, prefix='image'):
         """
         Deserializing, prefix wrapper for ThumbnailBackendBase._store_get_raw
         """
-        value = self._store_get_raw(prefix_key(key))
+        value = self._store_get_raw(prefix_key(key, prefix))
         if value is None:
             return None
         return deserialize(value)
 
-    def _store_set(self, key, value):
+    def _store_set(self, key, value, prefix='image'):
         """
         Serializing, prefix wrapper for ThumbnailBackendBase._store_set_raw
         """
-        self._store_set_raw(prefix_key(key), serialize(value))
+        self._store_set_raw(prefix_key(key, prefix), serialize(value))
 
-    def _store_delete(self, key):
+    def _store_delete(self, key, prefix='image'):
         """
         Prefix wrapper for ThumbnailBackendBase._store_delete_raw
         """
-        self._store_delete_raw(prefix_key(key))
+        self._store_delete_raw(prefix_key(key, prefix))
 
     #
     # Methods which backends need to implement
@@ -193,10 +185,10 @@ class ThumbnailBackendBase(object):
         raise NotImplemented()
 
     @abstractmethod
-    def _store_empty_all(self):
+    def _store_empty(self, prefix='image'):
         """
-        Removes all references to all images in store. This can be used in
-        *emergency* situations
+        Removes all keys in store with prefix (the THUMBNAIL_KEY_PREFIX is
+        always prepended) This can be used in *emergency* situations
         """
         raise NotImplemented()
 
