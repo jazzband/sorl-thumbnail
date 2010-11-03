@@ -90,8 +90,21 @@ class KVStoreBase(object):
         """
         self._delete_raw(add_prefix(key, identity))
 
+    def _delete_orphans(self):
+        """
+        Deletes all store key references for image_files that do not exist.
+        Also deletes all key references for thumbnails *and* their
+        image_files. This can be used in *emergency* situations.
+        """
+        keys = self._find_keys(identity='image')
+        for key in keys:
+            value = self._get_raw(key)
+            image_file = deserialize_image_file(value)
+            if not image_file.exists():
+                self.delete(image_file)
+
     #
-    # Methods which keystorages need to implement
+    # Methods which key-value stores need to implement
     #
     @abstractmethod
     def _get_raw(self, key):
@@ -117,11 +130,9 @@ class KVStoreBase(object):
         raise NotImplemented()
 
     @abstractmethod
-    def _delete_orphans(self):
+    def _find_keys(self, identity):
         """
-        Deletes all store key references for image_files that do not exist.
-        Also deletes all key references for thumbnails *and* their
-        image_fields. This can be used in *emergency* situations.
+        Finds and returns all keys for identity
         """
         raise NotImplemented()
 

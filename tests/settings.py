@@ -11,7 +11,7 @@ THUMBNAIL_DEBUG = True
 
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.Engine'
-THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis.KVStore'
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db.KVStore'
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),

@@ -22,12 +22,7 @@ class KVStore(KVStoreBase):
     def _delete_raw(self, key):
         return self.connection.delete(key)
 
-    def _delete_orphans(self):
-        pattern = add_prefix('*', 'image')
-        keys = self.connection.keys(pattern=pattern)
-        for key in keys:
-            value = self.connection.get(key)
-            image_file = deserialize_image_file(value)
-            if not image_file.exists():
-                self.delete(image_file)
+    def _find_keys(self, identity):
+        pattern = add_prefix('*', identity)
+        return self.connection.keys(pattern=pattern)
 

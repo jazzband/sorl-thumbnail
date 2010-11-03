@@ -33,11 +33,8 @@ class KVStore(KVStoreBase):
         KVStoreModel.objects.filter(key=key).delete()
         cache.delete(key)
 
-    def _delete_orphans(self):
-        start = add_prefix('', identity='image')
+    def _find_keys(self, identity):
+        start = add_prefix('', identity)
         qs = KVStoreModel.objects.filter(key__startswith=start)
-        for value in qs.values_list('value', flat=True):
-            image_file = deserialize_image_file(value)
-            if not image_file.exists():
-                self.delete(image_file)
+        return qs.values_list('key', flat=True)
 
