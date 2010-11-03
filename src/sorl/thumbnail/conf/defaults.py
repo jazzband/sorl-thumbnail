@@ -12,7 +12,7 @@ THUMBNAIL_BACKEND = 'sorl.thumbnail.backends.cached_db.ThumbnailBackend'
 # Thumbnail engine
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.ThumbnailEngine'
 
-# Default storage for the generated thumbnail
+# Storage for the generated thumbnail
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
 # Redis backend settings
