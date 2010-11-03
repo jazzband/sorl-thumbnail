@@ -190,9 +190,9 @@ class ThumbnailBackendBase(object):
     @abstractmethod
     def _store_delete_orphans(self):
         """
-        Removes all store referneces image_files that do not exist and their
-        referenced thumbnail keys *and* image_fields. This can be used in
-        *emergency* situations.
+        Deletes all store key references for image_files that do not exist.
+        Also deletes all key references for thumbnails *and* their
+        image_fields. This can be used in *emergency* situations.
         """
         raise NotImplemented()
 
