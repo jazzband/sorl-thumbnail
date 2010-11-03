@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from sorl.thumbnail.backends.base import ThumbnailBackendBase, prefix_key
+from sorl.thumbnail.backends.base import ThumbnailBackendBase, add_prefix
 from sorl.thumbnail.models import KeyStore
 from sorl.thumbnail.conf import settings
 
@@ -33,7 +33,7 @@ class ThumbnailBackend(ThumbnailBackendBase):
         cache.delete(key)
 
     def _store_empty(self, prefix='image'):
-        start = prefix_key('', prefix)
+        start = add_prefix('', prefix)
         qs = KeyStore.objects.filter(key__startswith=start)
         for ks in qs:
             cache.delete(ks.key)

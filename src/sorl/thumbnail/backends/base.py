@@ -7,9 +7,9 @@ from sorl.thumbnail.parsers import parse_geometry
 
 
 
-def prefix_key(key, prefix='image'):
+def add_prefix(key, prefix='image'):
     """
-    Adds prefixes to the key
+    Adds prefixes
     """
     return '||'.join([settings.THUMBNAIL_KEY_PREFIX, prefix, key])
 
@@ -141,7 +141,7 @@ class ThumbnailBackendBase(object):
         """
         Deserializing, prefix wrapper for ThumbnailBackendBase._store_get_raw
         """
-        value = self._store_get_raw(prefix_key(key, prefix))
+        value = self._store_get_raw(add_prefix(key, prefix))
         if value is None:
             return None
         return deserialize(value)
@@ -150,13 +150,13 @@ class ThumbnailBackendBase(object):
         """
         Serializing, prefix wrapper for ThumbnailBackendBase._store_set_raw
         """
-        self._store_set_raw(prefix_key(key, prefix), serialize(value))
+        self._store_set_raw(add_prefix(key, prefix), serialize(value))
 
     def _store_delete(self, key, prefix='image'):
         """
         Prefix wrapper for ThumbnailBackendBase._store_delete_raw
         """
-        self._store_delete_raw(prefix_key(key, prefix))
+        self._store_delete_raw(add_prefix(key, prefix))
 
     #
     # Methods which backends need to implement
