@@ -14,6 +14,7 @@ from sorl.thumbnail.backends.base import suffix_key
 from sorl.thumbnail.engines.PIL import ThumbnailEngine as EnginePil
 from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
 from sorl.thumbnail.storage import ImageFile
+from sorl.thumbnail.templatetags.thumbnail import margin
 
 
 class ParsersTestCase(unittest.TestCase):
@@ -104,6 +105,15 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(th.is_portrait(), True)
         th = self.backend.get_thumbnail(im, '500x2', crop='center')
         self.assertEqual(th.is_portrait(), False)
+
+    def testMargin(self):
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        self.assertEqual(margin(im, '1000x1000'), '250px 250px 250px 250px')
+        self.assertEqual(margin(im, '800x1000'), '250px 150px 250px 150px')
+        self.assertEqual(margin(im, '500x500'), '0px 0px 0px 0px')
+        self.assertEqual(margin(im, '500x501'), '0px 0px 1px 0px')
+        self.assertEqual(margin(im, '503x500'), '0px 2px 0px 1px')
+        self.assertEqual(margin(im, '300x300'), '-100px -100px -100px -100px')
 
     def testStoreGetSet(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)

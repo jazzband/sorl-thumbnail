@@ -142,18 +142,16 @@ def margin(file_, geometry_string):
     """
     margin = [0, 0, 0, 0]
     image_file = get_image_file(file_)
-    x, y = parse_geometry(geometry_string)
-    if x is not None:
-        ex = x - image_file.x
-        margin[3] = ex / 2
-        margin[1] = ex / 2
-        if ex % 2:
-            margin[1] += 1
-    if y is not None:
-        ey = y - image_file.y
-        margin[0] = ey / 2
-        margin[2] = ey / 2
-        if ey % 2:
-            margin[2] += 1
+    x, y = parse_geometry(geometry_string, image_file.size)
+    ex = x - image_file.x
+    margin[3] = ex / 2
+    margin[1] = ex / 2
+    if ex % 2:
+        margin[1] += 1
+    ey = y - image_file.y
+    margin[0] = ey / 2
+    margin[2] = ey / 2
+    if ey % 2:
+        margin[2] += 1
     return ' '.join([ '%spx' % n for n in margin ])
 
