@@ -18,7 +18,7 @@ class Engine(EngineBase):
             return image.convert('L')
         return image
 
-    def _resize(self, image, width, height):
+    def _scale(self, image, width, height):
         return image.resize((width, height), resample=Image.ANTIALIAS)
 
     def _crop(self, image, width, height, x_offset, y_offset):

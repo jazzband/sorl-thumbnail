@@ -23,7 +23,7 @@ class Engine(EngineBase):
         image.quantize()
         return image
 
-    def _resize(self, image, width, height):
+    def _scale(self, image, width, height):
         geometry = Geometry(width, height)
         image.scale(geometry)
         return image

@@ -15,7 +15,7 @@ class EngineBase(object):
         Processing conductor, returns the thumbnail as a backend image object
         """
         image = self.colorspace(image, geometry, options)
-        image = self.resize(image, geometry, options)
+        image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
         return image
 
@@ -26,9 +26,9 @@ class EngineBase(object):
         colorspace = options['colorspace']
         return self._colorspace(image, colorspace)
 
-    def resize(self, image, geometry, options):
+    def scale(self, image, geometry, options):
         """
-        Wrapper for ``_resize``
+        Wrapper for ``_scale``
         """
         crop = options['crop']
         upscale = options['upscale']
@@ -39,7 +39,7 @@ class EngineBase(object):
         if factor < 1 or upscale:
             width = toint(x_image * factor)
             height = toint(y_image * factor)
-            image = self._resize(image, width, height)
+            image = self._scale(image, width, height)
         return image
 
     def crop(self, image, geometry, options):
@@ -91,7 +91,7 @@ class EngineBase(object):
         raise NotImplemented()
 
     @abstractmethod
-    def _resize(self, image, width, height):
+    def _scale(self, image, width, height):
         """
         Does the resizing of the image
         """
