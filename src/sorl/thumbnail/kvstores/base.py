@@ -63,6 +63,19 @@ class KVStoreBase(object):
         # Delete the thumbnails key from store
         self._delete(image_file.key, identity='thumbnails')
 
+    def delete_orphans(self):
+        """
+        Deletes all store key references for image_files that do not exist.
+        Also deletes all key references for thumbnails *and* their
+        image_files.
+        """
+        keys = self._find_keys(identity='image')
+        for key in keys:
+            value = self._get_raw(key)
+            image_file = deserialize_image_file(value)
+            if not image_file.exists():
+                self.delete(image_file)
+
     def _get(self, key, identity='image'):
         """
         Deserializing, prefix wrapper for _get_raw
@@ -89,19 +102,6 @@ class KVStoreBase(object):
         Prefix wrapper for _delete_raw
         """
         self._delete_raw(add_prefix(key, identity))
-
-    def _delete_orphans(self):
-        """
-        Deletes all store key references for image_files that do not exist.
-        Also deletes all key references for thumbnails *and* their
-        image_files.
-        """
-        keys = self._find_keys(identity='image')
-        for key in keys:
-            value = self._get_raw(key)
-            image_file = deserialize_image_file(value)
-            if not image_file.exists():
-                self.delete(image_file)
 
     #
     # Methods which key-value stores need to implement

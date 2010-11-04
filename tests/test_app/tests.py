@@ -132,7 +132,7 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(th.exists(), False)
         self.assertEqual(self.kvstore.get(th).x, 3)
         self.assertEqual(self.kvstore.get(th).y, 3)
-        self.kvstore._delete_orphans()
+        self.kvstore.delete_orphans()
         self.assertEqual(self.kvstore.get(th), None)
 
 
