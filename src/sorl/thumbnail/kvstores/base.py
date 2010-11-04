@@ -55,7 +55,7 @@ class KVStoreBase(object):
         thumbnails = self._get(image_file.key, identity='thumbnails')
         if thumbnails:
             # Delete all thumbnail keys from store and delete the
-            # ImageFiles. Storage is assumed to be the same
+            # ImageFiles.
             for name in thumbnails:
                 thumbnail = ImageFile(name, storage)
                 self._delete(thumbnail.key)
