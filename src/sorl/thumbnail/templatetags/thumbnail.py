@@ -1,5 +1,4 @@
 import re
-from abc import ABCMeta, abstractmethod
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from functools import wraps
@@ -50,8 +49,6 @@ class ThumbnailNodeBase(Node):
     """
     Renders safely and has a simple backend attribute.
     """
-    __metaclass__ = ABCMeta
-
     error_output = ''
 
     @property
@@ -68,7 +65,6 @@ class ThumbnailNodeBase(Node):
                 raise
             return self.error_output
 
-    @abstractmethod
     def _render(self, context):
         raise NotImplemented()
 

@@ -1,5 +1,4 @@
 #coding=utf-8
-from abc import ABCMeta, abstractmethod
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop
 
@@ -8,8 +7,6 @@ class EngineBase(object):
     """
     ABC from Thumbnail engines, methods are static
     """
-    __metaclass__ = ABCMeta
-
     def create(self, image, geometry, options):
         """
         Processing conductor, returns the thumbnail as a backend image object
@@ -65,21 +62,18 @@ class EngineBase(object):
     # Methods which engines need to implement
     # The ``image`` argument refers to a backend image object
     #
-    @abstractmethod
     def get_image(self, source):
         """
         Returns the backend image objects from a ImageFile instance
         """
         raise NotImplemented()
 
-    @abstractmethod
     def get_image_size(self, image):
         """
         Returns the image width and height as a tuple
         """
         raise NotImplemented()
 
-    @abstractmethod
     def _colorspace(self, image, colorspace):
         """
         `Valid colorspaces
@@ -90,21 +84,18 @@ class EngineBase(object):
         """
         raise NotImplemented()
 
-    @abstractmethod
     def _scale(self, image, width, height):
         """
         Does the resizing of the image
         """
         raise NotImplemented()
 
-    @abstractmethod
     def _crop(self, image, width, height, x_offset, y_offset):
         """
         Crops the image
         """
         raise NotImplemented()
 
-    @abstractmethod
     def _write(self, image, format_, quality, thumbnail):
         """
         Writes to the thumbnail which is ImageFile instance

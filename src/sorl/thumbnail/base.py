@@ -1,4 +1,3 @@
-from abc import ABCMeta
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class, tokey, serialize
 from sorl.thumbnail.parsers import parse_geometry
@@ -6,8 +5,6 @@ from sorl.thumbnail.storage import ImageFile
 
 
 class ThumbnailBackend(object):
-    __metaclass__ = ABCMeta
-
     default_options = {
         'format': settings.THUMBNAIL_FORMAT,
         'quality': settings.THUMBNAIL_QUALITY,

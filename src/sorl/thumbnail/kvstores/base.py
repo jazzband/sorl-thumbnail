@@ -1,4 +1,3 @@
-from abc import ABCMeta, abstractmethod
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import serialize, deserialize
 from sorl.thumbnail.storage import ImageFile
@@ -13,8 +12,6 @@ def add_prefix(key, identity='image'):
 
 
 class KVStoreBase(object):
-    __metaclass__ = ABCMeta
-
     def get(self, image_file):
         """
         Gets the ``image_file`` from store. Returns ``None`` if not found.
@@ -106,14 +103,12 @@ class KVStoreBase(object):
     #
     # Methods which key-value stores need to implement
     #
-    @abstractmethod
     def _get_raw(self, key):
         """
         Gets the value from keystore, returns `None` if not found.
         """
         raise NotImplemented()
 
-    @abstractmethod
     def _set_raw(self, key, value):
         """
         Sets value associated to key. Key is expected to be shorter than 200
@@ -122,14 +117,12 @@ class KVStoreBase(object):
         """
         raise NotImplemented()
 
-    @abstractmethod
     def _delete_raw(self, key):
         """
         Deletes the key, value. Silent failure for missing key.
         """
         raise NotImplemented()
 
-    @abstractmethod
     def _find_keys(self, identity):
         """
         Finds and returns all keys for identity
