@@ -94,7 +94,7 @@ class KVStoreBase(object):
         """
         Deletes all store key references for image_files that do not exist.
         Also deletes all key references for thumbnails *and* their
-        image_files. This can be used in *emergency* situations.
+        image_files.
         """
         keys = self._find_keys(identity='image')
         for key in keys:
