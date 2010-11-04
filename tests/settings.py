@@ -10,7 +10,7 @@ THUMBNAIL_PREFIX = 'test/cache/'
 THUMBNAIL_DEBUG = True
 
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.Engine'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pgmagick.Engine'
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db.KVStore'
 
 ADMINS = (
