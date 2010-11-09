@@ -1,5 +1,3 @@
-syntax: glob
-
 *.pyc
 .DS_Store
 ._*
@@ -8,6 +6,5 @@ syntax: glob
 *.swo
 *.swn
 .svn
-local_settings.py
 *.orig
 _build
