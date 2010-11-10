@@ -26,10 +26,11 @@ fix this.
 #    def _crop(self, image, width, height, x_offset, y_offset):
 #        return image.crop((x_offset, y_offset), (width, height))
 #
-#    def _write(self, image, format_, quality, thumbnail):
+#    def _get_raw_data(self, image, format_, quality):
 #        tmp = tempfile.mkstemp()[1]
 #        image.save(tmp, format=format_.lower())
 #        with open(tmp) as fp:
-#            thumbnail.write(fp.read())
+#            data = fp.read()
 #        os.remove(tmp)
+#        return data
 #

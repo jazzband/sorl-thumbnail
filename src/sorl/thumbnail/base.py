@@ -51,8 +51,8 @@ class ThumbnailBackend(object):
 
     def _create_thumbnail(self, source, geometry_string, options, thumbnail):
         image = self.engine.get_image(source)
-        image_size = self.engine.get_image_size(image)
-        geometry = parse_geometry(geometry_string, image_size)
+        ratio = self.engine.get_image_ratio(image)
+        geometry = parse_geometry(geometry_string, ratio)
         thumbnail_image = self.engine.create(image, geometry, options)
         self.engine.write(thumbnail_image, options, thumbnail)
         # It's much cheaper to set the size here
@@ -68,4 +68,5 @@ class ThumbnailBackend(object):
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             self.extensions[options['format']])
+
 

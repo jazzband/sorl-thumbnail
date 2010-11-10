@@ -1,9 +1,10 @@
+import random
 import re
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from functools import wraps
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.storage import ImageFile
+from sorl.thumbnail.storage import ImageFile, DummyImageFile
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.parsers import parse_geometry
 
@@ -101,14 +102,23 @@ class ThumbnailNode(ThumbnailNodeBase):
         options = {}
         for key, value in self.options.iteritems():
             options[key] = value.resolve(context)
-        if not file_:
+
+        def get_thumbnail():
+            if settings.THUMBNAIL_DUMMY:
+                if random.random() > settings.THUMBNAIL_DUMMY_EMPTY_P:
+                    return DummyImageFile(geometry)
+            if file_:
+                return self.backend.get_thumbnail(file_, geometry, **options)
+
+        thumbnail = get_thumbnail()
+        if thumbnail is None:
             return self.nodelist_empty.render(context)
         context.push()
-        thumbnail = self.backend.get_thumbnail(file_, geometry, **options)
         context[self.as_var] = thumbnail
         output = self.nodelist_file.render(context)
         context.pop()
         return output
+
 
     def __repr__(self):
         return "<ThumbnailNode>"
@@ -120,25 +130,29 @@ class ThumbnailNode(ThumbnailNodeBase):
             yield node
 
 
-@safe_filter(error_output='auto')
+@safe_filter(error_output=False)
 @register.filter
 def is_portrait(file_):
     """
     A very handy filter to determine if an image is portrait or landscape.
     """
+    if settings.THUMBNAIL_DUMMY:
+        return settings.THUMBNAIL_DUMMY_RATIO < 1
     image_file = get_image_file(file_)
     return image_file.is_portrait()
 
 
-@safe_filter(error_output=False)
+@safe_filter(error_output='auto')
 @register.filter
 def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
+    if settings.THUMBNAIL_DUMMY:
+        return 'auto'
     margin = [0, 0, 0, 0]
     image_file = get_image_file(file_)
-    x, y = parse_geometry(geometry_string, image_file.size)
+    x, y = parse_geometry(geometry_string, image_file.ratio)
     ex = x - image_file.x
     margin[3] = ex / 2
     margin[1] = ex / 2

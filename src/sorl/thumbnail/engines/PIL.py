@@ -1,4 +1,4 @@
-from ..PIL import Image, Image
+from ..PIL import Image, ImageDraw
 from cStringIO import StringIO
 from sorl.thumbnail.engines.base import EngineBase
 
@@ -10,6 +10,14 @@ class Engine(EngineBase):
 
     def get_image_size(self, image):
         return image.size
+
+    def dummy_image(self, width, height):
+        im = Image.new('L', (width, height), 240)
+        draw = ImageDraw.Draw(im)
+        draw.line((0, 0, width, height), fill=128)
+        draw.line((0, height, width, 0), fill=128)
+        del draw
+        return im
 
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
@@ -25,13 +33,14 @@ class Engine(EngineBase):
         return image.crop((x_offset, y_offset,
                            width + x_offset, height + y_offset))
 
-    def _write(self, image, format_, quality, thumbnail):
+    def _get_raw_data(self, image, format_, quality):
         Image.MAXBLOCK = 1024 * 1024
         buf = StringIO()
         try:
             image.save(buf, format=format_, quality=quality, optimize=1)
         except IOError:
             image.save(buf, format=format_, quality=quality)
-        thumbnail.write(buf.getvalue())
+        raw_data = buf.getvalue()
         buf.close()
+        return raw_data
 

@@ -4,8 +4,10 @@ from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
 from django.utils.encoding import force_unicode
 from django.utils import simplejson
+from django.core.urlresolvers import reverse
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class
+from sorl.thumbnail.parsers import parse_geometry
 
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
@@ -31,7 +33,33 @@ def deserialize_image_file(s):
     return image_file
 
 
-class ImageFile(object):
+class BaseImageFile(object):
+    def exists(self):
+        raise NotImplemented()
+
+    @property
+    def width(self):
+        return self.size[0]
+    x = width
+
+    @property
+    def height(self):
+        return self.size[1]
+    y = height
+
+    def is_portrait(self):
+        return self.y > self.x
+
+    @property
+    def ratio(self):
+        return self.x / float(self.y)
+
+    @property
+    def url(self):
+        raise NotImplemented()
+
+
+class ImageFile(BaseImageFile):
     _size = None
 
     def __init__(self, file_, storage=None):
@@ -83,19 +111,6 @@ class ImageFile(object):
         return self._size
 
     @property
-    def width(self):
-        return self.size[0]
-    x = width
-
-    @property
-    def height(self):
-        return self.size[1]
-    y = height
-
-    def is_portrait(self):
-        return self.y > self.x
-
-    @property
     def url(self):
         return self.storage.url(self.name)
 
@@ -123,6 +138,21 @@ class ImageFile(object):
         return serialize_image_file(self)
 
 
+class DummyImageFile(BaseImageFile):
+    def __init__(self, geometry_string):
+        self.size = parse_geometry(
+            geometry_string,
+            settings.THUMBNAIL_DUMMY_RATIO,
+            )
+
+    def exists(self):
+        return True
+
+    @property
+    def url(self):
+        return reverse('thumbnail_dummy', args=(self.x, self.y))
+
+
 class UrlStorage(Storage):
     def open(self, name):
         return urllib2.urlopen(name, timeout=settings.THUMBNAIL_URL_TIMEOUT)
@@ -139,4 +169,5 @@ class UrlStorage(Storage):
 
     def delete(self, name):
         pass
+
 

@@ -1,0 +1,6 @@
+{% load thumbnail %}{% spaceless %}
+{% thumbnail anything "300" as im %}
+<img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}">
+{% endthumbnail %}
+{% if not ""|is_portrait %}<p>NOT</p>{% endif %}
+{% endspaceless %}

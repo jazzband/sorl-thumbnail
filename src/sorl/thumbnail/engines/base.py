@@ -56,7 +56,12 @@ class EngineBase(object):
         """
         format_ = options['format']
         quality = options['quality']
-        self._write(image, format_, quality, thumbnail)
+        raw_data = self._get_raw_data(image, format_, quality)
+        thumbnail.write(raw_data)
+
+    def get_image_ratio(self, image):
+        x, y = self.get_image_size(image)
+        return float(x) / y
 
     #
     # Methods which engines need to implement
@@ -71,6 +76,14 @@ class EngineBase(object):
     def get_image_size(self, image):
         """
         Returns the image width and height as a tuple
+        """
+        raise NotImplemented()
+
+    def dummy_image(self, width, hieght):
+        """
+        Returns a generated dummy image object with size given. The dummy image
+        from the shipped engines are grey (240) and has a darker cross (128)
+        over them.
         """
         raise NotImplemented()
 
@@ -96,9 +109,9 @@ class EngineBase(object):
         """
         raise NotImplemented()
 
-    def _write(self, image, format_, quality, thumbnail):
+    def _get_raw_data(self, image, format_, quality):
         """
-        Writes to the thumbnail which is ImageFile instance
+        Gets raw data given the image, format and quality
         """
         raise NotImplemented()
 

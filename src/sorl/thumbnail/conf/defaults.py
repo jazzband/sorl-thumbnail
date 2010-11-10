@@ -53,7 +53,6 @@ THUMBNAIL_ERROR = ''
 # Timeout for fetching remote images
 THUMBNAIL_URL_TIMEOUT = socket._GLOBAL_DEFAULT_TIMEOUT
 
-# TODO Implement dummy generation
 # This means sorl.thumbnail will generate and serve a generated dummy image
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False
@@ -62,6 +61,7 @@ THUMBNAIL_DUMMY = False
 # True
 THUMBNAIL_DUMMY_EMPTY_P = 0
 
-# Sets the source image ratio for dummy generation
-THUMBNAIL_DUMMY_RATIO = 3 / 2
+# Sets the source image ratio for dummy generation for images with only width
+# or height given
+THUMBNAIL_DUMMY_RATIO = 3.0 / 2
 

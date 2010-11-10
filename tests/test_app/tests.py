@@ -1,19 +1,21 @@
-import Image
-import os
-import unittest
-import shutil
 import operator
+import os
 import random
-from django.conf import settings
+import shutil
+import unittest
+from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
+from django.test.client import Client
 from os.path import join as pjoin
-from test_app.models import Item
+from PIL import Image
+from sorl.thumbnail.conf import settings
+#from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
+from sorl.thumbnail.engines.PIL import Engine as EnginePil
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
-from sorl.thumbnail.engines.PIL import Engine as EnginePil
-#from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
-from sorl.thumbnail.storage import ImageFile
+from sorl.thumbnail.storage import ImageFile, DummyImageFile
 from sorl.thumbnail.templatetags.thumbnail import margin
+from test_app.models import Item
 
 
 class ParsersTestCase(unittest.TestCase):
@@ -260,4 +262,46 @@ class CropTestCase(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
 
+
+class DummyTestCase(unittest.TestCase):
+    def setUp(self):
+        self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
+        self.org_settings = {}
+        params = {
+            'THUMBNAIL_DUMMY': True,
+        }
+        for k, v in params.iteritems():
+            self.org_settings[k] = getattr(settings, k)
+            setattr(settings, k, v)
+
+    def test_dummy_url(self):
+        im = DummyImageFile('100x100')
+        url = reverse('thumbnail_dummy', args=(100,100))
+        self.assertEqual(url, im.url)
+
+    def test_dummy_tags(self):
+        val = render_to_string('thumbnaild1.html', {
+            'anything': 'AINO',
+        }).strip()
+        self.assertEqual(val, '<img style="margin:auto" width="200" height="100">')
+        val = render_to_string('thumbnaild2.html', {
+            'anything': None,
+        }).strip()
+        self.assertEqual(val, '<img src="/thumbnail-dummy/300x200/" width="300" height="200"><p>NOT</p>')
+        val = render_to_string('thumbnaild3.html', {
+        }).strip()
+        self.assertEqual(val, '<img src="/thumbnail-dummy/600x400/" width="600" height="400">')
+
+    def test_dummy_response(self):
+        client = Client()
+        response = client.get('/thumbnail-dummy/111x666/')
+        engine = get_module_class(settings.THUMBNAIL_ENGINE)()
+        image = engine.dummy_image(111, 666)
+        raw_data = engine._get_raw_data(image, format_='JPEG', quality=75)
+        self.assertEqual(response.content, raw_data)
+
+
+    def tearDown(self):
+        for k, v in self.org_settings.iteritems():
+            setattr(settings, k, v)
 
