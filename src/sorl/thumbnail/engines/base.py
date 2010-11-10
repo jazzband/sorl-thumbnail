@@ -5,7 +5,7 @@ from sorl.thumbnail.parsers import parse_crop
 
 class EngineBase(object):
     """
-    ABC from Thumbnail engines, methods are static
+    ABC for Thumbnail engines, methods are static
     """
     def create(self, image, geometry, options):
         """
