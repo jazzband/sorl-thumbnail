@@ -150,6 +150,15 @@ class TemplateTestCaseA(SimpleTestCase):
         }).strip()
         self.assertEqual(val, u'<img style="margin:0px 50px 0px 50px" width="100" height="100">')
 
+    def test_nested(self):
+        item = Item.objects.get(image='500x500.jpg')
+        val = render_to_string('thumbnail6.html', {
+            'item': item,
+        }).strip()
+        self.assertEqual(val, ('<a href="/media/test/cache/2b/5c/2b5c5a5989347f1de967ce45bef88dcb.jpg">'
+                               '<img src="/media/test/cache/dd/e9/dde919d4e5c0b0fff78f45e41f4f496d.jpg" width="400" height="400">'
+                               '</a>'))
+
 
 class TemplateTestCaseB(unittest.TestCase):
     def tearDown(self):

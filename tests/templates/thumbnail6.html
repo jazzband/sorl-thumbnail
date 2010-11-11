@@ -1,0 +1,7 @@
+{% load thumbnail %}{% spaceless %}
+{% thumbnail item.image "100x100" as th %}
+    {% thumbnail item.image "400x400" as im %}
+    <a href="{{ th.url }}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"></a>
+    {% endthumbnail %}
+{% endthumbnail %}
+{% endspaceless %}

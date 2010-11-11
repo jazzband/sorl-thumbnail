@@ -119,7 +119,6 @@ class ThumbnailNode(ThumbnailNodeBase):
         context.pop()
         return output
 
-
     def __repr__(self):
         return "<ThumbnailNode>"
 
