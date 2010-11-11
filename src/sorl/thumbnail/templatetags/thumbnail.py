@@ -73,18 +73,20 @@ class ThumbnailNodeBase(Node):
 @register.tag('thumbnail')
 class ThumbnailNode(ThumbnailNodeBase):
     child_nodelists = ('nodelist_file', 'nodelist_empty')
+    error_msg = ('Syntax error. Expected: ``thumbnail source geometry '
+                 '[key1=val1 key2=val2...] as var``')
 
     def __init__(self, parser, token):
         bits = token.split_contents()
         if len(bits) < 5 or bits[-2] != 'as':
-            raise TemplateSyntaxError('Syntax error.')
+            raise TemplateSyntaxError(self.error_msg)
         self.file_ = parser.compile_filter(bits[1])
         self.geometry = parser.compile_filter(bits[2])
         self.options = {}
         for bit in bits[3:-2]:
             m = kw_pat.match(bit)
             if not m:
-                raise TemplateSyntaxError('Syntax error.')
+                raise TemplateSyntaxError(self.error_msg)
             key = smart_str(m.group('key'))
             value = parser.compile_filter(m.group('value'))
             self.options[key] = value
@@ -102,16 +104,11 @@ class ThumbnailNode(ThumbnailNodeBase):
         options = {}
         for key, value in self.options.iteritems():
             options[key] = value.resolve(context)
-
-        def get_thumbnail():
-            if settings.THUMBNAIL_DUMMY:
-                if random.random() > settings.THUMBNAIL_DUMMY_EMPTY_P:
-                    return DummyImageFile(geometry)
-            if file_:
-                return self.backend.get_thumbnail(file_, geometry, **options)
-
-        thumbnail = get_thumbnail()
-        if thumbnail is None:
+        if settings.THUMBNAIL_DUMMY:
+            thumbnail = DummyImageFile(geometry)
+        elif file_:
+            thumbnail = self.backend.get_thumbnail(file_, geometry, **options)
+        else:
             return self.nodelist_empty.render(context)
         context.push()
         context[self.as_var] = thumbnail
@@ -137,6 +134,8 @@ def is_portrait(file_):
     """
     if settings.THUMBNAIL_DUMMY:
         return settings.THUMBNAIL_DUMMY_RATIO < 1
+    if not file_:
+        return False
     image_file = get_image_file(file_)
     return image_file.is_portrait()
 
@@ -147,7 +146,7 @@ def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
-    if settings.THUMBNAIL_DUMMY:
+    if not file_ or settings.THUMBNAIL_DUMMY:
         return 'auto'
     margin = [0, 0, 0, 0]
     image_file = get_image_file(file_)

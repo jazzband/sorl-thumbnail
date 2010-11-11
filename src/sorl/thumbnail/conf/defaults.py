@@ -57,11 +57,7 @@ THUMBNAIL_URL_TIMEOUT = socket._GLOBAL_DEFAULT_TIMEOUT
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False
 
-# The probability of returning an empty image when THUMBNAIL_DUMMY is set to
-# True
-THUMBNAIL_DUMMY_EMPTY_P = 0
-
-# Sets the source image ratio for dummy generation for images with only width
+# Sets the source image ratio for dummy generation of images with only width
 # or height given
 THUMBNAIL_DUMMY_RATIO = 3.0 / 2
 
