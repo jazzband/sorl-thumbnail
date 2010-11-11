@@ -19,8 +19,14 @@ class Engine(EngineBase):
         im.strokeColor(Color(128, 128, 128))
         im.strokeWidth(1)
         im.draw(DrawableLine(0, 0, width, height))
-        im.draw(DrawableLine(0, height, height, 0))
+        im.draw(DrawableLine(0, height, width, 0))
         return im
+
+    def is_valid_image(self, raw_data):
+        blob = Blob()
+        blob.update(raw_data)
+        im = Image(blob)
+        return im.isValid()
 
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':

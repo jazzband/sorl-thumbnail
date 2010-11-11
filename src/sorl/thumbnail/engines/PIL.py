@@ -19,6 +19,15 @@ class Engine(EngineBase):
         del draw
         return im
 
+    def is_valid_image(self, raw_data):
+        buf = StringIO(raw_data)
+        try:
+            trial_image = Image.open(buf)
+            trial_image.verify()
+        except Exception:
+            return False
+        return True
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             return image.convert('RGB')

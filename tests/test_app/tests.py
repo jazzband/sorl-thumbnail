@@ -13,7 +13,7 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.PIL import Engine as EnginePil
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
-from sorl.thumbnail.storage import ImageFile, DummyImageFile
+from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail.templatetags.thumbnail import margin
 from test_app.models import Item
 
@@ -176,7 +176,7 @@ class TemplateTestCaseB(unittest.TestCase):
             'source': 'http://www.aino.se/media/i/logo.png',
             'dims': 'x666',
         }).strip()
-        self.assertEqual(val, '<img src="/media/test/cache/75/1a/751a864d2c7b8327f8ce28ecfbd63618.jpg" width="1984" height="666" class="landscape">')
+        self.assertEqual(val, '<img src="/media/test/cache/bd/5d/bd5db73239bfd68473481b6701a8167d.jpg" width="1984" height="666" class="landscape">')
 
     def testEmpty(self):
         val = render_to_string('thumbnail5.html', {}).strip()

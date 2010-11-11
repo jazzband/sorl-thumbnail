@@ -87,6 +87,12 @@ class EngineBase(object):
         """
         raise NotImplemented()
 
+    def is_valid_image(self, raw_data):
+        """
+        Checks if the supplied raw data is valid image data
+        """
+        raise NotImplemented()
+
     def _colorspace(self, image, colorspace):
         """
         `Valid colorspaces

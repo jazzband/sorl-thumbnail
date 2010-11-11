@@ -9,10 +9,16 @@ THUMBNAIL_DEBUG = False
 # Backend
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 
-# Key-value store
+# Key-value store, ships with:
+# sorl.thumbnail.kvstores.redis.KVStore
+# sorl.thumbnail.kvstores.cached_db.KVStore
+# Redis is preferred but requires some more work, see docs
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db.KVStore'
 
-# Engine
+# Engine, ships with:
+# sorl.thumbnail.engines.pgmagick.Engine
+# sorl.thumbnail.engines.PIL.Engine
+# pgmagick is preferred but requires some more work, se docs
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.Engine'
 
 # Storage for the generated thumbnails

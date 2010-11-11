@@ -4,7 +4,7 @@ from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from functools import wraps
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.storage import ImageFile, DummyImageFile
+from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.parsers import parse_geometry
 

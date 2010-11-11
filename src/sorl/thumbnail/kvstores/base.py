@@ -1,7 +1,7 @@
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import serialize, deserialize
-from sorl.thumbnail.storage import ImageFile
-from sorl.thumbnail.storage import serialize_image_file, deserialize_image_file
+from sorl.thumbnail.images import ImageFile
+from sorl.thumbnail.images import serialize_image_file, deserialize_image_file
 
 
 def add_prefix(key, identity='image'):

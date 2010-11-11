@@ -1,7 +1,7 @@
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class, tokey, serialize
 from sorl.thumbnail.parsers import parse_geometry
-from sorl.thumbnail.storage import ImageFile
+from sorl.thumbnail.images import ImageFile
 
 
 class ThumbnailBackend(object):
