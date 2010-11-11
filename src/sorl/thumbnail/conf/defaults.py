@@ -47,7 +47,7 @@ THUMBNAIL_FORMAT = 'JPEG'
 # Setting this to None will keep the original colorspace.
 THUMBNAIL_COLORSPACE = 'RGB'
 
-# Should we upscale images
+# Should we upscale images by default
 THUMBNAIL_UPSCALE = True
 
 # Quality, 0-100
