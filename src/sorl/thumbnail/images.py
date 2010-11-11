@@ -170,4 +170,3 @@ class UrlStorage(Storage):
     def delete(self, name):
         pass
 
-

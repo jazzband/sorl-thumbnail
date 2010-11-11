@@ -69,4 +69,3 @@ class ThumbnailBackend(object):
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             self.extensions[options['format']])
 
-
