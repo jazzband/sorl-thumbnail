@@ -9,7 +9,7 @@ class EngineBase(object):
     """
     def create(self, image, geometry, options):
         """
-        Processing conductor, returns the thumbnail as a backend image object
+        Processing conductor, returns the thumbnail as an image engine instance
         """
         image = self.colorspace(image, geometry, options)
         image = self.scale(image, geometry, options)

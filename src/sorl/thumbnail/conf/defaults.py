@@ -18,16 +18,16 @@ THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.PIL.Engine'
 # Storage for the generated thumbnails
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
-# Redis backend settings
+# Redis settings
 THUMBNAIL_REDIS_HOST = 'localhost'
 THUMBNAIL_REDIS_PORT = 6379
 THUMBNAIL_REDIS_DB = 0
 
-# Cache timeout for ``cached_db`` backend. You should probably keep this at
+# Cache timeout for ``cached_db`` store. You should probably keep this at
 # maximum or ``None`` if your caching backend can handle that as infinate.
 THUMBNAIL_CACHE_TIMEOUT = sys.maxint
 
-# Key prefix used bu the key value store
+# Key prefix used by the key value store
 THUMBNAIL_KEY_PREFIX = 'sorl.thumbnail'
 
 # Thumbnail filename prefix
