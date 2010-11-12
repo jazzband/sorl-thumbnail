@@ -8,3 +8,6 @@
 .svn
 *.orig
 _build
+build
+dist
+*.egg-info
