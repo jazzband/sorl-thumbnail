@@ -13,4 +13,6 @@ Features at a glance
   images to develop locally anymore).
 - Flexible, simple syntax, generates no html
 - ImageField for model that deletes thumbnails
+- CSS style cropping options
+- Margin calculation for vertical positioning
 
