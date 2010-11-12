@@ -10,14 +10,14 @@ your template::
 
 Simple::
 
-    {% thumbnail item.image "100x100" as im %}
+    {% thumbnail item.image "100x100" crop="center" as im %}
         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
     {% endthumbnail %}
 
     
-Crop using margin filter, x, y aliases, and center cropping::
+Crop using margin filter, x, y aliases::
 
-    {% thumbnail item.image "100x700" crop="center" as im %}
+    {% thumbnail item.image "100x700" as im %}
         <img style="margin:{{ im|margin:"100x700" }}" src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}">
     {% endthumbnail %}
 
