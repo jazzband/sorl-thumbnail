@@ -34,7 +34,7 @@ THUMBNAIL_REDIS_DB = 0
 THUMBNAIL_CACHE_TIMEOUT = sys.maxint
 
 # Key prefix used by the key value store
-THUMBNAIL_KEY_PREFIX = 'sorl.thumbnail'
+THUMBNAIL_KEY_PREFIX = 'sorl-thumbnail'
 
 # Thumbnail filename prefix
 THUMBNAIL_PREFIX = 'cache/'

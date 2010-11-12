@@ -12,6 +12,7 @@ THUMBNAIL_DEBUG = True
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pgmagick.Engine'
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db.KVStore'
+INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),

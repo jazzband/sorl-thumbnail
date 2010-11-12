@@ -6,7 +6,6 @@ from os.path import abspath, dirname, join as pjoin
 here = abspath(dirname(__file__))
 
 paths = [
-    pjoin(here, os.pardir, 'src'),
     pjoin(here, os.pardir),
 ]
 for path in paths:

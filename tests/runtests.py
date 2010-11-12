@@ -8,7 +8,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 here = abspath(dirname(__file__))
 
 paths = [
-    pjoin(here, os.pardir, 'src'),
     pjoin(here, os.pardir),
 ]
 for path in paths:
