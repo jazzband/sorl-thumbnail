@@ -1,4 +1,3 @@
-import random
 import re
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
@@ -10,8 +9,6 @@ from sorl.thumbnail.parsers import parse_geometry
 
 
 register = Library()
-
-
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
 
 
