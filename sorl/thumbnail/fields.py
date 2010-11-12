@@ -9,7 +9,18 @@ from sorl.thumbnail.images import ImageFile
 __all__ = ('ImageField', 'ImageFormField')
 
 
-class ImageField(models.FileField):
+class South(object):
+    """
+    Just a south introspection Mixin
+    """
+    def south_field_triple(self):
+        from south.modelsinspector import introspector
+        cls_name = '%s.%s' % (self.__class__.__module__ , self.__class__.__name__)
+        args, kwargs = introspector(self)
+        return (cls_name, args, kwargs)
+
+
+class ImageField(South, models.FileField):
     def delete_file(self, instance, sender, **kwargs):
         """
         Adds deletion of thumbnails and key kalue store references to the
