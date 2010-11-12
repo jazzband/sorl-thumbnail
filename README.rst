@@ -11,6 +11,6 @@ Features at a glance
 - Pluggable Backend support
 - Dummy generation (no you dont have to download the production site's 666GB of
   images to develop locally anymore).
-- Flexible syntax, simple syntax, generates no html
+- Flexible, simple syntax, generates no html
 - ImageField for model that deletes thumbnails
 
