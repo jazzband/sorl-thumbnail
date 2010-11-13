@@ -356,8 +356,8 @@ class ModelTestCase(SimpleTestCaseBase):
         self.assertEqual(3, len(list(self.kvstore._find_keys(identity='image'))))
         self.assertEqual(1, len(list(self.kvstore._find_keys(identity='thumbnails'))))
         item1.delete()
-        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='image'))))
-        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='thumbnails'))))
         self.assertEqual(None, self.kvstore.get(im1))
         self.assertEqual(None, self.kvstore._get(im1.key, identity='thumbnails'))
+        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='image'))))
+        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='thumbnails'))))
 

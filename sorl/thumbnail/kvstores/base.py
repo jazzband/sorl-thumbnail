@@ -112,9 +112,9 @@ class KVStoreBase(object):
 
     def clear(self):
         """
-        Brutely clears the key value store with key prefixes
-        THUMBNAIL_KEY_PREFIX. Use this in emergency situations. Normally you
-        want to use the ``cleanup`` method instaed of this.
+        Brutely clears the key value store for keys with THUMBNAIL_KEY_PREFIX
+        prefix. Use this in emergency situations. Normally you would probably
+        want to use the ``cleanup`` method instead.
         """
         all_keys = self._find_keys_raw(settings.THUMBNAIL_KEY_PREFIX)
         self._delete_raw(*all_keys)
