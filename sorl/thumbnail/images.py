@@ -13,21 +13,6 @@ from sorl.thumbnail.parsers import parse_geometry
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 
-def get_image_file(file_, kvstore=None):
-    """
-    Helper that returns and stores an ``ImageFile`` from a file input
-    """
-    image_file = ImageFile(file_)
-    if kvstore is None:
-        kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
-    cached = kvstore.get(image_file)
-    if cached is not None:
-        return cached
-    kvstore.set(image_file)
-    return image_file
-
-
-
 def serialize_image_file(image_file):
     if image_file.size is None:
         raise ThumbnailError('Trying to serialize an ``ImageFile`` with a '
