@@ -12,7 +12,7 @@ fp.close()
 
 setup(
     name='sorl-thumbnail',
-    version='10.12-alpha',
+    version='10.12-beta',
     url='https://github.com/sorl/sorl-thumbnail',
     license='BSD',
     author='Mikko Hellsing',
@@ -20,7 +20,7 @@ setup(
     description='Thumbnails for Django',
     long_description=long_description,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Alpha',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
