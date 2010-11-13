@@ -14,7 +14,7 @@ Key Value Store
 ---------------
 Support for `redis`_ and a cached database key value store is shipped with
 sorl-thumbnail. `redis`_ is the best option. To use the `redis`_ key value store
-you need to install that::
+you need to install `redis-py`_::
 
     pip install redis
 
@@ -75,6 +75,7 @@ want to see the following::
 
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
 .. _redis: http://code.google.com/p/redis/
+.. _redis-py: https://github.com/andymccurdy/redis-py/
 .. _Django: http://www.djangoproject.com/
 .. _Python: http://www.python.org/
 .. _pgmagick: http://bitbucket.org/hhatto/pgmagick/src

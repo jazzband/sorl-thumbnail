@@ -83,3 +83,8 @@ value store and ts thumbnail references and the thumbnail files when deleted::
         image = ImageField()
 
 
+.. note:: You do not need to use the ``sorl.thumbnail.ImageField`` to use
+    ``sorl.thumbnail``. The standard ``django.db.models.ImageField`` is fine
+    except that it does not know how to delete itself from the Key Value Store
+    or its thumbnails if you delete it.
+
