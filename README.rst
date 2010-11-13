@@ -16,5 +16,5 @@ Features at a glance
 - CSS style cropping options
 - Margin calculation for vertical positioning
 
-Read more in `the documentation <http://thumbnail.sorl.net/>`_
+Read more in `the half assed documentation so far <http://thumbnail.sorl.net/>`_
 
