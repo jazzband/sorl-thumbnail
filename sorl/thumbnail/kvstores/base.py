@@ -96,8 +96,7 @@ class KVStoreBase(object):
                 thumbnail_keys = self._get(key, identity='thumbnails') or []
                 thumbnail_keys_set = set(thumbnail_keys)
                 for thumbnail_key in thumbnail_keys:
-                    image_file = self._get(thumbnail_key)
-                    if not image_file:
+                    if not self._get(thumbnail_key):
                         thumbnail_keys_set.remove(thumbnail_key)
                 thumbnail_keys = list(thumbnail_keys_set)
                 if thumbnail_keys:
