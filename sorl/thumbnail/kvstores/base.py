@@ -1,7 +1,5 @@
-import re
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import serialize, deserialize, ThumbnailError
-from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.images import serialize_image_file, deserialize_image_file
 
 
@@ -172,9 +170,9 @@ class KVStoreBase(object):
         """
         raise NotImplemented()
 
-    def _delete_raw(self, key):
+    def _delete_raw(self, *keys):
         """
-        Deletes the key, value. Silent failure for missing key.
+        Deletes the keys. Silent failure for missing keys.
         """
         raise NotImplemented()
 

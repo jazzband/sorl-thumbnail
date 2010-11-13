@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from sorl.thumbnail.kvstores.base import KVStoreBase, add_prefix
+from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
 
