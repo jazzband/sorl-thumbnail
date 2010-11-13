@@ -28,12 +28,12 @@ class KVStore(KVStoreBase):
         kv.save()
         cache.set(key, value, settings.THUMBNAIL_CACHE_TIMEOUT)
 
-    def _delete_raw(self, key):
-        KVStoreModel.objects.filter(key=key).delete()
-        cache.delete(key)
+    def _delete_raw(self, *keys):
+        KVStoreModel.objects.filter(key__in=keys).delete()
+        for key in keys:
+            cache.delete(key)
 
-    def _find_keys(self, identity):
-        start = add_prefix('', identity)
-        qs = KVStoreModel.objects.filter(key__startswith=start)
+    def _find_keys_raw(self, prefix):
+        qs = KVStoreModel.objects.filter(key__startswith=prefix)
         return qs.values_list('key', flat=True)
 

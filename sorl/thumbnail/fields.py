@@ -32,11 +32,12 @@ class ImageField(South, models.FileField):
         # delete it from the backend.
         if file_ and file_.name != self.default and \
             not sender._default_manager.filter(**{self.name: file_.name}):
-                file_.delete(save=False)
-                # now delete the kvstore references and thumbnails
+                # delete the kvstore references and thumbnails
                 image_file = ImageFile(file_)
                 kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
                 kvstore.delete(image_file)
+                # delete the file
+                file_.delete(save=False)
         elif file_:
             # Otherwise, just close the file, so it doesn't tie up resources.
             file_.close()

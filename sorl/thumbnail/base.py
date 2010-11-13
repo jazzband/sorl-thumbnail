@@ -5,6 +5,10 @@ from sorl.thumbnail.images import ImageFile
 
 
 class ThumbnailBackend(object):
+    """
+    The main class for sorl-thumbnail, you can subclass this if you for example
+    want to change the way destination filename is generated.
+    """
     default_options = {
         'format': settings.THUMBNAIL_FORMAT,
         'quality': settings.THUMBNAIL_QUALITY,
@@ -30,10 +34,14 @@ class ThumbnailBackend(object):
         self.storage = storage
 
     def get_thumbnail(self, file_, geometry_string, **options):
+        """
+        Returns thumbnail as an ImageFile instance for file with geometry and
+        options given. First it will try to get it from the key value store,
+        secondly it will create it.
+        """
         source = ImageFile(file_)
         for key, value in self.default_options.iteritems():
             options.setdefault(key, value)
-
         name = self._get_thumbnail_filename(source, geometry_string, options)
         thumbnail = ImageFile(name, self.storage)
         cached = self.kvstore.get(thumbnail)
@@ -50,14 +58,25 @@ class ThumbnailBackend(object):
         return thumbnail
 
     def _create_thumbnail(self, source, geometry_string, options, thumbnail):
-        image = self.engine.get_image(source)
-        ratio = self.engine.get_image_ratio(image)
-        geometry = parse_geometry(geometry_string, ratio)
-        thumbnail_image = self.engine.create(image, geometry, options)
+        """
+        Creates the thumbnail by using self.engine and stores the source to
+        kvstore if its not already there.
+        """
+        source_image = self.engine.get_image(source)
+        source_image_ratio = self.engine.get_image_ratio(source_image)
+        if not self.kvstore.get(source):
+            # We store the source in kvstore if its not there already. The
+            # reason for us doing that here is because we have the file open
+            # and can cheaply access size.
+            source_image_size = self.engine.get_image_size(source_image)
+            source.set_size(source_image_size)
+            self.kvstore.set(source)
+        geometry = parse_geometry(geometry_string, source_image_ratio)
+        thumbnail_image = self.engine.create(source_image, geometry, options)
         self.engine.write(thumbnail_image, options, thumbnail)
-        # It's much cheaper to set the size here
-        size = self.engine.get_image_size(thumbnail_image)
-        thumbnail.set_size(size)
+        # It's much cheaper to set the size here too
+        thumbnail_image_size = self.engine.get_image_size(thumbnail_image)
+        thumbnail.set_size(thumbnail_image_size)
 
     def _get_thumbnail_filename(self, source, geometry_string, options):
         """

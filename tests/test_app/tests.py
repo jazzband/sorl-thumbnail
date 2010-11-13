@@ -47,7 +47,7 @@ class ParsersTestCase(unittest.TestCase):
         self.assertEqual(g, (None, 999))
 
 
-class SimpleTestCase(unittest.TestCase):
+class SimpleTestCaseBase(unittest.TestCase):
     def setUp(self):
         self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
         self.engine = get_module_class(settings.THUMBNAIL_ENGINE)()
@@ -68,6 +68,7 @@ class SimpleTestCase(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
 
+class SimpleTestCase(SimpleTestCaseBase):
     def testSimple(self):
         item = Item.objects.get(image='500x500.jpg')
         t = self.backend.get_thumbnail(item.image, '400x300', crop='center')
@@ -93,7 +94,7 @@ class SimpleTestCase(unittest.TestCase):
         th2 = self.backend.get_thumbnail(im, 'x50')
         th3 = self.backend.get_thumbnail(im, '20x20')
         self.assertEqual(
-            set([th1.name, th2.name, th3.name]),
+            set([th1.key, th2.key, th3.key]),
             set(self.kvstore._get(im.key, identity='thumbnails'))
             )
         self.kvstore.delete_thumbnails(im)
@@ -125,7 +126,7 @@ class SimpleTestCase(unittest.TestCase):
         self.kvstore.set(im)
         self.assertEqual(im.size, [500, 500])
 
-    def testDeleteOrphans(self):
+    def test_cleanup1(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         self.kvstore.delete_thumbnails(im)
         th = self.backend.get_thumbnail(im, '3x3')
@@ -134,11 +135,33 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(th.exists(), False)
         self.assertEqual(self.kvstore.get(th).x, 3)
         self.assertEqual(self.kvstore.get(th).y, 3)
-        self.kvstore.delete_orphans()
+        self.kvstore.cleanup()
         self.assertEqual(self.kvstore.get(th), None)
+        self.kvstore.delete(im)
+
+    def test_cleanup2(self):
+        self.kvstore.clear()
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        th3 = self.backend.get_thumbnail(im, '27x27')
+        th4 = self.backend.get_thumbnail(im, '81x81')
+        def keys_test(x, y, z):
+            self.assertEqual(x, len(list(self.kvstore._find_keys(identity='image'))))
+            self.assertEqual(y, len(list(self.kvstore._find_keys(identity='thumbnails'))))
+            self.assertEqual(z, len(self.kvstore._get(im.key, identity='thumbnails') or []))
+        keys_test(3, 1, 2)
+        th3.delete()
+        keys_test(3, 1, 2)
+        self.kvstore.cleanup()
+        keys_test(2, 1, 1)
+        th4.delete()
+        keys_test(2, 1, 1)
+        self.kvstore.cleanup()
+        keys_test(1, 0, 0)
+        self.kvstore.clear()
+        keys_test(0, 0, 0)
 
 
-class TemplateTestCaseA(SimpleTestCase):
+class TemplateTestCaseA(SimpleTestCaseBase):
     def testModel(self):
         item = Item.objects.get(image='500x500.jpg')
         val = render_to_string('thumbnail1.html', {
@@ -313,4 +336,28 @@ class DummyTestCase(unittest.TestCase):
     def tearDown(self):
         for k, v in self.org_settings.iteritems():
             setattr(settings, k, v)
+
+
+class ModelTestCase(SimpleTestCaseBase):
+    def test_field1(self):
+        self.kvstore.clear()
+        item0 = Item.objects.get(image='100x100.jpg')
+        item1 = Item.objects.get(image='500x500.jpg')
+        im0 = ImageFile(item0.image)
+        im1 = ImageFile(item1.image)
+        th00 = self.backend.get_thumbnail(im0, '27x27')
+        th01 = self.backend.get_thumbnail(im0, '81x81')
+        th10 = self.backend.get_thumbnail(im1, '16x16')
+        th11 = self.backend.get_thumbnail(im1, '9x5')
+        self.kvstore.set(im0)
+        item0.delete()
+        self.assertEqual(None, self.kvstore.get(im0))
+        self.assertNotEqual(None, self.kvstore.get(im1))
+        self.assertEqual(3, len(list(self.kvstore._find_keys(identity='image'))))
+        self.assertEqual(1, len(list(self.kvstore._find_keys(identity='thumbnails'))))
+        item1.delete()
+        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='image'))))
+        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='thumbnails'))))
+        self.assertEqual(None, self.kvstore.get(im1))
+        self.assertEqual(None, self.kvstore._get(im1.key, identity='thumbnails'))
 

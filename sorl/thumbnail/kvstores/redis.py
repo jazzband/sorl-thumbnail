@@ -18,10 +18,10 @@ class KVStore(KVStoreBase):
     def _set_raw(self, key, value):
         return self.connection.set(key, value)
 
-    def _delete_raw(self, key):
-        return self.connection.delete(key)
+    def _delete_raw(self, *keys):
+        return self.connection.delete(*keys)
 
-    def _find_keys(self, identity):
-        pattern = add_prefix('*', identity)
+    def _find_keys_raw(self, prefix):
+        pattern = prefix + '*'
         return self.connection.keys(pattern=pattern)
 

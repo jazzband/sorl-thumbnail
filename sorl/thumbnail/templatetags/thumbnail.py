@@ -18,11 +18,7 @@ def get_image_file(file_):
     """
     image_file = ImageFile(file_)
     kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
-    cached = kvstore.get(image_file)
-    if cached is not None:
-        return cached
-    kvstore.set(image_file)
-    return image_file
+    return kvstore.get_or_set(image_file)
 
 
 def safe_filter(error_output=''):
