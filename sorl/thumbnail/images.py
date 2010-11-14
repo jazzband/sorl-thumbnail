@@ -127,7 +127,8 @@ class ImageFile(BaseImageFile):
 
     def serialize_storage(self):
         if isinstance(self.storage, LazyObject):
-            # if this is wraped in a lazy object we need to get the real thing
+            # if storage is wrapped in a lazy object we need to get the real
+            # thing.
             self.storage._setup()
             cls = self.storage._wrapped.__class__
         else:
