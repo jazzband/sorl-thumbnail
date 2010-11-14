@@ -7,7 +7,7 @@ from django.utils.encoding import force_unicode
 from django.utils.functional import LazyObject
 from django.utils import simplejson
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError, tokey
+from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
@@ -29,7 +29,10 @@ def serialize_image_file(image_file):
 
 def deserialize_image_file(s):
     data = simplejson.loads(s)
-    image_file = ImageFile(data['name'], default.storage)
+    class LazyStorage(LazyObject):
+        def _setup(self):
+            self._wrapped = get_module_class(data['storage'])()
+    image_file = ImageFile(data['name'], LazyStorage())
     image_file.set_size(data['size'])
     return image_file
 

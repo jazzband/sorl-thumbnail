@@ -22,6 +22,7 @@ class Storage(LazyObject):
     def _setup(self):
         self._wrapped = get_module_class(settings.THUMBNAIL_STORAGE)()
 
+
 backend = Backend()
 kvstore = KVStore()
 engine = Engine()
