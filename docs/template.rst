@@ -103,12 +103,11 @@ below are how they are used and interperated in the shipped engines.
 
 ``crop``
 ~~~~~~~~
-This option is only valid if both width and height is given. Crop behaves
-much like `css background-position`_.  The image is first rescaled to
-minimum values of height and width given, this will be equivalent to the
-`padding box` in the above text. After it is rescaled it will apply the
-cropping options. There are some differences to the `css
-background-position`_:
+This option is only used if both width and height is given. Crop behaves much
+like `css background-position`_.  The image is first rescaled to minimum values
+of height and width given, this will be equivalent to the `padding box` in the
+above text. After it is rescaled it will apply the cropping options. There are
+some differences to the `css background-position`_:
 
 - Only % and px are valid lengths (units)
 - ``noop`` (No Operation) is a valid option which means there is no 
