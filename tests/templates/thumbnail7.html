@@ -1,0 +1,5 @@
+{% load thumbnail %}{% spaceless %}
+{% thumbnail item.image "100x100" crop="center" upscale="True" quality=70 as th %}
+{{ th.url }}
+{% endthumbnail %}
+{% endspaceless %}

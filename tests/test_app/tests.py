@@ -214,6 +214,18 @@ class TemplateTestCaseA(SimpleTestCaseBase):
                                '<img src="/media/test/cache/6c/c3/6cc32cd4aa002c577b534442c11e07d2.jpg" width="400" height="400">'
                                '</a>'))
 
+    def test_serialization_options(self):
+        item = Item.objects.get(image='500x500.jpg')
+        for j in xrange(0, 20):
+            # we could be lucky...
+            val0 = render_to_string('thumbnail7.html', {
+                'item': item,
+            }).strip()
+            val1 = render_to_string('thumbnail7a.html', {
+                'item': item,
+            }).strip()
+            self.assertEqual(val0, val1)
+
 
 class TemplateTestCaseB(unittest.TestCase):
     def tearDown(self):
