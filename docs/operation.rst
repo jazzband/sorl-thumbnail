@@ -1,6 +1,8 @@
 How sorl-thumbnail operates
 ===========================
 
+.. highlight:: python
+
 When you use the ``thumbnail`` template tag sorl-thumbnail looks up the
 thumbnail in a :ref:`kvstore-requirements`. The key for a thumbnail is
 generated from its filename and storage. The thumbnail filename in turn is

@@ -13,6 +13,7 @@ Contents:
 
    installation
    requirements
+   template
    examples
    management
    operation
@@ -24,4 +25,3 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. |kvstore| replace:: Key Value Store

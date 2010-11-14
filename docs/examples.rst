@@ -3,6 +3,9 @@ Examples
 
 Template examples
 -----------------
+
+.. highlight:: html+django
+
 All of the examples assume that you first load the ``thumbnail`` template tag in
 your template::
 
@@ -72,6 +75,8 @@ Setting format and using the is_portrait filter::
 
 Model examples
 --------------
+
+.. highlight:: python
 
 Using the ImageField that automatically deletes references to itself in the key
 value store and ts thumbnail references and the thumbnail files when deleted::
