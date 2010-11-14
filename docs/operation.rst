@@ -50,10 +50,12 @@ persistent caching. However sorl-thumbnail does ship with a *cached* database
 .. note:: We have to assume the thumbnail exists if the thumbnail key exists in
     the |kvstore|
 
-There are bonuses, we can store meta data in the |kvstore| that would be
+**There are bonuses**. We can store meta data in the |kvstore| that would be
 too costly to retreive even for local file storage. Today this meta data
 consists only of the image size but this could be expanded to for example EXIF
-data.
+data. The other bonus is that we can keep track of what thumbnails has been
+generated from a particular source and deleting them too when the source is
+deleted.
 
 `Schematic view of how things are done
 <https://docs.google.com/drawings/edit?id=1wlE4LkQpzXd2a2Nxfjt6_j5NG7889dzMyf0V-xPAJSE&hl=en>`_
