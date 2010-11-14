@@ -22,15 +22,16 @@ the ``KVStoreBase`` sublass's ``delete`` method::
 
     from sorl.thumbnail.images import ImageFile
     from sorl.thumbnail import default
+    
+    # Instantiate the ImageFile before deletion
+    image_file = ImageFile(my_file)
 
-    #
-    # Before deleting my_file you need to delete it from the Key Value Store
-    #
-    my_image_file = ImageFile(my_file)
-    default.kvstore.delete(my_image_file)
-    #
-    # Now you are ready to delete my_file
-    #
+    # Delete the file before we remove references in kvstore to avoid kvstore
+    # to update and have stale cache
+    delete_my_file_function(my_file)
+
+    # Remove references and thumbnails from kvstore
+    default.kvstore.delete(image_file)
 
 Alternatively if you have **deleted** a file you can use the management command
 :ref:`thumbnail-cleanup`.  Deleting an image using the
