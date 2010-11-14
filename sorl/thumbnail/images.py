@@ -4,6 +4,7 @@ from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, default_storage
 from django.core.urlresolvers import reverse
 from django.utils.encoding import force_unicode
+from django.utils.functional import LazyObject
 from django.utils import simplejson
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import ThumbnailError, tokey
@@ -125,7 +126,12 @@ class ImageFile(BaseImageFile):
         return self.storage.delete(self.name)
 
     def serialize_storage(self):
-        cls = self.storage.__class__
+        if isinstance(self.storage, LazyObject):
+            # if this is wraped in a lazy object we need to get the real thing
+            self.storage._setup()
+            cls = self.storage._wrapped.__class__
+        else:
+            cls = self.storage.__class__
         return '%s.%s' % (cls.__module__, cls.__name__)
 
     @property

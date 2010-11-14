@@ -3,6 +3,7 @@ import os
 import random
 import shutil
 import unittest
+from django.core.files.storage import Storage, default_storage
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from django.test.client import Client
@@ -12,8 +13,9 @@ from sorl.thumbnail.conf import settings
 #from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
 from sorl.thumbnail.engines.PIL import Engine as EnginePil
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
-from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.images import ImageFile, DummyImageFile
+from sorl.thumbnail import default
+from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
 from test_app.models import Item
 
@@ -160,6 +162,22 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.kvstore.clear()
         keys_test(0, 0, 0)
 
+    def test_storage_serialize(self):
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        self.assertEqual(im.serialize_storage(), 'django.core.files.storage.FileSystemStorage')
+        self.assertEqual(
+            ImageFile('http://www.image.jpg').serialize_storage(),
+            'sorl.thumbnail.images.UrlStorage',
+            )
+        self.assertEqual(
+            ImageFile('http://www.image.jpg', default.storage).serialize_storage(),
+            'django.core.files.storage.FileSystemStorage',
+            )
+        self.assertEqual(
+            ImageFile('getit', default_storage).serialize_storage(),
+            'django.core.files.storage.FileSystemStorage',
+            )
+
 
 class TemplateTestCaseA(SimpleTestCaseBase):
     def testModel(self):
@@ -178,8 +196,8 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         val = render_to_string('thumbnail6.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, ('<a href="/media/test/cache/2b/5c/2b5c5a5989347f1de967ce45bef88dcb.jpg">'
-                               '<img src="/media/test/cache/dd/e9/dde919d4e5c0b0fff78f45e41f4f496d.jpg" width="400" height="400">'
+        self.assertEqual(val, ('<a href="/media/test/cache/57/ba/57ba10c5a6c56dc71362d9b1427cb0b4.jpg">'
+                               '<img src="/media/test/cache/6c/c3/6cc32cd4aa002c577b534442c11e07d2.jpg" width="400" height="400">'
                                '</a>'))
 
 
