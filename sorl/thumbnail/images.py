@@ -75,11 +75,10 @@ class ImageFile(BaseImageFile):
             self.storage = storage
         elif hasattr(file_, 'storage'):
             self.storage = file_.storage
+        elif url_pat.match(self.name):
+            self.storage = UrlStorage()
         else:
-            if url_pat.match(self.name):
-                self.storage = UrlStorage()
-            else:
-                self.storage = default_storage
+            self.storage = default_storage
 
     def __unicode__(self):
         return self.name
