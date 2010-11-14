@@ -4,21 +4,12 @@ from django.utils.encoding import smart_str
 from functools import wraps
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
-from sorl.thumbnail.helpers import get_module_class
+from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
 
 register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
-
-
-def get_image_file(file_):
-    """
-    Helper that returns and stores an ``ImageFile`` from a file input
-    """
-    image_file = ImageFile(file_)
-    kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
-    return kvstore.get_or_set(image_file)
 
 
 def safe_filter(error_output=''):
@@ -41,15 +32,9 @@ def safe_filter(error_output=''):
 
 class ThumbnailNodeBase(Node):
     """
-    Renders safely and has a simple backend attribute.
+    A Node that renders safely
     """
     error_output = ''
-
-    @property
-    def backend(self):
-        if not hasattr(self, '_backend'):
-            self._backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-        return self._backend
 
     def render(self, context):
         try:
@@ -100,7 +85,9 @@ class ThumbnailNode(ThumbnailNodeBase):
         if settings.THUMBNAIL_DUMMY:
             thumbnail = DummyImageFile(geometry)
         elif file_:
-            thumbnail = self.backend.get_thumbnail(file_, geometry, **options)
+            thumbnail = default.backend.get_thumbnail(
+                file_, geometry, **options
+                )
         else:
             return self.nodelist_empty.render(context)
         context.push()
@@ -129,7 +116,7 @@ def is_portrait(file_):
         return settings.THUMBNAIL_DUMMY_RATIO < 1
     if not file_:
         return False
-    image_file = get_image_file(file_)
+    image_file = default.kvstore.get_or_set(ImageFile(file_))
     return image_file.is_portrait()
 
 
@@ -142,7 +129,7 @@ def margin(file_, geometry_string):
     if not file_ or settings.THUMBNAIL_DUMMY:
         return 'auto'
     margin = [0, 0, 0, 0]
-    image_file = get_image_file(file_)
+    image_file = default.kvstore.get_or_set(ImageFile(file_))
     x, y = parse_geometry(geometry_string, image_file.ratio)
     ex = x - image_file.x
     margin[3] = ex / 2

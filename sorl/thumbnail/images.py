@@ -2,11 +2,12 @@ import re
 import urllib2
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, FileSystemStorage
+from django.core.urlresolvers import reverse
 from django.utils.encoding import force_unicode
 from django.utils import simplejson
-from django.core.urlresolvers import reverse
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class
+from sorl.thumbnail.helpers import ThumbnailError, tokey
+from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
 
@@ -27,8 +28,7 @@ def serialize_image_file(image_file):
 
 def deserialize_image_file(s):
     data = simplejson.loads(s)
-    storage = get_module_class(data['storage'])()
-    image_file = ImageFile(data['name'], storage)
+    image_file = ImageFile(data['name'], default.storage)
     image_file.set_size(data['size'])
     return image_file
 
@@ -101,9 +101,8 @@ class ImageFile(BaseImageFile):
             size = self.storage.image_size(self.name)
         else:
             # This is the worst case scenario
-            engine = get_module_class(settings.THUMBNAIL_ENGINE)()
-            image = engine.get_image(self)
-            size = engine.get_image_size(image)
+            image = default.engine.get_image(self)
+            size = default.engine.get_image_size(image)
         self._size = list(size)
 
     @property

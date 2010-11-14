@@ -2,8 +2,8 @@ from django.db import models
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
+from sorl.thumbnail import default
 
 
 __all__ = ('ImageField', 'ImageFormField')
@@ -36,8 +36,7 @@ class ImageField(South, models.FileField):
             ):
             # delete the kvstore references and thumbnails
             image_file = ImageFile(file_)
-            kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
-            kvstore.delete(image_file)
+            default.kvstore.delete(image_file)
             # delete the file
             file_.delete(save=False)
         elif file_:
@@ -72,8 +71,7 @@ class ImageFormField(forms.FileField):
             raw_data = data.read()
         else:
             raw_data = data['content']
-        engine = get_module_class(settings.THUMBNAIL_ENGINE)()
-        if not engine.is_valid_image(raw_data):
+        if not default.engine.is_valid_image(raw_data):
             raise forms.ValidationError(self.error_messages['invalid_image'])
         if hasattr(f, 'seek') and callable(f.seek):
             f.seek(0)

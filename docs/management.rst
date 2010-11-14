@@ -9,7 +9,7 @@ thumbnail cleanup
 ``python manage.py thumbnail cleanup``
 
 This cleans up the Key Value Store from stale cache. It removes references to
-images that do not exist and thumbnail references and their acual files for
+images that do not exist and thumbnail references and their actual files for
 images that do not exist. It removes thumbnails for unknown images.
 
 
