@@ -1,7 +1,7 @@
 import re
 import urllib2
 from django.core.files.base import File, ContentFile
-from django.core.files.storage import Storage, FileSystemStorage
+from django.core.files.storage import Storage, default_storage
 from django.core.urlresolvers import reverse
 from django.utils.encoding import force_unicode
 from django.utils import simplejson
@@ -79,7 +79,7 @@ class ImageFile(BaseImageFile):
             if url_pat.match(self.name):
                 self.storage = UrlStorage()
             else:
-                self.storage = FileSystemStorage()
+                self.storage = default_storage
 
     def __unicode__(self):
         return self.name
