@@ -178,6 +178,20 @@ class SimpleTestCase(SimpleTestCaseBase):
             'django.core.files.storage.FileSystemStorage',
             )
 
+    def test_image_file_deserialize(self):
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        default.kvstore.set(im)
+        self.assertEqual(
+            default.kvstore.get(im).serialize_storage(),
+            'django.core.files.storage.FileSystemStorage',
+            )
+        im = ImageFile('http://www.aino.se/media/i/logo.png')
+        default.kvstore.set(im)
+        self.assertEqual(
+            default.kvstore.get(im).serialize_storage(),
+            'sorl.thumbnail.images.UrlStorage',
+            )
+
 
 class TemplateTestCaseA(SimpleTestCaseBase):
     def testModel(self):
