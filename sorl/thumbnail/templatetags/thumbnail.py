@@ -60,14 +60,14 @@ class ThumbnailNode(ThumbnailNodeBase):
             raise TemplateSyntaxError(self.error_msg)
         self.file_ = parser.compile_filter(bits[1])
         self.geometry = parser.compile_filter(bits[2])
-        self.options = {}
+        self.options = []
         for bit in bits[3:-2]:
             m = kw_pat.match(bit)
             if not m:
                 raise TemplateSyntaxError(self.error_msg)
             key = smart_str(m.group('key'))
-            value = parser.compile_filter(m.group('value'))
-            self.options[key] = value
+            expr = parser.compile_filter(m.group('value'))
+            self.options.append((key, expr))
         self.as_var = bits[-1]
         self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
         if parser.next_token().contents == 'empty':
@@ -80,7 +80,7 @@ class ThumbnailNode(ThumbnailNodeBase):
         file_ = self.file_.resolve(context)
         geometry = self.geometry.resolve(context)
         options = {}
-        for key, expr in self.options.iteritems():
+        for key, expr in self.options:
             noresolve = {'True': True, 'False': False, 'None': None}
             value = noresolve.get(unicode(expr), expr.resolve(context))
             if key == 'options':
