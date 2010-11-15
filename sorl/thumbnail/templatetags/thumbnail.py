@@ -81,8 +81,8 @@ class ThumbnailNode(ThumbnailNodeBase):
         geometry = self.geometry.resolve(context)
         options = {}
         for key, expr in self.options.iteritems():
-            noresolve = {'true': True, 'false': False}
-            value = noresolve.get(unicode(expr).lower(), expr.resolve(context))
+            noresolve = {'True': True, 'False': False, 'None': None}
+            value = noresolve.get(unicode(expr), expr.resolve(context))
             if key == 'options':
                 options.update(value)
             else:
