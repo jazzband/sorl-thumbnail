@@ -80,8 +80,13 @@ class ThumbnailNode(ThumbnailNodeBase):
         file_ = self.file_.resolve(context)
         geometry = self.geometry.resolve(context)
         options = {}
-        for key, value in self.options.iteritems():
-            options[key] = value.resolve(context)
+        for key, expr in self.options.iteritems():
+            noresolve = {'true': True, 'false': False}
+            value = noresolve.get(unicode(expr).lower(), expr.resolve(context))
+            if key == 'options':
+                options.update(value)
+            else:
+                options[key] = value
         if settings.THUMBNAIL_DUMMY:
             thumbnail = DummyImageFile(geometry)
         elif file_:

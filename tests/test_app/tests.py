@@ -226,6 +226,23 @@ class TemplateTestCaseA(SimpleTestCaseBase):
             }).strip()
             self.assertEqual(val0, val1)
 
+    def test_options(self):
+        item = Item.objects.get(image='500x500.jpg')
+        options = {
+            'crop': "center",
+            'upscale': True,
+            'quality': 77,
+        }
+        val0 = render_to_string('thumbnail8.html', {
+            'item': item,
+            'options': options,
+        }).strip()
+        val1 = render_to_string('thumbnail8a.html', {
+            'item': item,
+        }).strip()
+        self.assertEqual(val0, val1)
+
+
 
 class TemplateTestCaseB(unittest.TestCase):
     def tearDown(self):
