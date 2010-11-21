@@ -1,7 +1,13 @@
-from base64 import b64decode
 from ..pgmagick import Blob, Color, ColorspaceType, DrawableLine, Geometry
 from ..pgmagick import Image
 from sorl.thumbnail.engines.base import EngineBase
+
+try:
+    from ..pgmagick._pgmagick import get_blob_datae
+except ImportError:
+    from base64 import b64decode
+    def get_blob_data(blob):
+        return b64decode(blob.base64())
 
 
 class Engine(EngineBase):
@@ -53,6 +59,5 @@ class Engine(EngineBase):
         image.quality(quality)
         blob = Blob()
         image.write(blob)
-        # is there a better way?
-        return b64decode(blob.base64())
+        return get_blob_data(blob)
 
