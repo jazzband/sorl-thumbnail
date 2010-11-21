@@ -3,7 +3,7 @@ from ..pgmagick import Image
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from ..pgmagick._pgmagick import get_blob_datae
+    from ..pgmagick._pgmagick import get_blob_data
 except ImportError:
     from base64 import b64decode
     def get_blob_data(blob):
