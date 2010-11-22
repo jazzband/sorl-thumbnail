@@ -16,7 +16,6 @@ from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
-from sorl.thumbnail import shortcuts
 from test_app.models import Item
 
 
@@ -423,8 +422,9 @@ class ModelTestCase(SimpleTestCaseBase):
         self.assertEqual(0, len(list(self.kvstore._find_keys(identity='thumbnails'))))
 
 
-class ShortcutsTest(SimpleTestCaseBase):
+class BackendTest(SimpleTestCaseBase):
     def test_delete(self):
+        delete = default.backend.delete
         im1 = Item.objects.get(image='100x100.jpg').image
         im2 = Item.objects.get(image='500x500.jpg').image
         default.kvstore.get_or_set(ImageFile(im1))
@@ -432,7 +432,7 @@ class ShortcutsTest(SimpleTestCaseBase):
         self.assertTrue(bool(default.kvstore.get(ImageFile(im1))))
         self.assertTrue(ImageFile(im1).exists())
         # delete
-        shortcuts.delete(im1)
+        delete(im1)
         self.assertFalse(bool(default.kvstore.get(ImageFile(im1))))
         self.assertFalse(ImageFile(im1).exists())
 
@@ -441,7 +441,7 @@ class ShortcutsTest(SimpleTestCaseBase):
         self.assertTrue(bool(default.kvstore.get(ImageFile(im2))))
         self.assertTrue(ImageFile(im2).exists())
         # delete
-        shortcuts.delete(im2, delete_file=False)
+        delete(im2, delete_file=False)
         self.assertFalse(bool(default.kvstore.get(ImageFile(im2))))
         self.assertTrue(ImageFile(im2).exists())
 

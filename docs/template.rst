@@ -146,6 +146,20 @@ by the shipped eninges are JPEG and PNG. Default value is JPEG.
 This controls the resulting thumbnails colorspace, valid values are: RGB and
 GRAY. Default value is RGB
 
+``options``
+~~~~~~~~~~~
+Yes this option is called ``options``. This needs to be a context variable that
+resolves to a dictionary. This dictionary can contain multiple options, for
+example::
+
+    options = {'colorspace': 'GRAY', 'quality': 75, 'crop': 'center'}
+
+You can use this option together with the other options but beware that the
+order will matter. As soon as the keyword ``options`` is encountered all the
+options that have a key in ``options`` are overwritten. Similarly, options in
+the ``options`` dict will be overwritten by options set after the options
+keyword argument to the thumbnail tag.
+
 
 is_portrait
 -----------

@@ -11,12 +11,13 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   examples
    installation
    requirements
    template
-   examples
    management
    operation
+   ref/index
 
 Indices and tables
 ==================

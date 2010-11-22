@@ -53,6 +53,16 @@ class ThumbnailBackend(object):
         default.kvstore.set(thumbnail, source)
         return thumbnail
 
+    def delete(self, file_, delete_file=True):
+        """
+        Deletes file_ references in Key Value store and optionally the file_
+        it self.
+        """
+        image_file = ImageFile(file_)
+        if delete_file:
+            image_file.delete()
+        default.kvstore.delete(image_file)
+
     def _create_thumbnail(self, source_image, geometry_string, options,
                           thumbnail):
         """
