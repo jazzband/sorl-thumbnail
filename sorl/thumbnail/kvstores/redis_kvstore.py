@@ -1,4 +1,4 @@
-from ..redis import Redis
+from redis import Redis
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 

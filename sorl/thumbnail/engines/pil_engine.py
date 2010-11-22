@@ -2,7 +2,7 @@ from cStringIO import StringIO
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from ..PIL import Image, ImageDraw
+    from PIL import Image, ImageDraw
 except ImportError:
     import Image, ImageDraw
 

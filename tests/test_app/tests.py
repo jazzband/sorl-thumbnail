@@ -10,8 +10,7 @@ from django.test.client import Client
 from os.path import join as pjoin
 from PIL import Image
 from sorl.thumbnail.conf import settings
-#from sorl.thumbnail.engines.pgmagick import ThumbnailEngine as EnginePgmagick
-from sorl.thumbnail.engines.PIL import Engine as EnginePil
+from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
@@ -300,7 +299,7 @@ class CropTestCase(unittest.TestCase):
             return reduce(operator.add, values) / len(values)
         for crop in ('center', '88% 50%', '50px'):
             th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
-            engine = EnginePil()
+            engine = PILEngine()
             im = engine.get_image(th)
             self.assertEqual(mean_pixel(50,0), 255)
             self.assertEqual(mean_pixel(50,45), 255)
@@ -309,14 +308,14 @@ class CropTestCase(unittest.TestCase):
             self.assertEqual(mean_pixel(50,99), 0)
         for crop in ('top', '0%', '0px'):
             th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
-            engine = EnginePil()
+            engine = PILEngine()
             im = engine.get_image(th)
             for x in xrange(0, 99, 10):
                 for y in xrange(0, 99, 10):
                     self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
         for crop in ('bottom', '100%', '100px'):
             th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
-            engine = EnginePil()
+            engine = PILEngine()
             im = engine.get_image(th)
             for x in xrange(0, 99, 10):
                 for y in xrange(0, 99, 10):
@@ -330,7 +329,7 @@ class CropTestCase(unittest.TestCase):
             return reduce(operator.add, values) / len(values)
         for crop in ('center', '50% 200%', '50px 700px'):
             th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
-            engine = EnginePil()
+            engine = PILEngine()
             im = engine.get_image(th)
             self.assertEqual(mean_pixel(0, 50), 255)
             self.assertEqual(mean_pixel(45, 50), 255)
@@ -339,14 +338,14 @@ class CropTestCase(unittest.TestCase):
             self.assertEqual(mean_pixel(99, 50), 0)
         for crop in ('left', '0%', '0px'):
             th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
-            engine = EnginePil()
+            engine = PILEngine()
             im = engine.get_image(th)
             for x in xrange(0, 99, 10):
                 for y in xrange(0, 99, 10):
                     self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
         for crop in ('right', '100%', '100px'):
             th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
-            engine = EnginePil()
+            engine = PILEngine()
             im = engine.get_image(th)
             for x in xrange(0, 99, 10):
                 for y in xrange(0, 99, 10):
