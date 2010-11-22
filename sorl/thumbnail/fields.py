@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail import default
+from sorl.thumbnail.shortcuts import delete
 
 
 __all__ = ('ImageField', 'ImageFormField')
@@ -34,12 +35,7 @@ class ImageField(South, models.FileField):
             file_.name != self.default and
             not sender._default_manager.filter(**{self.name: file_.name})
             ):
-            # Instantiate the ImageFile before deletion
-            image_file = ImageFile(file_)
-            # Delete the file first to avoid kvstore to update
-            file_.delete(save=False)
-            # Remove references and thumbnails from kvstore
-            default.kvstore.delete(image_file)
+            delete(file_)
         elif file_:
             # Otherwise, just close the file, so it doesn't tie up resources.
             file_.close()

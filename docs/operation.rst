@@ -20,20 +20,19 @@ check if source or thumbnail exists if the thumbnail key is found in the
     thumbnail file notify the |kvstore|.
 
 If you change or delete a source or a thumbnail for some reason, you can use
-the ``KVStoreBase`` sublass's ``delete`` method::
+the ``sorl.thumbnail.shortcuts.delete``::
 
-    from sorl.thumbnail.images import ImageFile
-    from sorl.thumbnail import default
-    
-    # Instantiate the ImageFile before deletion
-    image_file = ImageFile(my_file)
+    from sorl.thumbnail.shortcuts import delete
 
-    # Delete the file before we remove references in kvstore to avoid kvstore
-    # to update and have stale cache
-    delete_my_file_function(my_file)
 
-    # Remove references and thumbnails from kvstore
-    default.kvstore.delete(image_file)
+    # Delete the Key Value Store but **not** the file.
+    # Use this if you have changed the source
+    delete(my_file, delete_file=False)
+
+    # Delete the Key Value Store reference and the file
+    # Use this if you want to delete the source file
+    delete(my_file)
+
 
 Alternatively if you have **deleted** a file you can use the management command
 :ref:`thumbnail-cleanup`.  Deleting an image using the
