@@ -12,9 +12,10 @@ Base requirements
 
 Key Value Store
 ---------------
-sorl-thumbnail needs a Key Value Store for its operation. Support for a cached
-database which requires no special installation to your normal Django setup
-**or** you can user redis which requires a little bit more work.
+sorl-thumbnail needs a Key Value Store for its operation. You can choose
+between a **cached database** which requires no special installation to your
+normal Django setup **or** you can setup **redis** which requires a little bit
+more work.
 
 Cached DB
 ^^^^^^^^^
