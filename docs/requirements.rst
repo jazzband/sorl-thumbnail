@@ -12,15 +12,26 @@ Base requirements
 
 Key Value Store
 ---------------
-Support for `redis`_ and a cached database key value store is shipped with
-sorl-thumbnail. `redis`_ is the best option. To use the `redis`_ key value store
-you need to install `redis-py`_::
+sorl-thumbnail needs a Key Value Store for its operation. Support for a cached
+database which requires no special installation to your normal Django setup
+**or** you can user redis which requires a little bit more work.
+
+Cached DB
+^^^^^^^^^
+All you need to use the cached database key value store is a database and
+preferably `cache <http://docs.djangoproject.com/en/dev/topics/cache/>`_ setup
+properly.
+
+Redis
+^^^^^
+Redis is the other Key Value Store alternative shipping with sorl-thumbnail. It
+is faster and better suited for the job. To use the `redis`_ key value store
+you first need to install the `redis server
+<http://code.google.com/p/redis/>`_. After that install the `redis client
+<https://github.com/andymccurdy/redis-py/>`_::
 
     pip install redis
 
-To use the cached database key value store you need to have a `database defined
-<http://docs.djangoproject.com/en/dev/ref/settings/?from=olddocs#databases>`_ in
-your `Django`_ settings and preferably cache setup properly.
 
 .. _image-library:
 
@@ -29,27 +40,6 @@ Image Library
 You need to have an image library installed. sorl-thumbnail ships with support
 for `Python Imaging Library`_ and `pgmagick`_. `pgmagick`_ are python bindings
 for GraphicsMagick (Magick++) and is the preferred option.
-
-pgmagick installation
-^^^^^^^^^^^^^^^^^^^^^^
-Prerequisites:
-
-- GraphicsMagick
-- Boost.Python
-
-Ubuntu 10.04 package installation::
-
-    sudo apt-get install libgraphicsmagick++-dev
-    sudo apt-get install libboost-python1.40-dev
-
-Fedora installation::
-
-    yum install GraphicsMagick-c++-devel
-    yum install boost-devel
-
-Installing `pgmagick`_ using pip::
-
-    pip install pgmagick
 
 Python Imaging Library installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -71,6 +61,27 @@ want to see the following::
 
     --- JPEG support available
     --- ZLIB (PNG/ZIP) support available
+
+pgmagick installation
+^^^^^^^^^^^^^^^^^^^^^^
+Prerequisites:
+
+- GraphicsMagick
+- Boost.Python
+
+Ubuntu 10.04 package installation::
+
+    sudo apt-get install libgraphicsmagick++-dev
+    sudo apt-get install libboost-python1.40-dev
+
+Fedora installation::
+
+    yum install GraphicsMagick-c++-devel
+    yum install boost-devel
+
+Installing `pgmagick`_ using pip::
+
+    pip install pgmagick
 
 
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
