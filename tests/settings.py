@@ -11,7 +11,7 @@ THUMBNAIL_DEBUG = True
 
 #THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 #THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil_engine.Engine'
-#THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db.KVStore'
+#THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
 INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
