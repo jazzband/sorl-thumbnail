@@ -73,19 +73,19 @@ Width and height are in pixels. Geometry can either be a string or resolve
 into a valid geometry string. Examples::
 
     {% thumbnail item.image "200x100" as im %}
-        <img src="{{ im.src }}">
+        <img src="{{ im.url }}">
     {% endthumbnail %}
 
     {% thumbnail item.image "200" as im %}
-        <img src="{{ im.src }}">
+        <img src="{{ im.url }}">
     {% endthumbnail %}
 
     {% thumbnail item.image "x100" as im %}
-        <img src="{{ im.src }}">
+        <img src="{{ im.url }}">
     {% endthumbnail %}
 
     {% thumbnail item.image geometry as im %}
-        <img src="{{ im.src }}">
+        <img src="{{ im.url }}">
     {% endthumbnail %}
 
 If width and height are given the image is rescaled to maximum values of height
