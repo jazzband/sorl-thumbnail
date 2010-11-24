@@ -12,7 +12,7 @@ fp.close()
 
 setup(
     name='sorl-thumbnail',
-    version='10.12-beta3',
+    version='10.12-beta4',
     url='https://github.com/sorl/sorl-thumbnail',
     license='BSD',
     author='Mikko Hellsing',
@@ -36,6 +36,8 @@ setup(
         'sorl.thumbnail.conf',
         'sorl.thumbnail.engines',
         'sorl.thumbnail.kvstores',
+        'sorl.thumbnail.management',
+        'sorl.thumbnail.management.commands',
         'sorl.thumbnail.templatetags',
     ],
     platforms='any',
