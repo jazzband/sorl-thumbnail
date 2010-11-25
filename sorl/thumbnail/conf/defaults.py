@@ -1,4 +1,3 @@
-import socket
 import sys
 from django.conf import settings
 

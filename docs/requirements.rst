@@ -3,7 +3,7 @@ Requirements
 
 Base requirements
 -----------------
-- `Python`_ 2.6+
+- `Python`_ 2.5+
 - `Django`_
 - :ref:`kvstore-requirements`
 - :ref:`image-library`
