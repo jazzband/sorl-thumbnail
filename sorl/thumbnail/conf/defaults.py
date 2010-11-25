@@ -56,9 +56,6 @@ THUMBNAIL_QUALITY = 95
 # Return this when an error is raised and THUMBNAIL_DEBUG is False
 THUMBNAIL_ERROR = ''
 
-# Timeout for fetching remote images
-THUMBNAIL_URL_TIMEOUT = socket._GLOBAL_DEFAULT_TIMEOUT
-
 # This means sorl.thumbnail will generate and serve a generated dummy image
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False

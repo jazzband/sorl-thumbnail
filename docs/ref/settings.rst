@@ -169,14 +169,6 @@ This is what will populate the context variable when an error is raised and
 ``THUMBNAIL_DEBUG`` is set to ``False``.
 
 
-``THUMBNAIL_URL_TIMEOUT``
--------------------------
-
-Default: ``socket._GLOBAL_DEFAULT_TIMEOUT``
-
-sorl-thumbnail supports remote addresses as input sources, since these may or may not
-respond within acceptable time we have an option to set that here.
-
 
 ``THUMBNAIL_DUMMY``
 -------------------

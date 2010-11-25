@@ -163,7 +163,7 @@ class DummyImageFile(BaseImageFile):
 
 class UrlStorage(Storage):
     def open(self, name):
-        return urllib2.urlopen(name, timeout=settings.THUMBNAIL_URL_TIMEOUT)
+        return urllib2.urlopen(name)
 
     def exists(self, name):
         try:
