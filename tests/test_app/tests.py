@@ -1,3 +1,4 @@
+#coding=utf-8
 import operator
 import os
 import random
@@ -445,4 +446,22 @@ class BackendTest(SimpleTestCaseBase):
         self.assertFalse(bool(default.kvstore.get(ImageFile(im2))))
         self.assertTrue(ImageFile(im2).exists())
 
+class TestInputCase(unittest.TestCase):
+    def setUp(self):
+        if not os.path.exists(settings.MEDIA_ROOT):
+            os.makedirs(settings.MEDIA_ROOT)
+        name = u'åäö.jpg'
+        self.fn = pjoin(settings.MEDIA_ROOT, name)
+        im = Image.new('L', (666, 666))
+        im.save(self.fn)
+
+    def test_nonascii(self):
+        th = default.backend.get_thumbnail(self.fn, '200x200')
+        self.assertEqual(
+            th.url,
+            '/media/test/cache/1d/79/1d79508b3389891c24f83f25f700cefc.jpg'
+            )
+
+    def tearDown(self):
+        shutil.rmtree(settings.MEDIA_ROOT)
 

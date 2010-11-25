@@ -1,7 +1,7 @@
 import hashlib
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.datastructures import SortedDict
-from django.utils.encoding import force_unicode
+from django.utils.encoding import smart_str
 from django.utils.importlib import import_module
 from django.utils import simplejson
 
@@ -23,7 +23,7 @@ def tokey(*args):
     """
     Computes a (hopefully) unique key from arguments given.
     """
-    salt = '||'.join([force_unicode(arg) for arg in args])
+    salt = '||'.join([smart_str(arg) for arg in args])
     hash_ = hashlib.md5(salt)
     return hash_.hexdigest()
 
