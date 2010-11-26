@@ -450,16 +450,16 @@ class TestInputCase(unittest.TestCase):
     def setUp(self):
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
-        name = u'åäö.jpg'
-        self.fn = pjoin(settings.MEDIA_ROOT, name)
+        self.name = u'åäö.jpg'
+        fn = pjoin(settings.MEDIA_ROOT, self.name)
         im = Image.new('L', (666, 666))
-        im.save(self.fn)
+        im.save(fn)
 
     def test_nonascii(self):
-        th = default.backend.get_thumbnail(self.fn, '200x200')
+        th = default.backend.get_thumbnail(self.name, '200x200')
         self.assertEqual(
             th.url,
-            '/media/test/cache/1d/79/1d79508b3389891c24f83f25f700cefc.jpg'
+            '/media/test/cache/4c/ed/4cede3c3e9dc62dcd3164e680e611c87.jpg'
             )
 
     def tearDown(self):
