@@ -1,2 +1,11 @@
-*.pyc
+._*
 build
+dist
+docs/_build
+.DS_Store
+*.egg-info
+.git*
+MANIFEST
+*.pyc
+*.swo
+*.swp
