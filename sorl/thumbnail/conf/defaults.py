@@ -63,3 +63,5 @@ THUMBNAIL_DUMMY = False
 # or height given
 THUMBNAIL_DUMMY_RATIO = 3.0 / 2
 
+# Enabled mailing to the managers about missing images
+THUMBNAIL_SEND_MISSING_IMAGE_EMAIL = False

@@ -12,9 +12,13 @@ except ImportError:
 
 class Engine(EngineBase):
     def get_image(self, source):
-        blob = Blob()
-        blob.update(source.read())
-        return Image(blob)
+        try:
+            blob = Blob()
+            blob.update(source.read())
+            img = Image(blob)
+        except IOError:
+            img = self._missing_image(source)
+        return img
 
     def get_image_size(self, image):
         geometry = image.size()

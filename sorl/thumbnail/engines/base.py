@@ -1,6 +1,9 @@
 #coding=utf-8
+from django.core.mail import mail_managers
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop
+from sorl.thumbnail.conf import settings
+
 
 
 class EngineBase(object):
@@ -62,6 +65,15 @@ class EngineBase(object):
     def get_image_ratio(self, image):
         x, y = self.get_image_size(image)
         return float(x) / y
+        
+        
+    def _missing_image(self, source):
+        """
+            Handles what happens in case of a missing image
+        """
+        if settings.THUMBNAIL_SEND_MISSING_IMAGE_EMAIL:
+            mail_managers('Missing image', 'The following image is missing: %s' % source.url, fail_silently=True)
+        return self.dummy_image(800, 600)
 
     #
     # Methods which engines need to implement

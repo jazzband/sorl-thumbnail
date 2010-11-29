@@ -9,8 +9,12 @@ except ImportError:
 
 class Engine(EngineBase):
     def get_image(self, source):
-        buf = StringIO(source.read())
-        return Image.open(buf)
+        try:
+            buf = StringIO(source.read())
+            img = Image.open(buf)
+        except IOError:
+            img = self._missing_image(source)
+        return img
 
     def get_image_size(self, image):
         return image.size
