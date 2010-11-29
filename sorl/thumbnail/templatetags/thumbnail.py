@@ -34,7 +34,7 @@ class ThumbnailNodeBase(Node):
     """
     A Node that renders safely
     """
-    error_output = ''
+    error_output = settings.THUMBNAIL_ERROR
 
     def render(self, context):
         try:
