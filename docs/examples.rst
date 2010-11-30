@@ -31,7 +31,8 @@ Using external images and advanced cropping::
     {% endthumbnail %}
 
 Using the empty feature, the empty section is rendered when the source is
-resolved to an empty value or an invalid image source::
+resolved to an empty value or an invalid image source, you can think of it as
+rendering when the thumbnail becomes undefined::
 
     {% thumbnail item.image my_size_string crop="left" as im %}
         <img src="{{ im.url }}">
