@@ -1,4 +1,5 @@
 #coding=utf-8
+import logging
 import operator
 import os
 import random
@@ -15,9 +16,15 @@ from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
+from sorl.thumbnail.log import ThumbnailLogHandler
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
 from test_app.models import Item
+
+
+handler = ThumbnailLogHandler()
+handler.setLevel(logging.ERROR)
+logging.getLogger('sorl.thumbnail').addHandler(handler)
 
 
 class ParsersTestCase(unittest.TestCase):

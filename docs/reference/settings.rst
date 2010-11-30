@@ -1,10 +1,11 @@
+********
 Settings
-========
+********
 
 .. highlight:: python
 
 ``THUMBNAIL_DEBUG``
--------------------
+===================
 
 - Default: ``False``
 
@@ -14,32 +15,8 @@ but since sorl-thumbnail is such a complex tag we will need to have more
 debuging available.
 
 
-``THUMBNAIL_LOG_HANDLER``
--------------------------
-- Default::
-
-    {
-        'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
-        'level': 'CRITICAL',
-    }
-
-``'class'`` is class dotted name path of the log handler and ``'level'``
-(optional) sets the level for the handler. Currently only ``'ERROR'`` is emited
-from the tag and filters. The handler is used when sorl-thumbnail raises an
-error but silences it due to the fact that ``THUMBNAIL_DEBUG`` is set to
-``False``.  The default handler sends an email to the ``settings.ADMINS``.
-
-If you want emails to be sent to ``settings.ADMINS`` in case of an error then
-you need to lower the level, put this in your settings::
-    
-    THUMBNAIL_LOG_HANDLER = {
-        'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
-        'level': 'ERROR',
-    }
-
-
 ``THUMBNAIL_BACKEND``
----------------------
+=====================
 
 - Default: ``'sorl.thumbnail.base.ThumbnailBackend'``
 
@@ -50,7 +27,7 @@ your own implementation.
 
 
 ``THUMBNAIL_KVSTORE``
----------------------
+=====================
 
 - Default: ``'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'``
 
@@ -58,20 +35,20 @@ sorl-thumbnail needs a Key Value Store to :doc:`/operation`.
 sorl-thumbnail ships with suport for two Key Value Stores:
 
 Redis
-~~~~~
+-----
 ``sorl.thumbnail.kvstores.redis_kvstore.KVStore``. This is the preferred Key
 Value Store because it is the fastest. It is not default because it requires
 you to install a redis server as well as a `redis python client
 <https://github.com/andymccurdy/redis-py/>`_
 
 Cached DB
-~~~~~~~~~
+---------
 ``sorl.thumbnail.kvstores.cached_db_kvstore.KVStore``. This is the default
 Key Value Store because it does not require any special installation.
 
 
 ``THUMBNAIL_ENGINE``
---------------------
+====================
 
 = Default: ``'sorl.thumbnail.engines.pil_engine.Engine'``
 
@@ -80,20 +57,20 @@ resizing, cropping or whatever processing you want to perform.
 sorl-thumbnail ships with two engines:
 
 Pgmagick
-~~~~~~~~
+--------
 ``'sorl.thumbnail.engines.pgmagick_engine.Engine'`` This is the preferrred
 engine because it produces the best quality and it can handle CMYK sources.
 Pgmagick uses `Graphics <http://www.graphicsmagick.org/>`_ which is much more
 competent library than PIL.
 
 PIL
-~~~
+---
 ``'sorl.thumbnail.engines.pil_engine.Engine'``. This is the default option
 because it is what most people have instaled already.
 
 
 ``THUMBNAIL_STORAGE``
----------------------
+=====================
 
 - Defualt: ``settings.DEFAULT_FILE_STORAGE``
 
@@ -101,7 +78,7 @@ The storage class to use for the generated thumbnails.
 
 
 ``THUMBNAIL_REDIS_HOST``
-------------------------
+========================
 
 - Default: ``'localhost'``
 
@@ -109,7 +86,7 @@ The host for Redis server. Only applicable for the Redis Key Value Store
 
 
 ``THUMBNAIL_REDIS_PORT``
-------------------------
+========================
 
 - Default: ``6379``
 
@@ -117,7 +94,7 @@ The port for Redis server. Only applicable for the Redis Key Value Store
 
 
 ``THUMBNAIL_REDIS_DB``
-----------------------
+======================
 
 - Default: ``0``
 
@@ -133,7 +110,7 @@ Only applicable for the Cached DB Key Value Store.
 
 
 ``THUMBNAIL_KEY_PREFIX``
-------------------------
+========================
 
 - Default: ``'sorl-thumbnail'``
 
@@ -141,7 +118,7 @@ Key prefix used by the key value store.
 
 
 ``THUMBNAIL_PREFIX``
---------------------
+====================
 
 - Default: ``'cache/'``
 
@@ -149,7 +126,7 @@ The generated thumbnails filename prefix.
 
 
 ``THUMBNAIL_FORMAT``
---------------------
+====================
 
 - Default: ``'JPEG'``
 
@@ -158,7 +135,7 @@ sets the filename extension. This can be overridden by individual options.
 
 
 ``THUMBNAIL_COLORSPACE``
-------------------------
+========================
 
 - Default: ``'RGB'``
 
@@ -168,7 +145,7 @@ overridden by individual options.
 
 
 ``THUMBNAIL_UPSCALE``
----------------------
+=====================
 
 - Default: ``True``
 
@@ -177,7 +154,7 @@ Should we upscale by default? ``True`` means we upscale images by default.
 
 
 ``THUMBNAIL_QUALITY``
----------------------
+=====================
 
 - Default: ``95``
 
@@ -186,7 +163,7 @@ overridden by individual options.
 
 
 ``THUMBNAIL_DUMMY``
--------------------
+===================
 
 - Default: ``False``
 
@@ -199,7 +176,7 @@ regardless of the input source.
 
 
 ``THUMBNAIL_DUMMY_RATIO``
--------------------------
+=========================
 
 Default: ``3.0 / 2``
 

@@ -1,10 +1,6 @@
-.. sorl-thumbnail documentation master file, created by
-   sphinx-quickstart on Fri Nov 12 00:51:21 2010.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to sorl-thumbnail's documentation!
-==========================================
+******************************
+sorl-thumbnail's documentation
+******************************
 
 Contents:
 
@@ -16,8 +12,9 @@ Contents:
    requirements
    template
    management
+   logging
    operation
-   ref/index
+   reference/index
 
 Indices and tables
 ==================

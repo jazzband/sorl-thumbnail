@@ -1,8 +1,9 @@
+************
 Requirements
-============
+************
 
 Base requirements
------------------
+=================
 - `Python`_ 2.5+
 - `Django`_
 - :ref:`kvstore-requirements`
@@ -11,21 +12,20 @@ Base requirements
 .. _kvstore-requirements:
 
 Key Value Store
----------------
+===============
 sorl-thumbnail needs a Key Value Store for its operation. You can choose
 between a **cached database** which requires no special installation to your
 normal Django setup **or** you can setup **redis** which requires a little bit
 more work.
 
 Cached DB
-^^^^^^^^^
+---------
 All you need to use the cached database key value store is a database and
 preferably `cache <http://docs.djangoproject.com/en/dev/topics/cache/>`_ setup
 properly.
 
 Redis
-^^^^^
-Redis is the other Key Value Store alternative shipping with sorl-thumbnail. It
+-----
 is faster and better suited for the job. To use the `redis`_ key value store
 you first need to install the `redis server
 <http://code.google.com/p/redis/>`_. After that install the `redis client
@@ -37,13 +37,13 @@ you first need to install the `redis server
 .. _image-library:
 
 Image Library
--------------
+=============
 You need to have an image library installed. sorl-thumbnail ships with support
 for `Python Imaging Library`_ and `pgmagick`_. `pgmagick`_ are python bindings
 for GraphicsMagick (Magick++) and is the preferred option.
 
 Python Imaging Library installation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------
 Prerequisites:
 
 - libjpeg
@@ -64,7 +64,7 @@ want to see the following::
     --- ZLIB (PNG/ZIP) support available
 
 pgmagick installation
-^^^^^^^^^^^^^^^^^^^^^^
+---------------------
 Prerequisites:
 
 - GraphicsMagick

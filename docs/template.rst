@@ -1,6 +1,6 @@
-
+*************************
 Template tags and filters
-=========================
+*************************
 
 .. highlight:: html+django
 
@@ -14,7 +14,7 @@ need to load them::
 .. _thumbnail:
 
 thumbnail
----------
+=========
 
 Syntax::
 
@@ -28,13 +28,13 @@ Alternative syntax using empty::
     {% endthumbnail %}
 
 The ``{% empty %}`` section is rendered if the thumbnail source is resolved to
-an empty value.
-
+an empty value or an invalid image source, you can think of it as rendering
+when the thumbnail becomes undefined.
 
 .. _source:
 
 Source
-^^^^^^
+------
 
 .. highlight:: python
 
@@ -64,7 +64,7 @@ these things out::
                 self.storage = default_storage
 
 Geometry
-^^^^^^^^
+--------
 
 .. highlight:: html+django
 
@@ -93,7 +93,7 @@ and width given. Aspect ratio preserved.
 
 
 Options
-^^^^^^^
+-------
 Options are passed on to the backend and engine, the backend generates the
 thumbnail filename from it and the engine can use it for processing. Option
 keys are not resolved in context but values are. Passing all options to the
@@ -102,7 +102,7 @@ like rounded corners or what ever processing you like. The options described
 below are how they are used and interperated in the shipped engines.
 
 ``crop``
-~~~~~~~~
+^^^^^^^^
 This option is only used if both width and height is given. Crop behaves much
 like `css background-position`_.  The image is first rescaled to minimum values
 of height and width given, this will be equivalent to the `padding box` in the
@@ -124,7 +124,7 @@ you are wondering, sorl-thumbnail sorts the options so the order does not
 matter, same options but in different order will generate only one thumbnail.
 
 ``upscale``
-~~~~~~~~~~~
+^^^^^^^^^^^
 Upscale is a boolean and controls if the image can be upscaled or not. For
 example if your source is 100x100 and you request a thumbnail of size 200x200
 and upscale is False this will reurn a thumbnail of size 100x100. If upscale
@@ -132,22 +132,22 @@ was True this would result in a thumbnail size 200x200 (upscaled). The default
 value is True.
 
 ``quality``
-~~~~~~~~~~~
+^^^^^^^^^^^
 Quality is a value between 0-100 and controls the thumbnail write quality.
 Default value is 95.
 
 ``format``
-~~~~~~~~~~
+^^^^^^^^^^
 This controls the the write format and thumbnail extension. Formats supported
 by the shipped eninges are JPEG and PNG. Default value is JPEG.
 
 ``colorspace``
-~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^
 This controls the resulting thumbnails colorspace, valid values are: RGB and
 GRAY. Default value is RGB
 
 ``options``
-~~~~~~~~~~~
+^^^^^^^^^^^
 Yes this option is called ``options``. This needs to be a context variable that
 resolves to a dictionary. This dictionary can contain multiple options, for
 example::
@@ -162,7 +162,7 @@ keyword argument to the thumbnail tag.
 
 
 is_portrait
------------
+===========
 This filter returns True if the image height is larger than the image width.
 Examples::
 
@@ -190,7 +190,7 @@ Examples::
 
 
 margin
-------
+======
 Margin is a filter for calculating margins agains a padding box. For example
 lets say you have an image ``item.image`` and you want to pad it vertically in
 a 1000x1000 box, you would simply write::

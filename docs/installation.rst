@@ -1,8 +1,9 @@
+********************
 Installation & Setup
-====================
+********************
 
 Installation
-------------
+============
 First you need to make sure to read the :doc:`requirements`. To install
 sorl-thumbnail is easy::
 
@@ -11,7 +12,7 @@ sorl-thumbnail is easy::
 Or you can go to `the github page <https://github.com/sorl/sorl-thumbnail>`_
 
 Setup
------
+=====
 
 .. highlight:: python
 

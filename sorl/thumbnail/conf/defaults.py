@@ -5,12 +5,6 @@ from django.conf import settings
 # When True ThumbnailNode.render can raise errors
 THUMBNAIL_DEBUG = False
 
-# Logging handler
-THUMBNAIL_LOG_HANDLER = {
-    'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
-    'level': 'CRITICAL',
-}
-
 # Backend
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 

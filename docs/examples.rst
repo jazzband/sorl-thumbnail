@@ -1,8 +1,9 @@
+********
 Examples
-========
+********
 
 Template examples
------------------
+=================
 
 .. highlight:: html+django
 
@@ -75,7 +76,7 @@ Setting format and using the is_portrait filter::
 
 
 Model examples
---------------
+==============
 
 .. highlight:: python
 

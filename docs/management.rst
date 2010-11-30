@@ -1,12 +1,13 @@
+*******************
 Management commands
-===================
+*******************
 
 .. highlight:: python
 
 .. _thumbnail-cleanup:
 
 thumbnail cleanup
------------------
+=================
 ``python manage.py thumbnail cleanup``
 
 This cleans up the Key Value Store from stale cache. It removes references to
@@ -17,7 +18,7 @@ images that do not exist. It removes thumbnails for unknown images.
 .. _thumbnail-clear:
 
 thumbnail clear
----------------
+===============
 ``python manage.py thumbnail clear``
 
 This totally empties the Key Value Store from all keys that start with the
