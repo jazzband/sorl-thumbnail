@@ -1,5 +1,5 @@
-sorl-thumbnail version 10.12-beta4
-==================================
+sorl-thumbnail version 10.12
+============================
 
 Thumbnails for Django. Totally rewritten.
 
