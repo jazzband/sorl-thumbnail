@@ -7,6 +7,10 @@ TEMPLATE_DEBUG = DEBUG
 
 THUMBNAIL_PREFIX = 'test/cache/'
 THUMBNAIL_DEBUG = True
+THUMBNAIL_LOG_HANDLER = {
+    'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
+    'level': 'ERROR',
+}
 
 #THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 #THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil_engine.Engine'

@@ -8,7 +8,7 @@ THUMBNAIL_DEBUG = False
 # Logging handler
 THUMBNAIL_LOG_HANDLER = {
     'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
-    'level': 'ERROR',
+    'level': 'CRITICAL',
 }
 
 # Backend

@@ -17,9 +17,10 @@ debuging available.
 ``THUMBNAIL_LOG_HANDLER``
 -------------------------
 - Default::
+
     {
-    'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
-    'level': 'ERROR',
+        'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
+        'level': 'CRITICAL',
     }
 
 ``'class'`` is class dotted name path of the log handler and ``'level'``
@@ -27,6 +28,14 @@ debuging available.
 from the tag and filters. The handler is used when sorl-thumbnail raises an
 error but silences it due to the fact that ``THUMBNAIL_DEBUG`` is set to
 ``False``.  The default handler sends an email to the ``settings.ADMINS``.
+
+If you want emails to be sent to ``settings.ADMIN`` in case of an error then
+you need to lower the level, put this in your settings::
+    
+    THUMBNAIL_LOG_HANDLER = {
+        'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
+        'level': 'ERROR',
+    }
 
 
 ``THUMBNAIL_BACKEND``

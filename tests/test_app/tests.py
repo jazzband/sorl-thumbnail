@@ -286,10 +286,10 @@ class TemplateTestCaseClient(unittest.TestCase):
         end = outbox[0].body.split('\n\n')[-2][-20:-1]
         self.assertEqual(end, 'tests/media/invalid')
 
-
     def tearDown(self):
         for k, v in self.org_settings.iteritems():
             setattr(settings, k, v)
+
 
 class CropTestCase(unittest.TestCase):
     def setUp(self):
