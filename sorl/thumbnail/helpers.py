@@ -1,6 +1,5 @@
 import hashlib
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
 from django.utils.importlib import import_module
 from django.utils import simplejson
@@ -8,6 +7,15 @@ from django.utils import simplejson
 
 class ThumbnailError(Exception):
     pass
+
+
+class SortedJSONEncoder(simplejson.JSONEncoder):
+    """
+    A json encoder that sorts the dict keys
+    """
+    def __init__(self, **kwargs):
+        kwargs['sort_keys'] = True
+        super(SortedJSONEncoder, self).__init__(**kwargs)
 
 
 def toint(number):
@@ -29,12 +37,7 @@ def tokey(*args):
 
 
 def serialize(obj):
-    if isinstance(obj, dict):
-        result = SortedDict()
-        for key in sorted(obj.keys()):
-            result[key]= obj[key]
-        obj = result
-    return simplejson.dumps(obj)
+    return simplejson.dumps(obj, cls=SortedJSONEncoder)
 
 
 def deserialize(s):
