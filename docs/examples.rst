@@ -30,8 +30,8 @@ Using external images and advanced cropping::
         <img src="{{ im.url }}">
     {% endthumbnail %}
 
-Using the empty feature, empty is when the source is resolved to an empty
-value::
+Using the empty feature, the empty section is rendered when the source is
+resolved to an empty value or an invalid image source::
 
     {% thumbnail item.image my_size_string crop="left" as im %}
         <img src="{{ im.url }}">

@@ -1,4 +1,6 @@
+import logging
 import re
+import sys
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from functools import wraps
@@ -10,6 +12,7 @@ from sorl.thumbnail.parsers import parse_geometry
 
 register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
+logger = logging.getLogger('sorl.thumbnail')
 
 
 def safe_filter(error_output=''):
@@ -25,6 +28,7 @@ def safe_filter(error_output=''):
             except Exception:
                 if settings.THUMBNAIL_DEBUG:
                     raise
+                logger.error('Thumbnail filter failed:', exc_info=sys.exc_info())
                 return error_output
         return wrapper
     return inner
@@ -34,7 +38,7 @@ class ThumbnailNodeBase(Node):
     """
     A Node that renders safely
     """
-    error_output = settings.THUMBNAIL_ERROR
+    nodelist_empty = NodeList()
 
     def render(self, context):
         try:
@@ -42,7 +46,8 @@ class ThumbnailNodeBase(Node):
         except Exception:
             if settings.THUMBNAIL_DEBUG:
                 raise
-            return self.error_output
+            logger.error('Thumbnail tag failed:', exc_info=sys.exc_info())
+            return self.nodelist_empty.render(context)
 
     def _render(self, context):
         raise NotImplemented()
@@ -73,8 +78,6 @@ class ThumbnailNode(ThumbnailNodeBase):
         if parser.next_token().contents == 'empty':
             self.nodelist_empty = parser.parse(('endthumbnail',))
             parser.delete_first_token()
-        else:
-            self.nodelist_empty = NodeList()
 
     def _render(self, context):
         file_ = self.file_.resolve(context)

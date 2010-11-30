@@ -267,6 +267,30 @@ class TemplateTestCaseB(unittest.TestCase):
         self.assertEqual(val, '<p>empty</p>')
 
 
+class TemplateTestCaseClient(unittest.TestCase):
+    def setUp(self):
+        self.org_settings = {}
+        params = {
+            'THUMBNAIL_DEBUG': False,
+        }
+        for k, v in params.iteritems():
+            self.org_settings[k] = getattr(settings, k)
+            setattr(settings, k, v)
+
+    def testEmptyError(self):
+        client = Client()
+        response = client.get('/thumbnail9.html')
+        self.assertEqual(response.content.strip(), '<p>empty</p>')
+        from django.core.mail import outbox
+        self.assertEqual(outbox[0].subject, '[sorl-thumbnail] ERROR: /thumbnail9.html')
+        end = outbox[0].body.split('\n\n')[-2][-20:-1]
+        self.assertEqual(end, 'tests/media/invalid')
+
+
+    def tearDown(self):
+        for k, v in self.org_settings.iteritems():
+            setattr(settings, k, v)
+
 class CropTestCase(unittest.TestCase):
     def setUp(self):
         self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()

@@ -7,6 +7,7 @@ urlpatterns = patterns('',
         'document_root': settings.MEDIA_ROOT,
         'show_indexes': True}
     ),
+    (r'^(.*\.html)$', 'django.views.generic.simple.direct_to_template'),
     (r'^', include('sorl.thumbnail.urls')),
 )
 

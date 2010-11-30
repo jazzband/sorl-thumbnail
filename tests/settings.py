@@ -1,10 +1,9 @@
 from os.path import join as pjoin, abspath, dirname
 
+PROJ_ROOT = abspath(dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-
-PROJ_ROOT = abspath(dirname(__file__))
 
 THUMBNAIL_PREFIX = 'test/cache/'
 THUMBNAIL_DEBUG = True
@@ -15,7 +14,7 @@ THUMBNAIL_DEBUG = True
 INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('Sorl', 'thumbnail@sorl.net'),
 )
 
 MANAGERS = ADMINS
@@ -96,3 +95,13 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'test_app',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
+)
+

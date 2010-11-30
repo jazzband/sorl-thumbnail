@@ -5,6 +5,12 @@ from django.conf import settings
 # When True ThumbnailNode.render can raise errors
 THUMBNAIL_DEBUG = False
 
+# Logging handler
+THUMBNAIL_LOG_HANDLER = {
+    'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
+    'level': 'ERROR',
+}
+
 # Backend
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 
@@ -51,9 +57,6 @@ THUMBNAIL_UPSCALE = True
 
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
-
-# Return this when an error is raised and THUMBNAIL_DEBUG is False
-THUMBNAIL_ERROR = ''
 
 # This means sorl.thumbnail will generate and serve a generated dummy image
 # regardless of the thumbnail source content

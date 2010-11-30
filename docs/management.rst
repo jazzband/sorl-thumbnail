@@ -1,6 +1,7 @@
 Management commands
 ===================
 
+.. highlight:: python
 
 .. _thumbnail-cleanup:
 

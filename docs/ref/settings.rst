@@ -1,6 +1,8 @@
 Settings
 ========
 
+.. highlight:: python
+
 ``THUMBNAIL_DEBUG``
 -------------------
 
@@ -9,7 +11,22 @@ Settings
 When set to ``True`` the ``ThumbnailNode.render`` method can raise errors.
 Django recommends that tags never raise errors in the ``Node.render`` method
 but since sorl-thumbnail is such a complex tag we will need to have more
-debuging available, this this setting.
+debuging available.
+
+
+``THUMBNAIL_LOG_HANDLER``
+-------------------------
+- Default::
+    {
+    'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
+    'level': 'ERROR',
+    }
+
+``'class'`` is class dotted name path of the log handler and ``'level'``
+(optional) sets the level for the handler. Currently only ``'ERROR'`` is emited
+from the tag and filters. The handler is used when sorl-thumbnail raises an
+error but silences it due to the fact that ``THUMBNAIL_DEBUG`` is set to
+``False``.  The default handler sends an email to the ``settings.ADMINS``.
 
 
 ``THUMBNAIL_BACKEND``
@@ -157,17 +174,6 @@ Should we upscale by default? ``True`` means we upscale images by default.
 
 Default thumbnail quality. A value between 0 and 100 is allowed. This can be
 overridden by individual options.
-
-
-
-``THUMBNAIL_ERROR``
--------------------
-
-- Default: ``''``
-
-This is what will populate the context variable when an error is raised and
-``THUMBNAIL_DEBUG`` is set to ``False``.
-
 
 
 ``THUMBNAIL_DUMMY``
