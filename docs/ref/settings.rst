@@ -29,7 +29,7 @@ from the tag and filters. The handler is used when sorl-thumbnail raises an
 error but silences it due to the fact that ``THUMBNAIL_DEBUG`` is set to
 ``False``.  The default handler sends an email to the ``settings.ADMINS``.
 
-If you want emails to be sent to ``settings.ADMIN`` in case of an error then
+If you want emails to be sent to ``settings.ADMINS`` in case of an error then
 you need to lower the level, put this in your settings::
     
     THUMBNAIL_LOG_HANDLER = {
