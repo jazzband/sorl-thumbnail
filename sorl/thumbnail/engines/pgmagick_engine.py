@@ -1,5 +1,5 @@
-from pgmagick import Blob, Color, ColorspaceType, DrawableLine, Geometry
-from pgmagick import Image
+from pgmagick import Blob, Color, ColorspaceType, DrawableLine
+from pgmagick import DrawableRectangle, Geometry, Image
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
@@ -21,11 +21,14 @@ class Engine(EngineBase):
         return geometry.width(), geometry.height()
 
     def dummy_image(self, width, height):
-        im = Image(Geometry(width, height), Color(240, 240, 240))
-        im.strokeColor(Color(128, 128, 128))
+        d = self._get_dummy_image_data(width, height)
+        im = Image(Geometry(width, height), Color(*d['canvas_color']))
+        im.strokeColor(Color(*d['line_color']))
         im.strokeWidth(1)
-        im.draw(DrawableLine(0, 0, width, height))
-        im.draw(DrawableLine(0, height, width, 0))
+        for line in d['lines']:
+            im.draw(DrawableLine(*line))
+        im.fillColor(Color())
+        im.draw(DrawableRectangle(*d['rectangle']))
         return im
 
     def is_valid_image(self, raw_data):

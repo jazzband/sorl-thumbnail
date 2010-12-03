@@ -16,10 +16,12 @@ class Engine(EngineBase):
         return image.size
 
     def dummy_image(self, width, height):
-        im = Image.new('L', (width, height), 240)
+        d = self._get_dummy_image_data(width, height)
+        im = Image.new('RGB', (width, height), d['canvas_color'])
         draw = ImageDraw.Draw(im)
-        draw.line((0, 0, width, height), fill=128)
-        draw.line((0, height, width, 0), fill=128)
+        for line in d['lines']:
+            draw.line(line, fill=d['line_color'])
+        draw.rectangle(d['rectangle'], outline=d['line_color'])
         del draw
         return im
 

@@ -60,8 +60,27 @@ class EngineBase(object):
         thumbnail.write(raw_data)
 
     def get_image_ratio(self, image):
+        """
+        Calculates the image ratio
+        """
         x, y = self.get_image_size(image)
         return float(x) / y
+
+    def _get_dummy_image_data(self, width, height):
+        """
+        Returns useful data for subclass ``dummy_image`` method
+        """
+        w = min(width, height) / 2.0
+        x0 = toint(0.5 * (width - w))
+        y0 = toint(0.5 * (height - w))
+        x1 = toint(0.5 * (width + w))
+        y1 = toint(0.5 * (height + w))
+        return {
+            'canvas_color': (255, 255, 255),
+            'line_color': (200, 200, 200),
+            'lines': [(x0, y0, x1, y1), (x0, y1, x1, y0)],
+            'rectangle': (0, 0, width - 1, height -1),
+        }
 
     #
     # Methods which engines need to implement

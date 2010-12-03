@@ -10,6 +10,10 @@ def thumbnail_dummy(request, width, height):
         return HttpResponseForbidden()
     width, height = int(width), int(height)
     image = default.engine.dummy_image(width, height)
-    raw_data = default.engine._get_raw_data(image, format_='JPEG', quality=75)
+    raw_data = default.engine._get_raw_data(
+        image,
+        format_='PNG',
+        quality=settings.THUMBNAIL_QUALITY,
+        )
     return HttpResponse(raw_data, mimetype='image/jpeg')
 
