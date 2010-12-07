@@ -1,4 +1,3 @@
-import sys
 from django.conf import settings
 
 
@@ -30,7 +29,7 @@ THUMBNAIL_REDIS_DB = 0
 
 # Cache timeout for ``cached_db`` store. You should probably keep this at
 # maximum or ``None`` if your caching backend can handle that as infinate.
-THUMBNAIL_CACHE_TIMEOUT = sys.maxint
+THUMBNAIL_CACHE_TIMEOUT = 3600 * 24 * 365 * 100 # 100 years
 
 # Key prefix used by the key value store
 THUMBNAIL_KEY_PREFIX = 'sorl-thumbnail'
