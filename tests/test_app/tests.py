@@ -421,7 +421,7 @@ class DummyTestCase(unittest.TestCase):
         response = client.get('/thumbnail-dummy/111x666/')
         engine = get_module_class(settings.THUMBNAIL_ENGINE)()
         image = engine.dummy_image(111, 666)
-        raw_data = engine._get_raw_data(image, format_='JPEG', quality=75)
+        raw_data = engine._get_raw_data(image, format_='PNG', quality=95)
         self.assertEqual(response.content, raw_data)
 
 
