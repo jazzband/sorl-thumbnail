@@ -50,7 +50,7 @@ Key Value Store because it does not require any special installation.
 ``THUMBNAIL_ENGINE``
 ====================
 
-= Default: ``'sorl.thumbnail.engines.pil_engine.Engine'``
+- Default: ``'sorl.thumbnail.engines.pil_engine.Engine'``
 
 This is the processing class for sorl-thumbnail. It does all the
 resizing, cropping or whatever processing you want to perform.
