@@ -61,6 +61,7 @@ class BaseImageFile(object):
     @property
     def url(self):
         raise NotImplemented()
+    src = url
 
 
 class ImageFile(BaseImageFile):
