@@ -4,16 +4,17 @@ from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import default
 
 
-class ClearableFileWidget(forms.MultiWidget):
-    def __init__(self, widgets, attrs=None):
-        widgets = (forms.FileInput(), ClearImageWidget)
-        super(ClearableFileWidget, self).__init__(widgets, attrs)
+class AdminClearWidget(forms.CheckboxInput):
+    def render(self, name, value, attrs=None):
+        output = super(AdminClearWidget, self).render(name, value, attrs)
+        return (
+            u'<div style="clear:both;padding-top:5px">'
+            u'<label for="id_%s">%s:</label>%s'
+            u'</div>'
+            ) % (name, _('Clear image'), output)
 
-    def decompress(self, value):
-        return [value, False]
 
-
-class AdminImageWidget(ClearableFileWidget):
+class AdminImageWidget(forms.FileInput):
     """
     An ImageField Widget for django.contrib.admin that shows a thumbnailed
     image as well as a link to the current one if it hase one.
@@ -28,17 +29,26 @@ class AdminImageWidget(ClearableFileWidget):
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
         if value and hasattr(value, 'url'):
-            mini = default.backend.get_thumbnail(value, self.thumbnail_geometry)
-            output = (
-                '<div style="float:left">'
-                '<a style="display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
-                '<img src="%s"></a>%s</div>' % (value.url, mini.url, output)
-                )
+            try:
+                mini = default.backend.get_thumbnail(value, self.thumbnail_geometry)
+            except Exception:
+                pass
+            else:
+                output = (
+                    u'<div style="float:left">'
+                    u'<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
+                    u'<img src="%s"></a>%s</div>' % (mini.width, value.url, mini.url, output)
+                    )
         return mark_safe(output)
 
 
-class ClearImageWidget(forms.CheckboxInput):
-    def render(self, name, value, attrs=None):
-        output = super(ClearImageWidget, self).render(name, value, attrs)
-        return output
+class AdminClearableImageWidget(forms.MultiWidget):
+    def __init__(self, attrs=None):
+        widgets = (AdminImageWidget(attrs=attrs), AdminClearWidget())
+        super(AdminClearableImageWidget, self).__init__(widgets, attrs)
+
+    def decompress(self, value):
+        if value:
+            return (value, False)
+        return (None, None)
 
