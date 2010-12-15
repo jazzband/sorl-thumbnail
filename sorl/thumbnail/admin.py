@@ -1,7 +1,5 @@
-from django.contrib import admin
-from django.db import models
 from sorl.thumbnail.fields import ImageField
-from sorl.thumbnail.widgets import AdminClearableImageWidget, AdminImageWidget
+from sorl.thumbnail.widgets import AdminClearableImageWidget
 
 
 class AdminImageMixin(object):
