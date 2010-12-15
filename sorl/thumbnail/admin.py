@@ -36,11 +36,12 @@ class AdminImageWidget(forms.FileInput):
 class AdminClearWidget(forms.CheckboxInput):
     def render(self, name, value, attrs=None):
         output = super(AdminClearWidget, self).render(name, value, attrs)
-        return (
+        output = (
             u'<div style="clear:both;padding-top:5px">'
             u'<label for="id_%s">%s:</label>%s'
             u'</div>'
             ) % (name, _('Clear image'), output)
+        return mark_safe(output)
 
 
 class AdminClearableImageWidget(forms.MultiWidget):
