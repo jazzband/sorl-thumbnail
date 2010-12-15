@@ -142,16 +142,6 @@ Easy to plugin solution example with little code to change::
         pass
 
 
-For the implicit stupid lazy::
-
-    # myapp/admin.py
-    from sorl.thumbnail import admin
-    from myapp.models import MyModel
-
-    class MyModelAdmin(admin.ModelAdmin):
-        pass
-
-
 Low level API examples
 ======================
 How to get make a thumbnail in you python code::

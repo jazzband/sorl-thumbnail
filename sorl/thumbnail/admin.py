@@ -14,10 +14,3 @@ class AdminImageMixin(object):
         }
     }
 
-
-class ModelAdmin(AdminImageMixin, admin.ModelAdmin):
-    """
-    This is for wicked stupid lazy people to inherit from.
-    """
-    pass
-
