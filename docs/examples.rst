@@ -75,11 +75,10 @@ Setting format and using the is_portrait filter::
     {% endif %}
 
 
-Model examples
-==============
-
 .. highlight:: python
 
+Model examples
+==============
 Using the ImageField that automatically deletes references to itself in the key
 value store and ts thumbnail references and the thumbnail files when deleted::
 
@@ -93,5 +92,79 @@ value store and ts thumbnail references and the thumbnail files when deleted::
 .. note:: You do not need to use the ``sorl.thumbnail.ImageField`` to use
     ``sorl.thumbnail``. The standard ``django.db.models.ImageField`` is fine
     except that it does not know how to delete itself from the Key Value Store
-    or its thumbnails if you delete it.
+    or its thumbnails if you delete it. Also using the
+    ``sorl.thumbnail.ImageField`` lets ju plugin the nice admin addition
+    explained in the next section.
+
+
+Another example on how to use ``sorl.thumbnail.ImageField`` in your existing
+project with only small code changes::
+
+    # util/models.py
+    from django.db.models import *
+    from sorl.thumbnail import ImageField
+
+    # myapp/models.py
+    from util import models
+
+    class MyModel(models.Model):
+        logo = models.ImageField(upload_to='/dev/null')
+
+
+Admin examples
+==============
+Example using ``sorl.thumbnail.admin.AdminImageMixin``::
+
+    # myapp/admin.py
+    from django.contrib import admin
+    from myapp.models import MyModel
+    from sorl.thumbnail.admin import AdminImageMixin
+
+    class MyModelAdmin(AdminImageMixin, admin.ModelAdmin):
+        pass
+
+
+Easy to plugin solution example with little code to change::
+
+    # util/admin.py
+    from django.contrib.admin import *
+    from sorl.thumbnail.admin import AdminImageMixin
+
+    class ModelAdmin(AdminImageMixin, ModelAdmin):
+        pass
+
+
+    # myapp/admin.py
+    from util import admin
+    from myapp.models import MyModel
+
+    class MyModelAdmin(admin.ModelAdmin):
+        pass
+
+
+For the implicit stupid lazy::
+
+    # myapp/admin.py
+    from sorl.thumbnail import admin
+    from myapp.models import MyModel
+
+    class MyModelAdmin(admin.ModelAdmin):
+        pass
+
+
+Low level API examples
+======================
+How to get make a thumbnail in you python code::
+
+    from sorl.thumbnail import get_thumbnail
+
+    im = get_thumbnail(my_file, '100x100', crop='center', quality=99)
+
+
+How to delete a file, its thumbnails as well as references in the Key Value
+Store::
+
+    from sorl.thumbnail import delete
+
+    delete(my_file)
 

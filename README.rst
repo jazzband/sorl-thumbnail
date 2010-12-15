@@ -1,5 +1,5 @@
-sorl-thumbnail version 10.12
-============================
+sorl-thumbnail
+==============
 
 Thumbnails for Django. Totally rewritten.
 
@@ -9,8 +9,8 @@ Features at a glance
 - Pluggable Engine support (PIL, pgmagick)
 - Pluggable Key Value Store support (redis, cached db)
 - Pluggable Backend support
-- Dummy generation (no you dont have to download the production site's 666GB of
-  images to develop locally anymore).
+- Admin integration with possibility to delete
+- Dummy generation
 - Flexible, simple syntax, generates no html
 - ImageField for model that deletes thumbnails
 - CSS style cropping options

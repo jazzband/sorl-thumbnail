@@ -12,7 +12,7 @@ fp.close()
 
 setup(
     name='sorl-thumbnail',
-    version='10.12',
+    version='10.12.1',
     url='https://github.com/sorl/sorl-thumbnail',
     license='BSD',
     author='Mikko Hellsing',
