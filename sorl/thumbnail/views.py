@@ -15,5 +15,5 @@ def thumbnail_dummy(request, width, height):
         format_='PNG',
         quality=settings.THUMBNAIL_QUALITY,
         )
-    return HttpResponse(raw_data, mimetype='image/jpeg')
+    return HttpResponse(raw_data, mimetype='image/png')
 

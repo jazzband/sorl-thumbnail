@@ -23,25 +23,24 @@ check if source or thumbnail exists if the thumbnail key is found in the
 If you change or delete a source or a thumbnail for some reason, you can use
 the ``delete`` method of the ``ThumbnailBackend`` class or subclass::
 
-    from sorl.thumbnail import default
+    from sorl.thumbnail import delete
 
     # Delete the Key Value Store reference but **not** the file.
     # Use this if you have changed the source
-    default.backend.delete(my_file, delete_file=False)
+    delete(my_file, delete_file=False)
 
     # Delete the Key Value Store reference and the file
     # Use this if you want to delete the source file
-    default.backend.delete(my_file)
+    delete(my_file) # delete_file=True is default
 
 
-The ``sorl.thumbnail.default.backend.delete`` method always deletes the input
-files thumbnail Key Value Store referances as well as thumbnail files. You can
-use this method on thumbnails as well as source files. Alternatively if you
-have **deleted** a file you can use the management command
-:ref:`thumbnail-cleanup`.  Deleting an image using the
-``sorl.thumbnail.ImageField`` will notify the |kvstore| to delete references to
-it and delete all of its thumbnail references and files, exactly like the above
-code example.
+The ``sorl.thumbnail.delete`` method always deletes the input files thumbnail
+Key Value Store referances as well as thumbnail files. You can use this method
+on thumbnails as well as source files. Alternatively if you have **deleted** a
+file you can use the management command :ref:`thumbnail-cleanup`.  Deleting an
+image using the ``sorl.thumbnail.ImageField`` will notify the |kvstore| to
+delete references to it and delete all of its thumbnail references and files,
+exactly like the above code example.
 
 **Why you ask?** Why go through all the trouble with a |kvstore| and risk
 stale cache? Why not use a database to cache if you are going to do that?

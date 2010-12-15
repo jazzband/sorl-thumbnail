@@ -15,7 +15,7 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
 from sorl.thumbnail.images import ImageFile, DummyImageFile
-from sorl.thumbnail import default
+from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.log import ThumbnailLogHandler
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
@@ -456,7 +456,6 @@ class ModelTestCase(SimpleTestCaseBase):
 
 class BackendTest(SimpleTestCaseBase):
     def test_delete(self):
-        delete = default.backend.delete
         im1 = Item.objects.get(image='100x100.jpg').image
         im2 = Item.objects.get(image='500x500.jpg').image
         default.kvstore.get_or_set(ImageFile(im1))
@@ -487,7 +486,8 @@ class TestInputCase(unittest.TestCase):
         im.save(fn)
 
     def test_nonascii(self):
-        th = default.backend.get_thumbnail(self.name, '200x200')
+        # also test the get_thumbnail shortcut
+        th = get_thumbnail(self.name, '200x200')
         self.assertEqual(
             th.url,
             '/media/test/cache/4c/ed/4cede3c3e9dc62dcd3164e680e611c87.jpg'
