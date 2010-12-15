@@ -1,16 +1,17 @@
 from django.contrib import admin
 from django.db import models
+from sorl.thumbnail.fields import ImageField
 from sorl.thumbnail.widgets import AdminImageWidget
 
 
 class AdminThumbnailMixin(object):
     """
-    This is for lazy people to mix-in in their ModelAdmin class. We use
-    ``django.db.models.ImageField`` since we are so lazy that we also want
-    thumbnails for all ImageFields.
+    This is for lazy people to mix-in in their ModelAdmin class.
     """
     formfield_overrides = {
-        models.ImageField: {'widget': AdminImageWidget}
+        ImageField: {
+            'widget': AdminImageWidget,
+        }
     }
 
 
