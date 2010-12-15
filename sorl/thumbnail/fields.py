@@ -3,10 +3,7 @@ from django.db import models
 from django.db.models import Q
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail.conf import settings
-from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail import default
-from sorl.thumbnail.widgets import AdminImageWidget
 
 
 __all__ = ('ImageField', 'ImageFormField')
