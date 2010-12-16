@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from sorl.thumbnail import default
 
 
-__all__ = ('ImageField', 'ImageFormField')
+__all__ = ('ImageField', 'ImageFormField', 'ClearableImageFormField')
 
 
 class South(object):
