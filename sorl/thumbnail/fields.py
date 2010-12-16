@@ -40,7 +40,7 @@ class ImageField(South, models.FileField):
             file_.close()
 
     def formfield(self, **kwargs):
-        defaults = {'form_class': ClearableImageFormField}
+        defaults = {'form_class': ImageFormField}
         defaults.update(kwargs)
         return super(ImageField, self).formfield(**defaults)
 

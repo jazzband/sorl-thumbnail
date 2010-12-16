@@ -113,7 +113,7 @@ project with only small code changes::
 
 Admin examples
 ==============
-Example using ``sorl.thumbnail.admin.AdminImageMixin``::
+Recomended usage using ``sorl.thumbnail.admin.AdminImageMixin``::
 
     # myapp/admin.py
     from django.contrib import admin
@@ -140,6 +140,24 @@ Easy to plugin solution example with little code to change::
 
     class MyModelAdmin(admin.ModelAdmin):
         pass
+
+
+Example using ``ModelAdmin.formfield_overrides``::
+
+    # myapp/admin.py
+    from django.contrib import admin
+    from myapp.models import MyModel
+    from sorl.thumbnail.admin import AdminClearableImageWidget
+    from sorl.thumbnail.fields import ClearableImageFormField
+
+    MyModelAdmin(admin.ModelAdmin):
+        formfield_overrides = {
+            ImageField: {
+                'form_class': ClearableImageFormField,
+                'widget': AdminClearableImageWidget,
+            }
+        }
+
 
 
 Low level API examples

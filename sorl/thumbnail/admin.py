@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail.fields import ImageField
+from sorl.thumbnail.fields import ImageField, ClearableImageFormField
 from sorl.thumbnail import default
 
 
@@ -57,11 +57,15 @@ class AdminClearableImageWidget(forms.MultiWidget):
 
 class AdminImageMixin(object):
     """
-    This is for lazy people to mix-in in their ModelAdmin class.
+    This is a mix-in for ModelAdmin subclasses to make ``ImageField`` show ncer
+    form class and widget
     """
-    formfield_overrides = {
-        ImageField: {
-            'widget': AdminClearableImageWidget,
-        }
-    }
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if isinstance(db_field, ImageField):
+            return db_field.formfield(
+                form_class=ClearableImageFormField,
+                widget=AdminClearableImageWidget,
+                )
+        sup = super(AdminImageMixin, self)
+        return sup.formfield_for_dbfield(db_field, **kwargs)
 
