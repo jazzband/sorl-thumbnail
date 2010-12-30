@@ -123,16 +123,36 @@ Recomended usage using ``sorl.thumbnail.admin.AdminImageMixin``::
     class MyModelAdmin(AdminImageMixin, admin.ModelAdmin):
         pass
 
+For inlines::
+
+    # myapp/admin.py
+    from django.contrib import admin
+    from myapp.models import MyModel, MyInlineModel
+    from sorl.thumbnail.admin import AdminInlineImageMixin
+
+    class MyInlineModelAdmin(AdminInlineImageMixin, admin.ModelAdmin):
+        model = MyInlineModel
+
+    class MyModelAdmin(admin.ModelAdmin):
+        inlines = [MyInlineModelAdmin]
 
 Easy to plugin solution example with little code to change::
 
     # util/admin.py
     from django.contrib.admin import *
-    from sorl.thumbnail.admin import AdminImageMixin
+    from sorl.thumbnail.admin import AdminImageMixin, AdminInlineImageMixin
 
     class ModelAdmin(AdminImageMixin, ModelAdmin):
         pass
 
+    class InlineModelAdmin(AdminInlineImageMixin, InlineModelAdmin):
+        pass
+
+    class TabularInline(AdminInlineImageMixin, TabularInline):
+        pass
+
+    class StackedInline(AdminInlineImageMixin, StackedInline):
+        pass
 
     # myapp/admin.py
     from util import admin
