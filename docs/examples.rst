@@ -130,7 +130,7 @@ For inlines::
     from myapp.models import MyModel, MyInlineModel
     from sorl.thumbnail.admin import AdminInlineImageMixin
 
-    class MyInlineModelAdmin(AdminInlineImageMixin, admin.ModelAdmin):
+    class MyInlineModelAdmin(AdminInlineImageMixin, admin.TabularInline):
         model = MyInlineModel
 
     class MyModelAdmin(admin.ModelAdmin):
