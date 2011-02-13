@@ -80,7 +80,7 @@ Setting format and using the is_portrait filter::
 Model examples
 ==============
 Using the ImageField that automatically deletes references to itself in the key
-value store and ts thumbnail references and the thumbnail files when deleted::
+value store and its thumbnail references and the thumbnail files when deleted::
 
     from django.db import models
     from sorl.thumbnail import ImageField
@@ -93,7 +93,7 @@ value store and ts thumbnail references and the thumbnail files when deleted::
     ``sorl.thumbnail``. The standard ``django.db.models.ImageField`` is fine
     except that it does not know how to delete itself from the Key Value Store
     or its thumbnails if you delete it. Also using the
-    ``sorl.thumbnail.ImageField`` lets ju plugin the nice admin addition
+    ``sorl.thumbnail.ImageField`` lets you plugin the nice admin addition
     explained in the next section.
 
 
@@ -113,7 +113,7 @@ project with only small code changes::
 
 Admin examples
 ==============
-Recomended usage using ``sorl.thumbnail.admin.AdminImageMixin``::
+Recommended usage using ``sorl.thumbnail.admin.AdminImageMixin``::
 
     # myapp/admin.py
     from django.contrib import admin

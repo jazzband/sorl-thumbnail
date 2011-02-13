@@ -10,7 +10,7 @@ generated from its filename and storage. The thumbnail filename in turn is
 generated from the source and requested thumbnail size and options.  If the key
 for the thumbnail is found in the |kvstore|, the serialized thumbnail
 information is fetched from it and returned. If the thumbnail key is not found
-there sorl-thumbnail continues to generate the thumbnail and stores necesssary
+there sorl-thumbnail continues to generate the thumbnail and stores necessary
 information in the |kvstore|.  It is worth noting that sorl-thumbnail does not
 check if source or thumbnail exists if the thumbnail key is found in the
 |kvstore|.

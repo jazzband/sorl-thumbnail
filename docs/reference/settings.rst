@@ -12,7 +12,7 @@ Settings
 When set to ``True`` the ``ThumbnailNode.render`` method can raise errors.
 Django recommends that tags never raise errors in the ``Node.render`` method
 but since sorl-thumbnail is such a complex tag we will need to have more
-debuging available.
+debugging available.
 
 
 ``THUMBNAIL_BACKEND``
@@ -20,9 +20,9 @@ debuging available.
 
 - Default: ``'sorl.thumbnail.base.ThumbnailBackend'``
 
-This is the entrypoint for generating thumbnails, you probably want to keep the
+This is the entry point for generating thumbnails, you probably want to keep the
 default one but just in case you would like to generate thumbnails filenames
-differently or need som special functionality you can override this and use
+differently or need some special functionality you can override this and use
 your own implementation.
 
 
@@ -58,7 +58,7 @@ sorl-thumbnail ships with two engines:
 
 Pgmagick
 --------
-``'sorl.thumbnail.engines.pgmagick_engine.Engine'`` This is the preferrred
+``'sorl.thumbnail.engines.pgmagick_engine.Engine'`` This is the preferred
 engine because it produces the best quality and it can handle CMYK sources.
 Pgmagick uses `Graphics <http://www.graphicsmagick.org/>`_ which is much more
 competent library than PIL.
@@ -66,13 +66,13 @@ competent library than PIL.
 PIL
 ---
 ``'sorl.thumbnail.engines.pil_engine.Engine'``. This is the default option
-because it is what most people have instaled already.
+because it is what most people have installed already.
 
 
 ``THUMBNAIL_STORAGE``
 =====================
 
-- Defualt: ``settings.DEFAULT_FILE_STORAGE``
+- Default: ``settings.DEFAULT_FILE_STORAGE``
 
 The storage class to use for the generated thumbnails.
 
@@ -105,7 +105,7 @@ The redis database. Only applicable for the Redis Key Value Store
 - Default: ``sys.maxint``
 
 Cache timeout for Cached DB Key Value Store. You should probably keep this at
-maximum or ``None`` if your caching backend can handle that as infinate.
+maximum or ``None`` if your caching backend can handle that as infinite.
 Only applicable for the Cached DB Key Value Store.
 
 

@@ -99,7 +99,7 @@ thumbnail filename from it and the engine can use it for processing. Option
 keys are not resolved in context but values are. Passing all options to the
 engine means that you can easily subclass an engine and create new features
 like rounded corners or what ever processing you like. The options described
-below are how they are used and interperated in the shipped engines.
+below are how they are used and interpreted in the shipped engines.
 
 ``crop``
 ^^^^^^^^
@@ -127,7 +127,7 @@ matter, same options but in different order will generate only one thumbnail.
 ^^^^^^^^^^^
 Upscale is a boolean and controls if the image can be upscaled or not. For
 example if your source is 100x100 and you request a thumbnail of size 200x200
-and upscale is False this will reurn a thumbnail of size 100x100. If upscale
+and upscale is False this will return a thumbnail of size 100x100. If upscale
 was True this would result in a thumbnail size 200x200 (upscaled). The default
 value is True.
 
@@ -138,8 +138,8 @@ Default value is 95.
 
 ``format``
 ^^^^^^^^^^
-This controls the the write format and thumbnail extension. Formats supported
-by the shipped eninges are JPEG and PNG. Default value is JPEG.
+This controls the write format and thumbnail extension. Formats supported
+by the shipped engines are JPEG and PNG. Default value is JPEG.
 
 ``colorspace``
 ^^^^^^^^^^^^^^
@@ -191,7 +191,7 @@ Examples::
 
 margin
 ======
-Margin is a filter for calculating margins agains a padding box. For example
+Margin is a filter for calculating margins against a padding box. For example
 lets say you have an image ``item.image`` and you want to pad it vertically in
 a 1000x1000 box, you would simply write::
 
@@ -199,7 +199,7 @@ a 1000x1000 box, you would simply write::
         <img src="{{ item.image.url }}" style="margin:{{ item.image|margin:"1000x1000" }}">
     </div>
 
-The above is a rather syntetic example the more common usecase is when you want
+The above is a rather synthetic example the more common use case is when you want
 boxes of images of a certain size but you do not want to crop them::
 
     {% for profile in profiles %}
