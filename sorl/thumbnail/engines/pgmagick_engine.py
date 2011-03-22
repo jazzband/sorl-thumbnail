@@ -58,7 +58,7 @@ class Engine(EngineBase):
         return image
 
     def _get_raw_data(self, image, format_, quality):
-        image.magick(format_)
+        image.magick(format_.encode('utf8'))
         image.quality(quality)
         blob = Blob()
         image.write(blob)

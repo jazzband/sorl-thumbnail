@@ -98,7 +98,7 @@ class EngineBase(object):
         """
         raise NotImplemented()
 
-    def dummy_image(self, width, hieght):
+    def dummy_image(self, width, height):
         """
         Returns a generated dummy image object with size given. The dummy image
         from the shipped engines are grey (240) and has a darker cross (128)
