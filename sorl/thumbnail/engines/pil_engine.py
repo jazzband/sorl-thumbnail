@@ -2,9 +2,9 @@ from cStringIO import StringIO
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from PIL import Image, ImageDraw
+    from PIL import Image, ImageFile, ImageDraw
 except ImportError:
-    import Image, ImageDraw
+    import Image, ImageFile, ImageDraw
 
 
 class Engine(EngineBase):
@@ -53,7 +53,7 @@ class Engine(EngineBase):
                            width + x_offset, height + y_offset))
 
     def _get_raw_data(self, image, format_, quality):
-        Image.MAXBLOCK = 1024 * 1024
+        ImageFile.MAXBLOCK = 1024 * 1024
         buf = StringIO()
         try:
             image.save(buf, format=format_, quality=quality, optimize=1)
