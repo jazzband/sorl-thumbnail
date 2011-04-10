@@ -26,6 +26,7 @@ THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 THUMBNAIL_REDIS_HOST = 'localhost'
 THUMBNAIL_REDIS_PORT = 6379
 THUMBNAIL_REDIS_DB = 0
+THUMBNAIL_REDIS_PASSWORD = ''
 
 # Cache timeout for ``cached_db`` store. You should probably keep this at
 # maximum or ``0`` if your caching backend can handle that as infinate.

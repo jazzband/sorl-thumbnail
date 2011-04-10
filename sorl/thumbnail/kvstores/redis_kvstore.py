@@ -10,6 +10,7 @@ class KVStore(KVStoreBase):
             host=settings.THUMBNAIL_REDIS_HOST,
             port=settings.THUMBNAIL_REDIS_PORT,
             db=settings.THUMBNAIL_REDIS_DB,
+            password=settings.THUMBNAIL_REDIS_PASSWORD,
             )
 
     def _get_raw(self, key):

@@ -93,6 +93,14 @@ The host for Redis server. Only applicable for the Redis Key Value Store
 The port for Redis server. Only applicable for the Redis Key Value Store
 
 
+``THUMBNAIL_REDIS_PASSWORD``
+========================
+
+- Default: ``''``
+
+The password for Redis server. Only applicable for the Redis Key Value Store
+
+
 ``THUMBNAIL_REDIS_DB``
 ======================
 
