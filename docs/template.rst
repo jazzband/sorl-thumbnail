@@ -143,7 +143,7 @@ by the shipped engines are JPEG and PNG. Default value is JPEG.
 
 ``colorspace``
 ^^^^^^^^^^^^^^
-This controls the resulting thumbnails colorspace, valid values are: RGB and
+This controls the resulting thumbnails color space, valid values are: RGB and
 GRAY. Default value is RGB
 
 ``options``

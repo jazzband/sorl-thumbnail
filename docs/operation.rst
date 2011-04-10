@@ -35,7 +35,7 @@ the ``delete`` method of the ``ThumbnailBackend`` class or subclass::
 
 
 The ``sorl.thumbnail.delete`` method always deletes the input files thumbnail
-Key Value Store referances as well as thumbnail files. You can use this method
+Key Value Store references as well as thumbnail files. You can use this method
 on thumbnails as well as source files. Alternatively if you have **deleted** a
 file you can use the management command :ref:`thumbnail-cleanup`.  Deleting an
 image using the ``sorl.thumbnail.ImageField`` will notify the |kvstore| to
@@ -55,7 +55,7 @@ persistent caching. However sorl-thumbnail does ship with a *cached* database
     the |kvstore|
 
 **There are bonuses**. We can store meta data in the |kvstore| that would be
-too costly to retreive even for local file storage. Today this meta data
+too costly to retrieve even for local file storage. Today this meta data
 consists only of the image size but this could be expanded to for example EXIF
 data. The other bonus is that we can keep track of what thumbnails has been
 generated from a particular source and deleting them too when the source is

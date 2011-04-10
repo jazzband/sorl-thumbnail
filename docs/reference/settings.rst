@@ -32,13 +32,13 @@ your own implementation.
 - Default: ``'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'``
 
 sorl-thumbnail needs a Key Value Store to :doc:`/operation`.
-sorl-thumbnail ships with suport for two Key Value Stores:
+sorl-thumbnail ships with support for two Key Value Stores:
 
 Redis
 -----
 ``sorl.thumbnail.kvstores.redis_kvstore.KVStore``. This is the preferred Key
 Value Store because it is the fastest. It is not default because it requires
-you to install a redis server as well as a `redis python client
+you to install a Redis server as well as a `redis python client
 <https://github.com/andymccurdy/redis-py/>`_
 
 Cached DB
@@ -77,6 +77,22 @@ because it is what most people have installed already.
 The storage class to use for the generated thumbnails.
 
 
+``THUMBNAIL_REDIS_DB``
+======================
+
+- Default: ``0``
+
+The Redis database. Only applicable for the Redis Key Value Store
+
+
+``THUMBNAIL_REDIS_PASSWORD``
+========================
+
+- Default: ``''``
+
+The password for Redis server. Only applicable for the Redis Key Value Store
+
+
 ``THUMBNAIL_REDIS_HOST``
 ========================
 
@@ -93,23 +109,9 @@ The host for Redis server. Only applicable for the Redis Key Value Store
 The port for Redis server. Only applicable for the Redis Key Value Store
 
 
-``THUMBNAIL_REDIS_PASSWORD``
-========================
-
-- Default: ``''``
-
-The password for Redis server. Only applicable for the Redis Key Value Store
-
-
-``THUMBNAIL_REDIS_DB``
-======================
-
-- Default: ``0``
-
-The redis database. Only applicable for the Redis Key Value Store
-
-
 ``THUMBNAIL_CACHE_TIMEOUT``
+===========================
+
 - Default: ``sys.maxint``
 
 Cache timeout for Cached DB Key Value Store. You should probably keep this at
@@ -147,8 +149,8 @@ sets the filename extension. This can be overridden by individual options.
 
 - Default: ``'RGB'``
 
-Default thumbnail colorspace, engines are required to implement: ``'RGB'``,
-``'GRAY'`` Setting this to None will keep the original colorspace. This can be
+Default thumbnail color space, engines are required to implement: ``'RGB'``,
+``'GRAY'`` Setting this to None will keep the original color space. This can be
 overridden by individual options.
 
 
