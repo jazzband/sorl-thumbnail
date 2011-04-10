@@ -23,10 +23,10 @@ THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil_engine.Engine'
 THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
 # Redis settings
-THUMBNAIL_REDIS_HOST = 'localhost'
-THUMBNAIL_REDIS_PORT = 6379
 THUMBNAIL_REDIS_DB = 0
 THUMBNAIL_REDIS_PASSWORD = ''
+THUMBNAIL_REDIS_HOST = 'localhost'
+THUMBNAIL_REDIS_PORT = 6379
 
 # Cache timeout for ``cached_db`` store. You should probably keep this at
 # maximum or ``0`` if your caching backend can handle that as infinate.
