@@ -11,10 +11,22 @@ class EngineBase(object):
         """
         Processing conductor, returns the thumbnail as an image engine instance
         """
+        image = self.cropbox(image, geometry, options)
         image = self.colorspace(image, geometry, options)
         image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
         return image
+
+    def cropbox(self, image, geometry, options):
+        """
+        Wrapper for ``_cropbox``
+        """
+        cropbox = options['cropbox']
+        if not cropbox:
+            return image
+        
+        x, y, x2, y2 = [int(x.strip()) for x in cropbox.split(',')]
+        return self._cropbox(image, x, y, x2, y2)
 
     def colorspace(self, image, geometry, options):
         """

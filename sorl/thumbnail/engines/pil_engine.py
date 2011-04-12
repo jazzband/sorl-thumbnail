@@ -34,6 +34,9 @@ class Engine(EngineBase):
             return False
         return True
 
+    def _cropbox(self, image, x, y, x2, y2):
+        return image.crop((x, y, x2, y2))
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             if image.mode == 'RGBA':
