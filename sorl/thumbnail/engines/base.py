@@ -25,7 +25,10 @@ class EngineBase(object):
         if not cropbox:
             return image
         
-        x, y, x2, y2 = [int(x.strip()) for x in cropbox.split(',')]
+        if isinstance(cropbox, str):
+            x, y, x2, y2 = [int(x.strip()) for x in cropbox.split(',')]
+        else:
+            x, y, x2, y2 = cropbox
         return self._cropbox(image, x, y, x2, y2)
 
     def colorspace(self, image, geometry, options):
