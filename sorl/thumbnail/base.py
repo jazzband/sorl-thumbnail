@@ -17,6 +17,7 @@ class ThumbnailBackend(object):
         'upscale': settings.THUMBNAIL_UPSCALE,
         'crop': False,
         'cropbox': None,
+        'rounded': None,
     }
 
     extensions = {
