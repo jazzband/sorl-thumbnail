@@ -1,5 +1,5 @@
 """
-Thios is for Django < 1.3
+This is for Django < 1.3
 I hate this shit and hopefully I will never have to touch this ever again.
 """
 
