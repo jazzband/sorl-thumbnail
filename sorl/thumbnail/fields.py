@@ -83,18 +83,3 @@ class ImageFormField(forms.FileField):
             f.seek(0)
         return f
 
-
-class ClearableImageFormField(forms.MultiValueField):
-    def __init__(self, max_length=None, **kwargs):
-        fields = (
-            ImageFormField(max_length=max_length, **kwargs),
-            forms.BooleanField()
-            )
-        super(ClearableImageFormField, self).__init__(fields, **kwargs)
-
-    def compress(self, data_list):
-        if data_list:
-            if not data_list[0] and data_list[1]:
-                return False
-            return data_list[0]
-

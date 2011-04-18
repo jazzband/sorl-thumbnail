@@ -1,8 +1,28 @@
+"""
+Thios is for Django < 1.3
+I hate this shit and hopefully I will never have to touch this ever again.
+"""
+
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail.fields import ImageField, ClearableImageFormField
-from sorl.thumbnail import default
+from sorl.thumbnail.fields import ImageField, ImageFormField
+from sorl.thumbnail.shortcuts import get_thumbnail
+
+
+class ClearableImageFormField(forms.MultiValueField):
+    def __init__(self, max_length=None, **kwargs):
+        fields = (
+            ImageFormField(max_length=max_length, **kwargs),
+            forms.BooleanField()
+            )
+        super(ClearableImageFormField, self).__init__(fields, **kwargs)
+
+    def compress(self, data_list):
+        if data_list:
+            if not data_list[0] and data_list[1]:
+                return False
+            return data_list[0]
 
 
 class AdminImageWidget(forms.FileInput):
@@ -10,18 +30,14 @@ class AdminImageWidget(forms.FileInput):
     An ImageField Widget for django.contrib.admin that shows a thumbnailed
     image as well as a link to the current one if it hase one.
     """
-    thumbnail_geometry = '150x150'
-
-    def __init__(self, attrs=None, thumbnail_geometry=None):
-        if thumbnail_geometry:
-            self.thumbnail_geometry = thumbnail_geometry
+    def __init__(self, attrs=None):
         super(AdminImageWidget, self).__init__(attrs)
 
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
         if value and hasattr(value, 'url'):
             try:
-                mini = default.backend.get_thumbnail(value, self.thumbnail_geometry)
+                mini = get_thumbnail(value, 'x80', upscale=False)
             except Exception:
                 pass
             else:
@@ -77,9 +93,7 @@ class AdminInlineImageMixin(object):
     """
     def formfield_for_dbfield(self, db_field, **kwargs):
         if isinstance(db_field, ImageField):
-            return db_field.formfield(
-                widget=AdminImageWidget,
-                )
+            return db_field.formfield(widget=AdminImageWidget)
         sup = super(AdminInlineImageMixin, self)
         return sup.formfield_for_dbfield(db_field, **kwargs)
 

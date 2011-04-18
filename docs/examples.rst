@@ -145,9 +145,6 @@ Easy to plugin solution example with little code to change::
     class ModelAdmin(AdminImageMixin, ModelAdmin):
         pass
 
-    class InlineModelAdmin(AdminInlineImageMixin, InlineModelAdmin):
-        pass
-
     class TabularInline(AdminInlineImageMixin, TabularInline):
         pass
 
