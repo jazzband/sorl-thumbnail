@@ -30,9 +30,6 @@ class AdminImageWidget(forms.FileInput):
     An ImageField Widget for django.contrib.admin that shows a thumbnailed
     image as well as a link to the current one if it hase one.
     """
-    def __init__(self, attrs=None):
-        super(AdminImageWidget, self).__init__(attrs)
-
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
         if value and hasattr(value, 'url'):
