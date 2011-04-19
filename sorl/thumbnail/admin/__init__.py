@@ -1,8 +1,9 @@
 try:
     from django.forms import ClearableFileInput
 except ImportError:
-    from .compat import AdminImageMixin, AdminInlineImageMixin
+    from .compat import AdminImageMixin
 else:
     from .current import AdminImageMixin
-    from .current import AdminImageMixin as AdminInlineImageMixin
+
+AdminInlineImageMixin = AdminImageMixin # backwards compatibility
 

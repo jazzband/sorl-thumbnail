@@ -84,15 +84,3 @@ class AdminImageMixin(object):
         sup = super(AdminImageMixin, self)
         return sup.formfield_for_dbfield(db_field, **kwargs)
 
-
-class AdminInlineImageMixin(object):
-    """
-    This is a mix-in for InlineModelAdmin subclasses to make ``ImageField``
-    show nicer form widget
-    """
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        if isinstance(db_field, ImageField):
-            return db_field.formfield(widget=AdminImageWidget)
-        sup = super(AdminInlineImageMixin, self)
-        return sup.formfield_for_dbfield(db_field, **kwargs)
-

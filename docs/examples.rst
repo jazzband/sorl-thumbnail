@@ -123,14 +123,14 @@ Recommended usage using ``sorl.thumbnail.admin.AdminImageMixin``::
     class MyModelAdmin(AdminImageMixin, admin.ModelAdmin):
         pass
 
-For inlines::
+And the same thing For inlines::
 
     # myapp/admin.py
     from django.contrib import admin
     from myapp.models import MyModel, MyInlineModel
-    from sorl.thumbnail.admin import AdminInlineImageMixin
+    from sorl.thumbnail.admin import AdminImageMixin
 
-    class MyInlineModelAdmin(AdminInlineImageMixin, admin.TabularInline):
+    class MyInlineModelAdmin(AdminImageMixin, admin.TabularInline):
         model = MyInlineModel
 
     class MyModelAdmin(admin.ModelAdmin):
@@ -140,15 +140,15 @@ Easy to plugin solution example with little code to change::
 
     # util/admin.py
     from django.contrib.admin import *
-    from sorl.thumbnail.admin import AdminImageMixin, AdminInlineImageMixin
+    from sorl.thumbnail.admin import AdminImageMixin
 
     class ModelAdmin(AdminImageMixin, ModelAdmin):
         pass
 
-    class TabularInline(AdminInlineImageMixin, TabularInline):
+    class TabularInline(AdminImageMixin, TabularInline):
         pass
 
-    class StackedInline(AdminInlineImageMixin, StackedInline):
+    class StackedInline(AdminImageMixin, StackedInline):
         pass
 
     # myapp/admin.py
@@ -157,24 +157,6 @@ Easy to plugin solution example with little code to change::
 
     class MyModelAdmin(admin.ModelAdmin):
         pass
-
-
-Example using ``ModelAdmin.formfield_overrides``::
-
-    # myapp/admin.py
-    from django.contrib import admin
-    from myapp.models import MyModel
-    from sorl.thumbnail.admin import AdminClearableImageWidget
-    from sorl.thumbnail.fields import ClearableImageFormField
-
-    MyModelAdmin(admin.ModelAdmin):
-        formfield_overrides = {
-            ImageField: {
-                'form_class': ClearableImageFormField,
-                'widget': AdminClearableImageWidget,
-            }
-        }
-
 
 
 Low level API examples
