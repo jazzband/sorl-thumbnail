@@ -75,6 +75,8 @@ class AdminImageMixin(object):
     """
     def formfield_for_dbfield(self, db_field, **kwargs):
         if isinstance(db_field, ImageField):
+            if not db_field.blank:
+                return db_field.formfield(widget=AdminImageWidget)
             return db_field.formfield(
                 form_class=ClearableImageFormField,
                 widget=AdminClearableImageWidget,
