@@ -70,7 +70,7 @@ class AdminClearableImageWidget(forms.MultiWidget):
 
 class AdminImageMixin(object):
     """
-    This is a mix-in for ModelAdmin subclasses to make ``ImageField`` show ncer
+    This is a mix-in for ModelAdmin subclasses to make ``ImageField`` show nicer
     form class and widget
     """
     def formfield_for_dbfield(self, db_field, **kwargs):
