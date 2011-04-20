@@ -33,6 +33,7 @@ setup(
     packages=[
         'sorl',
         'sorl.thumbnail',
+        'sorl.thumbnail.admin',
         'sorl.thumbnail.conf',
         'sorl.thumbnail.engines',
         'sorl.thumbnail.kvstores',
