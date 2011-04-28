@@ -13,16 +13,17 @@ Base requirements
 
 Key Value Store
 ===============
-sorl-thumbnail needs a Key Value Store for its operation. You can choose
-between a **cached database** which requires no special installation to your
-normal Django setup **or** you can setup **redis** which requires a little bit
-more work.
+sorl-thumbnail needs a Key Value Store for its operation. You can choose between
+a **cached database** which requires no special installation to your normal
+Django setup besides installing a proper cache like memcached **or** you can
+setup **redis** which requires a little bit more work.
 
 Cached DB
 ---------
 All you need to use the cached database key value store is a database and `cache
 <http://docs.djangoproject.com/en/dev/topics/cache/>`_ setup properly using
-memcached. Using anything else than memcached is not recomended.
+memcached. This cache needs to be really fast so **using anything else than
+memcached is not recomended**.
 
 Redis
 -----
@@ -41,11 +42,11 @@ Image Library
 You need to have an image library installed. sorl-thumbnail ships with support
 for `Python Imaging Library`_, `ImageMagick`_ (or `GraphicsMagick`) commandline
 tools and `pgmagick`_. `pgmagick`_ are python bindings for GraphicsMagick
-(Magick++). The preferred option is to use `ImageMagick`_ which ny default calls
+(Magick++). The preferred option is to use `ImageMagick`_ which by default calls
 ``convert`` and ``identify`` commands from `ImageMagick`_. You can change the
 paths to these tools by setting ``THUMBNAIL_CONVERT`` and ``THUMBNAIL_IDENTIFY``
-respectively. Note that you need to change these to use `GraphicsMagick` to
-``path/to/gm convert`` and ``path/to/gm identify``.
+respectively. Note that you need to change these to use `GraphicsMagick`_ to
+``/path/to/gm convert`` and ``/path/to/gm identify``.
 
 ImageMagick installation
 ------------------------

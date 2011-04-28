@@ -25,7 +25,8 @@ class Engine(EngineBase):
         args = [settings.THUMBNAIL_CONVERT, image['source']]
         for k, v in image['options'].iteritems():
             args.append('-%s' % k)
-            args.append('%s' % v)
+            if v is not None:
+                args.append('%s' % v)
         args.append(out)
         args = map(smart_str, args)
         p = Popen(args)

@@ -9,6 +9,16 @@ class EMPTY_VALUE(object):
 
 
 class KVStore(KVStoreBase):
+    def clear(self):
+        """
+        We can clear the database more efficiently using the prefix here rather
+        than calling :meth:`_delete_raw`.
+        """
+        prefix = settings.THUMBNAIL_KEY_PREFIX
+        KVStoreModel.objects.filter(key__startswith=prefix).delete()
+        for key in self._find_keys_raw(prefix):
+            cache.delete(key)
+
     def _get_raw(self, key):
         value = cache.get(key)
         if value is None:

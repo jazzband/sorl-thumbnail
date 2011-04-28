@@ -34,17 +34,30 @@ your own implementation.
 sorl-thumbnail needs a Key Value Store to :doc:`/operation`.
 sorl-thumbnail ships with support for two Key Value Stores:
 
-Redis
------
-``sorl.thumbnail.kvstores.redis_kvstore.KVStore``. This is the preferred Key
-Value Store because it is the fastest. It is not default because it requires
-you to install a Redis server as well as a `redis python client
-<https://github.com/andymccurdy/redis-py/>`_
-
 Cached DB
 ---------
-``sorl.thumbnail.kvstores.cached_db_kvstore.KVStore``. This is the default
-Key Value Store because it does not require any special installation.
+``sorl.thumbnail.kvstores.cached_db_kvstore.KVStore``. This is the default and
+preferred Key Value Store.
+
+Features
+^^^^^^^^
+* Fast persistent storage
+* First query uses database which is slow. Successive queries are cached and if
+  you use memcached this is very fast.
+* Easy to transfer data between environments since the data is in the default
+  database.
+
+Redis
+-----
+``sorl.thumbnail.kvstores.redis_kvstore.KVStore``. It requires you to install a
+Redis server as well as a `redis python client
+<https://github.com/andymccurdy/redis-py/>`_.
+
+Features
+^^^^^^^^
+* Fast persistent storage
+* More dependencies
+* Requires a little extra work to transfer data between environments
 
 
 ``THUMBNAIL_ENGINE``
@@ -52,21 +65,40 @@ Key Value Store because it does not require any special installation.
 
 - Default: ``'sorl.thumbnail.engines.pil_engine.Engine'``
 
-This is the processing class for sorl-thumbnail. It does all the
-resizing, cropping or whatever processing you want to perform.
-sorl-thumbnail ships with two engines:
-
-Pgmagick
---------
-``'sorl.thumbnail.engines.pgmagick_engine.Engine'`` This is the preferred
-engine because it produces the best quality and it can handle CMYK sources.
-Pgmagick uses `Graphics <http://www.graphicsmagick.org/>`_ which is much more
-competent library than PIL.
+This is the processing class for sorl-thumbnail. It does all the resizing,
+cropping or whatever processing you want to perform. sorl-thumbnail ships with
+three engines:
 
 PIL
 ---
-``'sorl.thumbnail.engines.pil_engine.Engine'``. This is the default option
-because it is what most people have installed already.
+``'sorl.thumbnail.engines.pil_engine.Engine'``. This is the default engine
+because it is what most people have installed already. Features:
+
+* Easy to install
+* Produces good quality images but not the best
+* It is fast
+* Can not handle CMYK sources
+
+ImageMagick
+-----------
+``'sorl.thumbnail.engines.convert_engine.Engine'``. This engine uses the
+ImageMagick ``convert`` command. Features:
+
+* Easy to install
+* Produces high quality images
+* It is fast
+* Can handle CMYK sources
+* It is a command line command, that is less than ideal,
+
+Pgmagick
+--------
+``'sorl.thumbnail.engines.pgmagick_engine.Engine'``. Pgmagick uses `Graphics
+<http://www.graphicsmagick.org/>`_. Fatures:
+
+* Not easy to install unless on linux, very slow to compile
+* Produces high quality images
+* It is a tad slow
+* Can handle CMYK sources
 
 
 ``THUMBNAIL_STORAGE``
@@ -86,7 +118,7 @@ The Redis database. Only applicable for the Redis Key Value Store
 
 
 ``THUMBNAIL_REDIS_PASSWORD``
-========================
+============================
 
 - Default: ``''``
 
