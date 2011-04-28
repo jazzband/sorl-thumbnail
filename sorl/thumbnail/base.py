@@ -5,6 +5,12 @@ from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
 
+EXTENSIONS = {
+    'JPEG': 'jpg',
+    'PNG': 'png',
+}
+
+
 class ThumbnailBackend(object):
     """
     The main class for sorl-thumbnail, you can subclass this if you for example
@@ -16,11 +22,6 @@ class ThumbnailBackend(object):
         'colorspace': settings.THUMBNAIL_COLORSPACE,
         'upscale': settings.THUMBNAIL_UPSCALE,
         'crop': False,
-    }
-
-    extensions = {
-        'JPEG': 'jpg',
-        'PNG': 'png',
     }
 
     def get_thumbnail(self, file_, geometry_string, **options):
@@ -84,5 +85,5 @@ class ThumbnailBackend(object):
         # make some subdirs
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
-                            self.extensions[options['format']])
+                            EXTENSIONS[options['format']])
 

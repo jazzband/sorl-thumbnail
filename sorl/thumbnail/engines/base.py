@@ -136,7 +136,8 @@ class EngineBase(object):
 
     def _get_raw_data(self, image, format_, quality):
         """
-        Gets raw data given the image, format and quality
+        Gets raw data given the image, format and quality. This method is
+        called from :meth:`write` and `views.thumbnail_dummy`
         """
         raise NotImplemented()
 
