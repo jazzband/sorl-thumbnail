@@ -21,7 +21,7 @@ class Engine(EngineBase):
         """
         Writes the thumbnail image
         """
-        out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])[1]
+        handle, out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])
         args = [settings.THUMBNAIL_CONVERT, image['source']]
         for k, v in image['options'].iteritems():
             args.append('-%s' % k)
@@ -33,6 +33,7 @@ class Engine(EngineBase):
         p.wait()
         with open(out, 'r') as fp:
             thumbnail.write(fp.read())
+        os.close(handle)
         os.remove(out)
         os.remove(image['source']) # we should not need this now
 
@@ -40,9 +41,10 @@ class Engine(EngineBase):
         """
         Returns the backend image objects from a ImageFile instance
         """
-        tmp = mkstemp()[1]
+        handle, tmp = mkstemp()
         with open(tmp, 'w') as fp:
             fp.write(source.read())
+        os.close(handle)
         return {'source': tmp, 'options': SortedDict(), 'size': None}
 
     def get_image_size(self, image):
@@ -61,11 +63,12 @@ class Engine(EngineBase):
         This is not very good for imagemagick because it will say anything is
         valid that it can use as input.
         """
-        tmp = mkstemp()[1]
+        handle, tmp = mkstemp()
         with open(tmp, 'w') as fp:
             fp.write(raw_data)
             p = Popen([settings.THUMBNAIL_IDENTIFY, tmp])
             retcode = p.wait()
+        os.close(handle)
         os.remove(tmp)
         return retcode == 0
 
