@@ -79,16 +79,18 @@ because it is what most people have installed already. Features:
 * It is fast
 * Can not handle CMYK sources
 
+
 ImageMagick
 -----------
-``'sorl.thumbnail.engines.convert_engine.Engine'``. This engine uses the
-ImageMagick ``convert`` command. Features:
+``'sorl.thumbnail.engines.convert_engine.Engine'``. This engine is the preferred
+on and it uses the ImageMagick ``convert`` command. Features:
 
 * Easy to install
-* Produces high quality images
+* Reliably produces high quality images
 * It is fast
 * Can handle CMYK sources
 * It is a command line command, that is less than ideal,
+
 
 Pgmagick
 --------
