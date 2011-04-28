@@ -1,13 +1,13 @@
 from __future__ import with_statement
 import re
 import os
-from django.utils.encoding import smart_str, DEFAULT_LOCALE_ENCODING
+from django.utils.datastructures import SortedDict
+from django.utils.encoding import smart_str
 from sorl.thumbnail.base import EXTENSIONS
+from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
 from subprocess import Popen, PIPE
 from tempfile import mkstemp
-from django.utils.datastructures import SortedDict
-from sorl.thumbnail.conf import settings
 
 
 size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
@@ -57,11 +57,12 @@ class Engine(EngineBase):
 
     def is_valid_image(self, raw_data):
         """
-        Checks if the supplied raw data is valid image data
+        This is not very good for imagemagick because it will say anything is
+        valid that it can use as input.
         """
         tmp = mkstemp()[1]
         with open(tmp, 'w') as fp:
-            tmp.write(raw_data)
+            fp.write(raw_data)
             p = Popen([settings.THUMBNAIL_IDENTIFY, tmp])
             retcode = p.wait()
         os.remove(tmp)
@@ -95,10 +96,4 @@ class Engine(EngineBase):
         image['options']['scale'] = '%sx%s!' % (width, height)
         image['size'] = (width, height) # update image size
         return image
-
-    def _get_raw_data(self, image, format_, quality):
-        """
-        Gets raw data given the image, format and quality
-        """
-        raise NotImplemented()
 
