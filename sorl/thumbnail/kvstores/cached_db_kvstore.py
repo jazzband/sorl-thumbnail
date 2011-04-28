@@ -15,9 +15,9 @@ class KVStore(KVStoreBase):
         than calling :meth:`_delete_raw`.
         """
         prefix = settings.THUMBNAIL_KEY_PREFIX
-        KVStoreModel.objects.filter(key__startswith=prefix).delete()
         for key in self._find_keys_raw(prefix):
             cache.delete(key)
+        KVStoreModel.objects.filter(key__startswith=prefix).delete()
 
     def _get_raw(self, key):
         value = cache.get(key)
