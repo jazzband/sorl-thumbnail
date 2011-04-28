@@ -6,11 +6,11 @@ Thumbnails for Django. Totally rewritten.
 Features at a glance
 --------------------
 - Storage support
-- Pluggable Engine support (PIL, pgmagick)
-- Pluggable Key Value Store support (redis, cached db)
+- Pluggable Engine support (ImageMagick, PIL, pgmagick included)
+- Pluggable Key Value Store support (cached db, redis)
 - Pluggable Backend support
 - Admin integration with possibility to delete
-- Dummy generation
+- Dummy generation (placeholders)
 - Flexible, simple syntax, generates no html
 - ImageField for model that deletes thumbnails
 - CSS style cropping options

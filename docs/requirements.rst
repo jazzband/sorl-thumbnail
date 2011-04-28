@@ -20,15 +20,15 @@ more work.
 
 Cached DB
 ---------
-All you need to use the cached database key value store is a database and
-preferably `cache <http://docs.djangoproject.com/en/dev/topics/cache/>`_ setup
-properly.
+All you need to use the cached database key value store is a database and `cache
+<http://docs.djangoproject.com/en/dev/topics/cache/>`_ setup properly using
+memcached. Using anything else than memcached is not recomended.
 
 Redis
 -----
-is faster and better suited for the job. To use the `redis`_ key value store
-you first need to install the `redis server
-<http://code.google.com/p/redis/>`_. After that install the `redis client
+Redis is a fast key value store also suited for the job. To use the `redis`_ key
+value store you first need to install the `redis server
+<http://code.google.com/p/redis/>`_.  After that install the `redis client
 <https://github.com/andymccurdy/redis-py/>`_::
 
     pip install redis
@@ -39,8 +39,24 @@ you first need to install the `redis server
 Image Library
 =============
 You need to have an image library installed. sorl-thumbnail ships with support
-for `Python Imaging Library`_ and `pgmagick`_. `pgmagick`_ are python bindings
-for GraphicsMagick (Magick++) and is the preferred option.
+for `Python Imaging Library`_, `ImageMagick`_ (or `GraphicsMagick`) commandline
+tools and `pgmagick`_. `pgmagick`_ are python bindings for GraphicsMagick
+(Magick++). The preferred option is to use `ImageMagick`_ which ny default calls
+``convert`` and ``identify`` commands from `ImageMagick`_. You can change the
+paths to these tools by setting ``THUMBNAIL_CONVERT`` and ``THUMBNAIL_IDENTIFY``
+respectively. Note that you need to change these to use `GraphicsMagick` to
+``path/to/gm convert`` and ``path/to/gm identify``.
+
+ImageMagick installation
+------------------------
+Ubuntu 10.04 package installation::
+
+    sudo apt-get install imagemagick
+
+Or if you prefer `GraphicsMagick`_::
+
+    sudo apt-get install graphicsmagick
+
 
 Python Imaging Library installation
 -----------------------------------
@@ -51,7 +67,7 @@ Prerequisites:
 
 Ubuntu 10.04 package installation::
 
-    sudo aptitude install libjpeg62 libjpeg62-dev zlib1g-dev
+    sudo apt-get install libjpeg62 libjpeg62-dev zlib1g-dev
 
 Installing `Python Imaging Library`_ using pip::
 
@@ -86,6 +102,8 @@ Installing `pgmagick`_ using pip::
 
 
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
+.. _ImageMagick: http://imagemagick.com/
+.. _GraphicsMagick: http://www.graphicsmagick.org/
 .. _redis: http://code.google.com/p/redis/
 .. _redis-py: https://github.com/andymccurdy/redis-py/
 .. _Django: http://www.djangoproject.com/

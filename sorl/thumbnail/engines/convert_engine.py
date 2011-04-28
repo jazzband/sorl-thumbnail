@@ -55,14 +55,6 @@ class Engine(EngineBase):
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']
 
-    def dummy_image(self, width, height):
-        """
-        Returns a generated dummy image object with size given. The dummy image
-        from the shipped engines are grey (240) and has a darker cross (128)
-        over them.
-        """
-        raise NotImplemented()
-
     def is_valid_image(self, raw_data):
         """
         Checks if the supplied raw data is valid image data
@@ -90,9 +82,10 @@ class Engine(EngineBase):
         """
         Crops the image
         """
-        image['options']['crop'] = '%sx%s!+%s+%s' % (
+        image['options']['crop'] = '%sx%s+%s+%s' % (
             width, height, x_offset, y_offset
             )
+        image['size'] = (width, height) # update image size
         return image
 
     def _scale(self, image, width, height):
@@ -100,6 +93,7 @@ class Engine(EngineBase):
         Does the resizing of the image
         """
         image['options']['scale'] = '%sx%s!' % (width, height)
+        image['size'] = (width, height) # update image size
         return image
 
     def _get_raw_data(self, image, format_, quality):

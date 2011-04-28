@@ -8,15 +8,16 @@ THUMBNAIL_DEBUG = False
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 
 # Key-value store, ships with:
-# sorl.thumbnail.kvstores.redis_kvstore.KVStore
 # sorl.thumbnail.kvstores.cached_db_kvstore.KVStore
-# Redis is preferred but requires some more work, see docs
+# sorl.thumbnail.kvstores.redis_kvstore.KVStore
+# Redis requires some more work, see docs
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
 
 # Engine, ships with:
-# sorl.thumbnail.engines.pgmagick_engine.Engine
+# sorl.thumbnail.engines.convert_engine.Engine
 # sorl.thumbnail.engines.pil_engine.Engine
-# pgmagick is preferred but requires some more work, se docs
+# sorl.thumbnail.engines.pgmagick_engine.Engine
+# convert is preferred but requires imagemagick or graphicsmagick, se docs
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil_engine.Engine'
 
 # Path to Imagemagick or Graphicsmagick ``convert`` and ``identify``.
@@ -59,6 +60,12 @@ THUMBNAIL_QUALITY = 95
 # This means sorl.thumbnail will generate and serve a generated dummy image
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False
+
+# Thumbnail dummy (placeholder) url. Some you might try are:
+# http://placekitten.com/%(width)s/%(height)s
+# http://placekitten.com/g/%(width)s/%(height)s
+# http://placehold.it/%(width)sx%(height)s
+THUMBNAIL_DUMMY_URL = 'http://placekitten.com/%(width)s/%(height)s'
 
 # Sets the source image ratio for dummy generation of images with only width
 # or height given

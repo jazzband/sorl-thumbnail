@@ -13,7 +13,7 @@ THUMBNAIL_LOG_HANDLER = {
 }
 
 #THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine'
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pgmagick_engine.Engine'
 #THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
 INTERNAL_IPS = ('127.0.0.1',)
 

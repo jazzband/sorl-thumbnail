@@ -159,7 +159,9 @@ class DummyImageFile(BaseImageFile):
 
     @property
     def url(self):
-        return reverse('thumbnail_dummy', args=(self.x, self.y))
+        return settings.THUMBNAIL_DUMMY_URL % (
+            {'width': self.x, 'height': self.y}
+            )
 
 
 class UrlStorage(Storage):

@@ -20,17 +20,6 @@ class Engine(EngineBase):
         geometry = image.size()
         return geometry.width(), geometry.height()
 
-    def dummy_image(self, width, height):
-        d = self._get_dummy_image_data(width, height)
-        im = Image(Geometry(width, height), Color(*d['canvas_color']))
-        im.strokeColor(Color(*d['line_color']))
-        im.strokeWidth(1)
-        for line in d['lines']:
-            im.draw(DrawableLine(*line))
-        im.fillColor(Color())
-        im.draw(DrawableRectangle(*d['rectangle']))
-        return im
-
     def is_valid_image(self, raw_data):
         blob = Blob()
         blob.update(raw_data)

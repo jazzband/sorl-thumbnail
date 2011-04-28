@@ -23,14 +23,3 @@ Setup
 
     python manage.py syncdb
 
-4. If you want to use the dummy generation feature add the following to your
-   urls.py::
-
-    (r'^', include('sorl.thumbnail.urls')),
-
-   This will not do anything unless you have ``THUMBNAIL_DUMMY`` set to
-   ``True``. You also need to set your IP in the ``INTERNAL_IPS`` setting, for
-   example::
-
-    INTERNAL_IPS = ('127.0.0.1',)
-

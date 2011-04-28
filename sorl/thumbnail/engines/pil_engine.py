@@ -15,16 +15,6 @@ class Engine(EngineBase):
     def get_image_size(self, image):
         return image.size
 
-    def dummy_image(self, width, height):
-        d = self._get_dummy_image_data(width, height)
-        im = Image.new('RGB', (width, height), d['canvas_color'])
-        draw = ImageDraw.Draw(im)
-        for line in d['lines']:
-            draw.line(line, fill=d['line_color'])
-        draw.rectangle(d['rectangle'], outline=d['line_color'])
-        del draw
-        return im
-
     def is_valid_image(self, raw_data):
         buf = StringIO(raw_data)
         try:

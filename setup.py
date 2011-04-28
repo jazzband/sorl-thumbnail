@@ -1,24 +1,18 @@
-from os.path import abspath, dirname, join as pjoin
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages
 
-
-fn = abspath(pjoin(dirname(__file__), 'README.rst'))
-fp = open(fn, 'r')
-long_description = fp.read()
-fp.close()
 
 setup(
     name='sorl-thumbnail',
-    version='11.04',
-    url='https://github.com/sorl/sorl-thumbnail',
-    license='BSD',
+    version='11.05',
+    description='Thumbnails for Django',
+    long_description=open('README.rst').read(),
     author='Mikko Hellsing',
     author_email='mikko@aino.se',
-    description='Thumbnails for Django',
-    long_description=long_description,
+    license='BSD',
+    url='https://github.com/sorl/sorl-thumbnail',
+    packages=find_packages(),
+    platforms='any',
+    zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -30,19 +24,5 @@ setup(
         'Topic :: Multimedia :: Graphics',
         'Framework :: Django',
     ],
-    packages=[
-        'sorl',
-        'sorl.thumbnail',
-        'sorl.thumbnail.admin',
-        'sorl.thumbnail.conf',
-        'sorl.thumbnail.engines',
-        'sorl.thumbnail.kvstores',
-        'sorl.thumbnail.management',
-        'sorl.thumbnail.management.commands',
-        'sorl.thumbnail.templatetags',
-    ],
-    platforms='any',
-    # we don't want eggs
-    zip_safe=False,
 )
 
