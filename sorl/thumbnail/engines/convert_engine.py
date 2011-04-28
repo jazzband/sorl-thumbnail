@@ -15,7 +15,7 @@ size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
 
 class Engine(EngineBase):
     """
-    Image object is a tuple of a pathname and a dict with options convert
+    Image object is a dict with source path, options and size
     """
     def write(self, image, options, thumbnail):
         """
