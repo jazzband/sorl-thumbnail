@@ -61,13 +61,13 @@ THUMBNAIL_QUALITY = 95
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False
 
-# Thumbnail dummy (placeholder) url. Some you might try are:
+# Thumbnail dummy (placeholder) source. Some you might try are:
 # http://placekitten.com/%(width)s/%(height)s
 # http://placekitten.com/g/%(width)s/%(height)s
 # http://placehold.it/%(width)sx%(height)s
-THUMBNAIL_DUMMY_URL = 'http://placekitten.com/%(width)s/%(height)s'
+THUMBNAIL_DUMMY_SOURCE = 'http://placekitten.com/%(width)s/%(height)s'
 
 # Sets the source image ratio for dummy generation of images with only width
 # or height given
-THUMBNAIL_DUMMY_RATIO = 3.0 / 2
+THUMBNAIL_DUMMY_RATIO = 1.5
 

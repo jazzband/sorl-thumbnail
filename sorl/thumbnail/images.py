@@ -159,7 +159,7 @@ class DummyImageFile(BaseImageFile):
 
     @property
     def url(self):
-        return settings.THUMBNAIL_DUMMY_URL % (
+        return settings.THUMBNAIL_DUMMY_SOURCE % (
             {'width': self.x, 'height': self.y}
             )
 

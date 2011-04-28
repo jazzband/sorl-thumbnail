@@ -219,10 +219,20 @@ option to ``True``. This will generate placeholder images for all thumbnails
 regardless of the input source.
 
 
+``THUMBNAIL_DUMMY_SOURCE``
+==========================
+
+- Default ``http://placekitten.com/%(width)s/%(height)s``
+
+If ``THUMBNAIL_DUMMY`` is ``True`` then this is the source of the presented
+thumbnail. Width and Height is passed to the string for formatting.  Another
+option is for example ``http://placehold.it/%(width)sx%(height)s``.
+
+
 ``THUMBNAIL_DUMMY_RATIO``
 =========================
 
-Default: ``3.0 / 2``
+Default: ``1.5``
 
 This option is only applicable if ``THUMBNAIL_DUMMY`` is set to true. This
 value sets an image ratio to all thumbnails that are not defined by width
