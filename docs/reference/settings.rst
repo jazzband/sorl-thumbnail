@@ -46,6 +46,7 @@ Features
   you use memcached this is very fast.
 * Easy to transfer data between environments since the data is in the default
   database.
+* If you get the database and fast cache out of sync there could be problems.
 
 Redis
 -----
@@ -79,19 +80,6 @@ because it is what most people have installed already. Features:
 * It is fast
 * Can not handle CMYK sources
 
-
-ImageMagick
------------
-``'sorl.thumbnail.engines.convert_engine.Engine'``. This engine is the preferred
-on and it uses the ImageMagick ``convert`` command. Features:
-
-* Easy to install
-* Reliably produces high quality images
-* It is fast
-* Can handle CMYK sources
-* It is a command line command, that is less than ideal,
-
-
 Pgmagick
 --------
 ``'sorl.thumbnail.engines.pgmagick_engine.Engine'``. Pgmagick uses `Graphics
@@ -99,8 +87,19 @@ Pgmagick
 
 * Not easy to install unless on linux, very slow to compile
 * Produces high quality images
-* It is a tad slow
+* It is a tad slow?
 * Can handle CMYK sources
+
+ImageMagick
+-----------
+``'sorl.thumbnail.engines.convert_engine.Engine'``. This engine uses the
+ImageMagick ``convert`` command. Features:
+
+* Easy to install
+* Produces high quality images
+* It is pretty fast
+* Can handle CMYK sources
+* It is a command line command, that is less than ideal,
 
 
 ``THUMBNAIL_STORAGE``

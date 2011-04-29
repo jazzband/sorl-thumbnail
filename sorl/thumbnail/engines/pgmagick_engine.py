@@ -1,5 +1,4 @@
-from pgmagick import Blob, Color, ColorspaceType, DrawableLine
-from pgmagick import DrawableRectangle, Geometry, Image
+from pgmagick import Blob, ColorspaceType, Geometry, Image, ImageType
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
@@ -28,8 +27,10 @@ class Engine(EngineBase):
 
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
+            image.type(ImageType.TrueColorMatteType)
             image.quantizeColorSpace(ColorspaceType.RGBColorspace)
         elif colorspace == 'GRAY':
+            image.type(ImageType.GrayscaleMatteType)
             image.quantizeColorSpace(ColorspaceType.GRAYColorspace)
         else:
             return image

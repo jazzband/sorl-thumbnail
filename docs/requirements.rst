@@ -40,24 +40,15 @@ value store you first need to install the `redis server
 Image Library
 =============
 You need to have an image library installed. sorl-thumbnail ships with support
-for `Python Imaging Library`_, `ImageMagick`_ (or `GraphicsMagick`) commandline
-tools and `pgmagick`_. `pgmagick`_ are python bindings for GraphicsMagick
-(Magick++). The preferred option is to use `ImageMagick`_ which by default calls
-``convert`` and ``identify`` commands from `ImageMagick`_. You can change the
+for `Python Imaging Library`_, `pgmagick`_, `ImageMagick`_ (or `GraphicsMagick`)
+command line tools. `pgmagick`_ are python bindings for `GraphicsMagick`_
+(Magick++)`, 
+
+The `ImageMagick`_ based engine ``sorl.thumbnail.engines.convert_engine.Engine``
+by default calls ``convert`` and ``identify`` shell commands. You can change the
 paths to these tools by setting ``THUMBNAIL_CONVERT`` and ``THUMBNAIL_IDENTIFY``
-respectively. Note that you need to change these to use `GraphicsMagick`_ to
+respectively.  Note that youneed to change these to use `GraphicsMagick`_ to
 ``/path/to/gm convert`` and ``/path/to/gm identify``.
-
-ImageMagick installation
-------------------------
-Ubuntu 10.04 package installation::
-
-    sudo apt-get install imagemagick
-
-Or if you prefer `GraphicsMagick`_::
-
-    sudo apt-get install graphicsmagick
-
 
 Python Imaging Library installation
 -----------------------------------
@@ -100,6 +91,16 @@ Fedora installation::
 Installing `pgmagick`_ using pip::
 
     pip install pgmagick
+
+ImageMagick installation
+------------------------
+Ubuntu 10.04 package installation::
+
+    sudo apt-get install imagemagick
+
+Or if you prefer `GraphicsMagick`_::
+
+    sudo apt-get install graphicsmagick
 
 
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
