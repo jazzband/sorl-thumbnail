@@ -27,13 +27,13 @@ class Engine(EngineBase):
         elif orientation == OrientationType.BottomLeftOrientation:
             image.flip()
         elif orientation == OrientationType.LeftTopOrientation:
-            image.flip().rotate(270.)
+            image.rotate(90.).flip()
         elif orientation == OrientationType.RightTopOrientation:
-            image.rotate(270.)
-        elif orientation == OrientationType.RightBottomOrientation:
-            image.flop().rotate(270.)
-        elif orientation == OrientationType.LeftBottomOrientation:
             image.rotate(90.)
+        elif orientation == OrientationType.RightBottomOrientation:
+            image.rotate(90.).flop()
+        elif orientation == OrientationType.LeftBottomOrientation:
+            image.rotate(270.)
 
         image.orientation(OrientationType.TopLeftOrientation)
 
