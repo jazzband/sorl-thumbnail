@@ -1,4 +1,5 @@
-from pgmagick import Blob, ColorspaceType, Geometry, Image, ImageType
+from pgmagick import Blob, ColorspaceType, Geometry, Image, ImageType, \
+    OrientationType
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
@@ -13,7 +14,30 @@ class Engine(EngineBase):
     def get_image(self, source):
         blob = Blob()
         blob.update(source.read())
-        return Image(blob)
+        image = Image(blob)
+        orientation = image.orientation()
+
+        if orientation in (OrientationType.UndefinedOrientation,
+            OrientationType.TopLeftOrientation):
+            pass
+        elif orientation == OrientationType.TopRightOrientation:
+            image.flop()
+        elif orientation == OrientationType.BottomRightOrientation:
+            image.rotate(180.)
+        elif orientation == OrientationType.BottomLeftOrientation:
+            image.flip()
+        elif orientation == OrientationType.LeftTopOrientation:
+            image.rotate(90.).flip()
+        elif orientation == OrientationType.RightTopOrientation:
+            image.rotate(90.)
+        elif orientation == OrientationType.RightBottomOrientation:
+            image.rotate(90.).flop()
+        elif orientation == OrientationType.LeftBottomOrientation:
+            image.rotate(270.)
+
+        image.orientation(OrientationType.TopLeftOrientation)
+
+        return image
 
     def get_image_size(self, image):
         geometry = image.size()
