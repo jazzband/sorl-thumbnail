@@ -6,9 +6,16 @@ from sorl.thumbnail.conf import settings
 
 def setup_store():
     connection = ES(settings.THUMBNAIL_ELASTIC_SEARCH_SERVERS)
-    connection.create_index_if_missing(settings.THUMBNAIL_ELASTIC_SEARCH_INDEX)
-    connection.put_mapping(settings.THUMBNAIL_ELASTIC_SEARCH_DOCUMENT_TYPE,
-                           settings.THUMBNAIL_ELASTIC_SEARCH_MAPPING)
+    try:
+        connection.create_index_if_missing(settings.THUMBNAIL_ELASTIC_SEARCH_INDEX)
+    except:
+        pass
+    try:
+        connection.put_mapping(settings.THUMBNAIL_ELASTIC_SEARCH_DOCUMENT_TYPE,
+                               settings.THUMBNAIL_ELASTIC_SEARCH_MAPPING,
+                               indexes=[settings.THUMBNAIL_ELASTIC_SEARCH_INDEX,])
+    except:
+        pass
 
 class KVStore(KVStoreBase):
     def __init__(self, *args, **kwargs):
@@ -17,15 +24,16 @@ class KVStore(KVStoreBase):
 
     def _get_raw(self, key):
         try:
+            #import pdb; pdb.set_trace()
             value = self.connection.get(settings.THUMBNAIL_ELASTIC_SEARCH_INDEX, 
                                         settings.THUMBNAIL_ELASTIC_SEARCH_DOCUMENT_TYPE,
                                         key)
-            return value['_source']
+            return value['_source']['value']
         except:
             return None
 
     def _set_raw(self, key, value):
-        ret = self.connection.index(value, 
+        ret = self.connection.index({"value": value}, 
                                     settings.THUMBNAIL_ELASTIC_SEARCH_INDEX,
                                     settings.THUMBNAIL_ELASTIC_SEARCH_DOCUMENT_TYPE,
                                     key)

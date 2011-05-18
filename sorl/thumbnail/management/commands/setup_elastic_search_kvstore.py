@@ -5,4 +5,4 @@ class Command(NoArgsCommand):
 
     def handle_noargs(self, **options):
         from sorl.thumbnail.kvstores.elasticsearch_kvstore import setup_store
-        setup_store
+        setup_store()

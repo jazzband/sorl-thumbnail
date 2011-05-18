@@ -76,5 +76,10 @@ THUMBNAIL_ELASTIC_SEARCH_SERVERS = ['localhost:9200',]
 THUMBNAIL_ELASTIC_SEARCH_INDEX = "thumbnails"
 THUMBNAIL_ELASTIC_SEARCH_DOCUMENT_TYPE = "thumbnail"
 THUMBNAIL_ELASTIC_SEARCH_MAPPING = {"thumbnail": 
-                                    {"_id": {"index": "not_analyzed", "store": "yes"}}}
+                                    {"_id": {"index": "not_analyzed", "store": "yes"},
+                                     "_all": {"enabled": False},
+                                     "_source": {"enabled": True},
+                                     "properties": {"value": {"type": "string", "index": "no", "store": "no"}},
+                                    }
+                                   }
 
