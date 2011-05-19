@@ -28,7 +28,10 @@ def serialize_image_file(image_file):
 
 
 def deserialize_image_file(s):
-    data = simplejson.loads(s)
+    if isinstance(s,dict):
+        data = s
+    else:
+        data = simplejson.loads(s)
     class LazyStorage(LazyObject):
         def _setup(self):
             self._wrapped = get_module_class(data['storage'])()
