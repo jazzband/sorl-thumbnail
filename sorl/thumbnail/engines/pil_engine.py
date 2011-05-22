@@ -45,6 +45,8 @@ class Engine(EngineBase):
     def _get_raw_data(self, image, format_, quality):
         ImageFile.MAXBLOCK = 1024 * 1024
         buf = StringIO()
+        if format_ == 'PNG' and image.mode != "RGB":
+          image = image.convert("RGB")
         try:
             image.save(buf, format=format_, quality=quality, optimize=1)
         except IOError:
