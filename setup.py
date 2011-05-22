@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sorl-thumbnail',
-    version='11.05.2',
+    version='11.05.3',
     description='Thumbnails for Django',
     long_description=open('README.rst').read(),
     author='Mikko Hellsing',
