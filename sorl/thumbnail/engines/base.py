@@ -11,10 +11,26 @@ class EngineBase(object):
         """
         Processing conductor, returns the thumbnail as an image engine instance
         """
+        image = self.cropbox(image, geometry, options)
         image = self.colorspace(image, geometry, options)
         image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
+        image = self.rounded(image, geometry, options)
         return image
+
+    def cropbox(self, image, geometry, options):
+        """
+        Wrapper for ``_cropbox``
+        """
+        cropbox = options['cropbox']
+        if not cropbox:
+            return image
+        
+        if isinstance(cropbox, str):
+            x, y, x2, y2 = [int(x.strip()) for x in cropbox.split(',')]
+        else:
+            x, y, x2, y2 = cropbox
+        return self._cropbox(image, x, y, x2, y2)
 
     def colorspace(self, image, geometry, options):
         """
@@ -49,6 +65,15 @@ class EngineBase(object):
         x_image, y_image = self.get_image_size(image)
         x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
         return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
+
+    def rounded(self, image, geometry, options):
+        """
+        Wrapper for ``_rounded``
+        """
+        r = options['rounded']
+        if not r:
+            return image
+        return self._rounded(image, int(r))
 
     def write(self, image, options, thumbnail):
         """

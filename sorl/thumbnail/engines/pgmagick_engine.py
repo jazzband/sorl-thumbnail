@@ -25,6 +25,11 @@ class Engine(EngineBase):
         im = Image(blob)
         return im.isValid()
 
+    def _cropbox(self, image, x, y, x2, y2):
+        geometry = Geometry(x2-x, y2-y, x, y)
+        image.crop(geometry)
+        return image
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             image.type(ImageType.TrueColorMatteType)
