@@ -1,6 +1,7 @@
 #coding=utf-8
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop
+from sorl.thumbnail.parsers import parse_cropbox
 
 
 class EngineBase(object):
@@ -25,11 +26,7 @@ class EngineBase(object):
         cropbox = options['cropbox']
         if not cropbox:
             return image
-        
-        if isinstance(cropbox, str):
-            x, y, x2, y2 = [int(x.strip()) for x in cropbox.split(',')]
-        else:
-            x, y, x2, y2 = cropbox
+        x, y, x2, y2 = parse_cropbox(cropbox)
         return self._cropbox(image, x, y, x2, y2)
 
     def colorspace(self, image, geometry, options):
@@ -84,11 +81,18 @@ class EngineBase(object):
         raw_data = self._get_raw_data(image, format_, quality)
         thumbnail.write(raw_data)
 
-    def get_image_ratio(self, image):
+    def get_image_ratio(self, image, options):
         """
-        Calculates the image ratio
+        Calculates the image ratio. If cropbox option is used, the ratio
+        may have changed.
         """
-        x, y = self.get_image_size(image)
+        cropbox = options['cropbox']
+        if cropbox:
+            x, y, x2, y2 = parse_cropbox(cropbox)
+            x = x2 - x
+            y = y2 - y
+        else:
+            x, y = self.get_image_size(image)
         return float(x) / y
 
     #

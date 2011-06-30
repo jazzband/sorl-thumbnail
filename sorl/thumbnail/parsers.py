@@ -89,3 +89,14 @@ def parse_crop(crop, xy_image, xy_window):
     offset_y = get_offset(y_crop, xy_image[1] - xy_window[1])
     return offset_x, offset_y
 
+
+def parse_cropbox(cropbox):
+    """
+    Returns x, y, x2, y2 tuple for cropping.
+    """
+    if isinstance(cropbox, unicode):
+        return tuple([int(x.strip()) for x in cropbox.split(',')])
+    else:
+        return tuple(cropbox)
+    
+    

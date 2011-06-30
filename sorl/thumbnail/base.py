@@ -71,7 +71,7 @@ class ThumbnailBackend(object):
         """
         Creates the thumbnail by using default.engine
         """
-        ratio = default.engine.get_image_ratio(source_image)
+        ratio = default.engine.get_image_ratio(source_image, options)
         geometry = parse_geometry(geometry_string, ratio)
         image = default.engine.create(source_image, geometry, options)
         default.engine.write(image, options, thumbnail)
