@@ -17,7 +17,7 @@ setup(
     author_email='mikko@aino.se',
     license='BSD',
     url='https://github.com/sorl/sorl-thumbnail',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
     zip_safe=False,
     classifiers=[
