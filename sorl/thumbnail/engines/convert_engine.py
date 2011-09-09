@@ -22,7 +22,8 @@ class Engine(EngineBase):
         Writes the thumbnail image
         """
         handle, out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])
-        args = [settings.THUMBNAIL_CONVERT, image['source']]
+        args = settings.THUMBNAIL_CONVERT.split(' ')
+        args.append(image['source'])
         for k, v in image['options'].iteritems():
             args.append('-%s' % k)
             if v is not None:
