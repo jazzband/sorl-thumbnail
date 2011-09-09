@@ -67,6 +67,7 @@ class Engine(EngineBase):
         handle, tmp = mkstemp()
         with open(tmp, 'w') as fp:
             fp.write(raw_data)
+            fp.flush()
             p = Popen([settings.THUMBNAIL_IDENTIFY, tmp])
             retcode = p.wait()
         os.close(handle)
