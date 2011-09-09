@@ -429,7 +429,7 @@ class ModelTestCase(SimpleTestCaseBase):
         th11 = self.backend.get_thumbnail(im1, '9x5')
         self.kvstore.set(im0)
         item0.delete()
-        #self.assertEqual(None, self.kvstore.get(im0))
+        self.assertEqual(None, self.kvstore.get(im0))
         self.assertNotEqual(None, self.kvstore.get(im1))
         self.assertEqual(3, len(list(self.kvstore._find_keys(identity='image'))))
         self.assertEqual(1, len(list(self.kvstore._find_keys(identity='thumbnails'))))
