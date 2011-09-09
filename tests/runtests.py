@@ -8,7 +8,8 @@ from os.path import abspath, dirname, join as pjoin
 
 def runtests(test_labels=None, verbosity=1, interactive=True, failfast=True):
     here = abspath(dirname(__file__))
-    sys.path[0:0] = [ here, pjoin(here, os.pardir, 'sorl') ]
+    root = pjoin(here, os.pardir)
+    sys.path[0:0] = [ here, root, pjoin(root, 'sorl') ]
     labels = ['thumbnail', 'thumbnail_tests']
     test_labels = test_labels or labels
     if not settings.configured:
@@ -21,12 +22,15 @@ def runtests(test_labels=None, verbosity=1, interactive=True, failfast=True):
             },
             INSTALLED_APPS=labels,
             MEDIA_ROOT = '/tmp/sorl-test-media/',
+            MEDIA_URL = '/media/',
+            ADMINS = ('hacker@thumbnail.sorl.net',),
             THUMBNAIL_PREFIX='test/cache/',
             THUMBNAIL_DEBUG=True,
             THUMBNAIL_LOG_HANDLER={
                 'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
                 'level': 'ERROR',
             },
+            ROOT_URLCONF = 'urls',
         )
     from django.test.utils import get_runner
     TestRunner = get_runner(settings)

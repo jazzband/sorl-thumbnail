@@ -289,6 +289,7 @@ class TemplateTestCaseClient(unittest.TestCase):
         response = client.get('/thumbnail9.html')
         self.assertEqual(response.content.strip(), '<p>empty</p>')
         from django.core.mail import outbox
+        import pdb;pdb.set_trace()
         self.assertEqual(outbox[0].subject, '[sorl-thumbnail] ERROR: /thumbnail9.html')
         end = outbox[0].body.split('\n\n')[-2][-20:-1]
         self.assertEqual(end, 'tests/media/invalid')
@@ -419,25 +420,14 @@ class DummyTestCase(unittest.TestCase):
 class ModelTestCase(SimpleTestCaseBase):
     def test_field1(self):
         self.kvstore.clear()
-        item0 = Item.objects.get(image='100x100.jpg')
-        item1 = Item.objects.get(image='500x500.jpg')
-        im0 = ImageFile(item0.image)
-        im1 = ImageFile(item1.image)
-        th00 = self.backend.get_thumbnail(im0, '27x27')
-        th01 = self.backend.get_thumbnail(im0, '81x81')
-        th10 = self.backend.get_thumbnail(im1, '16x16')
-        th11 = self.backend.get_thumbnail(im1, '9x5')
-        self.kvstore.set(im0)
-        item0.delete()
-        self.assertEqual(None, self.kvstore.get(im0))
-        self.assertNotEqual(None, self.kvstore.get(im1))
+        item = Item.objects.get(image='100x100.jpg')
+        im = ImageFile(item.image)
+        self.assertEqual(None, self.kvstore.get(im))
+        self.backend.get_thumbnail(im, '27x27')
+        self.backend.get_thumbnail(im, '81x81')
+        self.assertNotEqual(None, self.kvstore.get(im))
         self.assertEqual(3, len(list(self.kvstore._find_keys(identity='image'))))
         self.assertEqual(1, len(list(self.kvstore._find_keys(identity='thumbnails'))))
-        item1.delete()
-        self.assertEqual(None, self.kvstore.get(im1))
-        self.assertEqual(None, self.kvstore._get(im1.key, identity='thumbnails'))
-        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='image'))))
-        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='thumbnails'))))
 
 
 class BackendTest(SimpleTestCaseBase):
