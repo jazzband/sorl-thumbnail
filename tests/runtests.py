@@ -6,7 +6,7 @@ from os.path import abspath, dirname, join as pjoin
 
 
 
-def runtests(verbosity=1, interactive=True, failfast=True, settings_module=None):
+def runtests(verbosity=1, interactive=True, failfast=True, settings_module='settings'):
     here = abspath(dirname(__file__))
     root = pjoin(here, os.pardir)
     sys.path[0:0] = [ here, root, pjoin(root, 'sorl') ]
