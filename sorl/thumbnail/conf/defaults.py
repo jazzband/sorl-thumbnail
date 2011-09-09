@@ -13,6 +13,9 @@ THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 # Redis requires some more work, see docs
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
 
+# Change this to something else for MSSQL
+THUMBNAIL_KEY_DBCOLUMN = 'key'
+
 # Engine, ships with:
 # sorl.thumbnail.engines.convert_engine.Engine
 # sorl.thumbnail.engines.pil_engine.Engine
