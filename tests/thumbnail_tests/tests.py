@@ -19,7 +19,7 @@ from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.log import ThumbnailLogHandler
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
-from test_app.models import Item
+from thumbnail_tests.models import Item
 
 
 handler = ThumbnailLogHandler()

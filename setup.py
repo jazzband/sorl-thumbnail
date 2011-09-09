@@ -1,9 +1,16 @@
 from setuptools import setup, find_packages
+from setuptools.command.test import test
+
+
+class TestCommand(test):
+    def run(self):
+        from tests.runtests import runtests
+        runtests()
 
 
 setup(
     name='sorl-thumbnail',
-    version='11.05.2',
+    version='11.09-dev',
     description='Thumbnails for Django',
     long_description=open('README.rst').read(),
     author='Mikko Hellsing',
@@ -24,5 +31,6 @@ setup(
         'Topic :: Multimedia :: Graphics',
         'Framework :: Django',
     ],
+    cmdclass={"test": TestCommand},
 )
 
