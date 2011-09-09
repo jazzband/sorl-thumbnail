@@ -1,3 +1,4 @@
+import sorl
 from setuptools import setup, find_packages
 from setuptools.command.test import test
 
@@ -10,7 +11,7 @@ class TestCommand(test):
 
 setup(
     name='sorl-thumbnail',
-    version='11.09-dev',
+    version=sorl.__version__,
     description='Thumbnails for Django',
     long_description=open('README.rst').read(),
     author='Mikko Hellsing',

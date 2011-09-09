@@ -1,7 +1,7 @@
-from os.path import join as pjoin, abspath, dirname
+from os.path import join as pjoin, abspath, dirname, pardir
 
 
-PROJ_ROOT = abspath(dirname(__file__))
+PROJ_ROOT = abspath(pjoin(dirname(__file__), pardir))
 THUMBNAIL_PREFIX = 'test/cache/'
 THUMBNAIL_DEBUG = True
 THUMBNAIL_LOG_HANDLER = {
@@ -27,3 +27,4 @@ INSTALLED_APPS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
+
