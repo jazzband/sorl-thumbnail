@@ -289,7 +289,6 @@ class TemplateTestCaseClient(unittest.TestCase):
         response = client.get('/thumbnail9.html')
         self.assertEqual(response.content.strip(), '<p>empty</p>')
         from django.core.mail import outbox
-        import pdb;pdb.set_trace()
         self.assertEqual(outbox[0].subject, '[sorl-thumbnail] ERROR: /thumbnail9.html')
         end = outbox[0].body.split('\n\n')[-2][-20:-1]
         self.assertEqual(end, 'tests/media/invalid')

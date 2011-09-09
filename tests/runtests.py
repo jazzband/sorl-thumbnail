@@ -6,45 +6,26 @@ from os.path import abspath, dirname, join as pjoin
 
 
 
-def runtests(test_labels=None, verbosity=1, interactive=True, failfast=True):
+def runtests(verbosity=1, interactive=True, failfast=True, settings_module=None):
     here = abspath(dirname(__file__))
     root = pjoin(here, os.pardir)
     sys.path[0:0] = [ here, root, pjoin(root, 'sorl') ]
-    labels = ['thumbnail', 'thumbnail_tests']
-    test_labels = test_labels or labels
-    if not settings.configured:
-        settings.configure(
-            DATABASES={
-                'default': {
-                    'ENGINE': 'django.db.backends.sqlite3',
-                    'NAME': 'thumbnail_tests',
-                },
-            },
-            INSTALLED_APPS=labels,
-            MEDIA_ROOT = '/tmp/sorl-test-media/',
-            MEDIA_URL = '/media/',
-            ADMINS = ('hacker@thumbnail.sorl.net',),
-            THUMBNAIL_PREFIX='test/cache/',
-            THUMBNAIL_DEBUG=True,
-            THUMBNAIL_LOG_HANDLER={
-                'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
-                'level': 'ERROR',
-            },
-            ROOT_URLCONF = 'urls',
-        )
+    os.environ['DJANGO_SETTINGS_MODULE'] = settings_module
     from django.test.utils import get_runner
     TestRunner = get_runner(settings)
     test_runner = TestRunner(verbosity=verbosity, interactive=interactive, failfast=failfast)
-    return test_runner.run_tests(test_labels)
+    return test_runner.run_tests(settings.INSTALLED_APPS)
 
 
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Runs the test suite for sorl-thumbnail.')
     parser.add_argument(
-        'test_labels',
-        nargs='*',
-        help='Test labels.',
+        '--settings',
+        dest='settings_module',
+        action='store',
+        default='settings',
+        help='Specify settings module.',
         )
     parser.add_argument(
         '--noinput',
@@ -62,10 +43,10 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
     failures = runtests(
-        test_labels=args.test_labels,
         verbosity=1,
         interactive=args.interactive,
-        failfast=args.failfast
+        failfast=args.failfast,
+        settings_module=args.settings_module,
         )
     if failures:
         sys.exit(bool(failures))
