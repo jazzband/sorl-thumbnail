@@ -50,8 +50,8 @@ class Engine(EngineBase):
             'quality': quality,
             'optimize': 1,
         }
-        if format_ == 'JPEG':
-            params['progressive'] = progressive
+        if format_ == 'JPEG' and progressive:
+            params['progressive'] = True
         try:
             image.save(buf, **params)
         except IOError:

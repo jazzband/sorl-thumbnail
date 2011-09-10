@@ -2,23 +2,23 @@
 import logging
 import operator
 import os
-import random
+import re
 import shutil
 import unittest
-from django.core.files.storage import Storage, default_storage
-from django.core.urlresolvers import reverse
+from PIL import Image
+from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.test.client import Client
 from os.path import join as pjoin
-from PIL import Image
+from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
-from sorl.thumbnail.images import ImageFile, DummyImageFile
-from sorl.thumbnail import default, get_thumbnail, delete
+from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.log import ThumbnailLogHandler
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
+from subprocess import Popen, PIPE
 from thumbnail_tests.models import Item
 
 
@@ -249,7 +249,23 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         }).strip()
         self.assertEqual(val0, val1)
 
+    def test_progressive(self):
+        im = Item.objects.get(image='500x500.jpg').image
+        th = self.backend.get_thumbnail(im, '100x100', progressive=True)
+        path = pjoin(settings.MEDIA_ROOT, th.name)
+        p = Popen(['identify', '-verbose', path], stdout=PIPE)
+        p.wait()
+        m = re.search('Interlace: JPEG', p.stdout.read())
+        self.assertEqual(bool(m), True)
 
+    def test_nonprogressive(self):
+        im = Item.objects.get(image='500x500.jpg').image
+        th = self.backend.get_thumbnail(im, '100x100', progressive=False)
+        path = pjoin(settings.MEDIA_ROOT, th.name)
+        p = Popen(['identify', '-verbose', path], stdout=PIPE)
+        p.wait()
+        m = re.search('Interlace: None', p.stdout.read())
+        self.assertEqual(bool(m), True)
 
 class TemplateTestCaseB(unittest.TestCase):
     def tearDown(self):
