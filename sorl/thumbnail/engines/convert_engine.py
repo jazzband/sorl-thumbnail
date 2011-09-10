@@ -22,6 +22,8 @@ class Engine(EngineBase):
         Writes the thumbnail image
         """
         handle, out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])
+        if options['format'] == 'JPEG' and options.get('progressive'):
+            image['options']['interlace'] = 'line'
         args = settings.THUMBNAIL_CONVERT.split(' ')
         args.append(image['source'])
         for k, v in image['options'].iteritems():
