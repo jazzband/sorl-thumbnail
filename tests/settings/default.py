@@ -2,6 +2,7 @@ from os.path import join as pjoin, abspath, dirname, pardir
 
 
 PROJ_ROOT = abspath(pjoin(dirname(__file__), pardir))
+DATA_ROOT = pjoin(PROJ_ROOT, 'data')
 THUMBNAIL_PREFIX = 'test/cache/'
 THUMBNAIL_DEBUG = True
 THUMBNAIL_LOG_HANDLER = {

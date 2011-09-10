@@ -80,8 +80,36 @@ class Engine(EngineBase):
         os.remove(tmp)
         return retcode == 0
 
-    def _orient(self, image):
-        image['oprions']['auto-orient'] = None
+    def _orientation(self, image):
+        if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
+            args = settings.THUMBNAIL_IDENTIFY.split()
+            args.extend([ '-format', '%[exif:orientation]', image['source'] ])
+            p = Popen(args, stdout=PIPE)
+            p.wait()
+            result = p.stdout.read().strip()
+            if result:
+                result = int(result)
+                options = image['options']
+                if result == 2:
+                    options['flop'] = None
+                elif result == 3:
+                    options['rotate'] = '180'
+                elif result == 4:
+                    options['flip'] = None
+                elif result == 5:
+                    options['rotate'] = '90'
+                    options['flop'] = None
+                elif result == 6:
+                    options['rotate'] = '90'
+                elif result == 7:
+                    options['rotate'] = '-90'
+                    options['flop'] = None
+                elif result == 8:
+                    options['rotate'] = '-90'
+        else:
+            # ImageMagick also corrects the orientation exif data for
+            # destination
+            image['options']['auto-orient'] = None
         return image
 
     def _colorspace(self, image, colorspace):

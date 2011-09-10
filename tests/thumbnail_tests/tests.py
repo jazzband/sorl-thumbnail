@@ -77,6 +77,7 @@ class SimpleTestCaseBase(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
 
+
 class SimpleTestCase(SimpleTestCaseBase):
     def testSimple(self):
         item = Item.objects.get(image='500x500.jpg')
@@ -275,6 +276,29 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         p.wait()
         m = re.search('Interlace: None', p.stdout.read())
         self.assertEqual(bool(m), True)
+
+    def test_orientation(self):
+        data_dir = pjoin(settings.MEDIA_ROOT, 'data')
+        shutil.copytree(settings.DATA_ROOT, data_dir)
+        ref = Image.open(pjoin(data_dir, '1_topleft.jpg'))
+        top = ref.getpixel((14, 7))
+        left = ref.getpixel((7, 14))
+        engine = PILEngine()
+        def epsilon(x, y):
+            if isinstance(x, (tuple, list)):
+                x = sum(x) / len(x)
+            if isinstance(y, (tuple, list)):
+                y = sum(y) / len(y)
+            return abs(x - y)
+        for name in sorted(os.listdir(data_dir)):
+            th = self.backend.get_thumbnail('data/%s' % name, '30x30')
+            im = engine.get_image(th)
+            self.assertLess(epsilon(top, im.getpixel((14, 7))), 10)
+            self.assertLess(epsilon(left, im.getpixel((7, 14))), 10)
+            exif = im._getexif()
+            if exif:
+                self.assertEqual(exif.get(0x0112), 1)
+
 
 class TemplateTestCaseB(unittest.TestCase):
     def tearDown(self):

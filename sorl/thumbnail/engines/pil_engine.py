@@ -31,7 +31,20 @@ class Engine(EngineBase):
             exif = None
         if exif:
             orientation = exif.get(0x0112)
-            print orientation
+            if orientation == 2:
+                image = image.transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 3:
+                image = image.rotate(180)
+            elif orientation == 4:
+                image = image.transpose(Image.FLIP_TOP_BOTTOM)
+            elif orientation == 5:
+                image = image.rotate(-90).transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 6:
+                image = image.rotate(-90)
+            elif orientation == 7:
+                image = image.rotate(90).transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 8:
+                image = image.rotate(90)
         return image
 
     def _colorspace(self, image, colorspace):
