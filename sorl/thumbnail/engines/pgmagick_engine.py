@@ -1,4 +1,5 @@
 from pgmagick import Blob, ColorspaceType, Geometry, Image, ImageType
+from pgmagick import InterlaceType
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
@@ -47,9 +48,11 @@ class Engine(EngineBase):
         image.crop(geometry)
         return image
 
-    def _get_raw_data(self, image, format_, quality):
+    def _get_raw_data(self, image, format_, quality, progressive=False):
         image.magick(format_.encode('utf8'))
         image.quality(quality)
+        if format_ == 'JPEG' and progressive:
+            image.interlaceType(InterlaceType.LineInterlace)
         blob = Blob()
         image.write(blob)
         return get_blob_data(blob)
