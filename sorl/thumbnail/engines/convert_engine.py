@@ -53,7 +53,9 @@ class Engine(EngineBase):
         Returns the image width and height as a tuple
         """
         if image['size'] is None:
-            p = Popen([settings.THUMBNAIL_IDENTIFY, image['source']], stdout=PIPE)
+            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args.append(image['source'])
+            p = Popen(args, stdout=PIPE)
             p.wait()
             m = size_re.match(p.stdout.read())
             image['size'] = int(m.group('x')), int(m.group('y'))
@@ -68,7 +70,9 @@ class Engine(EngineBase):
         with open(tmp, 'w') as fp:
             fp.write(raw_data)
             fp.flush()
-            p = Popen([settings.THUMBNAIL_IDENTIFY, tmp])
+            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args.append(tmp)
+            p = Popen(args)
             retcode = p.wait()
         os.close(handle)
         os.remove(tmp)
