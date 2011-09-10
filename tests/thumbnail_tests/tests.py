@@ -199,6 +199,15 @@ class SimpleTestCase(SimpleTestCaseBase):
             'sorl.thumbnail.images.UrlStorage',
             )
 
+    def test_abspath(self):
+        item = Item.objects.get(image='500x500.jpg')
+        image = ImageFile(item.image.path)
+        val = render_to_string('thumbnail20.html', {
+            'image': image,
+        }).strip()
+        im = self.backend.get_thumbnail(image, '32x32', crop='center')
+        self.assertEqual('<img src="%s">' % im.url, val)
+
 
 class TemplateTestCaseA(SimpleTestCaseBase):
     def testModel(self):

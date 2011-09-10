@@ -1,5 +1,5 @@
 from pgmagick import Blob, ColorspaceType, Geometry, Image, ImageType
-from pgmagick import InterlaceType
+from pgmagick import InterlaceType, OrientationType
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
@@ -25,6 +25,25 @@ class Engine(EngineBase):
         blob.update(raw_data)
         im = Image(blob)
         return im.isValid()
+
+    def _orientation(self, image):
+        orientation = image.orientation()
+        if orientation == OrientationType.TopRightOrientation:
+            image.flop()
+        elif orientation == OrientationType.BottomRightOrientation:
+            image.rotate(180.0)
+        elif orientation == OrientationType.BottomLeftOrientation:
+            image.flip()
+        elif orientation == OrientationType.LeftTopOrientation:
+            image.rotate(90.0).flop()
+        elif orientation == OrientationType.RightTopOrientation:
+            image.rotate(90.0)
+        elif orientation == OrientationType.RightBottomOrientation:
+            image.rotate(-90.0).flop()
+        elif orientation == OrientationType.LeftBottomOrientation:
+            image.rotate(-90.0)
+        image.orientation(OrientationType.TopLeftOrientation)
+        return image
 
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':

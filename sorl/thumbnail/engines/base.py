@@ -11,9 +11,18 @@ class EngineBase(object):
         """
         Processing conductor, returns the thumbnail as an image engine instance
         """
+        image = self.orientation(image, geometry, options)
         image = self.colorspace(image, geometry, options)
         image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
+        return image
+
+    def orientation(self, image, geometry, options):
+        """
+        Wrapper for ``_orientation``
+        """
+        if options.get('orientation', True):
+            return self._orientation(image)
         return image
 
     def colorspace(self, image, geometry, options):
@@ -76,7 +85,7 @@ class EngineBase(object):
     #
     def get_image(self, source):
         """
-        Returns the backend image objects from a ImageFile instance
+        Returns the backend image objects from an ImageFile instance
         """
         raise NotImplemented()
 
@@ -91,6 +100,12 @@ class EngineBase(object):
         Checks if the supplied raw data is valid image data
         """
         raise NotImplemented()
+
+    def _orientation(self, image):
+        """
+        Read orientation exif data and orientate the image accordningly
+        """
+        return image
 
     def _colorspace(self, image, colorspace):
         """

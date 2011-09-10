@@ -24,6 +24,16 @@ class Engine(EngineBase):
             return False
         return True
 
+    def _orientation(self, image):
+        try:
+            exif = image._getexif()
+        except AttributeError:
+            exif = None
+        if exif:
+            orientation = exif.get(0x0112)
+            print orientation
+        return image
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             if image.mode == 'RGBA':

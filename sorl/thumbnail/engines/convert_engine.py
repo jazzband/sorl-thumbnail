@@ -80,6 +80,10 @@ class Engine(EngineBase):
         os.remove(tmp)
         return retcode == 0
 
+    def _orient(self, image):
+        image['oprions']['auto-orient'] = None
+        return image
+
     def _colorspace(self, image, colorspace):
         """
         `Valid colorspaces
