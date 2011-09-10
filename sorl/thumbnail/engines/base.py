@@ -56,7 +56,11 @@ class EngineBase(object):
         """
         format_ = options['format']
         quality = options['quality']
-        raw_data = self._get_raw_data(image, format_, quality)
+        # additional non-default-value options:
+        progressive = options.get('progressive')
+        raw_data = self._get_raw_data(image, format_, quality,
+            progressive=progressive
+            )
         thumbnail.write(raw_data)
 
     def get_image_ratio(self, image):
@@ -110,7 +114,7 @@ class EngineBase(object):
         """
         raise NotImplemented()
 
-    def _get_raw_data(self, image, format_, quality):
+    def _get_raw_data(self, image, format_, quality, progressive=False):
         """
         Gets raw data given the image, format and quality. This method is
         called from :meth:`write`

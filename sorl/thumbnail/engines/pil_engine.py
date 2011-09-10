@@ -42,13 +42,21 @@ class Engine(EngineBase):
         return image.crop((x_offset, y_offset,
                            width + x_offset, height + y_offset))
 
-    def _get_raw_data(self, image, format_, quality):
+    def _get_raw_data(self, image, format_, quality, progressive=False):
         ImageFile.MAXBLOCK = 1024 * 1024
         buf = StringIO()
+        params = {
+            'format': format_,
+            'quality': quality,
+            'optimize': 1,
+        }
+        if format_ == 'JPEG':
+            params['progressive'] = progressive
         try:
-            image.save(buf, format=format_, quality=quality, optimize=1)
+            image.save(buf, **params)
         except IOError:
-            image.save(buf, format=format_, quality=quality)
+            params.pop('optimize')
+            image.save(buf, **params)
         raw_data = buf.getvalue()
         buf.close()
         return raw_data
