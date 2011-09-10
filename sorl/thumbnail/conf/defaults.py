@@ -63,6 +63,9 @@ THUMBNAIL_QUALITY = 95
 # Save as progressive when saving as jpeg
 THUMBNAIL_PROGRESSIVE = True
 
+# Orientate the thumbnail with respect to source EXIF orientation tag
+THUMBNAIL_ORIENTATION = True
+
 # This means sorl.thumbnail will generate and serve a generated dummy image
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False

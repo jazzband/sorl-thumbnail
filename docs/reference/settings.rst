@@ -60,6 +60,14 @@ Features
 * More dependencies
 * Requires a little extra work to transfer data between environments
 
+``THUMBNAIL_KEY_DBCOLUMN``
+==========================
+
+- Default ``'key'``
+
+Since MSSQL reserved the ``key`` name for db columns you can change this to
+something else using this setting.
+
 
 ``THUMBNAIL_ENGINE``
 ====================
@@ -90,16 +98,33 @@ Pgmagick
 * It is a tad slow?
 * Can handle CMYK sources
 
-ImageMagick
------------
+ImageMagick / GraphicsMagick
+----------------------------
 ``'sorl.thumbnail.engines.convert_engine.Engine'``. This engine uses the
-ImageMagick ``convert`` command. Features:
+ImageMagick ``convert`` or  GraphicsMagic ``gm convert`` command. Features:
 
 * Easy to install
 * Produces high quality images
 * It is pretty fast
 * Can handle CMYK sources
 * It is a command line command, that is less than ideal,
+
+``THUMBNAIL_CONVERT``
+====================
+
+- Default ``'convert'``
+
+Path to convert command, use ``'gm convert'`` for GraphicsMagick.
+Only applicable for the convert Engine.
+
+
+``THUMBNAIL_IDENTIFY``
+====================
+
+- Default ``'identify'``
+
+Path to identify command, use ``'gm identify'`` for GraphicsMagick.
+Only applicable for the convert Engine.
 
 
 ``THUMBNAIL_STORAGE``
@@ -145,7 +170,7 @@ The port for Redis server. Only applicable for the Redis Key Value Store
 ``THUMBNAIL_CACHE_TIMEOUT``
 ===========================
 
-- Default: ``sys.maxint``
+- Default: ``3600 * 24 * 365 * 10``
 
 Cache timeout for Cached DB Key Value Store. You should probably keep this at
 maximum or ``None`` if your caching backend can handle that as infinite.
@@ -204,6 +229,13 @@ Should we upscale by default? ``True`` means we upscale images by default.
 Default thumbnail quality. A value between 0 and 100 is allowed. This can be
 overridden by individual options.
 
+``THUMBNAIL_PROGRESSIVE``
+========================
+
+- Default: ``True``
+
+Saves jpeg thumbnails as progressive jpegs. This can be overridden by individual
+options.
 
 ``THUMBNAIL_DUMMY``
 ===================
@@ -215,7 +247,7 @@ case is when you want to do development on a deployed project that has image
 references in its database. Instead of downloading all the image files from the
 server hosting the deployed project and all its thumbnails we just set this
 option to ``True``. This will generate placeholder images for all thumbnails
-regardless of the input source.
+missing input source.
 
 
 ``THUMBNAIL_DUMMY_SOURCE``
@@ -231,7 +263,7 @@ option is for example ``http://placehold.it/%(width)sx%(height)s``.
 ``THUMBNAIL_DUMMY_RATIO``
 =========================
 
-Default: ``1.5``
+- Default: ``1.5``
 
 This option is only applicable if ``THUMBNAIL_DUMMY`` is set to true. This
 value sets an image ratio to all thumbnails that are not defined by width

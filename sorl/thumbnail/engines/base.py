@@ -1,4 +1,5 @@
 #coding=utf-8
+from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop
 
@@ -21,7 +22,7 @@ class EngineBase(object):
         """
         Wrapper for ``_orientation``
         """
-        if options.get('orientation', True):
+        if options.get('orientation', settings.THUMBNAIL_ORIENTATION):
             return self._orientation(image)
         return image
 
@@ -66,7 +67,7 @@ class EngineBase(object):
         format_ = options['format']
         quality = options['quality']
         # additional non-default-value options:
-        progressive = options.get('progressive')
+        progressive = options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
         raw_data = self._get_raw_data(image, format_, quality,
             progressive=progressive
             )
@@ -103,7 +104,7 @@ class EngineBase(object):
 
     def _orientation(self, image):
         """
-        Read orientation exif data and orientate the image accordningly
+        Read orientation exif data and orientate the image accordingly
         """
         return image
 
