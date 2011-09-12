@@ -110,7 +110,7 @@ ImageMagick ``convert`` or  GraphicsMagic ``gm convert`` command. Features:
 * It is a command line command, that is less than ideal,
 
 ``THUMBNAIL_CONVERT``
-====================
+=====================
 
 - Default ``'convert'``
 
@@ -119,7 +119,7 @@ Only applicable for the convert Engine.
 
 
 ``THUMBNAIL_IDENTIFY``
-====================
+=====================
 
 - Default ``'identify'``
 
@@ -230,7 +230,7 @@ Default thumbnail quality. A value between 0 and 100 is allowed. This can be
 overridden by individual options.
 
 ``THUMBNAIL_PROGRESSIVE``
-========================
+=========================
 
 - Default: ``True``
 

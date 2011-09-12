@@ -15,7 +15,7 @@ import os
 import sphinx
 import sys
 
-sys.path.append(os.path.pardir)
+sys.path.insert(0, os.path.pardir)
 import sorl
 
 for j in xrange(0, len(sphinx.__version__)):
