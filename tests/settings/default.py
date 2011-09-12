@@ -9,6 +9,9 @@ THUMBNAIL_LOG_HANDLER = {
     'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
     'level': 'ERROR',
 }
+THUMBNAIL_KVSTORE = 'thumbnail_tests.kvstore.TestKVStore'
+THUMBNAIL_STORAGE = 'thumbnail_tests.storage.TestStorage'
+DEFAULT_FILE_STORAGE = 'thumbnail_tests.storage.TestStorage'
 ADMINS = (
     ('Sorl', 'thumbnail@sorl.net'),
 )
@@ -20,7 +23,7 @@ DATABASES = {
 }
 MEDIA_ROOT = pjoin(PROJ_ROOT, 'media')
 MEDIA_URL = '/media/'
-ROOT_URLCONF = 'tests.urls'
+ROOT_URLCONF = 'thumbnail_tests.urls'
 INSTALLED_APPS = (
     'thumbnail',
     'thumbnail_tests',

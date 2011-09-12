@@ -4,6 +4,7 @@ import operator
 import os
 import re
 import shutil
+import sys
 import unittest
 from PIL import Image
 from django.core.files.storage import default_storage
@@ -20,11 +21,50 @@ from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
 from subprocess import Popen, PIPE
 from thumbnail_tests.models import Item
+from thumbnail_tests.storage import slog
 
 
 handler = ThumbnailLogHandler()
 handler.setLevel(logging.ERROR)
 logging.getLogger('sorl.thumbnail').addHandler(handler)
+
+
+class StorageTestCase(unittest.TestCase):
+    def setUp(self):
+        name = 'org.jpg'
+        os.makedirs(settings.MEDIA_ROOT)
+        fn = pjoin(settings.MEDIA_ROOT, name)
+        Image.new('L', (100, 100)).save(fn)
+        self.im = ImageFile(name)
+
+    def test_a_new(self):
+        slog.start_log()
+        get_thumbnail(self.im, '50x50')
+        log = slog.stop_log()
+        actions = [
+            'exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # first see if the file exists
+            'open: org.jpg', # open the original for thumbnailing
+            'save: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # save the file
+            'get_available_name: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # cehck for filename
+            'exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # called by get_available_name
+        ]
+        self.assertEqual(log, actions)
+
+    def test_b_cached(self):
+        slog.start_log()
+        get_thumbnail(self.im, '50x50')
+        log = slog.stop_log()
+        self.assertEqual(log, []) # now this should all be in cache
+
+    def test_c_safe_methods(self):
+        slog.start_log()
+        im = default.kvstore.get(self.im)
+        im.url, im.x, im.y
+        log = slog.stop_log()
+        self.assertEqual(log, [])
+
+    def tearDown(self):
+        shutil.rmtree(settings.MEDIA_ROOT)
 
 
 class ParsersTestCase(unittest.TestCase):
@@ -172,18 +212,18 @@ class SimpleTestCase(SimpleTestCaseBase):
 
     def test_storage_serialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
-        self.assertEqual(im.serialize_storage(), 'django.core.files.storage.FileSystemStorage')
+        self.assertEqual(im.serialize_storage(), 'thumbnail_tests.storage.TestStorage')
         self.assertEqual(
             ImageFile('http://www.image.jpg').serialize_storage(),
             'sorl.thumbnail.images.UrlStorage',
             )
         self.assertEqual(
             ImageFile('http://www.image.jpg', default.storage).serialize_storage(),
-            'django.core.files.storage.FileSystemStorage',
+            'thumbnail_tests.storage.TestStorage',
             )
         self.assertEqual(
             ImageFile('getit', default_storage).serialize_storage(),
-            'django.core.files.storage.FileSystemStorage',
+            'thumbnail_tests.storage.TestStorage',
             )
 
     def test_image_file_deserialize(self):
@@ -191,7 +231,7 @@ class SimpleTestCase(SimpleTestCaseBase):
         default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
-            'django.core.files.storage.FileSystemStorage',
+            'thumbnail_tests.storage.TestStorage',
             )
         im = ImageFile('http://www.aino.se/media/i/logo.png')
         default.kvstore.set(im)
@@ -227,8 +267,8 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         val = render_to_string('thumbnail6.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, ('<a href="/media/test/cache/57/ba/57ba10c5a6c56dc71362d9b1427cb0b4.jpg">'
-                               '<img src="/media/test/cache/6c/c3/6cc32cd4aa002c577b534442c11e07d2.jpg" width="400" height="400">'
+        self.assertEqual(val, ('<a href="/media/test/cache/ac/78/ac78a0326054e1d795cba4016ee54966.jpg">'
+                               '<img src="/media/test/cache/4b/44/4b44d2d5f5cf0a35a1450873c88e28b7.jpg" width="400" height="400">'
                                '</a>'))
 
     def test_serialization_options(self):
@@ -514,7 +554,7 @@ class TestInputCase(unittest.TestCase):
         th = get_thumbnail(self.name, '200x200')
         self.assertEqual(
             th.url,
-            '/media/test/cache/4c/ed/4cede3c3e9dc62dcd3164e680e611c87.jpg'
+            '/media/test/cache/8a/17/8a17eff95c6ecf46f82d0807d93631e9.jpg'
             )
 
     def tearDown(self):
