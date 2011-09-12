@@ -237,6 +237,7 @@ overridden by individual options.
 Saves jpeg thumbnails as progressive jpegs. This can be overridden by individual
 options.
 
+
 ``THUMBNAIL_DUMMY``
 ===================
 
@@ -253,11 +254,13 @@ missing input source.
 ``THUMBNAIL_DUMMY_SOURCE``
 ==========================
 
-- Default ``http://placekitten.com/%(width)s/%(height)s``
+- Default ``http://dummyimage.com/%(width)sx%(height)s``
 
-If ``THUMBNAIL_DUMMY`` is ``True`` then this is the source of the presented
-thumbnail. Width and Height is passed to the string for formatting.  Another
-option is for example ``http://placehold.it/%(width)sx%(height)s``.
+This is the generated thumbnail whensource of the presented thumbnail. Width and
+Height is passed to the string for formatting.  Other options are for example:
+
+- ``http://placehold.it/%(width)sx%(height)s``
+- ``http://placekitten.com/%(width)s/%(height)s`` 
 
 
 ``THUMBNAIL_DUMMY_RATIO``
@@ -265,8 +268,7 @@ option is for example ``http://placehold.it/%(width)sx%(height)s``.
 
 - Default: ``1.5``
 
-This option is only applicable if ``THUMBNAIL_DUMMY`` is set to true. This
-value sets an image ratio to all thumbnails that are not defined by width
+This value sets an image ratio to all thumbnails that are not defined by width
 **and** height since we cannot determine from the file input (since we don't
 have that).
 

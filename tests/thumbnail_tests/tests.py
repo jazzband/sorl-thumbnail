@@ -495,10 +495,10 @@ class DummyTestCase(unittest.TestCase):
         val = render_to_string('thumbnaild2.html', {
             'anything': None,
         }).strip()
-        self.assertEqual(val, '<img src="http://placekitten.com/300/200" width="300" height="200"><p>NOT</p>')
+        self.assertEqual(val, '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>')
         val = render_to_string('thumbnaild3.html', {
         }).strip()
-        self.assertEqual(val, '<img src="http://placekitten.com/600/400" width="600" height="400">')
+        self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
 
     def tearDown(self):
         for k, v in self.org_settings.iteritems():
