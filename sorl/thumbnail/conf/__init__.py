@@ -7,4 +7,4 @@ sorl_settings = UserSettingsHolder(_settings)
 for setting in dir(defaults):
     if setting == setting.upper() and not hasattr(sorl_settings, setting):
         setattr(sorl_settings, setting, getattr(defaults, setting))
-settings = ush
+settings = sorl_settings
