@@ -1,4 +1,5 @@
 from cStringIO import StringIO
+from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
@@ -75,6 +76,14 @@ class Engine(EngineBase):
         }
         if format_ == 'JPEG' and progressive:
             params['progressive'] = True
+
+        if format_ == 'JPEG' and image.mode == 'RGBA':
+            # substitute untransparent background
+            bg = Image.new('RGB', image.size, settings.THUMBNAIL_BGCOLOR)
+            alpha = image.split()[-1]
+            bg.paste(image, None, alpha)
+            image = bg
+
         try:
             image.save(buf, **params)
         except IOError:
