@@ -1,4 +1,5 @@
 from pgmagick import Blob, ColorspaceType, Geometry, Image, ImageType
+from pgmagick import InterlaceType, OrientationType
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
@@ -30,6 +31,28 @@ class Engine(EngineBase):
         image.crop(geometry)
         return image
 
+    def _orientation(self, image):
+        orientation = image.orientation()
+        if orientation == OrientationType.TopRightOrientation:
+            image.flop()
+        elif orientation == OrientationType.BottomRightOrientation:
+            image.rotate(180)
+        elif orientation == OrientationType.BottomLeftOrientation:
+            image.flip()
+        elif orientation == OrientationType.LeftTopOrientation:
+            image.rotate(90)
+            image.flop()
+        elif orientation == OrientationType.RightTopOrientation:
+            image.rotate(90)
+        elif orientation == OrientationType.RightBottomOrientation:
+            image.rotate(-90)
+            image.flop()
+        elif orientation == OrientationType.LeftBottomOrientation:
+            image.rotate(-90)
+        image.orientation(OrientationType.TopLeftOrientation)
+
+        return image
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             image.type(ImageType.TrueColorMatteType)
@@ -52,9 +75,11 @@ class Engine(EngineBase):
         image.crop(geometry)
         return image
 
-    def _get_raw_data(self, image, format_, quality):
+    def _get_raw_data(self, image, format_, quality, progressive=False):
         image.magick(format_.encode('utf8'))
         image.quality(quality)
+        if format_ == 'JPEG' and progressive:
+            image.interlaceType(InterlaceType.LineInterlace)
         blob = Blob()
         image.write(blob)
         return get_blob_data(blob)

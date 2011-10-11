@@ -46,6 +46,29 @@ class Engine(EngineBase):
     def _cropbox(self, image, x, y, x2, y2):
         return image.crop((x, y, x2, y2))
 
+    def _orientation(self, image):
+        try:
+            exif = image._getexif()
+        except AttributeError:
+            exif = None
+        if exif:
+            orientation = exif.get(0x0112)
+            if orientation == 2:
+                image = image.transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 3:
+                image = image.rotate(180)
+            elif orientation == 4:
+                image = image.transpose(Image.FLIP_TOP_BOTTOM)
+            elif orientation == 5:
+                image = image.rotate(-90).transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 6:
+                image = image.rotate(-90)
+            elif orientation == 7:
+                image = image.rotate(90).transpose(Image.FLIP_LEFT_RIGHT)
+            elif orientation == 8:
+                image = image.rotate(90)
+        return image
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             if image.mode == 'RGBA':
@@ -69,13 +92,21 @@ class Engine(EngineBase):
         image.putalpha(i)
         return image
 
-    def _get_raw_data(self, image, format_, quality):
+    def _get_raw_data(self, image, format_, quality, progressive=False):
         ImageFile.MAXBLOCK = 1024 * 1024
         buf = StringIO()
+        params = {
+            'format': format_,
+            'quality': quality,
+            'optimize': 1,
+        }
+        if format_ == 'JPEG' and progressive:
+            params['progressive'] = True
         try:
-            image.save(buf, format=format_, quality=quality, optimize=1)
+            image.save(buf, **params)
         except IOError:
-            image.save(buf, format=format_, quality=quality)
+            params.pop('optimize')
+            image.save(buf, **params)
         raw_data = buf.getvalue()
         buf.close()
         return raw_data

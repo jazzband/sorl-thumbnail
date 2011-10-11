@@ -1,16 +1,24 @@
+import sorl
 from setuptools import setup, find_packages
+from setuptools.command.test import test
+
+
+class TestCommand(test):
+    def run(self):
+        from tests.runtests import runtests
+        runtests()
 
 
 setup(
     name='sorl-thumbnail',
-    version='11.05.2',
+    version=sorl.__version__,
     description='Thumbnails for Django',
     long_description=open('README.rst').read(),
     author='Mikko Hellsing',
     author_email='mikko@aino.se',
     license='BSD',
     url='https://github.com/sorl/sorl-thumbnail',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
     zip_safe=False,
     classifiers=[
@@ -24,5 +32,6 @@ setup(
         'Topic :: Multimedia :: Graphics',
         'Framework :: Django',
     ],
+    cmdclass={"test": TestCommand},
 )
 

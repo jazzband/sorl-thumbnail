@@ -9,7 +9,6 @@ class ThumbnailLogHandler(logging.Handler):
     """
     def emit(self, record):
         import traceback
-
         if not settings.ADMINS:
             return
         try:

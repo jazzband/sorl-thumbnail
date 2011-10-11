@@ -22,7 +22,13 @@ class Engine(EngineBase):
         Writes the thumbnail image
         """
         handle, out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])
-        args = [settings.THUMBNAIL_CONVERT, image['source']]
+        if (
+                options['format'] == 'JPEG' and
+                options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
+            ):
+            image['options']['interlace'] = 'line'
+        args = settings.THUMBNAIL_CONVERT.split(' ')
+        args.append(image['source'])
         for k, v in image['options'].iteritems():
             args.append('-%s' % k)
             if v is not None:
@@ -52,7 +58,9 @@ class Engine(EngineBase):
         Returns the image width and height as a tuple
         """
         if image['size'] is None:
-            p = Popen([settings.THUMBNAIL_IDENTIFY, image['source']], stdout=PIPE)
+            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args.append(image['source'])
+            p = Popen(args, stdout=PIPE)
             p.wait()
             m = size_re.match(p.stdout.read())
             image['size'] = int(m.group('x')), int(m.group('y'))
@@ -66,11 +74,46 @@ class Engine(EngineBase):
         handle, tmp = mkstemp()
         with open(tmp, 'w') as fp:
             fp.write(raw_data)
-            p = Popen([settings.THUMBNAIL_IDENTIFY, tmp])
+            fp.flush()
+            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args.append(tmp)
+            p = Popen(args)
             retcode = p.wait()
         os.close(handle)
         os.remove(tmp)
         return retcode == 0
+
+    def _orientation(self, image):
+        if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
+            args = settings.THUMBNAIL_IDENTIFY.split()
+            args.extend([ '-format', '%[exif:orientation]', image['source'] ])
+            p = Popen(args, stdout=PIPE)
+            p.wait()
+            result = p.stdout.read().strip()
+            if result:
+                result = int(result)
+                options = image['options']
+                if result == 2:
+                    options['flop'] = None
+                elif result == 3:
+                    options['rotate'] = '180'
+                elif result == 4:
+                    options['flip'] = None
+                elif result == 5:
+                    options['rotate'] = '90'
+                    options['flop'] = None
+                elif result == 6:
+                    options['rotate'] = '90'
+                elif result == 7:
+                    options['rotate'] = '-90'
+                    options['flop'] = None
+                elif result == 8:
+                    options['rotate'] = '-90'
+        else:
+            # ImageMagick also corrects the orientation exif data for
+            # destination
+            image['options']['auto-orient'] = None
+        return image
 
     def _colorspace(self, image, colorspace):
         """

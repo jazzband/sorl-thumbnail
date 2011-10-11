@@ -1,0 +1,6 @@
+{% load thumbnail %}
+{% thumbnail image "32x32" crop="center" as im %}
+    <img src="{{ im.url }}">
+{% empty %}
+    <p>fail</p>
+{% endthumbnail %}

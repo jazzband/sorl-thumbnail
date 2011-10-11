@@ -13,6 +13,9 @@ THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 # Redis requires some more work, see docs
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
 
+# Change this to something else for MSSQL
+THUMBNAIL_KEY_DBCOLUMN = 'key'
+
 # Engine, ships with:
 # sorl.thumbnail.engines.convert_engine.Engine
 # sorl.thumbnail.engines.pil_engine.Engine
@@ -57,6 +60,12 @@ THUMBNAIL_UPSCALE = True
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
 
+# Save as progressive when saving as jpeg
+THUMBNAIL_PROGRESSIVE = True
+
+# Orientate the thumbnail with respect to source EXIF orientation tag
+THUMBNAIL_ORIENTATION = True
+
 # This means sorl.thumbnail will generate and serve a generated dummy image
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False
@@ -65,7 +74,7 @@ THUMBNAIL_DUMMY = False
 # http://placekitten.com/%(width)s/%(height)s
 # http://placekitten.com/g/%(width)s/%(height)s
 # http://placehold.it/%(width)sx%(height)s
-THUMBNAIL_DUMMY_SOURCE = 'http://placekitten.com/%(width)s/%(height)s'
+THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 
 # Sets the source image ratio for dummy generation of images with only width
 # or height given

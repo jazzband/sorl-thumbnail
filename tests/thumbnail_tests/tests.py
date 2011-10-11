@@ -2,29 +2,69 @@
 import logging
 import operator
 import os
-import random
+import re
 import shutil
+import sys
 import unittest
-from django.core.files.storage import Storage, default_storage
-from django.core.urlresolvers import reverse
+from PIL import Image
+from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.test.client import Client
 from os.path import join as pjoin
-from PIL import Image
+from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from sorl.thumbnail.helpers import get_module_class, ThumbnailError
-from sorl.thumbnail.images import ImageFile, DummyImageFile
-from sorl.thumbnail import default, get_thumbnail, delete
+from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.log import ThumbnailLogHandler
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
-from test_app.models import Item
+from subprocess import Popen, PIPE
+from thumbnail_tests.models import Item
+from thumbnail_tests.storage import slog
 
 
 handler = ThumbnailLogHandler()
 handler.setLevel(logging.ERROR)
 logging.getLogger('sorl.thumbnail').addHandler(handler)
+
+
+class StorageTestCase(unittest.TestCase):
+    def setUp(self):
+        name = 'org.jpg'
+        os.makedirs(settings.MEDIA_ROOT)
+        fn = pjoin(settings.MEDIA_ROOT, name)
+        Image.new('L', (100, 100)).save(fn)
+        self.im = ImageFile(name)
+
+    def test_a_new(self):
+        slog.start_log()
+        get_thumbnail(self.im, '50x50')
+        log = slog.stop_log()
+        actions = [
+            'exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # first see if the file exists
+            'open: org.jpg', # open the original for thumbnailing
+            'save: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # save the file
+            'get_available_name: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # cehck for filename
+            'exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # called by get_available_name
+        ]
+        self.assertEqual(log, actions)
+
+    def test_b_cached(self):
+        slog.start_log()
+        get_thumbnail(self.im, '50x50')
+        log = slog.stop_log()
+        self.assertEqual(log, []) # now this should all be in cache
+
+    def test_c_safe_methods(self):
+        slog.start_log()
+        im = default.kvstore.get(self.im)
+        im.url, im.x, im.y
+        log = slog.stop_log()
+        self.assertEqual(log, [])
+
+    def tearDown(self):
+        shutil.rmtree(settings.MEDIA_ROOT)
 
 
 class ParsersTestCase(unittest.TestCase):
@@ -76,6 +116,7 @@ class SimpleTestCaseBase(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
+
 
 class SimpleTestCase(SimpleTestCaseBase):
     def testSimple(self):
@@ -171,18 +212,18 @@ class SimpleTestCase(SimpleTestCaseBase):
 
     def test_storage_serialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
-        self.assertEqual(im.serialize_storage(), 'django.core.files.storage.FileSystemStorage')
+        self.assertEqual(im.serialize_storage(), 'thumbnail_tests.storage.TestStorage')
         self.assertEqual(
             ImageFile('http://www.image.jpg').serialize_storage(),
             'sorl.thumbnail.images.UrlStorage',
             )
         self.assertEqual(
             ImageFile('http://www.image.jpg', default.storage).serialize_storage(),
-            'django.core.files.storage.FileSystemStorage',
+            'thumbnail_tests.storage.TestStorage',
             )
         self.assertEqual(
             ImageFile('getit', default_storage).serialize_storage(),
-            'django.core.files.storage.FileSystemStorage',
+            'thumbnail_tests.storage.TestStorage',
             )
 
     def test_image_file_deserialize(self):
@@ -190,7 +231,7 @@ class SimpleTestCase(SimpleTestCaseBase):
         default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
-            'django.core.files.storage.FileSystemStorage',
+            'thumbnail_tests.storage.TestStorage',
             )
         im = ImageFile('http://www.aino.se/media/i/logo.png')
         default.kvstore.set(im)
@@ -198,6 +239,15 @@ class SimpleTestCase(SimpleTestCaseBase):
             default.kvstore.get(im).serialize_storage(),
             'sorl.thumbnail.images.UrlStorage',
             )
+
+    def test_abspath(self):
+        item = Item.objects.get(image='500x500.jpg')
+        image = ImageFile(item.image.path)
+        val = render_to_string('thumbnail20.html', {
+            'image': image,
+        }).strip()
+        im = self.backend.get_thumbnail(image, '32x32', crop='center')
+        self.assertEqual('<img src="%s">' % im.url, val)
 
 
 class TemplateTestCaseA(SimpleTestCaseBase):
@@ -217,8 +267,8 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         val = render_to_string('thumbnail6.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, ('<a href="/media/test/cache/57/ba/57ba10c5a6c56dc71362d9b1427cb0b4.jpg">'
-                               '<img src="/media/test/cache/6c/c3/6cc32cd4aa002c577b534442c11e07d2.jpg" width="400" height="400">'
+        self.assertEqual(val, ('<a href="/media/test/cache/ac/78/ac78a0326054e1d795cba4016ee54966.jpg">'
+                               '<img src="/media/test/cache/4b/44/4b44d2d5f5cf0a35a1450873c88e28b7.jpg" width="400" height="400">'
                                '</a>'))
 
     def test_serialization_options(self):
@@ -249,6 +299,45 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         }).strip()
         self.assertEqual(val0, val1)
 
+    def test_progressive(self):
+        im = Item.objects.get(image='500x500.jpg').image
+        th = self.backend.get_thumbnail(im, '100x100', progressive=True)
+        path = pjoin(settings.MEDIA_ROOT, th.name)
+        p = Popen(['identify', '-verbose', path], stdout=PIPE)
+        p.wait()
+        m = re.search('Interlace: JPEG', p.stdout.read())
+        self.assertEqual(bool(m), True)
+
+    def test_nonprogressive(self):
+        im = Item.objects.get(image='500x500.jpg').image
+        th = self.backend.get_thumbnail(im, '100x100', progressive=False)
+        path = pjoin(settings.MEDIA_ROOT, th.name)
+        p = Popen(['identify', '-verbose', path], stdout=PIPE)
+        p.wait()
+        m = re.search('Interlace: None', p.stdout.read())
+        self.assertEqual(bool(m), True)
+
+    def test_orientation(self):
+        data_dir = pjoin(settings.MEDIA_ROOT, 'data')
+        shutil.copytree(settings.DATA_ROOT, data_dir)
+        ref = Image.open(pjoin(data_dir, '1_topleft.jpg'))
+        top = ref.getpixel((14, 7))
+        left = ref.getpixel((7, 14))
+        engine = PILEngine()
+        def epsilon(x, y):
+            if isinstance(x, (tuple, list)):
+                x = sum(x) / len(x)
+            if isinstance(y, (tuple, list)):
+                y = sum(y) / len(y)
+            return abs(x - y)
+        for name in sorted(os.listdir(data_dir)):
+            th = self.backend.get_thumbnail('data/%s' % name, '30x30')
+            im = engine.get_image(th)
+            self.assertLess(epsilon(top, im.getpixel((14, 7))), 10)
+            self.assertLess(epsilon(left, im.getpixel((7, 14))), 10)
+            exif = im._getexif()
+            if exif:
+                self.assertEqual(exif.get(0x0112), 1)
 
 
 class TemplateTestCaseB(unittest.TestCase):
@@ -406,10 +495,10 @@ class DummyTestCase(unittest.TestCase):
         val = render_to_string('thumbnaild2.html', {
             'anything': None,
         }).strip()
-        self.assertEqual(val, '<img src="http://placekitten.com/300/200" width="300" height="200"><p>NOT</p>')
+        self.assertEqual(val, '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>')
         val = render_to_string('thumbnaild3.html', {
         }).strip()
-        self.assertEqual(val, '<img src="http://placekitten.com/600/400" width="600" height="400">')
+        self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
 
     def tearDown(self):
         for k, v in self.org_settings.iteritems():
@@ -419,25 +508,14 @@ class DummyTestCase(unittest.TestCase):
 class ModelTestCase(SimpleTestCaseBase):
     def test_field1(self):
         self.kvstore.clear()
-        item0 = Item.objects.get(image='100x100.jpg')
-        item1 = Item.objects.get(image='500x500.jpg')
-        im0 = ImageFile(item0.image)
-        im1 = ImageFile(item1.image)
-        th00 = self.backend.get_thumbnail(im0, '27x27')
-        th01 = self.backend.get_thumbnail(im0, '81x81')
-        th10 = self.backend.get_thumbnail(im1, '16x16')
-        th11 = self.backend.get_thumbnail(im1, '9x5')
-        self.kvstore.set(im0)
-        item0.delete()
-        self.assertEqual(None, self.kvstore.get(im0))
-        self.assertNotEqual(None, self.kvstore.get(im1))
+        item = Item.objects.get(image='100x100.jpg')
+        im = ImageFile(item.image)
+        self.assertEqual(None, self.kvstore.get(im))
+        self.backend.get_thumbnail(im, '27x27')
+        self.backend.get_thumbnail(im, '81x81')
+        self.assertNotEqual(None, self.kvstore.get(im))
         self.assertEqual(3, len(list(self.kvstore._find_keys(identity='image'))))
         self.assertEqual(1, len(list(self.kvstore._find_keys(identity='thumbnails'))))
-        item1.delete()
-        self.assertEqual(None, self.kvstore.get(im1))
-        self.assertEqual(None, self.kvstore._get(im1.key, identity='thumbnails'))
-        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='image'))))
-        self.assertEqual(0, len(list(self.kvstore._find_keys(identity='thumbnails'))))
 
 
 class BackendTest(SimpleTestCaseBase):
@@ -476,7 +554,7 @@ class TestInputCase(unittest.TestCase):
         th = get_thumbnail(self.name, '200x200')
         self.assertEqual(
             th.url,
-            '/media/test/cache/4c/ed/4cede3c3e9dc62dcd3164e680e611c87.jpg'
+            '/media/test/cache/8a/17/8a17eff95c6ecf46f82d0807d93631e9.jpg'
             )
 
     def tearDown(self):

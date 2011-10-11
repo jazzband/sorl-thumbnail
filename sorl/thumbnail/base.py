@@ -1,4 +1,4 @@
-from sorl.thumbnail.conf import settings
+from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail import default
@@ -26,6 +26,11 @@ class ThumbnailBackend(object):
         'rounded': None,
     }
 
+    extra_options = (
+        ('progressive', 'THUMBNAIL_PROGRESSIVE'),
+        ('orientation', 'THUMBNAIL_ORIENTATION'),
+    )
+
     def get_thumbnail(self, file_, geometry_string, **options):
         """
         Returns thumbnail as an ImageFile instance for file with geometry and
@@ -35,6 +40,13 @@ class ThumbnailBackend(object):
         source = ImageFile(file_)
         for key, value in self.default_options.iteritems():
             options.setdefault(key, value)
+        # For the future I think it is better to add options only if they
+        # differ from the default settings as below. This will ensure the same
+        # filenames beeing generated for new options at default.
+        for key, attr in self.extra_options:
+            value = getattr(settings, attr)
+            if value != getattr(default_settings, attr):
+                options.setdefault(key, value)
         name = self._get_thumbnail_filename(source, geometry_string, options)
         thumbnail = ImageFile(name, default.storage)
         cached = default.kvstore.get(thumbnail)

@@ -129,22 +129,32 @@ Upscale is a boolean and controls if the image can be upscaled or not. For
 example if your source is 100x100 and you request a thumbnail of size 200x200
 and upscale is False this will return a thumbnail of size 100x100. If upscale
 was True this would result in a thumbnail size 200x200 (upscaled). The default
-value is True.
+value is ``True``.
 
 ``quality``
 ^^^^^^^^^^^
 Quality is a value between 0-100 and controls the thumbnail write quality.
-Default value is 95.
+Default value is ``95``.
+
+``progressive``
+^^^^^^^^^^^^^^^
+This controls whether to save jpeg thumbnails as progressive jpegs. Default
+value is ``True``.
+
+``orientation``
+^^^^^^^^^^^^^^^
+This controls whether to orientate the resulting thumbnail with respect to the
+source EXIF tags for orientation. Default value is ``True``.
 
 ``format``
 ^^^^^^^^^^
-This controls the write format and thumbnail extension. Formats supported
-by the shipped engines are JPEG and PNG. Default value is JPEG.
+This controls the write format and thumbnail extension. Formats supported by
+the shipped engines are ``'JPEG'`` and ``'PNG'``. Default value is ``'JPEG'``.
 
 ``colorspace``
 ^^^^^^^^^^^^^^
-This controls the resulting thumbnails color space, valid values are: RGB and
-GRAY. Default value is RGB
+This controls the resulting thumbnails color space, valid values are: ``'RGB'``
+and ``'GRAY'``. Default value is ``'RGB'``.
 
 ``options``
 ^^^^^^^^^^^

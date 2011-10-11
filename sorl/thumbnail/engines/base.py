@@ -1,4 +1,5 @@
 #coding=utf-8
+from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop
 from sorl.thumbnail.parsers import parse_cropbox
@@ -13,6 +14,7 @@ class EngineBase(object):
         Processing conductor, returns the thumbnail as an image engine instance
         """
         image = self.cropbox(image, geometry, options)
+        image = self.orientation(image, geometry, options)
         image = self.colorspace(image, geometry, options)
         image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
@@ -28,6 +30,14 @@ class EngineBase(object):
             return image
         x, y, x2, y2 = parse_cropbox(cropbox)
         return self._cropbox(image, x, y, x2, y2)
+
+    def orientation(self, image, geometry, options):
+        """
+        Wrapper for ``_orientation``
+        """
+        if options.get('orientation', settings.THUMBNAIL_ORIENTATION):
+            return self._orientation(image)
+        return image
 
     def colorspace(self, image, geometry, options):
         """
@@ -78,7 +88,11 @@ class EngineBase(object):
         """
         format_ = options['format']
         quality = options['quality']
-        raw_data = self._get_raw_data(image, format_, quality)
+        # additional non-default-value options:
+        progressive = options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
+        raw_data = self._get_raw_data(image, format_, quality,
+            progressive=progressive
+            )
         thumbnail.write(raw_data)
 
     def get_image_ratio(self, image, options):
@@ -101,7 +115,7 @@ class EngineBase(object):
     #
     def get_image(self, source):
         """
-        Returns the backend image objects from a ImageFile instance
+        Returns the backend image objects from an ImageFile instance
         """
         raise NotImplemented()
 
@@ -116,6 +130,12 @@ class EngineBase(object):
         Checks if the supplied raw data is valid image data
         """
         raise NotImplemented()
+
+    def _orientation(self, image):
+        """
+        Read orientation exif data and orientate the image accordingly
+        """
+        return image
 
     def _colorspace(self, image, colorspace):
         """
@@ -139,7 +159,7 @@ class EngineBase(object):
         """
         raise NotImplemented()
 
-    def _get_raw_data(self, image, format_, quality):
+    def _get_raw_data(self, image, format_, quality, progressive=False):
         """
         Gets raw data given the image, format and quality. This method is
         called from :meth:`write`
