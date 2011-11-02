@@ -11,6 +11,7 @@ class KVStore(KVStoreBase):
             port=settings.THUMBNAIL_REDIS_PORT,
             db=settings.THUMBNAIL_REDIS_DB,
             password=settings.THUMBNAIL_REDIS_PASSWORD,
+            unix_socket_path=settings.THUMBNAIL_REDIS_UNIX_SOCKET_PATH,
             )
 
     def _get_raw(self, key):
