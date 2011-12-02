@@ -27,6 +27,7 @@ class Engine(EngineBase):
                 options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
             ):
             image['options']['interlace'] = 'line'
+        image['options']['quality'] = options['quality']
         args = settings.THUMBNAIL_CONVERT.split(' ')
         args.append(image['source'])
         for k, v in image['options'].iteritems():
