@@ -34,6 +34,8 @@ class Engine(EngineBase):
             args.append('-%s' % k)
             if v is not None:
                 args.append('%s' % v)
+        args.append('-quality')
+        args.append('%s' % options['quality'])
         args.append(out)
         args = map(smart_str, args)
         p = Popen(args)
