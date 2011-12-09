@@ -29,7 +29,7 @@ class Engine(EngineBase):
             image['options']['interlace'] = 'line'
         image['options']['quality'] = options['quality']
         args = settings.THUMBNAIL_CONVERT.split(' ')
-        args.append(image['source'])
+        args.append(image['source']+'[0]')
         for k, v in image['options'].iteritems():
             args.append('-%s' % k)
             if v is not None:
