@@ -36,8 +36,11 @@ class Engine(EngineBase):
                 args.append('%s' % v)
         args.append(out)
         args = map(smart_str, args)
-        p = Popen(args)
-        p.wait()
+        p1 = Popen(args)
+        p1.wait()
+        if options['format'] == 'JPEG':
+            p2 = Popen(['jpegoptim', '--strip-all', out])
+            p2.wait()
         with open(out, 'r') as fp:
             thumbnail.write(fp.read())
         os.close(handle)
