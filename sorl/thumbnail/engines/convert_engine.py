@@ -92,24 +92,27 @@ class Engine(EngineBase):
             p.wait()
             result = p.stdout.read().strip()
             if result:
-                result = int(result)
-                options = image['options']
-                if result == 2:
-                    options['flop'] = None
-                elif result == 3:
-                    options['rotate'] = '180'
-                elif result == 4:
-                    options['flip'] = None
-                elif result == 5:
-                    options['rotate'] = '90'
-                    options['flop'] = None
-                elif result == 6:
-                    options['rotate'] = '90'
-                elif result == 7:
-                    options['rotate'] = '-90'
-                    options['flop'] = None
-                elif result == 8:
-                    options['rotate'] = '-90'
+                try:
+                    result = int(result)
+                    options = image['options']
+                    if result == 2:
+                        options['flop'] = None
+                    elif result == 3:
+                        options['rotate'] = '180'
+                    elif result == 4:
+                        options['flip'] = None
+                    elif result == 5:
+                        options['rotate'] = '90'
+                        options['flop'] = None
+                    elif result == 6:
+                        options['rotate'] = '90'
+                    elif result == 7:
+                        options['rotate'] = '-90'
+                        options['flop'] = None
+                    elif result == 8:
+                        options['rotate'] = '-90'
+                except ValueError:
+                    pass
         else:
             # ImageMagick also corrects the orientation exif data for
             # destination
