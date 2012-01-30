@@ -9,7 +9,7 @@ from sorl.thumbnail import default
 __all__ = ('ImageField', 'ImageFormField')
 
 
-class ImageField(models.FileField):
+class ImageField(models.ImageField):
     def delete_file(self, instance, sender, **kwargs):
         """
         Adds deletion of thumbnails and key kalue store references to the
