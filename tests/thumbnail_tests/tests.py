@@ -105,6 +105,7 @@ class SimpleTestCaseBase(unittest.TestCase):
         dims = [
             (500, 500),
             (100, 100),
+            (200, 100),
         ]
         for dim in dims:
             name = '%sx%s.jpg' % dim
@@ -134,6 +135,15 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.assertEqual(t.y, 100)
         t = self.backend.get_thumbnail(item.image, '400x300', upscale=True)
         self.assertEqual(t.x, 300)
+        self.assertEqual(t.y, 300)
+
+    def testUpscaleCrop(self):
+        item = Item.objects.get(image='200x100.jpg')
+        t = self.backend.get_thumbnail(item.image, '400x300', crop='center', upscale=False)
+        self.assertEqual(t.x, 200)
+        self.assertEqual(t.y, 100)
+        t = self.backend.get_thumbnail(item.image, '400x300', crop='center', upscale=True)
+        self.assertEqual(t.x, 400)
         self.assertEqual(t.y, 300)
 
     def testKVStore(self):

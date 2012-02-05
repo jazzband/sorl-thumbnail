@@ -57,6 +57,8 @@ class EngineBase(object):
         if not crop or crop == 'noop':
             return image
         x_image, y_image = self.get_image_size(image)
+        if geometry[0] > x_image or geometry[1] > y_image:
+            return image
         x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
         return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
 
