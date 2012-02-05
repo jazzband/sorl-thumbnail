@@ -119,7 +119,7 @@ Only applicable for the convert Engine.
 
 
 ``THUMBNAIL_IDENTIFY``
-=====================
+======================
 
 - Default ``'identify'``
 
