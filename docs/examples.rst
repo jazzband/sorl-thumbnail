@@ -86,7 +86,7 @@ value store and its thumbnail references and the thumbnail files when deleted::
     from sorl.thumbnail import ImageField
 
     class Item(models.Model):
-        image = ImageField()
+        image = ImageField(upload_to='whatever')
 
 
 .. note:: You do not need to use the ``sorl.thumbnail.ImageField`` to use
