@@ -93,7 +93,7 @@ class Engine(EngineBase):
             p = Popen(args, stdout=PIPE)
             p.wait()
             result = p.stdout.read().strip()
-            if result:
+            if result and result != 'unknown':
                 result = int(result)
                 options = image['options']
                 if result == 2:
