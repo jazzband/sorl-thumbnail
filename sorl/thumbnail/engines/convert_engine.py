@@ -38,7 +38,7 @@ class Engine(EngineBase):
         args = map(smart_str, args)
         p = Popen(args)
         p.wait()
-        with open(out, 'r') as fp:
+        with open(out, 'rb') as fp:
             thumbnail.write(fp.read())
         os.close(handle)
         os.remove(out)
@@ -49,7 +49,7 @@ class Engine(EngineBase):
         Returns the backend image objects from a ImageFile instance
         """
         handle, tmp = mkstemp()
-        with open(tmp, 'w') as fp:
+        with open(tmp, 'wb') as fp:
             fp.write(source.read())
         os.close(handle)
         return {'source': tmp, 'options': SortedDict(), 'size': None}
@@ -73,7 +73,7 @@ class Engine(EngineBase):
         valid that it can use as input.
         """
         handle, tmp = mkstemp()
-        with open(tmp, 'w') as fp:
+        with open(tmp, 'wb') as fp:
             fp.write(raw_data)
             fp.flush()
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
