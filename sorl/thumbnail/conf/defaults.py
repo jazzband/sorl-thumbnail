@@ -81,3 +81,6 @@ THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 # or height given
 THUMBNAIL_DUMMY_RATIO = 1.5
 
+# Timeout, in seconds, to use when retrieving images with urllib2
+THUMBNAIL_URL_TIMEOUT = None
+
