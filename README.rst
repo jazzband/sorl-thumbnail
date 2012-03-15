@@ -18,3 +18,5 @@ Features at a glance
 
 Read more in `the documentation (latest version) <http://thumbnail.sorl.net/>`_
 
+beholderrk fork
+
