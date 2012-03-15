@@ -90,12 +90,12 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options.update(value)
             else:
                 options[key] = value
-        if settings.THUMBNAIL_DUMMY:
-            thumbnail = DummyImageFile(geometry)
-        elif file_:
+        if file_:
             thumbnail = default.backend.get_thumbnail(
                 file_, geometry, **options
                 )
+        elif settings.THUMBNAIL_DUMMY:
+            thumbnail = DummyImageFile(geometry)
         else:
             return self.nodelist_empty.render(context)
         context.push()
