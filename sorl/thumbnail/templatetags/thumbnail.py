@@ -94,7 +94,7 @@ class ThumbnailNode(ThumbnailNodeBase):
             thumbnail = default.backend.get_thumbnail(
                 file_, geometry, **options
                 )
-        elif settings.THUMBNAIL_DUMMY:
+        elif settings.THUMBNAIL_DUMMY or settings.THUMBNAIL_LAZY_FILL_EMPTY:
             thumbnail = DummyImageFile(geometry)
         else:
             return self.nodelist_empty.render(context)
