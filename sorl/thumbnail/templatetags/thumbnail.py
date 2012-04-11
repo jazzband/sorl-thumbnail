@@ -61,23 +61,34 @@ class ThumbnailNode(ThumbnailNodeBase):
 
     def __init__(self, parser, token):
         bits = token.split_contents()
-        if len(bits) < 5 or bits[-2] != 'as':
-            raise TemplateSyntaxError(self.error_msg)
+        #if len(bits) < 5:
+        #    raise TemplateSyntaxError(self.error_msg)
         self.file_ = parser.compile_filter(bits[1])
         self.geometry = parser.compile_filter(bits[2])
         self.options = []
-        for bit in bits[3:-2]:
+        self.as_var = None
+        self.nodelist_file = None
+        self.nodelist_empty = None
+
+        if bits[-2] == 'as':
+            options_bits = bits[3:-2]
+        else:
+            options_bits = bits[3:]
+
+        for bit in options_bits:
             m = kw_pat.match(bit)
             if not m:
                 raise TemplateSyntaxError(self.error_msg)
             key = smart_str(m.group('key'))
             expr = parser.compile_filter(m.group('value'))
             self.options.append((key, expr))
-        self.as_var = bits[-1]
-        self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
-        if parser.next_token().contents == 'empty':
-            self.nodelist_empty = parser.parse(('endthumbnail',))
-            parser.delete_first_token()
+
+        if bits[-2] == 'as':
+            self.as_var = bits[-1]
+            self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
+            if parser.next_token().contents == 'empty':
+                self.nodelist_empty = parser.parse(('endthumbnail',))
+                parser.delete_first_token()
 
     def _render(self, context):
         file_ = self.file_.resolve(context)
@@ -97,11 +108,17 @@ class ThumbnailNode(ThumbnailNodeBase):
                 file_, geometry, **options
                 )
         else:
-            return self.nodelist_empty.render(context)
-        context.push()
-        context[self.as_var] = thumbnail
-        output = self.nodelist_file.render(context)
-        context.pop()
+            if self.nodelist_empty:
+                return self.nodelist_empty.render(context)
+            else:
+                return ''
+        if self.as_var:
+            context.push()
+            context[self.as_var] = thumbnail
+            output = self.nodelist_file.render(context)
+            context.pop()
+        else:
+            output = thumbnail.url
         return output
 
     def __repr__(self):

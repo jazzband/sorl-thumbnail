@@ -18,3 +18,10 @@ Features at a glance
 
 Read more in `the documentation (latest version) <http://thumbnail.sorl.net/>`_
 
+Usage
+=====
+
+Everything documented here: http://thumbnail.sorl.net/ and::
+
+    <img src="{% thumbnail obj.image "200x150" crop="center" %}"/>
+
