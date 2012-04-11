@@ -139,7 +139,7 @@ def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
-    if not file_ or settings.THUMBNAIL_DUMMY:
+    if not file_ or settings.THUMBNAIL_DUMMY or isinstance(file_, DummyImageFile):
         return 'auto'
     margin = [0, 0, 0, 0]
     image_file = default.kvstore.get_or_set(ImageFile(file_))
