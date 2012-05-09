@@ -14,6 +14,7 @@ class EngineBase(object):
         """
         image = self.orientation(image, geometry, options)
         image = self.colorspace(image, geometry, options)
+        image = self.remove_border(image, options)
         image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
         return image
@@ -32,6 +33,14 @@ class EngineBase(object):
         """
         colorspace = options['colorspace']
         return self._colorspace(image, colorspace)
+        
+    def remove_border(self, image, options):
+    
+        if options.get('remove_border', False):
+            x_image, y_image = self.get_image_size(image)
+            image = self._remove_border(image, x_image, y_image)
+    
+        return image
 
     def scale(self, image, geometry, options):
         """
@@ -56,10 +65,14 @@ class EngineBase(object):
         crop = options['crop']
         if not crop or crop == 'noop':
             return image
-        x_image, y_image = self.get_image_size(image)
-        if geometry[0] > x_image or geometry[1] > y_image:
-            return image
-        x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
+        # Smart cropping is suitably different from regular cropping
+        # to warrent it's own function
+        image_size = self.get_image_size(image)
+        if crop == 'smart':
+            import logging
+            logging.warn('smart')
+            return self._entropy_crop(image, geometry[0], geometry[1], image_size[0], image_size[1])
+        x_offset, y_offset = parse_crop(crop, image_size, geometry)
         return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
 
     def write(self, image, options, thumbnail):
@@ -117,6 +130,19 @@ class EngineBase(object):
         Backends need to implement the following::
 
             RGB, GRAY
+        """
+        raise NotImplemented()
+        
+    def _remove_border(self, image):
+        """
+        Remove borders around images
+        """
+        raise NotImplemented()
+            
+    def _entropy_crop(self, image, image_ratio, geometry_ratio):
+        """
+        Crop the image to the correct aspect ratio
+        by removing the lowest entropy parts
         """
         raise NotImplemented()
 
