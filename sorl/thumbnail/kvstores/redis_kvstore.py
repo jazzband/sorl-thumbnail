@@ -27,3 +27,6 @@ class KVStore(KVStoreBase):
         pattern = prefix + '*'
         return self.connection.keys(pattern=pattern)
 
+    def clear(self):
+        return self.connection.flushdb()
+
