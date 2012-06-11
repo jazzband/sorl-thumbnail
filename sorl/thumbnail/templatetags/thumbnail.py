@@ -68,7 +68,6 @@ class ThumbnailNode(ThumbnailNodeBase):
         self.options = []
         self.as_var = None
         self.nodelist_file = None
-        self.nodelist_empty = None
 
         if bits[-2] == 'as':
             options_bits = bits[3:-2]
