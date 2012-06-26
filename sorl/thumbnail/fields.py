@@ -65,7 +65,7 @@ class ImageFormField(forms.FileField):
         else:
             raw_data = data['content']
         if not default.engine.is_valid_image(raw_data):
-            raise forms.ValidationError(self.error_messages['invalid_image'])
+            raise forms.ValidationError(self.default_error_messages['invalid_image'])
         if hasattr(f, 'seek') and callable(f.seek):
             f.seek(0)
         return f
