@@ -83,9 +83,20 @@ class ThumbnailBackend(object):
         """
         ratio = default.engine.get_image_ratio(source_image)
         geometry = parse_geometry(geometry_string, ratio)
+        self._create_retina_thumbnail(source_image, geometry, options, thumbnail.name)
         image = default.engine.create(source_image, geometry, options)
         default.engine.write(image, options, thumbnail)
         # It's much cheaper to set the size here
+        size = default.engine.get_image_size(image)
+        thumbnail.set_size(size)
+
+    def _create_retina_thumbnail(self, source_image, geometry, options, name):
+        geometry = (geometry[0]*2, geometry[1]*2)
+        file_type = name.split('.')[len(name.split('.'))-1]
+        name = name.replace(".%s" % file_type, "@2x.%s" % file_type)
+        thumbnail = ImageFile(name, default.storage)
+        image = default.engine.create(source_image, geometry, options)
+        default.engine.write(image, options, thumbnail)
         size = default.engine.get_image_size(image)
         thumbnail.set_size(size)
 
@@ -98,4 +109,6 @@ class ThumbnailBackend(object):
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             EXTENSIONS[options['format']])
+
+
 
