@@ -41,17 +41,17 @@ class StorageTestCase(unittest.TestCase):
         get_thumbnail(self.im, '50x50')
         log = slog.stop_log()
         actions = [
-            'exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # first see if the file exists
+            'exists: test/cache/a6/25/a625f42245ad20e8ef73a62bc793f080.jpg', # first see if the file exists
             'open: org.jpg', # open the original for thumbnailing
-            'save: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # save the file
-            'get_available_name: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # check for filename
-            'exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # called by get_available_name
+            'save: test/cache/a6/25/a625f42245ad20e8ef73a62bc793f080.jpg', # save the file
+            'get_available_name: test/cache/a6/25/a625f42245ad20e8ef73a62bc793f080.jpg', # check for filename
+            'exists: test/cache/a6/25/a625f42245ad20e8ef73a62bc793f080.jpg', # called by get_available_name
         ]
 
         if settings.THUMBNAIL_RETINA_NAME_LABEL:
-            actions.append('save: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # save the retina file
-            actions.append('get_available_name: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # check for retina filename
-            actions.append('exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # retina called by get_available_name
+            actions.append('save: test/cache/a6/25/a625f42245ad20e8ef73a62bc793f080%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # save the retina file
+            actions.append('get_available_name: test/cache/a6/25/a625f42245ad20e8ef73a62bc793f080%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # check for retina filename
+            actions.append('exists: test/cache/a6/25/a625f42245ad20e8ef73a62bc793f080%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # retina called by get_available_name
 
         self.assertEqual(log, actions)
 
@@ -291,8 +291,8 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         val = render_to_string('thumbnail6.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, ('<a href="/media/test/cache/ac/78/ac78a0326054e1d795cba4016ee54966.jpg">'
-                               '<img src="/media/test/cache/4b/44/4b44d2d5f5cf0a35a1450873c88e28b7.jpg" width="400" height="400">'
+        self.assertEqual(val, ('<a href="/media/test/cache/38/1f/381ff08ecb91f4f4e349050c1143415a.jpg">'
+                               '<img src="/media/test/cache/90/ef/90efa9bd708cfbaa0e0e1b722da6fe88.jpg" width="400" height="400">'
                                '</a>'))
 
     def test_serialization_options(self):
@@ -380,7 +380,7 @@ class TemplateTestCaseB(unittest.TestCase):
             'source': 'http://www.aino.se/media/i/logo.png',
             'dims': 'x666',
         }).strip()
-        self.assertEqual(val, '<img src="/media/test/cache/bd/5d/bd5db73239bfd68473481b6701a8167d.jpg" width="1985" height="666" class="landscape">')
+        self.assertEqual(val, '<img src="/media/test/cache/7a/c0/7ac031f4177ac5dd1451573c689b216b.jpg" width="1985" height="666" class="landscape">')
 
     def testEmpty(self):
         val = render_to_string('thumbnail5.html', {}).strip()
@@ -578,7 +578,7 @@ class TestInputCase(unittest.TestCase):
         th = get_thumbnail(self.name, '200x200')
         self.assertEqual(
             th.url,
-            '/media/test/cache/8a/17/8a17eff95c6ecf46f82d0807d93631e9.jpg'
+            '/media/test/cache/7e/98/7e98a5a674ab86e3894fe2c582cdd111.jpg'
             )
 
     def tearDown(self):
