@@ -44,9 +44,15 @@ class StorageTestCase(unittest.TestCase):
             'exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # first see if the file exists
             'open: org.jpg', # open the original for thumbnailing
             'save: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # save the file
-            'get_available_name: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # cehck for filename
+            'get_available_name: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # check for filename
             'exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3.jpg', # called by get_available_name
         ]
+
+        if settings.THUMBNAIL_RETINA_NAME_LABEL:
+            actions.append('save: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # save the retina file
+            actions.append('get_available_name: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # check for retina filename
+            actions.append('exists: test/cache/20/c7/20c7ceda51cd4d26f8f4f375cf9dddf3%s.jpg' % settings.THUMBNAIL_RETINA_NAME_LABEL), # retina called by get_available_name
+
         self.assertEqual(log, actions)
 
     def test_b_cached(self):
