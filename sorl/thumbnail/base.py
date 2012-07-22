@@ -21,6 +21,8 @@ class ThumbnailBackend(object):
         'quality': settings.THUMBNAIL_QUALITY,
         'colorspace': settings.THUMBNAIL_COLORSPACE,
         'upscale': settings.THUMBNAIL_UPSCALE,
+        'retina': settings.THUMBNAIL_RETINA,
+        'retina_label': settings.THUMBNAIL_RETINA_NAME_LABEL,
         'crop': False,
     }
 
@@ -59,6 +61,8 @@ class ThumbnailBackend(object):
             source.set_size(size)
             self._create_thumbnail(source_image, geometry_string, options,
                                    thumbnail)
+            self._create_retina_thumbnail(source_image, geometry_string,
+                                          options, thumbnail.name)
         # If the thumbnail exists we don't create it, the other option is
         # to delete and write but this could lead to race conditions so I
         # will just leave that out for now.
@@ -89,6 +93,25 @@ class ThumbnailBackend(object):
         size = default.engine.get_image_size(image)
         thumbnail.set_size(size)
 
+    def _create_retina_thumbnail(self, source_image, geometry_string, options, name):
+        """
+        Creates the thumbnail by using default.engine with double size
+        and @2x in the file name
+        """
+        if options['retina'] is False:
+            return
+
+        ratio = default.engine.get_image_ratio(source_image)
+        geometry = parse_geometry(geometry_string, ratio)
+        geometry = (geometry[0]*2, geometry[1]*2)
+        file_type = name.split('.')[len(name.split('.'))-1]
+        name = name.replace(".%s" % file_type, "%s.%s" % (options['retina_label'], file_type))
+        thumbnail = ImageFile(name, default.storage)
+        image = default.engine.create(source_image, geometry, options)
+        default.engine.write(image, options, thumbnail)
+        size = default.engine.get_image_size(image)
+        thumbnail.set_size(size)
+
     def _get_thumbnail_filename(self, source, geometry_string, options):
         """
         Computes the destination filename.
@@ -98,4 +121,6 @@ class ThumbnailBackend(object):
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             EXTENSIONS[options['format']])
+
+
 

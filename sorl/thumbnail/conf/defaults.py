@@ -81,3 +81,8 @@ THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 # or height given
 THUMBNAIL_DUMMY_RATIO = 1.5
 
+# Enables creation of a image of double size with @2x in the file name
+THUMBNAIL_RETINA = True
+
+# The string added to retina thumbnails
+THUMBNAIL_RETINA_NAME_LABEL = "@2x"
