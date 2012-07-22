@@ -22,6 +22,7 @@ class ThumbnailBackend(object):
         'colorspace': settings.THUMBNAIL_COLORSPACE,
         'upscale': settings.THUMBNAIL_UPSCALE,
         'retina': settings.THUMBNAIL_RETINA,
+        'retina_label': settings.THUMBNAIL_RETINA_NAME_LABEL,
         'crop': False,
     }
 
@@ -104,7 +105,7 @@ class ThumbnailBackend(object):
         geometry = parse_geometry(geometry_string, ratio)
         geometry = (geometry[0]*2, geometry[1]*2)
         file_type = name.split('.')[len(name.split('.'))-1]
-        name = name.replace(".%s" % file_type, "@2x.%s" % file_type)
+        name = name.replace(".%s" % file_type, "%s.%s" % (options['retina_label'], file_type))
         thumbnail = ImageFile(name, default.storage)
         image = default.engine.create(source_image, geometry, options)
         default.engine.write(image, options, thumbnail)
