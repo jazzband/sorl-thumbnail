@@ -27,7 +27,7 @@ class Engine(EngineBase):
     def _orientation(self, image):
         try:
             exif = image._getexif()
-        except AttributeError:
+        except (AttributeError, KeyError, IndexError):
             exif = None
         if exif:
             orientation = exif.get(0x0112)
@@ -66,7 +66,7 @@ class Engine(EngineBase):
                            width + x_offset, height + y_offset))
 
     def _get_raw_data(self, image, format_, quality, progressive=False):
-        ImageFile.MAXBLOCK = 1024 * 1024
+        ImageFile.MAXBLOCK = 1024 * 1024 * 2
         buf = StringIO()
         params = {
             'format': format_,
