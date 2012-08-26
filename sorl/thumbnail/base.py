@@ -1,3 +1,4 @@
+import os.path
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
 from sorl.thumbnail.images import ImageFile
@@ -38,6 +39,17 @@ class ThumbnailBackend(object):
         source = ImageFile(file_)
         for key, value in self.default_options.iteritems():
             options.setdefault(key, value)
+
+        if options['format'] is None:
+            # Try to extract image format from file extension
+            ext = os.path.splitext(source.name)[1][1:]
+            format = ext.upper()
+            if format in EXTENSIONS:
+                options['format'] = format
+            else:
+                # Fallback to defaults
+                options['format'] = self.default_options['format']
+
         # For the future I think it is better to add options only if they
         # differ from the default settings as below. This will ensure the same
         # filenames beeing generated for new options at default.
@@ -98,4 +110,3 @@ class ThumbnailBackend(object):
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             EXTENSIONS[options['format']])
-
