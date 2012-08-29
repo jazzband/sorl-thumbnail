@@ -86,15 +86,13 @@ value store and its thumbnail references and the thumbnail files when deleted::
     from sorl.thumbnail import ImageField
 
     class Item(models.Model):
-        image = ImageField()
+        image = ImageField(upload_to='whatever')
 
 
 .. note:: You do not need to use the ``sorl.thumbnail.ImageField`` to use
     ``sorl.thumbnail``. The standard ``django.db.models.ImageField`` is fine
-    except that it does not know how to delete itself from the Key Value Store
-    or its thumbnails if you delete it. Also using the
-    ``sorl.thumbnail.ImageField`` lets you plugin the nice admin addition
-    explained in the next section.
+    except that using the ``sorl.thumbnail.ImageField`` lets you plugin the
+    nice admin addition explained in the next section.
 
 
 Another example on how to use ``sorl.thumbnail.ImageField`` in your existing

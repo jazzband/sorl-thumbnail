@@ -4,12 +4,11 @@ import operator
 import os
 import re
 import shutil
-import sys
-import unittest
 from PIL import Image
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.test.client import Client
+from django.utils import unittest
 from os.path import join as pjoin
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
@@ -106,6 +105,7 @@ class SimpleTestCaseBase(unittest.TestCase):
         dims = [
             (500, 500),
             (100, 100),
+            (200, 100),
         ]
         for dim in dims:
             name = '%sx%s.jpg' % dim
@@ -135,6 +135,15 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.assertEqual(t.y, 100)
         t = self.backend.get_thumbnail(item.image, '400x300', upscale=True)
         self.assertEqual(t.x, 300)
+        self.assertEqual(t.y, 300)
+
+    def testUpscaleCrop(self):
+        item = Item.objects.get(image='200x100.jpg')
+        t = self.backend.get_thumbnail(item.image, '400x300', crop='center', upscale=False)
+        self.assertEqual(t.x, 200)
+        self.assertEqual(t.y, 100)
+        t = self.backend.get_thumbnail(item.image, '400x300', crop='center', upscale=True)
+        self.assertEqual(t.x, 400)
         self.assertEqual(t.y, 300)
 
     def testKVStore(self):
@@ -225,6 +234,15 @@ class SimpleTestCase(SimpleTestCaseBase):
             ImageFile('getit', default_storage).serialize_storage(),
             'thumbnail_tests.storage.TestStorage',
             )
+
+    def test_quality(self):
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        th = self.backend.get_thumbnail(im, '100x100', quality=50)
+        p1 = Popen(['identify', '-verbose', th.storage.path(th.name)], stdout=PIPE)
+        p2 = Popen(['grep', '-c', 'Quality: 50'], stdin=p1.stdout, stdout=PIPE)
+        p1.stdout.close()
+        output = p2.communicate()[0].strip()
+        self.assertEqual(output, '1')
 
     def test_image_file_deserialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)

@@ -56,13 +56,10 @@ class Engine(EngineBase):
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             image.type(ImageType.TrueColorMatteType)
-            image.quantizeColorSpace(ColorspaceType.RGBColorspace)
         elif colorspace == 'GRAY':
             image.type(ImageType.GrayscaleMatteType)
-            image.quantizeColorSpace(ColorspaceType.GRAYColorspace)
         else:
             return image
-        image.quantize()
         return image
 
     def _scale(self, image, width, height):

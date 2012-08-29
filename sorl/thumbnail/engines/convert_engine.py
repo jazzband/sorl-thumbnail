@@ -27,6 +27,7 @@ class Engine(EngineBase):
                 options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
             ):
             image['options']['interlace'] = 'line'
+        image['options']['quality'] = options['quality']
         args = settings.THUMBNAIL_CONVERT.split(' ')
         args.append(image['source'])
         for k, v in image['options'].iteritems():
@@ -37,7 +38,7 @@ class Engine(EngineBase):
         args = map(smart_str, args)
         p = Popen(args)
         p.wait()
-        with open(out, 'r') as fp:
+        with open(out, 'rb') as fp:
             thumbnail.write(fp.read())
         os.close(handle)
         os.remove(out)
@@ -48,7 +49,7 @@ class Engine(EngineBase):
         Returns the backend image objects from a ImageFile instance
         """
         handle, tmp = mkstemp()
-        with open(tmp, 'w') as fp:
+        with open(tmp, 'wb') as fp:
             fp.write(source.read())
         os.close(handle)
         return {'source': tmp, 'options': SortedDict(), 'size': None}
@@ -72,7 +73,7 @@ class Engine(EngineBase):
         valid that it can use as input.
         """
         handle, tmp = mkstemp()
-        with open(tmp, 'w') as fp:
+        with open(tmp, 'wb') as fp:
             fp.write(raw_data)
             fp.flush()
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
@@ -84,13 +85,15 @@ class Engine(EngineBase):
         return retcode == 0
 
     def _orientation(self, image):
+        return image
+        # XXX need to get the dimensions right after a transpose.
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
             args = settings.THUMBNAIL_IDENTIFY.split()
             args.extend([ '-format', '%[exif:orientation]', image['source'] ])
             p = Popen(args, stdout=PIPE)
             p.wait()
             result = p.stdout.read().strip()
-            if result:
+            if result and result != 'unknown':
                 result = int(result)
                 options = image['options']
                 if result == 2:
