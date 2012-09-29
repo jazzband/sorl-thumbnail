@@ -237,5 +237,5 @@ For example, let's say you have an image ``item.image`` and you want to
 get the 2x DPI version of it.  You would simply write::
 
     <div class="millxmill">
-        <img src="{{ item.image|resolution:"2x" }}">
+        <img src="{{ item.image.url|resolution:"2x" }}">
     </div>
