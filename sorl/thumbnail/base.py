@@ -108,7 +108,7 @@ class ThumbnailBackend(object):
         for resolution in options['alternative_resolutions']:
             geometry = (geometry[0]*resolution, geometry[1]*resolution)
             thumbnail_name = name.replace(".%s" % file_type,
-                                          "@%sx.%s" % (ratio, file_type))
+                                          "@%sx.%s" % (resolution, file_type))
             image = default.engine.create(source_image, geometry, options)
             thumbnail = ImageFile(thumbnail_name, default.storage)
             default.engine.write(image, options, thumbnail)
