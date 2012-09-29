@@ -272,16 +272,10 @@ This value sets an image ratio to all thumbnails that are not defined by width
 **and** height since we cannot determine from the file input (since we don't
 have that).
 
-``THUMBNAIL_RETINA``
-=========================
+``THUMBNAIL_ALTERNATIVE_RESOLUTONS``
+====================================
 
-- Default: ``True``
+- Default: ``[1.5, 2]``
 
-This value enables creation of additional retina thumbnails for every thumbnail.
-
-``THUMBNAIL_RETINA_NAME_LABEL``
-=========================
-
-- Default: ``'@2x'``
-
-This value sets the string added to the file name of a retina thumbnail.
+This value enables creation of additional high-resolution ("Retina") thumbnails
+for every thumbnail.

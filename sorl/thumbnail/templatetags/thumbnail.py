@@ -1,6 +1,7 @@
 import logging
 import re
 import sys
+import os
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from functools import wraps
@@ -156,3 +157,11 @@ def margin(file_, geometry_string):
         margin[2] += 1
     return ' '.join([ '%spx' % n for n in margin ])
 
+
+@register.filter
+def resolution(file_, resolution_string):
+    """
+    A filter to return the URL for the provided resolution of the thumbnail.
+    """
+    filename, extension = os.path.splitext(file_)
+    return '%s@%s%s' % (filename, resolution_string, extension)
