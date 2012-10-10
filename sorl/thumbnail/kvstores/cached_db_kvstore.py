@@ -1,5 +1,4 @@
 from django.core.cache import cache
-from django.db import IntegrityError
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
@@ -11,8 +10,10 @@ class EMPTY_VALUE(object):
 
 class KVStore(KVStoreBase):
     def clear(self):
-        # We can clear the database more efficiently using the prefix here rather
-        # than calling :meth:`_delete_raw`.
+        """
+        We can clear the database more efficiently using the prefix here rather
+        than calling :meth:`_delete_raw`.
+        """
         prefix = settings.THUMBNAIL_KEY_PREFIX
         for key in self._find_keys_raw(prefix):
             cache.delete(key)
@@ -24,7 +25,7 @@ class KVStore(KVStoreBase):
             try:
                 value = KVStoreModel.objects.get(key=key).value
             except KVStoreModel.DoesNotExist:
-                # We set the cache to prevent further db lookups
+                # we set the cache to prevent further db lookups
                 value = EMPTY_VALUE
             cache.set(key, value, settings.THUMBNAIL_CACHE_TIMEOUT)
         if value == EMPTY_VALUE:
@@ -32,13 +33,9 @@ class KVStore(KVStoreBase):
         return value
 
     def _set_raw(self, key, value):
-        try:
-            # It's always more likely the key doesn't exist yet...
-            KVStoreModel.objects.create(key=key, value=value)
-        except IntegrityError:
-            # but if it does, we update rather than get and save()
-            # to keep it atomic and save one db hit
-            KVStoreModel.objects.filter(key=key).update(value=value)
+        kv = KVStoreModel.objects.get_or_create(key=key)[0]
+        kv.value = value
+        kv.save()
         cache.set(key, value, settings.THUMBNAIL_CACHE_TIMEOUT)
 
     def _delete_raw(self, *keys):
