@@ -81,3 +81,6 @@ THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 # or height given
 THUMBNAIL_DUMMY_RATIO = 1.5
 
+# Lazy fill empty thumbnail like THUMBNAIL_DUMMY
+THUMBNAIL_LAZY_FILL_EMPTY = False
+

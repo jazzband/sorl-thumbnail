@@ -90,14 +90,15 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options.update(value)
             else:
                 options[key] = value
-        if settings.THUMBNAIL_DUMMY:
-            thumbnail = DummyImageFile(geometry)
-        elif file_:
+        if file_:
             thumbnail = default.backend.get_thumbnail(
                 file_, geometry, **options
                 )
-        else:
+        elif self.nodelist_empty:
             return self.nodelist_empty.render(context)
+        elif settings.THUMBNAIL_DUMMY or settings.THUMBNAIL_LAZY_FILL_EMPTY:
+            thumbnail = DummyImageFile(geometry)
+
         context.push()
         context[self.as_var] = thumbnail
         output = self.nodelist_file.render(context)
@@ -139,7 +140,7 @@ def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
-    if not file_ or settings.THUMBNAIL_DUMMY:
+    if not file_ or settings.THUMBNAIL_DUMMY or isinstance(file_, DummyImageFile):
         return 'auto'
     margin = [0, 0, 0, 0]
     image_file = default.kvstore.get_or_set(ImageFile(file_))
