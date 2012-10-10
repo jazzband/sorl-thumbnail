@@ -2,8 +2,6 @@ import logging
 
 
 __version__ = '11.12sm1'
-VERSION = tuple(map(int, __version__.split('.')))
-
 
 class NullHandler(logging.Handler):
     def emit(self, record):
