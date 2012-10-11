@@ -22,6 +22,7 @@ class ThumbnailBackend(object):
         'colorspace': settings.THUMBNAIL_COLORSPACE,
         'upscale': settings.THUMBNAIL_UPSCALE,
         'crop': False,
+        'blur': False,
     }
 
     extra_options = (

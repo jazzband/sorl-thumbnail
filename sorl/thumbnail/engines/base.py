@@ -16,6 +16,7 @@ class EngineBase(object):
         image = self.colorspace(image, geometry, options)
         image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
+        image = self.blur(image, geometry, options)
         return image
 
     def orientation(self, image, geometry, options):
@@ -61,6 +62,15 @@ class EngineBase(object):
             return image
         x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
         return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
+
+    def blur(self, image, geometry, options):
+        """
+        Wrapper for ``_blur``
+        """
+        blur = options['blur']
+        if not blur or blur == 'noop':
+            return image
+        return self._blur(image, blur)
 
     def write(self, image, options, thumbnail):
         """

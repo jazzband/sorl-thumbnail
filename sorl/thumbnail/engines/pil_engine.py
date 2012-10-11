@@ -2,10 +2,16 @@ from cStringIO import StringIO
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from PIL import Image, ImageFile, ImageDraw
+    from PIL import Image, ImageFile, ImageDraw, ImageFilter
 except ImportError:
     import Image, ImageFile, ImageDraw
 
+class GaussianBlur(ImageFilter.Filter):
+    name = "GaussianBlur"
+    def __init__(self, radius=2):
+        self.radius = radius
+    def filter(self, image):
+        return image.gaussian_blur(self.radius)
 
 class Engine(EngineBase):
     def get_image(self, source):
@@ -64,6 +70,9 @@ class Engine(EngineBase):
     def _crop(self, image, width, height, x_offset, y_offset):
         return image.crop((x_offset, y_offset,
                            width + x_offset, height + y_offset))
+
+    def _blur(self, image, radius):
+        return image.filter(GaussianBlur(radius))
 
     def _get_raw_data(self, image, format_, quality, progressive=False):
         ImageFile.MAXBLOCK = 1024 * 1024
