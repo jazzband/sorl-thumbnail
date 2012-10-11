@@ -4,6 +4,8 @@ from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
+import logging
+logger = logging.getLogger(__name__)
 
 EXTENSIONS = {
     'JPEG': 'jpg',
@@ -36,6 +38,7 @@ class ThumbnailBackend(object):
         options given. First it will try to get it from the key value store,
         secondly it will create it.
         """
+        logger.debug('Getting thumbnail for file [%s] at [%s]', file_, geometry_string)
         source = ImageFile(file_)
         for key, value in self.default_options.iteritems():
             options.setdefault(key, value)
@@ -55,8 +58,15 @@ class ThumbnailBackend(object):
             # We have to check exists() because the Storage backend does not
             # overwrite in some implementations.
 			# exists() is extremely slow when using S3boto as a backend, 
-			# so I've make the assumption that if the thumbnail is not cached, it doesn't exist
-            source_image = default.engine.get_image(source)
+			# so we make the assumption that if the thumbnail is not cached, it doesn't exist
+            try:
+                source_image = default.engine.get_image(source)
+            except IOError:
+                # if S3Storage says file doesn't exist remotely, don't try to
+                # create it, exit early
+                # Will return working empty image type; 404'd image
+                logger.warn('Remote file [%s] at [%s] does not exist', file_, geometry_string)
+                return thumbnail
             # We might as well set the size since we have the image in memory
             size = default.engine.get_image_size(source_image)
             source.set_size(size)
@@ -84,6 +94,7 @@ class ThumbnailBackend(object):
         """
         Creates the thumbnail by using default.engine
         """
+        logger.debug('Creating thumbnail file [%s] at [%s] with [%s]', thumbnail.name, geometry_string, options)
         ratio = default.engine.get_image_ratio(source_image)
         geometry = parse_geometry(geometry_string, ratio)
         image = default.engine.create(source_image, geometry, options)
