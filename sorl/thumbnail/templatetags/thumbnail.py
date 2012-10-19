@@ -90,7 +90,7 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options.update(value)
             else:
                 options[key] = value
-        if settings.get('THUMBNAIL_DUMMY', False):
+        if settings.THUMBNAIL_DUMMY:
             thumbnail = DummyImageFile(geometry)
         elif file_:
             thumbnail = default.backend.get_thumbnail(
