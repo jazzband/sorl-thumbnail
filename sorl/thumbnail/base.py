@@ -63,7 +63,7 @@ class ThumbnailBackend(object):
                                        thumbnail)
             except IOError, e:
                 if settings.THUMBNAIL_DUMMY:
-                    thumbnail = DummyImageFile(geometry_string)
+                    return DummyImageFile(geometry_string)
                 else:
                     raise e
         # If the thumbnail exists we don't create it, the other option is
