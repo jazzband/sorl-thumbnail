@@ -4,7 +4,7 @@ from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
-from django.conf import settings as d_settings
+# from django.conf import settings as d_settings
 
 EXTENSIONS = {
     'JPEG': 'jpg',
@@ -62,7 +62,7 @@ class ThumbnailBackend(object):
                 self._create_thumbnail(source_image, geometry_string, options,
                                        thumbnail)
             except IOError, e:
-                if d_settings.THUMBNAIL_DUMMY:
+                if settings.THUMBNAIL_DUMMY:
                     thumbnail = DummyImageFile(geometry_string)
                 else:
                     raise e
