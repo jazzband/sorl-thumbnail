@@ -4,7 +4,6 @@ from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
-# from django.conf import settings as d_settings
 
 EXTENSIONS = {
     'JPEG': 'jpg',
