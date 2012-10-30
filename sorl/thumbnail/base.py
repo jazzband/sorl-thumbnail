@@ -24,12 +24,12 @@ class ThumbnailBackend(object):
         'colorspace': settings.THUMBNAIL_COLORSPACE,
         'upscale': settings.THUMBNAIL_UPSCALE,
         'crop': False,
-        'blur': False,
     }
 
     extra_options = (
         ('progressive', 'THUMBNAIL_PROGRESSIVE'),
         ('orientation', 'THUMBNAIL_ORIENTATION'),
+        ('blur', 'THUMBNAIL_BLUR'),
     )
 
     def get_thumbnail(self, file_, geometry_string, **options):

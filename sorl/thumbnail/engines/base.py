@@ -67,10 +67,9 @@ class EngineBase(object):
         """
         Wrapper for ``_blur``
         """
-        blur = options['blur']
-        if not blur or blur == 'noop':
-            return image
-        return self._blur(image, blur)
+        if options.get('blur'):
+            return self._blur(image, options.get('blur'))
+        return image
 
     def write(self, image, options, thumbnail):
         """
