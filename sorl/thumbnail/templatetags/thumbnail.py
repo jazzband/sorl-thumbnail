@@ -101,7 +101,9 @@ class ThumbnailNode(ThumbnailNodeBase):
             return self.nodelist_empty.render(context)
         elif settings.THUMBNAIL_DUMMY or lazy_fill:
             thumbnail = DummyImageFile(geometry)
-
+        else:
+            return self.nodelist_empty.render(context)
+        
         context.push()
         context[self.as_var] = thumbnail
         output = self.nodelist_file.render(context)
