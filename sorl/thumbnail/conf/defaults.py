@@ -61,6 +61,9 @@ THUMBNAIL_UPSCALE = True
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
 
+# Gaussian blur radius
+THUMBNAIL_BLUR = 0
+
 # Save as progressive when saving as jpeg
 THUMBNAIL_PROGRESSIVE = True
 
@@ -80,4 +83,7 @@ THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 # Sets the source image ratio for dummy generation of images with only width
 # or height given
 THUMBNAIL_DUMMY_RATIO = 1.5
+
+# Timeout, in seconds, to use when retrieving images with urllib2
+THUMBNAIL_URL_TIMEOUT = None
 
