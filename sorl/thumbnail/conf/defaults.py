@@ -81,3 +81,5 @@ THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 # or height given
 THUMBNAIL_DUMMY_RATIO = 1.5
 
+# Temporarily Increase the PIL MAX
+THUMBNAIL_PIL_MAXBLOCK_FALLBACK = 2**24

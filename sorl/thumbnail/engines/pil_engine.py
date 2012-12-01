@@ -1,5 +1,6 @@
 from cStringIO import StringIO
 from sorl.thumbnail.engines.base import EngineBase
+from sorl.thumbnail.conf import settings
 
 try:
     from PIL import Image, ImageFile, ImageDraw
@@ -78,8 +79,13 @@ class Engine(EngineBase):
         try:
             image.save(buf, **params)
         except IOError:
-            params.pop('optimize')
-            image.save(buf, **params)
+            try:
+                params.pop('optimize')
+                image.save(buf, **params)
+            except IOError:
+                ImageFile.MAXBLOCK = settings.THUMBNAIL_PIL_MAXBLOCK_FALLBACK
+                image.save(buf, **params)
+
         raw_data = buf.getvalue()
         buf.close()
         return raw_data
