@@ -16,6 +16,7 @@ class ThumbnailBackend(object):
     The main class for sorl-thumbnail, you can subclass this if you for example
     want to change the way destination filename is generated.
     """
+
     default_options = {
         'format': settings.THUMBNAIL_FORMAT,
         'quality': settings.THUMBNAIL_QUALITY,
@@ -29,6 +30,23 @@ class ThumbnailBackend(object):
         ('orientation', 'THUMBNAIL_ORIENTATION'),
     )
 
+    file_extension = lambda inst, file_: str(file_).split('.')[-1].lower()
+
+    def _get_format(self, file_):
+        file_extension = self.file_extension(file_)
+
+        is_jpeg = re.match('jpg|jpeg', file_extension)
+        is_png = re.match('png', file_extension)
+
+        if is_jpeg:
+            format_ = 'JPEG'
+        elif is_png:
+            format_ = 'PNG'
+        else:
+            format_ = default_settings.THUMBNAIL_FORMAT
+
+        return str(format_)
+    
     def get_thumbnail(self, file_, geometry_string, **options):
         """
         Returns thumbnail as an ImageFile instance for file with geometry and
@@ -36,6 +54,11 @@ class ThumbnailBackend(object):
         secondly it will create it.
         """
         source = ImageFile(file_)
+        
+        #preserve image filetype
+        if settings.THUMBNAIL_PRESERVE_FORMAT:
+            self.default_options['format'] = self._get_format(file_)
+            
         for key, value in self.default_options.iteritems():
             options.setdefault(key, value)
         # For the future I think it is better to add options only if they
