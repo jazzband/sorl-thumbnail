@@ -51,6 +51,8 @@ THUMBNAIL_PREFIX = 'cache/'
 # Make sure the backend can handle the format you specify
 THUMBNAIL_FORMAT = 'JPEG'
 
+THUMBNAIL_PRESERVE_FORMAT = False
+
 # Colorspace, backends are required to implement: RGB, GRAY
 # Setting this to None will keep the original colorspace.
 THUMBNAIL_COLORSPACE = 'RGB'
