@@ -1,3 +1,5 @@
+import re
+
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
 from sorl.thumbnail.images import ImageFile
