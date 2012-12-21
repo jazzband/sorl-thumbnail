@@ -66,7 +66,7 @@ class Engine(EngineBase):
                            width + x_offset, height + y_offset))
 
     def _get_raw_data(self, image, format_, quality, progressive=False):
-        ImageFile.MAXBLOCK = 1024 * 1024
+        ImageFile.MAXBLOCK = image.size[0] * image.size[1]
         buf = StringIO()
         params = {
             'format': format_,
