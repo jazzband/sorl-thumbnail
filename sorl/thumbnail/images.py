@@ -1,16 +1,16 @@
 import re
 import urllib2
+from hashlib import md5
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, default_storage
 from django.core.urlresolvers import reverse
 from django.utils.encoding import force_unicode
-from django.utils.functional import LazyObject
+from django.utils.functional import LazyObject, cached_property
 from django.utils import simplejson
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
-
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
@@ -85,6 +85,15 @@ class ImageFile(BaseImageFile):
         else:
             self.storage = default_storage
 
+    @cached_property
+    def file_hash(self):
+        if self.exists():
+            image = default.engine.get_image(self)
+            my_hash = md5(image.tostring()).hexdigest()
+            return my_hash
+
+        return ''
+
     def __unicode__(self):
         return self.name
 
@@ -113,7 +122,7 @@ class ImageFile(BaseImageFile):
     def size(self):
         return self._size
 
-    @property
+    @cached_property
     def url(self):
         return self.storage.url(self.name)
 
@@ -139,9 +148,9 @@ class ImageFile(BaseImageFile):
             cls = self.storage.__class__
         return '%s.%s' % (cls.__module__, cls.__name__)
 
-    @property
+    @cached_property
     def key(self):
-        return tokey(self.name, self.serialize_storage())
+        return tokey(self.name, self.file_hash, self.serialize_storage())
 
     def serialize(self):
         return serialize_image_file(self)
