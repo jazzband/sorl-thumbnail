@@ -25,6 +25,8 @@ class ThumbnailBackend(object):
         'colorspace': settings.THUMBNAIL_COLORSPACE,
         'upscale': settings.THUMBNAIL_UPSCALE,
         'crop': False,
+        'cropbox': None,
+        'rounded': None,
     }
 
     extra_options = (
@@ -108,7 +110,7 @@ class ThumbnailBackend(object):
         """
         Creates the thumbnail by using default.engine
         """
-        ratio = default.engine.get_image_ratio(source_image)
+        ratio = default.engine.get_image_ratio(source_image, options)
         geometry = parse_geometry(geometry_string, ratio)
         image = default.engine.create(source_image, geometry, options)
         default.engine.write(image, options, thumbnail)
