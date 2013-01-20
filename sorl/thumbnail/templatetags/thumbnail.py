@@ -1,5 +1,6 @@
 import logging
 import re
+import os
 import sys
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
@@ -81,6 +82,7 @@ class ThumbnailNode(ThumbnailNodeBase):
 
     def _render(self, context):
         file_ = self.file_.resolve(context)
+        lazy_fill = settings.THUMBNAIL_LAZY_FILL_EMPTY
         geometry = self.geometry.resolve(context)
         options = {}
         for key, expr in self.options:
@@ -90,14 +92,18 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options.update(value)
             else:
                 options[key] = value
-        if settings.THUMBNAIL_DUMMY:
-            thumbnail = DummyImageFile(geometry)
-        elif file_:
+        # logic arranged to ensure we're not doing any unecessary calls to os.path.exists
+        if file_ and (not lazy_fill or lazy_fill and os.path.exists(file_.path)):
             thumbnail = default.backend.get_thumbnail(
                 file_, geometry, **options
                 )
+        elif self.nodelist_empty:
+            return self.nodelist_empty.render(context)
+        elif settings.THUMBNAIL_DUMMY or lazy_fill:
+            thumbnail = DummyImageFile(geometry)
         else:
             return self.nodelist_empty.render(context)
+        
         context.push()
         context[self.as_var] = thumbnail
         output = self.nodelist_file.render(context)
@@ -139,7 +145,7 @@ def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
-    if not file_ or settings.THUMBNAIL_DUMMY:
+    if not file_ or settings.THUMBNAIL_DUMMY or isinstance(file_, DummyImageFile):
         return 'auto'
     margin = [0, 0, 0, 0]
     image_file = default.kvstore.get_or_set(ImageFile(file_))
