@@ -1,6 +1,5 @@
 from django.conf import settings
 
-
 # When True ThumbnailNode.render can raise errors
 THUMBNAIL_DEBUG = False
 
@@ -92,3 +91,5 @@ THUMBNAIL_LAZY_FILL_EMPTY = False
 # Timeout, in seconds, to use when retrieving images with urllib2
 THUMBNAIL_URL_TIMEOUT = None
 
+# Temporarily Increase the PIL MAX
+THUMBNAIL_PIL_MAXBLOCK_FALLBACK = 2 ** 24
