@@ -156,3 +156,20 @@ def margin(file_, geometry_string):
         margin[2] += 1
     return ' '.join([ '%spx' % n for n in margin ])
 
+@safe_filter(error_output='auto')
+@register.filter
+def background_margin(file_, geometry_string):
+	"""
+	Returns the calculated margin for a background image and geometry
+	"""
+	if not file_ or settings.THUMBNAIL_DUMMY:
+		return 'auto'
+	margin = [0, 0]
+	image_file = default.kvstore.get_or_set(ImageFile(file_))
+	x, y = parse_geometry(geometry_string, image_file.ratio)
+	ex = x - image_file.x
+	margin[0] = ex / 2
+	ey = y - image_file.y
+	margin[1] = ey / 2
+	return ' '.join([ '%spx' % n for n in margin ])
+

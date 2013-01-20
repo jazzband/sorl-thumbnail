@@ -75,9 +75,11 @@ class ThumbnailBackend(object):
         cached = default.kvstore.get(thumbnail)
         if cached:
             return cached
-        if not thumbnail.exists():
+        else:
             # We have to check exists() because the Storage backend does not
             # overwrite in some implementations.
+			# exists() is extremely slow when using S3boto as a backend, 
+			# so I've make the assumption that if the thumbnail is not cached, it doesn't exist
             source_image = default.engine.get_image(source)
             # We might as well set the size since we have the image in memory
             size = default.engine.get_image_size(source_image)
