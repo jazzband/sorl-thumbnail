@@ -267,6 +267,15 @@ class SimpleTestCase(SimpleTestCaseBase):
         im = self.backend.get_thumbnail(image, '32x32', crop='center')
         self.assertEqual('<img src="%s">' % im.url, val)
 
+    def test_new_tag_style(self):
+        item = Item.objects.get(image='500x500.jpg')
+        image = ImageFile(item.image.path)
+        val = render_to_string('thumbnail20a.html', {
+            'image': image,
+        }).strip()
+        im = self.backend.get_thumbnail(image, '32x32', crop='center')
+        self.assertEqual('<img src="%s">' % im.url, val)
+
 
 class TemplateTestCaseA(SimpleTestCaseBase):
     def testModel(self):

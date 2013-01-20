@@ -19,8 +19,16 @@ Features at a glance
 Read more in `the documentation (latest version)
 <http://sorl-thumbnail.rtfd.org/>`_
 
-
 Format preservation has been added. To preserve format set settings.THUMBNAIL_PRESERVE_FORMAT = True.
 Gracefully degrades and defaults to using settings.THUMBNAIL_FORMAT.
 
 Applications that currently use sorl should not notice any difference in functionality unless settings.THUMBNAIL_PRESERVE_FORMAT is set explicitly set to True.
+
+=====
+Usage
+=====
+
+Everything documented here: http://thumbnail.sorl.net/ and::
+
+    <img src="{% thumbnail obj.image "200x150" crop="center" %}"/>
+
