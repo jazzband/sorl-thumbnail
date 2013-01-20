@@ -63,6 +63,9 @@ THUMBNAIL_UPSCALE = True
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
 
+# Gaussian blur radius
+THUMBNAIL_BLUR = 0
+
 # Save as progressive when saving as jpeg
 THUMBNAIL_PROGRESSIVE = True
 

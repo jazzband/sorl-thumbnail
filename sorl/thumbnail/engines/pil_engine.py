@@ -2,7 +2,7 @@ from cStringIO import StringIO
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from PIL import Image, ImageFile, ImageDraw, ImageChops
+    from PIL import Image, ImageFile, ImageDraw, ImageChops, ImageFilter
 except ImportError:
     import Image, ImageFile, ImageDraw, ImageChops
 
@@ -25,6 +25,12 @@ def round_rectangle(size, radius, fill):
     rectangle.paste(corner.rotate(270), (width - radius, 0))
     return rectangle
 
+class GaussianBlur(ImageFilter.Filter):
+    name = "GaussianBlur"
+    def __init__(self, radius=2):
+        self.radius = radius
+    def filter(self, image):
+        return image.gaussian_blur(self.radius)
 
 class Engine(EngineBase):
     def get_image(self, source):
@@ -49,7 +55,7 @@ class Engine(EngineBase):
     def _orientation(self, image):
         try:
             exif = image._getexif()
-        except (AttributeError, KeyError, IndexError):
+        except (AttributeError, IOError, KeyError, IndexError):
             exif = None
         if exif:
             orientation = exif.get(0x0112)
@@ -87,10 +93,14 @@ class Engine(EngineBase):
         return image.crop((x_offset, y_offset,
                            width + x_offset, height + y_offset))
 
+
     def _rounded(self, image, r):
         i = round_rectangle(image.size, r, "notusedblack")
         image.putalpha(i)
         return image
+
+    def _blur(self, image, radius):
+        return image.filter(GaussianBlur(radius))
 
     def _get_raw_data(self, image, format_, quality, progressive=False):
         ImageFile.MAXBLOCK = image.size[0] * image.size[1]
