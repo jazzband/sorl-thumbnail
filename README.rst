@@ -3,6 +3,8 @@ django-thumbnail
 
 A fork of sorl-thumbnail; created due to its inactivity.
 
+pip install django-thumbnail
+
 ---------------------------------------------------------
 
 
