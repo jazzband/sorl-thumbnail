@@ -1,5 +1,7 @@
 import re
+import urllib
 import urllib2
+import urlparse
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, default_storage
 from django.core.urlresolvers import reverse
@@ -165,8 +167,18 @@ class DummyImageFile(BaseImageFile):
 
 
 class UrlStorage(Storage):
+
+    def normalize_url(self, s, charset='utf-8'):
+        if isinstance(s, unicode):
+            s = s.encode(charset, 'replace')
+        scheme, netloc, path, qs, anchor = urlparse.urlsplit(s)
+        path = path.encode('utf8')
+        path = urllib.quote(path, '/%')
+        qs = urllib.quote_plus(qs, ':&%=')
+        return urlparse.urlunsplit((scheme, netloc, path, qs, anchor))
+
     def open(self, name):
-        return urllib2.urlopen(name)
+        return urllib2.urlopen(self.normalize_url(name))
 
     def exists(self, name):
         try:
