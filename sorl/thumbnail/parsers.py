@@ -40,7 +40,7 @@ def parse_geometry(geometry, ratio=None):
     return x, y
 
 
-def parse_crop(crop, xy_image, xy_window):
+def parse_crop(crop, xy_image):
     """
     Returns x, y offsets for cropping. The window area should fit inside
     image but it works out anyway
@@ -57,20 +57,56 @@ def parse_crop(crop, xy_image, xy_window):
         'center': '50%',
         'bottom': '100%',
     }
-    xy_crop = crop.split(' ')
-    if len(xy_crop) == 1:
+    xywh_crop = crop.split(' ')
+    if len(xywh_crop) == 1:
         if crop in x_alias_percent:
             x_crop = x_alias_percent[crop]
             y_crop = '50%'
+            w_crop = '100%'
+            h_crop = '100%'
+
         elif crop in y_alias_percent:
             y_crop = y_alias_percent[crop]
             x_crop = '50%'
+            w_crop = '100%'
+            h_crop = '100%'
+
         else:
             x_crop, y_crop = crop, crop
-    elif len(xy_crop) == 2:
-        x_crop, y_crop = xy_crop
+            w_crop, h_crop = '100%', '100%'
+            
+    elif len(xywh_crop) == 2:
+        x_crop, y_crop = xywh_crop
         x_crop = x_alias_percent.get(x_crop, x_crop)
         y_crop = y_alias_percent.get(y_crop, y_crop)
+        w_crop, h_crop = '100%', '100%'
+        
+    elif len(xywh_crop) == 3:
+        x_crop, y_crop = xywh_crop[0], xywh_crop[1]
+        x_crop = x_alias_percent.get(x_crop, x_crop)
+        y_crop = y_alias_percent.get(y_crop, y_crop)
+
+        w = xywh_crop[2]
+        if w in x_alias_percent:
+            w_crop = x_alias_percent[w]
+            h_crop = '100%'
+            
+        elif w in y_alias_percent:
+            h_crop = y_alias_percent[w]
+            w_crop = '100%'
+            
+        else:
+            w_crop, h_crop = w, w
+    
+    elif len(xywh_crop) == 4:
+        x_crop, y_crop = xywh_crop[0], xywh_crop[1]
+        x_crop = x_alias_percent.get(x_crop, x_crop)
+        y_crop = y_alias_percent.get(y_crop, y_crop)
+
+        w_crop, h_crop = xywh_crop[2], xywh_crop[3]
+        w_crop = x_alias_percent.get(w_crop, w_crop)
+        h_crop = y_alias_percent.get(h_crop, h_crop)
+    
     else:
         syntax_error()
 
@@ -85,7 +121,9 @@ def parse_crop(crop, xy_image, xy_window):
         # return ∈ [0, epsilon]
         return int(max(0, min(value, epsilon)))
 
-    offset_x = get_offset(x_crop, xy_image[0] - xy_window[0])
-    offset_y = get_offset(y_crop, xy_image[1] - xy_window[1])
-    return offset_x, offset_y
+    window_x = get_offset(w_crop, xy_image[0])
+    window_y = get_offset(h_crop, xy_image[1])
+    offset_x = get_offset(x_crop, xy_image[0] - window_x)
+    offset_y = get_offset(y_crop, xy_image[1] - window_y)
+    return offset_x, offset_y, window_x, window_y
 
