@@ -1,4 +1,4 @@
-#coding=utf-8
+# coding=utf-8
 import re
 from sorl.thumbnail.helpers import ThumbnailError, toint
 
@@ -33,9 +33,9 @@ def parse_geometry(geometry, ratio=None):
     # for this
     if ratio is not None:
         ratio = float(ratio)
-        if x is None:
+        if x is None or ratio < 1.0:
             x = toint(y * ratio)
-        elif y is None:
+        elif y is None or ratio > 1.0:
             y = toint(x / ratio)
     return x, y
 
@@ -78,7 +78,7 @@ def parse_crop(crop, xy_image, xy_window):
         m = bgpos_pat.match(crop)
         if not m:
             syntax_error()
-        value = int(m.group('value')) # we only take ints in the regexp
+        value = int(m.group('value'))  # we only take ints in the regexp
         unit = m.group('unit')
         if unit == '%':
             value = epsilon * value / 100.0
