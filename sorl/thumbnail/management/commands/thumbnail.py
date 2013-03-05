@@ -15,8 +15,8 @@ class Command(BaseCommand):
             raise CommandError('`%s` is not a valid argument' % cmd)
         if cmd == 'cleanup':
             default.kvstore.cleanup()
-            print 'Cleanup thumbnails done.'
+            print('Cleanup thumbnails done.')
         if cmd == 'clear':
             default.kvstore.clear()
-            print 'Cleared the Key Value Store.'
+            print('Cleared the Key Value Store.')
 
