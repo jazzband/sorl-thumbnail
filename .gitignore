@@ -11,3 +11,4 @@ _build
 build
 dist
 *.egg-info
+setup.cfg
