@@ -81,3 +81,6 @@ THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 # or height given
 THUMBNAIL_DUMMY_RATIO = 1.5
 
+# Enables creation of multiple-resolution (aka "Retina") images.  Currently
+# creates 1.5x, 2x sizes.
+THUMBNAIL_ALTERNATIVE_RESOLUTIONS = [1.5, 2]
