@@ -103,13 +103,13 @@ class ThumbnailBackend(object):
 
         ratio = default.engine.get_image_ratio(source_image)
         geometry = parse_geometry(geometry_string, ratio)
-        file_type = name.split('.')[len(name.split('.'))-1]
+        file_type = name.split('.')[len(name.split('.')) - 1]
 
         for resolution in options['alternative_resolutions']:
-            geometry = (geometry[0]*resolution, geometry[1]*resolution)
+            resolution_geometry = (int(geometry[0] * resolution), int(geometry[1] * resolution))
             thumbnail_name = name.replace(".%s" % file_type,
                                           "@%sx.%s" % (resolution, file_type))
-            image = default.engine.create(source_image, geometry, options)
+            image = default.engine.create(source_image, resolution_geometry, options)
             thumbnail = ImageFile(thumbnail_name, default.storage)
             default.engine.write(image, options, thumbnail)
             size = default.engine.get_image_size(image)
