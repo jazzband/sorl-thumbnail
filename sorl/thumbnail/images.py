@@ -173,7 +173,8 @@ class UrlStorage(Storage):
             s = s.encode(charset, 'replace')
         scheme, netloc, path, qs, anchor = urlparse.urlsplit(s)
         # Encode to utf8 to prevent urllib KeyError
-        path = path.encode('utf8')
+        if isinstance(path, unicode):
+            path = path.encode(charset, 'replace')
         path = urllib.quote(path, '/%')
         qs = urllib.quote_plus(qs, ':&%=')
         return urlparse.urlunsplit((scheme, netloc, path, qs, anchor))
