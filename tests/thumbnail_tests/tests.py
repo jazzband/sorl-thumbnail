@@ -1,8 +1,13 @@
 #coding=utf-8
+from __future__ import unicode_literals
+
+from functools import reduce
 import logging
 import operator
 import os
 import re
+import six
+from six.moves import xrange
 import shutil
 from PIL import Image
 from django.core.files.storage import default_storage
@@ -242,7 +247,7 @@ class SimpleTestCase(SimpleTestCaseBase):
         p2 = Popen(['grep', '-c', 'Quality: 50'], stdin=p1.stdout, stdout=PIPE)
         p1.stdout.close()
         output = p2.communicate()[0].strip()
-        self.assertEqual(output, '1')
+        self.assertEqual(output, b'1')
 
     def test_image_file_deserialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
@@ -251,7 +256,7 @@ class SimpleTestCase(SimpleTestCaseBase):
             default.kvstore.get(im).serialize_storage(),
             'thumbnail_tests.storage.TestStorage',
             )
-        im = ImageFile('http://www.aino.se/media/i/logo.png')
+        im = ImageFile('http://www.aino.com/negative.png')
         default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
@@ -274,11 +279,11 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         val = render_to_string('thumbnail1.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, u'<img style="margin:0px 0px 0px 0px" width="200" height="100">')
+        self.assertEqual(val, '<img style="margin:0px 0px 0px 0px" width="200" height="100">')
         val = render_to_string('thumbnail2.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, u'<img style="margin:0px 50px 0px 50px" width="100" height="100">')
+        self.assertEqual(val, '<img style="margin:0px 50px 0px 50px" width="100" height="100">')
 
     def test_nested(self):
         item = Item.objects.get(image='500x500.jpg')
@@ -323,7 +328,7 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         path = pjoin(settings.MEDIA_ROOT, th.name)
         p = Popen(['identify', '-verbose', path], stdout=PIPE)
         p.wait()
-        m = re.search('Interlace: JPEG', p.stdout.read())
+        m = re.search('Interlace: JPEG', p.stdout.read().decode('ascii'))
         self.assertEqual(bool(m), True)
 
     def test_nonprogressive(self):
@@ -332,7 +337,7 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         path = pjoin(settings.MEDIA_ROOT, th.name)
         p = Popen(['identify', '-verbose', path], stdout=PIPE)
         p.wait()
-        m = re.search('Interlace: None', p.stdout.read())
+        m = re.search('Interlace: None', p.stdout.read().decode('ascii'))
         self.assertEqual(bool(m), True)
 
     def test_orientation(self):
@@ -371,10 +376,10 @@ class TemplateTestCaseB(unittest.TestCase):
 
     def testPortrait(self):
         val = render_to_string('thumbnail4.html', {
-            'source': 'http://www.aino.se/media/i/logo.png',
+            'source': 'http://www.aino.com/negative.png',
             'dims': 'x666',
         }).strip()
-        self.assertEqual(val, '<img src="/media/test/cache/bd/5d/bd5db73239bfd68473481b6701a8167d.jpg" width="1985" height="666" class="landscape">')
+        self.assertEqual(val, '<img src="/media/test/cache/ed/ad/edad4ee312c6f8f04cc881684f9f438b.jpg" width="1985" height="666" class="landscape">')
 
     def testEmpty(self):
         val = render_to_string('thumbnail5.html', {}).strip()
@@ -387,21 +392,22 @@ class TemplateTestCaseClient(unittest.TestCase):
         params = {
             'THUMBNAIL_DEBUG': False,
         }
-        for k, v in params.iteritems():
+        for k, v in six.iteritems(params):
             self.org_settings[k] = getattr(settings, k)
             setattr(settings, k, v)
 
     def testEmptyError(self):
         client = Client()
         response = client.get('/thumbnail9.html')
-        self.assertEqual(response.content.strip(), '<p>empty</p>')
+        self.assertEqual(response.content.strip().decode('ascii'), 
+                         '<p>empty</p>')
         from django.core.mail import outbox
         self.assertEqual(outbox[0].subject, '[sorl-thumbnail] ERROR: /thumbnail9.html')
         end = outbox[0].body.split('\n\n')[-2][-20:-1]
         self.assertEqual(end, 'tests/media/invalid')
 
     def tearDown(self):
-        for k, v in self.org_settings.iteritems():
+        for k, v in six.iteritems(self.org_settings):
             setattr(settings, k, v)
 
 
@@ -501,7 +507,7 @@ class DummyTestCase(unittest.TestCase):
         params = {
             'THUMBNAIL_DUMMY': True,
         }
-        for k, v in params.iteritems():
+        for k, v in six.iteritems(params):
             self.org_settings[k] = getattr(settings, k)
             setattr(settings, k, v)
 
@@ -519,7 +525,7 @@ class DummyTestCase(unittest.TestCase):
         self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
 
     def tearDown(self):
-        for k, v in self.org_settings.iteritems():
+        for k, v in six.iteritems(self.org_settings):
             setattr(settings, k, v)
 
 
@@ -562,7 +568,7 @@ class TestInputCase(unittest.TestCase):
     def setUp(self):
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
-        self.name = u'åäö.jpg'
+        self.name = 'åäö.jpg'
         fn = pjoin(settings.MEDIA_ROOT, self.name)
         im = Image.new('L', (666, 666))
         im.save(fn)

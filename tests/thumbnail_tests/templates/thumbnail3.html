@@ -1,5 +1,5 @@
 {% load thumbnail %}{% spaceless %}
-{% thumbnail  "http://www.aino.se/media/i/logo.png" "20x20" crop="center" as im %}
+{% thumbnail  "http://www.aino.com/negative.png" "20x20" crop="center" as im %}
     <img style="margin:{{ im|margin:"20x20" }}" width="{{ im.x }}" height="{{ im.y }}">
 {% endthumbnail %}
 {% endspaceless %}

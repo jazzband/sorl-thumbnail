@@ -1,9 +1,18 @@
+try:
+    import urllib2 as urllib
+    from urllib import urlopen
+except:
+    import urllib # python3
+    from urllib.request import urlopen
+try:
+    from django.utils.encoding import force_unicode as force_text
+except:
+    from django.utils.encoding import force_text
+
 import re
-import urllib2
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, default_storage
 from django.core.urlresolvers import reverse
-from django.utils.encoding import force_unicode
 from django.utils.functional import LazyObject
 from django.utils import simplejson
 from sorl.thumbnail.conf import settings
@@ -74,7 +83,7 @@ class ImageFile(BaseImageFile):
         if hasattr(file_, 'name'):
             self.name = file_.name
         else:
-            self.name = force_unicode(file_)
+            self.name = force_text(file_)
         # figure out storage
         if storage is not None:
             self.storage = storage
@@ -166,12 +175,12 @@ class DummyImageFile(BaseImageFile):
 
 class UrlStorage(Storage):
     def open(self, name):
-        return urllib2.urlopen(name)
+        return urlopen(name)
 
     def exists(self, name):
         try:
             self.open(name)
-        except urllib2.URLError:
+        except urllib.URLError:
             return False
         return True
 
