@@ -1,6 +1,6 @@
 #/bin/bash
 
-for name in pil pgmagick imagemagick graphicsmagick redis
+for name in pil pgmagick imagemagick graphicsmagick redis wand
 do
-    ./runtests.py --settings=settings.$name
+    ./runtests.py --settings=settings.$name;
 done
