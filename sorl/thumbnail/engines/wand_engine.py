@@ -40,9 +40,9 @@ class Engine(EngineBase):
 
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
-            image.type = 'truecolormatte'
+            image.type = 'truecolor'
         elif colorspace == 'GRAY':
-            image.type = 'grayscalematte'
+            image.type = 'grayscale'
         else:
             return image
         return image
@@ -52,7 +52,7 @@ class Engine(EngineBase):
         return image
 
     def _crop(self, image, width, height, x_offset, y_offset):
-        image.crop(width, height, width=x_offset, height=y_offset)
+        image.crop(width, height, width + x_offset, height + y_offset)
         return image
 
     def _get_raw_data(self, image, format_, quality, progressive=False):

@@ -109,6 +109,17 @@ ImageMagick ``convert`` or  GraphicsMagic ``gm convert`` command. Features:
 * Can handle CMYK sources
 * It is a command line command, that is less than ideal,
 
+Wand
+----------------------------
+``'sorl.thumbnail.engines.wand_engine.Engine'``. This engine uses `Wand
+<http://wand-py.org>`_, a ctypes-based simple ImageMagick binding for Python. 
+Features:
+
+* Easy to install
+* Produces high quality images
+* Can handle CMYK sources
+* Works on Python 2.6, 2.7, 3.2, 3.3, and PyPy
+
 ``THUMBNAIL_CONVERT``
 =====================
 
