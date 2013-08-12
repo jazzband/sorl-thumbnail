@@ -48,10 +48,9 @@ class Engine(EngineBase):
         """
         Returns the backend image objects from a ImageFile instance
         """
-        handle, tmp = mkstemp()
-        with open(tmp, 'wb') as fp:
+        fd, tmp = mkstemp()
+        with os.fdopen(fd, 'wb') as fp:
             fp.write(source.read())
-        os.close(handle)
         return {'source': tmp, 'options': SortedDict(), 'size': None}
 
     def get_image_size(self, image):
@@ -72,16 +71,17 @@ class Engine(EngineBase):
         This is not very good for imagemagick because it will say anything is
         valid that it can use as input.
         """
-        handle, tmp = mkstemp()
-        with open(tmp, 'wb') as fp:
-            fp.write(raw_data)
-            fp.flush()
-            args = settings.THUMBNAIL_IDENTIFY.split(' ')
-            args.append(tmp)
-            p = Popen(args)
-            retcode = p.wait()
-        os.close(handle)
-        os.remove(tmp)
+        fd, tmp = mkstemp()
+        try:
+            with os.fdopen(fd, 'wb') as fp:
+                fp.write(raw_data)
+                fp.flush()
+                args = settings.THUMBNAIL_IDENTIFY.split(' ')
+                args.append(tmp)
+                p = Popen(args)
+                retcode = p.wait()
+        finally:
+            os.remove(tmp)
         return retcode == 0
 
     def _orientation(self, image):
