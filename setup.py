@@ -10,14 +10,14 @@ class TestCommand(test):
 
 
 setup(
-    name='sorl-thumbnail',
+    name='fc-thumbnail',
     version=sorl.__version__,
     description='Thumbnails for Django',
     long_description=open('README.rst').read(),
     author='Mikko Hellsing',
     author_email='mikko@aino.se',
     license='BSD',
-    url='https://github.com/sorl/sorl-thumbnail',
+    url='https://github.com/futurecolors/sorl-thumbnail',
     packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
     zip_safe=False,
