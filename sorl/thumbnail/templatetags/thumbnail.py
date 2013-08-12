@@ -52,7 +52,26 @@ class ThumbnailNodeBase(Node):
         except Exception:
             if settings.THUMBNAIL_DEBUG:
                 raise
-            logger.error('Thumbnail tag failed:', exc_info=sys.exc_info())
+
+            try:
+                error_message_template = (
+                    "Thumbnail tag failed "
+                    "in template {template_name}, error at: "
+                    "{tag_text}"
+                )
+
+                template_origin, (position_start, position_end) = self.source
+                template_text = template_origin.reload()
+                tag_text = template_text[position_start:position_end]
+
+                error_message = error_message_template.format(
+                    template_name=template_origin.name,
+                    tag_text=tag_text,
+                )
+            except Exception:
+                error_message = 'Thumbnail tag failed:'
+
+            logger.exception(error_message)
             return self.nodelist_empty.render(context)
 
     def _render(self, context):
