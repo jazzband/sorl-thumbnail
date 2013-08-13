@@ -7,7 +7,7 @@ from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
 from subprocess import Popen, PIPE
-from tempfile import mkstemp
+from tempfile import mkstemp, NamedTemporaryFile
 
 
 size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
@@ -21,7 +21,6 @@ class Engine(EngineBase):
         """
         Writes the thumbnail image
         """
-        handle, out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])
         if (
                 options['format'] == 'JPEG' and
                 options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
@@ -34,24 +33,24 @@ class Engine(EngineBase):
             args.append('-%s' % k)
             if v is not None:
                 args.append('%s' % v)
-        args.append(out)
-        args = map(smart_str, args)
-        p = Popen(args)
-        p.wait()
-        with open(out, 'rb') as fp:
-            thumbnail.write(fp.read())
-        os.close(handle)
-        os.remove(out)
-        os.remove(image['source']) # we should not need this now
+
+        try:
+            with NamedTemporaryFile(suffix='.%s' % EXTENSIONS[options['format']], mode='rb') as fp:
+                args.append(fp.name)
+                args = map(smart_str, args)
+                p = Popen(args)
+                p.wait()
+                thumbnail.write(fp.read())
+        finally:
+            os.remove(image['source']) # we should not need this now
 
     def get_image(self, source):
         """
         Returns the backend image objects from a ImageFile instance
         """
-        fd, tmp = mkstemp()
-        with os.fdopen(fd, 'wb') as fp:
+        with NamedTemporaryFile(mode='wb', delete=False) as fp:
             fp.write(source.read())
-        return {'source': tmp, 'options': SortedDict(), 'size': None}
+        return {'source': fp.name, 'options': SortedDict(), 'size': None}
 
     def get_image_size(self, image):
         """
@@ -71,17 +70,13 @@ class Engine(EngineBase):
         This is not very good for imagemagick because it will say anything is
         valid that it can use as input.
         """
-        fd, tmp = mkstemp()
-        try:
-            with os.fdopen(fd, 'wb') as fp:
-                fp.write(raw_data)
-                fp.flush()
-                args = settings.THUMBNAIL_IDENTIFY.split(' ')
-                args.append(tmp)
-                p = Popen(args)
-                retcode = p.wait()
-        finally:
-            os.remove(tmp)
+        with NamedTemporaryFile(mode='wb') as fp:
+            fp.write(raw_data)
+            fp.flush()
+            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args.append(fp.name)
+            p = Popen(args)
+            retcode = p.wait()
         return retcode == 0
 
     def _orientation(self, image):
