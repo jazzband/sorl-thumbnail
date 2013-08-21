@@ -31,7 +31,8 @@ logging.getLogger('sorl.thumbnail').addHandler(handler)
 class StorageTestCase(unittest.TestCase):
     def setUp(self):
         name = 'org.jpg'
-        os.makedirs(settings.MEDIA_ROOT)
+        if not os.path.exists(settings.MEDIA_ROOT):
+            os.makedirs(settings.MEDIA_ROOT)
         fn = pjoin(settings.MEDIA_ROOT, name)
         Image.new('L', (100, 100)).save(fn)
         self.im = ImageFile(name)
@@ -251,7 +252,7 @@ class SimpleTestCase(SimpleTestCaseBase):
             default.kvstore.get(im).serialize_storage(),
             'thumbnail_tests.storage.TestStorage',
             )
-        im = ImageFile('http://www.aino.se/media/i/logo.png')
+        im = ImageFile('http://www.w3.org/Graphics/PNG/nurbcup2si.png')
         default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
@@ -371,10 +372,10 @@ class TemplateTestCaseB(unittest.TestCase):
 
     def testPortrait(self):
         val = render_to_string('thumbnail4.html', {
-            'source': 'http://www.aino.se/media/i/logo.png',
+            'source': 'http://www.w3.org/Graphics/PNG/nurbcup2si.png',
             'dims': 'x666',
         }).strip()
-        self.assertEqual(val, '<img src="/media/test/cache/bd/5d/bd5db73239bfd68473481b6701a8167d.jpg" width="1985" height="666" class="landscape">')
+        self.assertEqual(val, '<img src="/media/test/cache/95/21/9521624af830d49266bc46e230ccdc63.jpg" width="1121" height="666" class="landscape">')
 
     def testEmpty(self):
         val = render_to_string('thumbnail5.html', {}).strip()
