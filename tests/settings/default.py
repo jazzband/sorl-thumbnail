@@ -31,4 +31,5 @@ INSTALLED_APPS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
-
+ALLOWED_HOSTS = ['localhost']
+SECRET_KEY = 'test978udwi33487h5o385fb3oiun23e23oiu24fn'
