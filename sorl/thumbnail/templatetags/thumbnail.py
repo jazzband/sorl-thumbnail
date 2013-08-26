@@ -2,9 +2,10 @@ import logging
 import re
 import os
 import sys
+from functools import wraps
+
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
-from functools import wraps
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
@@ -21,6 +22,7 @@ def safe_filter(error_output=''):
     A safe filter decorator only raising errors when ``THUMBNAIL_DEBUG`` is
     ``True`` otherwise returning ``error_output``.
     """
+
     def inner(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
@@ -29,9 +31,12 @@ def safe_filter(error_output=''):
             except Exception:
                 if settings.THUMBNAIL_DEBUG:
                     raise
-                logger.error('Thumbnail filter failed:', exc_info=sys.exc_info())
+                logger.error('Thumbnail filter failed:',
+                             exc_info=sys.exc_info())
                 return error_output
+
         return wrapper
+
     return inner
 
 
@@ -104,10 +109,11 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options[key] = value
 
         # logic arranged to ensure we're not doing any unecessary calls to os.path.exists
-        if file_ and (not lazy_fill or lazy_fill and os.path.exists(file_.path)):
+        if file_ and (
+            not lazy_fill or lazy_fill and os.path.exists(file_.path)):
             thumbnail = default.backend.get_thumbnail(
                 file_, geometry, **options
-                )
+            )
         elif self.nodelist_empty:
             return self.nodelist_empty.render(context)
         elif settings.THUMBNAIL_DUMMY or lazy_fill:
@@ -163,7 +169,8 @@ def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
-    if not file_ or settings.THUMBNAIL_DUMMY or isinstance(file_, DummyImageFile):
+    if not file_ or settings.THUMBNAIL_DUMMY or isinstance(file_,
+                                                           DummyImageFile):
         return 'auto'
     margin = [0, 0, 0, 0]
     image_file = default.kvstore.get_or_set(ImageFile(file_))
@@ -178,7 +185,8 @@ def margin(file_, geometry_string):
     margin[2] = ey / 2
     if ey % 2:
         margin[2] += 1
-    return ' '.join([ '%spx' % n for n in margin ])
+    return ' '.join(['%spx' % n for n in margin])
+
 
 @safe_filter(error_output='auto')
 @register.filter
@@ -195,5 +203,4 @@ def background_margin(file_, geometry_string):
     margin[0] = ex / 2
     ey = y - image_file.y
     margin[1] = ey / 2
-    return ' '.join([ '%spx' % n for n in margin ])
-
+    return ' '.join(['%spx' % n for n in margin])
