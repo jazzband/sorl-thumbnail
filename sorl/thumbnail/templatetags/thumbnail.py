@@ -102,6 +102,7 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options.update(value)
             else:
                 options[key] = value
+
         # logic arranged to ensure we're not doing any unecessary calls to os.path.exists
         if file_ and (not lazy_fill or lazy_fill and os.path.exists(file_.path)):
             thumbnail = default.backend.get_thumbnail(
@@ -112,10 +113,11 @@ class ThumbnailNode(ThumbnailNodeBase):
         elif settings.THUMBNAIL_DUMMY or lazy_fill:
             thumbnail = DummyImageFile(geometry)
         else:
-           if self.nodelist_empty:
+            if self.nodelist_empty:
                 return self.nodelist_empty.render(context)
             else:
                 return ''
+
         if self.as_var:
             context.push()
             context[self.as_var] = thumbnail
@@ -123,6 +125,7 @@ class ThumbnailNode(ThumbnailNodeBase):
             context.pop()
         else:
             output = thumbnail.url
+
         return output
 
     def __repr__(self):
