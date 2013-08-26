@@ -3,12 +3,6 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test
 
 
-class TestCommand(test):
-    def run(self):
-        from tests.runtests import runtests
-        runtests()
-
-
 setup(
     name='django-thumbnail',
     version=sorl.__version__,
@@ -32,6 +26,5 @@ setup(
         'Topic :: Multimedia :: Graphics',
         'Framework :: Django',
     ],
-    cmdclass={"test": TestCommand},
 )
 
