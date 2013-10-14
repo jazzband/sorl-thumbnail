@@ -3,6 +3,7 @@ Wand (>=v0.3.0) engine for Sorl-thumbnail
 '''
 
 from wand.image import Image
+from wand.exceptions import CorruptImageError
 from sorl.thumbnail.engines.base import EngineBase
 
 
@@ -14,8 +15,16 @@ class Engine(EngineBase):
         return image.size
 
     def is_valid_image(self, raw_data):
-        im = Image(blob=raw_data)
-        return im.isValid()
+        '''
+        Wand library makes sure when opening any image that is fine, when
+        the image is corrupted raises an exception.
+        '''
+
+        try:
+            Image(blob=raw_data)
+            return True
+        except CorruptImageError:
+            return False
 
     def _orientation(self, image):
         orientation = image.orientation
