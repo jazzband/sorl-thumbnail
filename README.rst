@@ -2,8 +2,8 @@ News 2013-11-09
 ===============
 Unfortunately I no longer work with Django so my motivation to keep developing
 for sorl-thumbnail is very low. If you are interested in taking over this
-project please send an email to mikko@aino.se explaing why you the perfect fit
-for owning this project.
+project please send an email to mikko@aino.se explaing why you are the perfect
+fit for owning this project.
 
 sorl-thumbnail
 ==============
