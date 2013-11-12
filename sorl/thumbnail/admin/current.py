@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import forms
 from django.utils.safestring import mark_safe
 from sorl.thumbnail.fields import ImageField
@@ -10,8 +12,8 @@ class AdminImageWidget(forms.ClearableFileInput):
     image as well as a link to the current one if it hase one.
     """
 
-    template_with_initial = u'%(clear_template)s<br />%(input_text)s: %(input)s'
-    template_with_clear = u'%(clear)s <label style="width:auto" for="%(clear_checkbox_id)s">%(clear_checkbox_label)s</label>'
+    template_with_initial = '%(clear_template)s<br />%(input_text)s: %(input)s'
+    template_with_clear = '%(clear)s <label style="width:auto" for="%(clear_checkbox_id)s">%(clear_checkbox_label)s</label>'
 
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
@@ -22,9 +24,9 @@ class AdminImageWidget(forms.ClearableFileInput):
                 pass
             else:
                 output = (
-                    u'<div style="float:left">'
-                    u'<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
-                    u'<img src="%s"></a>%s</div>'
+                    '<div style="float:left">'
+                    '<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
+                    '<img src="%s"></a>%s</div>'
                     ) % (mini.width, value.url, mini.url, output)
         return mark_safe(output)
 

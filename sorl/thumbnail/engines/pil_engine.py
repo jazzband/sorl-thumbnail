@@ -1,4 +1,7 @@
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO as BytesIO
+except ImportError:
+    from io import BytesIO # Python3
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
@@ -9,14 +12,14 @@ except ImportError:
 
 class Engine(EngineBase):
     def get_image(self, source):
-        buf = StringIO(source.read())
+        buf = BytesIO(source.read())
         return Image.open(buf)
 
     def get_image_size(self, image):
         return image.size
 
     def is_valid_image(self, raw_data):
-        buf = StringIO(raw_data)
+        buf = BytesIO(raw_data)
         try:
             trial_image = Image.open(buf)
             trial_image.verify()
@@ -67,7 +70,7 @@ class Engine(EngineBase):
 
     def _get_raw_data(self, image, format_, quality, progressive=False):
         ImageFile.MAXBLOCK = 1024 * 1024
-        buf = StringIO()
+        buf = BytesIO()
         params = {
             'format': format_,
             'quality': quality,

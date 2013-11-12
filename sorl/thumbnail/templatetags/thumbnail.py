@@ -1,5 +1,8 @@
+from __future__ import division, unicode_literals
+
 import logging
 import re
+import six
 import sys
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
@@ -84,8 +87,8 @@ class ThumbnailNode(ThumbnailNodeBase):
         geometry = self.geometry.resolve(context)
         options = {}
         for key, expr in self.options:
-            noresolve = {u'True': True, u'False': False, u'None': None}
-            value = noresolve.get(unicode(expr), expr.resolve(context))
+            noresolve = {'True': True, 'False': False, 'None': None}
+            value = noresolve.get(six.text_type(expr), expr.resolve(context))
             if key == 'options':
                 options.update(value)
             else:
@@ -145,13 +148,13 @@ def margin(file_, geometry_string):
     image_file = default.kvstore.get_or_set(ImageFile(file_))
     x, y = parse_geometry(geometry_string, image_file.ratio)
     ex = x - image_file.x
-    margin[3] = ex / 2
-    margin[1] = ex / 2
+    margin[3] = ex // 2
+    margin[1] = ex // 2
     if ex % 2:
         margin[1] += 1
     ey = y - image_file.y
-    margin[0] = ey / 2
-    margin[2] = ey / 2
+    margin[0] = ey // 2
+    margin[2] = ey // 2
     if ey % 2:
         margin[2] += 1
     return ' '.join([ '%spx' % n for n in margin ])

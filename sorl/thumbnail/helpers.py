@@ -1,6 +1,10 @@
+from __future__ import unicode_literals
+
 import hashlib
+import six
+
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_bytes
 from django.utils.importlib import import_module
 
 try:
@@ -38,7 +42,7 @@ def tokey(*args):
     """
     Computes a (hopefully) unique key from arguments given.
     """
-    salt = '||'.join([smart_str(arg) for arg in args])
+    salt = b'||'.join([smart_bytes(arg) for arg in args])
     hash_ = hashlib.md5(salt)
     return hash_.hexdigest()
 
@@ -59,8 +63,8 @@ def get_module_class(class_path):
     try:
         mod_name, cls_name = class_path.rsplit('.', 1)
         mod = import_module(mod_name)
-    except ImportError, e:
-        raise ImproperlyConfigured(('Error importing module %s: "%s"' %
-                                   (mod_name, e)))
+    except ImportError as exc:
+        six.reraise(ImproperlyConfigured, 
+                    'Error importing module %s: "%s"' % (mod_name, exc))
     return getattr(mod, cls_name)
 

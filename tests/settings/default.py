@@ -1,6 +1,5 @@
 from os.path import join as pjoin, abspath, dirname, pardir
 
-
 PROJ_ROOT = abspath(pjoin(dirname(__file__), pardir))
 DATA_ROOT = pjoin(PROJ_ROOT, 'data')
 THUMBNAIL_PREFIX = 'test/cache/'
@@ -32,3 +31,4 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
 
+SECRET_KEY = 'v2824l&2-n+4zznbsk9c-ap5i)b3e8b+%*a=dxqlahm^%)68jn'

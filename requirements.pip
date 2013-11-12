@@ -1,0 +1,4 @@
+six
+Django
+# Use Pillow as a full compatible PIL replacement for Python3
+-e git+git://github.com/python-imaging/Pillow.git#egg=Pillow

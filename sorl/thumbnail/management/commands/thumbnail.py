@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.core.management.base import BaseCommand, CommandError
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail import default
@@ -5,7 +7,7 @@ from sorl.thumbnail import default
 
 class Command(BaseCommand):
     help = (
-        u'Handles thumbnails and key value store'
+        'Handles thumbnails and key value store'
     )
     args = '[cleanup, clear]'
     option_list = BaseCommand.option_list
