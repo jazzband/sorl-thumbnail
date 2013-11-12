@@ -11,7 +11,7 @@ class ThumbnailParseError(ThumbnailError):
     pass
 
 
-def parse_geometry(geometry, ratio=None):
+def parse_geometry(geometry, ratio=None, options=None):
     """
     Parses a geometry string syntax and returns a (width, height) tuple
     """
@@ -33,9 +33,9 @@ def parse_geometry(geometry, ratio=None):
     # for this
     if ratio is not None:
         ratio = float(ratio)
-        if x is None or ratio < 1.0:
+        if x is None or (ratio < 1.0 and options.get('crop', 'noop') == 'noop'):
             x = toint(y * ratio)
-        elif y is None or ratio > 1.0:
+        elif y is None or (ratio > 1.0 and options.get('crop', 'noop') == 'noop'):
             y = toint(x / ratio)
     return x, y
 
