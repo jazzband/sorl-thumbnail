@@ -3,13 +3,14 @@ import re
 import os
 import sys
 from functools import wraps
-
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
+
+from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
-from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
+from sorl.thumbnail.compat import text_type
 
 register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
@@ -101,7 +102,7 @@ class ThumbnailNode(ThumbnailNodeBase):
         options = {}
         for key, expr in self.options:
             noresolve = {u'True': True, u'False': False, u'None': None}
-            value = noresolve.get(unicode(expr), expr.resolve(context))
+            value = noresolve.get(text_type(expr), expr.resolve(context))
             if key == 'options':
                 options.update(value)
             else:
