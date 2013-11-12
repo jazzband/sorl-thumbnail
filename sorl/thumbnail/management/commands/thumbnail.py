@@ -10,13 +10,31 @@ class Command(BaseCommand):
     args = '[cleanup, clear]'
     option_list = BaseCommand.option_list
 
-    def handle(self, cmd, *args, **kwargs):
-        if cmd not in ['cleanup', 'clear']:
-            raise CommandError('`%s` is not a valid argument' % cmd)
-        if cmd == 'cleanup':
+    def handle(self, *labels, **options):
+        verbosity = int(options.get('verbosity'))
+        if len(labels) != 1:
+            raise CommandError('`%s` is not a valid argument' % labels)
+
+        label = labels[0]
+
+        if label not in ['cleanup', 'clear']:
+            raise CommandError('`%s` unknown action' % label)
+
+        if label == 'cleanup':
+            if verbosity >= 1:
+                self.stdout.write("Cleanup thumbnails ... ")
+
             default.kvstore.cleanup()
-            print 'Cleanup thumbnails done.'
-        if cmd == 'clear':
+
+            if verbosity >= 1:
+                self.stdout.write("[Done]\n")
+
+        if label == 'clear':
+            if verbosity >= 1:
+                self.stdout.write("Clear the Key Value Store ... ")
+
             default.kvstore.clear()
-            print 'Cleared the Key Value Store.'
+
+            if verbosity >= 1:
+                self.stdout.write("[Done]\n")
 

@@ -7,8 +7,10 @@ class ThumbnailLogHandler(logging.Handler):
     """
     An exception log handler for thumbnail errors.
     """
+
     def emit(self, record):
         import traceback
+
         if not settings.ADMINS:
             return
         try:
@@ -30,6 +32,6 @@ class ThumbnailLogHandler(logging.Handler):
             settings.SERVER_EMAIL,
             [a[1] for a in settings.ADMINS],
             connection=None
-            )
+        )
         msg.send(fail_silently=True)
 

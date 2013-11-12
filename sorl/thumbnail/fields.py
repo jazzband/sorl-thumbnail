@@ -37,7 +37,8 @@ class ImageField(models.FileField):
 
     def south_field_triple(self):
         from south.modelsinspector import introspector
-        cls_name = '%s.%s' % (self.__class__.__module__ , self.__class__.__name__)
+
+        cls_name = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
         args, kwargs = introspector(self)
         return (cls_name, args, kwargs)
 
@@ -56,6 +57,7 @@ class ImageFormField(forms.FileField):
         f = super(ImageFormField, self).to_python(data)
         if f is None:
             return None
+
         # We need to get a file raw data to validate it.
         if hasattr(data, 'temporary_file_path'):
             with open(data.temporary_file_path(), 'rb') as fp:
@@ -64,6 +66,7 @@ class ImageFormField(forms.FileField):
             raw_data = data.read()
         else:
             raw_data = data['content']
+
         if not default.engine.is_valid_image(raw_data):
             raise forms.ValidationError(self.error_messages['invalid_image'])
         if hasattr(f, 'seek') and callable(f.seek):

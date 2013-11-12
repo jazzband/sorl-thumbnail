@@ -11,7 +11,6 @@ from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
-
 register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
 logger = logging.getLogger('sorl.thumbnail')
@@ -109,8 +108,7 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options[key] = value
 
         # logic arranged to ensure we're not doing any unecessary calls to os.path.exists
-        if file_ and (
-            not lazy_fill or lazy_fill and os.path.exists(file_.path)):
+        if file_ and (not lazy_fill or lazy_fill and os.path.exists(file_.path)):
             thumbnail = default.backend.get_thumbnail(
                 file_, geometry, **options
             )

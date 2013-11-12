@@ -2,24 +2,18 @@ import hashlib
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_str
 from django.utils.importlib import import_module
-
-try:
-    import json as simplejson
-except ImportError:
-    try:
-        import simplejson
-    except ImportError:
-        from django.utils import simplejson
+from sorl.thumbnail.compat import json
 
 
 class ThumbnailError(Exception):
     pass
 
 
-class SortedJSONEncoder(simplejson.JSONEncoder):
+class SortedJSONEncoder(json.JSONEncoder):
     """
     A json encoder that sorts the dict keys
     """
+
     def __init__(self, **kwargs):
         kwargs['sort_keys'] = True
         super(SortedJSONEncoder, self).__init__(**kwargs)
@@ -44,11 +38,11 @@ def tokey(*args):
 
 
 def serialize(obj):
-    return simplejson.dumps(obj, cls=SortedJSONEncoder)
+    return json.dumps(obj, cls=SortedJSONEncoder)
 
 
 def deserialize(s):
-    return simplejson.loads(s)
+    return json.loads(s)
 
 
 def get_module_class(class_path):
@@ -61,6 +55,6 @@ def get_module_class(class_path):
         mod = import_module(mod_name)
     except ImportError, e:
         raise ImproperlyConfigured(('Error importing module %s: "%s"' %
-                                   (mod_name, e)))
+                                    (mod_name, e)))
     return getattr(mod, cls_name)
 
