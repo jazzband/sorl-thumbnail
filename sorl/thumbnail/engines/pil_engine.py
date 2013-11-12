@@ -1,10 +1,42 @@
 from cStringIO import StringIO
 from sorl.thumbnail.engines.base import EngineBase
+from sorl.thumbnail.conf import settings
 
 try:
-    from PIL import Image, ImageFile, ImageDraw
+    from PIL import Image, ImageFile, ImageDraw, ImageChops, ImageFilter
 except ImportError:
-    import Image, ImageFile, ImageDraw
+    import Image, ImageFile, ImageDraw, ImageChops
+
+
+def round_corner(radius, fill):
+    """Draw a round corner"""
+    corner = Image.new('L', (radius, radius), 0) #(0, 0, 0, 0))
+    draw = ImageDraw.Draw(corner)
+    draw.pieslice((0, 0, radius * 2, radius * 2), 180, 270, fill=fill)
+    return corner
+
+
+def round_rectangle(size, radius, fill):
+    """Draw a rounded rectangle"""
+    width, height = size
+    rectangle = Image.new('L', size, 255) #fill)
+    corner = round_corner(radius, 255) #fill)
+    rectangle.paste(corner, (0, 0))
+    rectangle.paste(corner.rotate(90),
+                    (0, height - radius)) # Rotate the corner and paste it
+    rectangle.paste(corner.rotate(180), (width - radius, height - radius))
+    rectangle.paste(corner.rotate(270), (width - radius, 0))
+    return rectangle
+
+
+class GaussianBlur(ImageFilter.Filter):
+    name = "GaussianBlur"
+
+    def __init__(self, radius=2):
+        self.radius = radius
+
+    def filter(self, image):
+        return image.gaussian_blur(self.radius)
 
 
 class Engine(EngineBase):
@@ -24,10 +56,13 @@ class Engine(EngineBase):
             return False
         return True
 
+    def _cropbox(self, image, x, y, x2, y2):
+        return image.crop((x, y, x2, y2))
+
     def _orientation(self, image):
         try:
             exif = image._getexif()
-        except AttributeError:
+        except (AttributeError, IOError, KeyError, IndexError):
             exif = None
         if exif:
             orientation = exif.get(0x0112)
@@ -65,8 +100,17 @@ class Engine(EngineBase):
         return image.crop((x_offset, y_offset,
                            width + x_offset, height + y_offset))
 
+
+    def _rounded(self, image, r):
+        i = round_rectangle(image.size, r, "notusedblack")
+        image.putalpha(i)
+        return image
+
+    def _blur(self, image, radius):
+        return image.filter(GaussianBlur(radius))
+
     def _get_raw_data(self, image, format_, quality, progressive=False):
-        ImageFile.MAXBLOCK = 1024 * 1024
+        ImageFile.MAXBLOCK = image.size[0] * image.size[1]
         buf = StringIO()
         params = {
             'format': format_,
@@ -78,8 +122,17 @@ class Engine(EngineBase):
         try:
             image.save(buf, **params)
         except IOError:
-            params.pop('optimize')
-            image.save(buf, **params)
+            try:
+                # Temporary encrease ImageFile MAXBLOCK
+                maxblock = ImageFile.MAXBLOCK
+                ImageFile.MAXBLOCK = image.size[0] * image.size[1]
+                image.save(buf, **params)
+            except IOError:
+                params.pop('optimize')
+                image.save(buf, **params)
+            finally:
+                ImageFile.MAXBLOCK = maxblock
+
         raw_data = buf.getvalue()
         buf.close()
         return raw_data

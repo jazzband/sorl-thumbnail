@@ -1,6 +1,5 @@
 from django.conf import settings
 
-
 # When True ThumbnailNode.render can raise errors
 THUMBNAIL_DEBUG = False
 
@@ -51,6 +50,8 @@ THUMBNAIL_PREFIX = 'cache/'
 # Make sure the backend can handle the format you specify
 THUMBNAIL_FORMAT = 'JPEG'
 
+THUMBNAIL_PRESERVE_FORMAT = False
+
 # Colorspace, backends are required to implement: RGB, GRAY
 # Setting this to None will keep the original colorspace.
 THUMBNAIL_COLORSPACE = 'RGB'
@@ -60,6 +61,9 @@ THUMBNAIL_UPSCALE = True
 
 # Quality, 0-100
 THUMBNAIL_QUALITY = 95
+
+# Gaussian blur radius
+THUMBNAIL_BLUR = 0
 
 # Save as progressive when saving as jpeg
 THUMBNAIL_PROGRESSIVE = True
@@ -81,3 +85,11 @@ THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 # or height given
 THUMBNAIL_DUMMY_RATIO = 1.5
 
+# Lazy fill empty thumbnail like THUMBNAIL_DUMMY
+THUMBNAIL_LAZY_FILL_EMPTY = False
+
+# Timeout, in seconds, to use when retrieving images with urllib2
+THUMBNAIL_URL_TIMEOUT = None
+
+# Temporarily Increase the PIL MAX
+THUMBNAIL_PIL_MAXBLOCK_FALLBACK = 2 ** 24

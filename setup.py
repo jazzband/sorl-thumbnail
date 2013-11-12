@@ -1,4 +1,5 @@
-import sorl
+# -*- encoding: utf8 -*-
+from sorl import __version__, __author__, __maintainer__, __email__, __license__
 from setuptools import setup, find_packages
 from setuptools.command.test import test
 
@@ -6,18 +7,21 @@ from setuptools.command.test import test
 class TestCommand(test):
     def run(self):
         from tests.runtests import runtests
+
         runtests()
 
 
 setup(
     name='sorl-thumbnail',
-    version=sorl.__version__,
-    description='Thumbnails for Django',
+    version=__version__,
+    description='Thumbnails for Django. The original and the best',
     long_description=open('README.rst').read(),
-    author='Mikko Hellsing',
+    author=__author__,
     author_email='mikko@aino.se',
-    license='BSD',
-    url='https://github.com/sorl/sorl-thumbnail',
+    maintainer=__maintainer__,
+    maintainer_email=__email__,
+    license=__license__,
+    url='https://github.com/mariocesar/sorl-thumbnail',
     packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
     zip_safe=False,

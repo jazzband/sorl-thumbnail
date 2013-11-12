@@ -1,9 +1,11 @@
 import logging
 import re
+import os
 import sys
+from functools import wraps
+
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
-from functools import wraps
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
@@ -20,6 +22,7 @@ def safe_filter(error_output=''):
     A safe filter decorator only raising errors when ``THUMBNAIL_DEBUG`` is
     ``True`` otherwise returning ``error_output``.
     """
+
     def inner(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
@@ -28,9 +31,12 @@ def safe_filter(error_output=''):
             except Exception:
                 if settings.THUMBNAIL_DEBUG:
                     raise
-                logger.error('Thumbnail filter failed:', exc_info=sys.exc_info())
+                logger.error('Thumbnail filter failed:',
+                             exc_info=sys.exc_info())
                 return error_output
+
         return wrapper
+
     return inner
 
 
@@ -61,26 +67,37 @@ class ThumbnailNode(ThumbnailNodeBase):
 
     def __init__(self, parser, token):
         bits = token.split_contents()
-        if len(bits) < 5 or bits[-2] != 'as':
-            raise TemplateSyntaxError(self.error_msg)
+        #if len(bits) < 5:
+        #    raise TemplateSyntaxError(self.error_msg)
         self.file_ = parser.compile_filter(bits[1])
         self.geometry = parser.compile_filter(bits[2])
         self.options = []
-        for bit in bits[3:-2]:
+        self.as_var = None
+        self.nodelist_file = None
+
+        if bits[-2] == 'as':
+            options_bits = bits[3:-2]
+        else:
+            options_bits = bits[3:]
+
+        for bit in options_bits:
             m = kw_pat.match(bit)
             if not m:
                 raise TemplateSyntaxError(self.error_msg)
             key = smart_str(m.group('key'))
             expr = parser.compile_filter(m.group('value'))
             self.options.append((key, expr))
-        self.as_var = bits[-1]
-        self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
-        if parser.next_token().contents == 'empty':
-            self.nodelist_empty = parser.parse(('endthumbnail',))
-            parser.delete_first_token()
+
+        if bits[-2] == 'as':
+            self.as_var = bits[-1]
+            self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
+            if parser.next_token().contents == 'empty':
+                self.nodelist_empty = parser.parse(('endthumbnail',))
+                parser.delete_first_token()
 
     def _render(self, context):
         file_ = self.file_.resolve(context)
+        lazy_fill = settings.THUMBNAIL_LAZY_FILL_EMPTY
         geometry = self.geometry.resolve(context)
         options = {}
         for key, expr in self.options:
@@ -90,18 +107,31 @@ class ThumbnailNode(ThumbnailNodeBase):
                 options.update(value)
             else:
                 options[key] = value
-        if settings.THUMBNAIL_DUMMY:
-            thumbnail = DummyImageFile(geometry)
-        elif file_:
+
+        # logic arranged to ensure we're not doing any unecessary calls to os.path.exists
+        if file_ and (
+            not lazy_fill or lazy_fill and os.path.exists(file_.path)):
             thumbnail = default.backend.get_thumbnail(
                 file_, geometry, **options
-                )
-        else:
+            )
+        elif self.nodelist_empty:
             return self.nodelist_empty.render(context)
-        context.push()
-        context[self.as_var] = thumbnail
-        output = self.nodelist_file.render(context)
-        context.pop()
+        elif settings.THUMBNAIL_DUMMY or lazy_fill:
+            thumbnail = DummyImageFile(geometry)
+        else:
+            if self.nodelist_empty:
+                return self.nodelist_empty.render(context)
+            else:
+                return ''
+
+        if self.as_var:
+            context.push()
+            context[self.as_var] = thumbnail
+            output = self.nodelist_file.render(context)
+            context.pop()
+        else:
+            output = thumbnail.url
+
         return output
 
     def __repr__(self):
@@ -139,7 +169,8 @@ def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
-    if not file_ or settings.THUMBNAIL_DUMMY:
+    if not file_ or settings.THUMBNAIL_DUMMY or isinstance(file_,
+                                                           DummyImageFile):
         return 'auto'
     margin = [0, 0, 0, 0]
     image_file = default.kvstore.get_or_set(ImageFile(file_))
@@ -154,5 +185,22 @@ def margin(file_, geometry_string):
     margin[2] = ey / 2
     if ey % 2:
         margin[2] += 1
-    return ' '.join([ '%spx' % n for n in margin ])
+    return ' '.join(['%spx' % n for n in margin])
 
+
+@safe_filter(error_output='auto')
+@register.filter
+def background_margin(file_, geometry_string):
+    """
+    Returns the calculated margin for a background image and geometry
+    """
+    if not file_ or settings.THUMBNAIL_DUMMY:
+        return 'auto'
+    margin = [0, 0]
+    image_file = default.kvstore.get_or_set(ImageFile(file_))
+    x, y = parse_geometry(geometry_string, image_file.ratio)
+    ex = x - image_file.x
+    margin[0] = ex / 2
+    ey = y - image_file.y
+    margin[1] = ey / 2
+    return ' '.join(['%spx' % n for n in margin])
