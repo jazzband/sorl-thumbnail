@@ -18,6 +18,7 @@ fit for owning this project.
 
 sorl-thumbnail
 ==============
+image:: https://secure.travis-ci.org/mariocesar/sorl-thumbnail.png
 
 Thumbnails for Django. Totally rewritten.
 
