@@ -37,4 +37,3 @@ class Command(BaseCommand):
 
             if verbosity >= 1:
                 self.stdout.write("[Done]\n")
-

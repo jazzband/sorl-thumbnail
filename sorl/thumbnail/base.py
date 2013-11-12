@@ -69,9 +69,11 @@ class ThumbnailBackend(object):
         if settings.THUMBNAIL_PRESERVE_FORMAT:
             self.default_options['format'] = self._get_format(file_)
 
-        for key, value in self.default_options.iteritems():
-            options.setdefault(key, value)
-            # For the future I think it is better to add options only if they
+        for key in self.default_options.keys():
+            if not key in options:
+                options.update({key: self.default_options[key]})
+
+        # For the future I think it is better to add options only if they
         # differ from the default settings as below. This will ensure the same
         # filenames beeing generated for new options at default.
         for key, attr in self.extra_options:
