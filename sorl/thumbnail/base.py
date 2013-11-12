@@ -75,7 +75,7 @@ class ThumbnailBackend(object):
 
         # For the future I think it is better to add options only if they
         # differ from the default settings as below. This will ensure the same
-        # filenames beeing generated for new options at default.
+        # filenames being generated for new options at default.
         for key, attr in self.extra_options:
             value = getattr(settings, attr)
             if value != getattr(default_settings, attr):
