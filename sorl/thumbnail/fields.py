@@ -12,14 +12,16 @@ __all__ = ('ImageField', 'ImageFormField')
 class ImageField(models.FileField):
     def delete_file(self, instance, sender, **kwargs):
         """
-        Adds deletion of thumbnails and key kalue store references to the
+        Adds deletion of thumbnails and key value store references to the
         parent class implementation. Only called in Django < 1.2.5
         """
         file_ = getattr(instance, self.attname)
+
         # If no other object of this type references the file, and it's not the
         # default value for future objects, delete it from the backend.
         query = Q(**{self.name: file_.name}) & ~Q(pk=instance.pk)
         qs = sender._default_manager.filter(query)
+
         if (file_ and file_.name != self.default and not qs):
             default.backend.delete(file_)
         elif file_:
@@ -71,5 +73,6 @@ class ImageFormField(forms.FileField):
             raise forms.ValidationError(self.error_messages['invalid_image'])
         if hasattr(f, 'seek') and callable(f.seek):
             f.seek(0)
+
         return f
 
