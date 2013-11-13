@@ -1,7 +1,7 @@
 import django
 import sys
 
-__all__ = ['json', 'BufferIO', 'urlopen', 'URLError']
+__all__ = ['json', 'BufferIO', 'urlopen', 'URLError', 'force_unicode']
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] == 3
 
@@ -28,7 +28,11 @@ except ImportError:
     from urllib2 import urlopen
 
 
+from django.utils.encoding import force_text
+
 if PY3:
     text_type = str
+    force_unicode = force_text
 else:
     text_type = unicode
+    from django.utils.encoding import force_unicode
