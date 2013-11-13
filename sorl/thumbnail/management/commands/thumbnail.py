@@ -1,5 +1,5 @@
+import sys
 from django.core.management.base import BaseCommand, CommandError
-from sorl.thumbnail.conf import settings
 from sorl.thumbnail import default
 
 
@@ -12,6 +12,11 @@ class Command(BaseCommand):
 
     def handle(self, *labels, **options):
         verbosity = int(options.get('verbosity'))
+
+        if not labels:
+            print self.print_help('thumbnail', '')
+            sys.exit(1)
+
         if len(labels) != 1:
             raise CommandError('`%s` is not a valid argument' % labels)
 
@@ -22,18 +27,18 @@ class Command(BaseCommand):
 
         if label == 'cleanup':
             if verbosity >= 1:
-                self.stdout.write("Cleanup thumbnails ... ")
+                self.stdout.write("Cleanup thumbnails ... ", ending=' ... ')
 
             default.kvstore.cleanup()
 
             if verbosity >= 1:
-                self.stdout.write("[Done]\n")
+                self.stdout.write("[Done]")
 
-        if label == 'clear':
+        elif label == 'clear':
             if verbosity >= 1:
-                self.stdout.write("Clear the Key Value Store ... ")
+                self.stdout.write("Clear the Key Value Store", ending=' ... ')
 
             default.kvstore.clear()
 
             if verbosity >= 1:
-                self.stdout.write("[Done]\n")
+                self.stdout.write("[Done]")
