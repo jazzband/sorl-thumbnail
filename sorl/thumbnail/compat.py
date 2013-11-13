@@ -16,8 +16,12 @@ except ImportError:
     from cStringIO import StringIO as BufferIO
 
 try:
-    from urllib import URLError
-    from urllib import urlopen
+    if PY3:
+        from urllib.request import urlopen
+        from urllib.error import URLError
+    else:
+        from urllib import URLError
+        from urllib import urlopen
 except ImportError:
     #For python2
     from urllib2 import URLError
