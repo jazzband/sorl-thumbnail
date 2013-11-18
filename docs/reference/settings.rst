@@ -188,6 +188,15 @@ maximum or ``None`` if your caching backend can handle that as infinite.
 Only applicable for the Cached DB Key Value Store.
 
 
+``THUMBNAIL_CACHE``
+===================
+
+- Default: ``'default'``
+
+Cache configuration for Cached DB Key Value Store. Defaults to the ``'default'`` cache
+but some applications might have multiple cache clusters.
+
+
 ``THUMBNAIL_KEY_PREFIX``
 ========================
 
