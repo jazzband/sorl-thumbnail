@@ -1,6 +1,6 @@
 from os.path import join as pjoin, abspath, dirname, pardir
 
-
+SECRET_KEY = 'SECRET'
 PROJ_ROOT = abspath(pjoin(dirname(__file__), pardir))
 DATA_ROOT = pjoin(PROJ_ROOT, 'data')
 THUMBNAIL_PREFIX = 'test/cache/'
@@ -18,7 +18,7 @@ ADMINS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'thumbnail_tests',
+        'NAME': ':memory:',
     }
 }
 MEDIA_ROOT = pjoin(PROJ_ROOT, 'media')

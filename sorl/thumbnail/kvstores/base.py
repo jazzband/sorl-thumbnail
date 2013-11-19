@@ -36,7 +36,7 @@ class KVStoreBase(object):
                 # make sure the source is in kvstore
                 raise ThumbnailError('Cannot add thumbnails for source: `%s` '
                                      'that is not in kvstore.' % source.name)
-            # Update the list of thumbnails for source.
+                # Update the list of thumbnails for source.
             thumbnails = self._get(source.key, identity='thumbnails') or []
             thumbnails = set(thumbnails)
             thumbnails.add(image_file.key)
@@ -72,7 +72,7 @@ class KVStoreBase(object):
                 if thumbnail:
                     self.delete(thumbnail)
                     thumbnail.delete() # delete the actual file
-            # Delete the thumbnails key from store
+                # Delete the thumbnails key from store
             self._delete(image_file.key, identity='thumbnails')
 
     def cleanup(self):
@@ -102,7 +102,7 @@ class KVStoreBase(object):
                 if thumbnail_keys:
                     self._set(key, thumbnail_keys, identity='thumbnails')
                     return
-            # if there is no image_file then this thumbnails key is just
+                # if there is no image_file then this thumbnails key is just
             # hangin' loose, If the thumbnail_keys ended up empty there is no
             # reason for keeping it either
             self._delete(key, identity='thumbnails')

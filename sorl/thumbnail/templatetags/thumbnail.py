@@ -59,7 +59,6 @@ class ThumbnailNodeBase(Node):
         raise NotImplemented()
 
 
-#@register.tag('thumbnail')
 class ThumbnailNode(ThumbnailNodeBase):
     child_nodelists = ('nodelist_file', 'nodelist_empty')
     error_msg = ('Syntax error. Expected: ``thumbnail source geometry '
