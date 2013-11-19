@@ -63,7 +63,7 @@ Ubuntu 10.04 package installation::
 
 Installing `Python Imaging Library`_ using pip::
 
-    pip install PIL
+    pip install Pillow
 
 Watch the output for messages on what support got compiled in, you at least
 want to see the following::
