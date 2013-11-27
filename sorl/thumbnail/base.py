@@ -30,6 +30,8 @@ class ThumbnailBackend(object):
         'crop': False,
         'cropbox': None,
         'rounded': None,
+        'padding': settings.THUMBNAIL_PADDING,
+        'padding_color': settings.THUMBNAIL_PADDING_COLOR,
     }
 
     extra_options = (

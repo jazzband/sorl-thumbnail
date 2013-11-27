@@ -100,7 +100,6 @@ class Engine(EngineBase):
         return image.crop((x_offset, y_offset,
                            width + x_offset, height + y_offset))
 
-
     def _rounded(self, image, r):
         i = round_rectangle(image.size, r, "notusedblack")
         image.putalpha(i)
@@ -108,6 +107,15 @@ class Engine(EngineBase):
 
     def _blur(self, image, radius):
         return image.filter(GaussianBlur(radius))
+
+    def _padding(self, image, geometry, options):
+        x_image, y_image = self.get_image_size(image)
+        left = int((geometry[0] - x_image) / 2)
+        top = int((geometry[1] - y_image) / 2)
+        color = options.get('padding_color')
+        im = Image.new(image.mode, geometry, color)
+        im.paste(image, (left, top))
+        return im
 
     def _get_raw_data(self, image, format_, quality, progressive=False):
         ImageFile.MAXBLOCK = image.size[0] * image.size[1]
