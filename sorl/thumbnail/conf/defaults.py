@@ -65,6 +65,10 @@ THUMBNAIL_QUALITY = 95
 # Gaussian blur radius
 THUMBNAIL_BLUR = 0
 
+# Adds padding around the image to match the requested size without cropping
+THUMBNAIL_PADDING = False
+THUMBNAIL_PADDING_COLOR = '#ffffff'
+
 # Save as progressive when saving as jpeg
 THUMBNAIL_PROGRESSIVE = True
 
