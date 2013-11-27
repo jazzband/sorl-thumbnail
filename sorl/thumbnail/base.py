@@ -38,8 +38,6 @@ class ThumbnailBackend(object):
         ('progressive', 'THUMBNAIL_PROGRESSIVE'),
         ('orientation', 'THUMBNAIL_ORIENTATION'),
         ('blur', 'THUMBNAIL_BLUR'),
-        #('padding', 'THUMBNAIL_PADDING'),
-        #('padding_color', 'THUMBNAIL_PADDING_COLOR'),
     )
 
     file_extension = lambda inst, file_: str(file_).split('.')[-1].lower()
