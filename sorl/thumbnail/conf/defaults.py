@@ -93,3 +93,6 @@ THUMBNAIL_URL_TIMEOUT = None
 
 # Temporarily Increase the PIL MAX
 THUMBNAIL_PIL_MAXBLOCK_FALLBACK = 2 ** 24
+
+# Default width when using filters for texts
+THUMBNAIL_FILTER_WIDTH = 500
