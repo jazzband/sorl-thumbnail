@@ -74,6 +74,13 @@ Setting format and using the is_portrait filter::
         </div>
     {% endif %}
 
+Using HTML filter::
+
+    {{ text|html_thumbnails }}
+
+Using markdown filter::
+
+    {{ text|markdown_thumbnails }}
 
 .. highlight:: python
 
