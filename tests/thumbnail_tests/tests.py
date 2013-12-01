@@ -276,6 +276,20 @@ class SimpleTestCase(SimpleTestCaseBase):
         im = self.backend.get_thumbnail(image, '32x32', crop='center')
         self.assertEqual('<img src="%s">' % im.url, val)
 
+    def test_html_filter(self):
+        text = '<img alt="A image!" src="http://dummyimage.com/800x800" />'
+        val = render_to_string('htmlfilter.html', {
+            'text': text,
+        }).strip()
+        self.assertEqual('<img alt="A image!" src="/media/test/cache/df/d5/dfd560ae0c3a15a28b73306f34d1f6e0.jpg" />', val)
+
+    def test_markdown_filter(self):
+        text = '![A image!](http://dummyimage.com/800x800)'
+        val = render_to_string('markdownfilter.html', {
+            'text': text,
+        }).strip()
+        self.assertEqual('![A image!](/media/test/cache/df/d5/dfd560ae0c3a15a28b73306f34d1f6e0.jpg)', val)
+
 
 class TemplateTestCaseA(SimpleTestCaseBase):
     def testModel(self):
@@ -586,4 +600,3 @@ class TestInputCase(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
-

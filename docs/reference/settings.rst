@@ -283,3 +283,10 @@ This value sets an image ratio to all thumbnails that are not defined by width
 **and** height since we cannot determine from the file input (since we don't
 have that).
 
+``THUMBNAIL_FILTER_WIDTH``
+=========================
+
+- Default: ``500``
+
+This value sets the width of thumbnails inserted when running filters one texts
+that regex replaces references to images with thumbnails.

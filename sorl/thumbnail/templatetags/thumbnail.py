@@ -11,6 +11,7 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail.parsers import parse_geometry
 from sorl.thumbnail.compat import text_type
+from sorl.thumbnail.shortcuts import get_thumbnail
 
 register = Library()
 kw_pat = re.compile(r'^(?P<key>[\w]+)=(?P<value>.+)$')
@@ -202,3 +203,32 @@ def background_margin(file_, geometry_string):
     ey = y - image_file.y
     margin[1] = ey / 2
     return ' '.join(['%spx' % n for n in margin])
+
+
+def text_filter(regex_base, value):
+    """
+    Helper method to regex replace images with captions in different markups
+    """
+
+    regex = regex_base % {
+        're_cap': u'[a-zA-Z0-9\.\,:;/_ \(\)\-\!\?\"]+',
+        're_img': u'[a-zA-Z0-9\.:/_\-\% ]+'
+    }
+    images = re.findall(regex, value)
+    for i in images:
+        image = i[1]
+        im = get_thumbnail(image, str(settings.THUMBNAIL_FILTER_WIDTH))
+        value = value.replace(image, im.url)
+    return value
+
+
+@safe_filter(error_output='auto')
+@register.filter
+def markdown_thumbnails(value):
+    return text_filter(u'!\[(%(re_cap)s)?\][ ]?\((%(re_img)s)\)', value)
+
+
+@safe_filter(error_output='auto')
+@register.filter
+def html_thumbnails(value):
+    return text_filter(u'<img(?: alt="(%(re_cap)s)?")? src="(%(re_img)s)"', value)
