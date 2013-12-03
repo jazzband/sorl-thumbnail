@@ -28,10 +28,9 @@ except ImportError:
     from urllib2 import urlopen
 
 
-from django.utils.encoding import force_text
-
 if PY3:
     text_type = str
+    from django.utils.encoding import force_text
     force_unicode = force_text
 else:
     text_type = unicode
