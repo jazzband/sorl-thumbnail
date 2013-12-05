@@ -14,12 +14,12 @@ PY3 = sys.version_info[0] == 3
 
 # Django version
 
-if django.VERSION <= (1, 5):
+if django.VERSION < (1, 5):
     from django.utils import simplejson as json
-    from django.utils.encoding import force_text as force_unicode
+    from django.utils.encoding import force_unicode
 else:
     import json
-    from django.utils.encoding import force_unicode
+    from django.utils.encoding import force_text as force_unicode
 
 
 # Python 2 and 3
