@@ -53,7 +53,7 @@ class StorageTestCase(unittest.TestCase):
         slog.start_log()
         get_thumbnail(self.im, '50x50')
         log = slog.stop_log()
-        self.assertEqual(log, []) # now this should all be in cache
+        self.assertEqual(log, [])  # now this should all be in cache
 
     def test_c_safe_methods(self):
         slog.start_log()
