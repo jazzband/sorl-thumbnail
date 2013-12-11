@@ -245,9 +245,9 @@ class SimpleTestCase(SimpleTestCaseBase):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         th = self.backend.get_thumbnail(im, '100x100', quality=50)
         p1 = Popen(['identify', '-verbose', th.storage.path(th.name)], stdout=PIPE)
-        p2 = Popen(['grep', '-c', 'quality: 50'], stdin=p1.stdout, stdout=PIPE)
-        output = p2.communicate()[0].strip()
+        p2 = Popen(['grep', '-c', 'Quality: 50'], stdin=p1.stdout, stdout=PIPE)
         p1.stdout.close()
+        output = p2.communicate()[0].strip()
         self.assertEqual(output, '1')
 
     def test_image_file_deserialize(self):
