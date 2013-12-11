@@ -8,9 +8,7 @@ from PIL import Image
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.test.client import Client
-from django.utils import unittest
 from os.path import join as pjoin
-from django.utils.unittest.case import skip
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
@@ -22,7 +20,9 @@ from sorl.thumbnail.templatetags.thumbnail import margin
 from subprocess import Popen, PIPE
 from thumbnail_tests.models import Item
 from thumbnail_tests.storage import slog
+from thumbnail_tests.compat import unittest
 
+from unittest import skip
 
 handler = ThumbnailLogHandler()
 handler.setLevel(logging.ERROR)
