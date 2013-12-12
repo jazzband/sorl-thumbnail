@@ -609,7 +609,7 @@ class TestInputCase(unittest.TestCase):
         th = get_thumbnail(self.name, '200x200')
         self.assertEqual(
             th.url,
-            '/media/test/cache/49/8c/498c53033cf1057875eca6cdaccabe34.jpg'
+            '/media/test/cache/2a/35/2a3533bac94f8ab92dabe2d964184a83.jpg'
         )
 
     def tearDown(self):

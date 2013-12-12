@@ -33,7 +33,7 @@ def tokey(*args):
     Computes a (hopefully) unique key from arguments given.
     """
     salt = '||'.join([smart_str(arg) for arg in args])
-    hash_ = hashlib.md5(salt)
+    hash_ = hashlib.md5(unicode(salt, errors='ignore').encode('utf-8'))
     return hash_.hexdigest()
 
 
