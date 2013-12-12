@@ -31,6 +31,7 @@ if PY3:
     from io import BytesIO as BufferIO
 
     text_type = str
+    string_type = str
 
     def encode(value):
         return value.encode('utf-8')
@@ -42,6 +43,7 @@ elif PY2:
     from cStringIO import StringIO as BufferIO
 
     text_type = unicode
+    string_type = basestring
 
     def encode(value):
         return unicode(value, errors='ignore').encode('utf-8')

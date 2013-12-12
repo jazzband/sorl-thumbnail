@@ -10,7 +10,7 @@ from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail.parsers import parse_geometry
-from sorl.thumbnail.compat import text_type
+from sorl.thumbnail.compat import text_type, string_type
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 register = Library()
@@ -108,7 +108,7 @@ class ThumbnailNode(ThumbnailNodeBase):
             else:
                 options[key] = value
 
-        if isinstance(file_, basestring):
+        if isinstance(file_, string_type):
             path = file_
             exists = re.search('^https?://', path) or os.path.exists(path)
         else:
