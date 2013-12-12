@@ -191,7 +191,7 @@ def margin(file_, geometry_string):
     margin[2] = ey / 2
     if ey % 2:
         margin[2] += 1
-    return ' '.join(['%spx' % n for n in margin])
+    return ' '.join(['%dpx' % n for n in margin])
 
 
 @safe_filter(error_output='auto')
