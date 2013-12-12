@@ -6,13 +6,13 @@ python:
 
 env:
   - DJANGO_VERSION=1.5 SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev' PIP=Pillow
-  - DJANGO_VERSION=1.5 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev' PIP=pgmagick
+  - DJANGO_VERSION=1.5 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev' PIP=pgmagick
   - DJANGO_VERSION=1.5 SETTINGS=imagemagick APT=imagemagick
   - DJANGO_VERSION=1.5 SETTINGS=graphicsmagic APT=graphicsmagick
   - DJANGO_VERSION=1.5 SETTINGS=wand APT=libmagickwand-dev PIP=wand
   - DJANGO_VERSION=1.5 SETTINGS=redis PIP=redis
   - DJANGO_VERSION=1.6 SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev' PIP=Pillow
-  - DJANGO_VERSION=1.6 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev' PIP=pgmagick
+  - DJANGO_VERSION=1.6 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev' PIP=pgmagick
   - DJANGO_VERSION=1.6 SETTINGS=imagemagick APT=imagemagick
   - DJANGO_VERSION=1.6 SETTINGS=graphicsmagic APT=graphicsmagick
   - DJANGO_VERSION=1.6 SETTINGS=wand APT=libmagickwand-dev PIP=wand
