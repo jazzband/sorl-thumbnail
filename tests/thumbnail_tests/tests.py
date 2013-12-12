@@ -321,7 +321,7 @@ class TemplateTestCaseA(SimpleTestCaseBase):
 
     def test_serialization_options(self):
         item = Item.objects.get(image='500x500.jpg')
-        for j in xrange(0, 20):
+        for j in range(0, 20):
             # we could be lucky...
             val0 = render_to_string('thumbnail7.html', {
                 'item': item,
@@ -484,15 +484,15 @@ class CropTestCase(unittest.TestCase):
             th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
             engine = PILEngine()
             im = engine.get_image(th)
-            for x in xrange(0, 99, 10):
-                for y in xrange(0, 99, 10):
+            for x in range(0, 99, 10):
+                for y in range(0, 99, 10):
                     self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
         for crop in ('bottom', '100%', '100px'):
             th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
             engine = PILEngine()
             im = engine.get_image(th)
-            for x in xrange(0, 99, 10):
-                for y in xrange(0, 99, 10):
+            for x in range(0, 99, 10):
+                for y in range(0, 99, 10):
                     self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
 
     def testLandscapeCrop(self):
@@ -514,15 +514,15 @@ class CropTestCase(unittest.TestCase):
             th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
             engine = PILEngine()
             im = engine.get_image(th)
-            for x in xrange(0, 99, 10):
-                for y in xrange(0, 99, 10):
+            for x in range(0, 99, 10):
+                for y in range(0, 99, 10):
                     self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
         for crop in ('right', '100%', '100px'):
             th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
             engine = PILEngine()
             im = engine.get_image(th)
-            for x in xrange(0, 99, 10):
-                for y in xrange(0, 99, 10):
+            for x in range(0, 99, 10):
+                for y in range(0, 99, 10):
                     self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
 
     def tearDown(self):
