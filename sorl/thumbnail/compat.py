@@ -32,6 +32,9 @@ if PY3:
 
     text_type = str
 
+    def encode(value):
+        return value.encode('utf-8')
+
 elif PY2:
     from urllib2 import URLError
     from urllib import urlopen
@@ -39,3 +42,6 @@ elif PY2:
     from cStringIO import StringIO as BufferIO
 
     text_type = unicode
+
+    def encode(value):
+        return unicode(value, errors='ignore').encode('utf-8')
