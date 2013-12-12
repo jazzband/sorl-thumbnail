@@ -8,6 +8,7 @@ from PIL import Image
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.test.client import Client
+from django.test import TestCase
 from os.path import join as pjoin
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
@@ -248,7 +249,7 @@ class SimpleTestCase(SimpleTestCaseBase):
         p2 = Popen(['grep', '-c', 'Quality: 50'], stdin=p1.stdout, stdout=PIPE)
         p1.stdout.close()
         output = p2.communicate()[0].strip()
-        self.assertEqual(output, '1')
+        self.assertEqual(str(output), '1')
 
     def test_image_file_deserialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
@@ -353,7 +354,7 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         path = pjoin(settings.MEDIA_ROOT, th.name)
         p = Popen(['identify', '-verbose', path], stdout=PIPE)
         p.wait()
-        m = re.search('Interlace: JPEG', p.stdout.read())
+        m = re.search('Interlace: JPEG', str(p.stdout.read()))
         self.assertEqual(bool(m), True)
 
     def test_nonprogressive(self):
@@ -415,29 +416,17 @@ class TemplateTestCaseB(unittest.TestCase):
         self.assertEqual(val, '<p>empty</p>')
 
 
-class TemplateTestCaseClient(unittest.TestCase):
-    def setUp(self):
-        self.org_settings = {}
-        params = {
-            'THUMBNAIL_DEBUG': False,
-        }
-        for k, v in params.iteritems():
-            self.org_settings[k] = getattr(settings, k)
-            setattr(settings, k, v)
-
+class TemplateTestCaseClient(TestCase):
     @skip("mailsending not working")
     def testEmptyError(self):
-        client = Client()
-        response = client.get('/thumbnail9.html')
-        self.assertEqual(response.content.strip(), '<p>empty</p>')
-        from django.core.mail import outbox
-        self.assertEqual(outbox[0].subject, '[sorl-thumbnail] ERROR: /thumbnail9.html')
-        end = outbox[0].body.split('\n\n')[-2][-20:-1]
-        self.assertEqual(end, 'tests/media/invalid')
-
-    def tearDown(self):
-        for k, v in self.org_settings.iteritems():
-            setattr(settings, k, v)
+        with self.settings(THUMBNAIL_DEBUG=False):
+            client = Client()
+            response = client.get('/thumbnail9.html')
+            self.assertEqual(response.content.strip(), '<p>empty</p>')
+            from django.core.mail import outbox
+            self.assertEqual(outbox[0].subject, '[sorl-thumbnail] ERROR: /thumbnail9.html')
+            end = outbox[0].body.split('\n\n')[-2][-20:-1]
+            self.assertEqual(end, 'tests/media/invalid')
 
 
 class CropTestCase(unittest.TestCase):
