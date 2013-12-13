@@ -19,7 +19,7 @@ env:
   - DJANGO_VERSION=1.6 SETTINGS=redis PIP=redis
 
 matrix:
-  include:
+  exclude:
     - python: "2.7"
       env:
         - DJANGO_VERSION=1.3
