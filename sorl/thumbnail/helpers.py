@@ -42,6 +42,8 @@ def serialize(obj):
 
 
 def deserialize(s):
+    if isinstance(s, bytes):
+        return json.loads(s.decode('utf-8'))
     return json.loads(s)
 
 

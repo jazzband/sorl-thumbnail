@@ -8,7 +8,7 @@ from django.utils.functional import LazyObject
 from sorl.thumbnail import default
 from sorl.thumbnail.compat import json, urlopen, URLError, force_unicode
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class
+from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class, deserialize
 from sorl.thumbnail.parsers import parse_geometry
 
 
@@ -28,7 +28,7 @@ def serialize_image_file(image_file):
 
 
 def deserialize_image_file(s):
-    data = json.loads(s)
+    data = deserialize(s)
 
     class LazyStorage(LazyObject):
         def _setup(self):
