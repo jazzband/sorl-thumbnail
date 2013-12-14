@@ -94,7 +94,7 @@ class Engine(EngineBase):
             args.extend(['-format', '%[exif:orientation]', image['source']])
             p = Popen(args, stdout=PIPE)
             p.wait()
-            result = p.stdout.read().strip()
+            result = p.stdout.read().strip().split('\n')[0]
             if result and result != 'unknown':
                 result = int(result)
                 options = image['options']
