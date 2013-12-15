@@ -31,7 +31,8 @@ class Engine(EngineBase):
         image['options']['quality'] = options['quality']
         args = settings.THUMBNAIL_CONVERT.split(' ')
         args.append(image['source'])
-        for k, v in image['options'].iteritems():
+        for k in image['options']:
+            v = image['options'][k]
             args.append('-%s' % k)
             if v is not None:
                 args.append('%s' % v)
@@ -64,7 +65,7 @@ class Engine(EngineBase):
             args.append(image['source'])
             p = Popen(args, stdout=PIPE)
             p.wait()
-            m = size_re.match(p.stdout.read())
+            m = size_re.match(str(p.stdout.read()))
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']
 

@@ -2,7 +2,7 @@ import hashlib
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import smart_str
 from django.utils.importlib import import_module
-from sorl.thumbnail.compat import json
+from sorl.thumbnail.compat import json, encode
 
 
 class ThumbnailError(Exception):
@@ -33,7 +33,7 @@ def tokey(*args):
     Computes a (hopefully) unique key from arguments given.
     """
     salt = '||'.join([smart_str(arg) for arg in args])
-    hash_ = hashlib.md5(salt.encode('utf-8'))
+    hash_ = hashlib.md5(encode(salt))
     return hash_.hexdigest()
 
 
@@ -42,6 +42,8 @@ def serialize(obj):
 
 
 def deserialize(s):
+    if isinstance(s, bytes):
+        return json.loads(s.decode('utf-8'))
     return json.loads(s)
 
 
@@ -58,4 +60,3 @@ def get_module_class(class_path):
         raise ImproperlyConfigured(('Error importing module %s: "%s"' % (mod_name, e)))
 
     return getattr(mod, cls_name)
-
