@@ -1,5 +1,5 @@
+import sys
 from django.core.management.base import BaseCommand, CommandError
-from sorl.thumbnail.conf import settings
 from sorl.thumbnail import default
 
 
@@ -10,13 +10,35 @@ class Command(BaseCommand):
     args = '[cleanup, clear]'
     option_list = BaseCommand.option_list
 
-    def handle(self, cmd, *args, **kwargs):
-        if cmd not in ['cleanup', 'clear']:
-            raise CommandError('`%s` is not a valid argument' % cmd)
-        if cmd == 'cleanup':
-            default.kvstore.cleanup()
-            print 'Cleanup thumbnails done.'
-        if cmd == 'clear':
-            default.kvstore.clear()
-            print 'Cleared the Key Value Store.'
+    def handle(self, *labels, **options):
+        verbosity = int(options.get('verbosity'))
 
+        if not labels:
+            print self.print_help('thumbnail', '')
+            sys.exit(1)
+
+        if len(labels) != 1:
+            raise CommandError('`%s` is not a valid argument' % labels)
+
+        label = labels[0]
+
+        if label not in ['cleanup', 'clear']:
+            raise CommandError('`%s` unknown action' % label)
+
+        if label == 'cleanup':
+            if verbosity >= 1:
+                self.stdout.write("Cleanup thumbnails ... ", ending=' ... ')
+
+            default.kvstore.cleanup()
+
+            if verbosity >= 1:
+                self.stdout.write("[Done]")
+
+        elif label == 'clear':
+            if verbosity >= 1:
+                self.stdout.write("Clear the Key Value Store", ending=' ... ')
+
+            default.kvstore.clear()
+
+            if verbosity >= 1:
+                self.stdout.write("[Done]")

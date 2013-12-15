@@ -63,7 +63,7 @@ Ubuntu 10.04 package installation::
 
 Installing `Python Imaging Library`_ using pip::
 
-    pip install PIL
+    pip install Pillow
 
 Watch the output for messages on what support got compiled in, you at least
 want to see the following::
@@ -102,6 +102,14 @@ Or if you prefer `GraphicsMagick`_::
 
     sudo apt-get install graphicsmagick
 
+Wand installation
+------------------------
+
+Ubuntu installation::
+
+    apt-get install libmagickwand-dev
+    pip install Wand
+
 
 .. _Python Imaging Library: http://www.pythonware.com/products/pil/
 .. _ImageMagick: http://imagemagick.com/
@@ -111,4 +119,5 @@ Or if you prefer `GraphicsMagick`_::
 .. _Django: http://www.djangoproject.com/
 .. _Python: http://www.python.org/
 .. _pgmagick: http://bitbucket.org/hhatto/pgmagick/src
+.. _wand: http://wand-py.org
 

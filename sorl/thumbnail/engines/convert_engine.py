@@ -17,20 +17,22 @@ class Engine(EngineBase):
     """
     Image object is a dict with source path, options and size
     """
+
     def write(self, image, options, thumbnail):
         """
         Writes the thumbnail image
         """
         handle, out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])
         if (
-                options['format'] == 'JPEG' and
+                    options['format'] == 'JPEG' and
                 options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
-            ):
+        ):
             image['options']['interlace'] = 'line'
         image['options']['quality'] = options['quality']
         args = settings.THUMBNAIL_CONVERT.split(' ')
         args.append(image['source'])
-        for k, v in image['options'].iteritems():
+        for k in image['options']:
+            v = image['options'][k]
             args.append('-%s' % k)
             if v is not None:
                 args.append('%s' % v)
@@ -63,7 +65,7 @@ class Engine(EngineBase):
             args.append(image['source'])
             p = Popen(args, stdout=PIPE)
             p.wait()
-            m = size_re.match(p.stdout.read())
+            m = size_re.match(str(p.stdout.read()))
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']
 
@@ -85,11 +87,12 @@ class Engine(EngineBase):
         return retcode == 0
 
     def _orientation(self, image):
-        return image
+        #return image
         # XXX need to get the dimensions right after a transpose.
+
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
             args = settings.THUMBNAIL_IDENTIFY.split()
-            args.extend([ '-format', '%[exif:orientation]', image['source'] ])
+            args.extend(['-format', '%[exif:orientation]', image['source']])
             p = Popen(args, stdout=PIPE)
             p.wait()
             result = p.stdout.read().strip()
@@ -135,7 +138,7 @@ class Engine(EngineBase):
         """
         image['options']['crop'] = '%sx%s+%s+%s' % (
             width, height, x_offset, y_offset
-            )
+        )
         image['size'] = (width, height) # update image size
         return image
 

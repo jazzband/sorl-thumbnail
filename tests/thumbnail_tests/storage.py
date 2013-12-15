@@ -16,7 +16,7 @@ class SlogHandler(object):
 
     def log(self, s):
         if self._active:
-            self._log.append(s)
+            self._log.append(str(s))
 
 
 slog = SlogHandler()
@@ -78,4 +78,3 @@ class TestStorageMixin(object):
 
 class TestStorage(TestStorageMixin, FileSystemStorage):
     pass
-

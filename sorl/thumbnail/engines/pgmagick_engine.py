@@ -6,6 +6,7 @@ try:
     from pgmagick._pgmagick import get_blob_data
 except ImportError:
     from base64 import b64decode
+
     def get_blob_data(blob):
         return b64decode(blob.base64())
 
@@ -26,6 +27,11 @@ class Engine(EngineBase):
         im = Image(blob)
         return im.isValid()
 
+    def _cropbox(self, image, x, y, x2, y2):
+        geometry = Geometry(x2 - x, y2 - y, x, y)
+        image.crop(geometry)
+        return image
+
     def _orientation(self, image):
         orientation = image.orientation()
         if orientation == OrientationType.TopRightOrientation:
@@ -45,6 +51,7 @@ class Engine(EngineBase):
         elif orientation == OrientationType.LeftBottomOrientation:
             image.rotate(-90)
         image.orientation(OrientationType.TopLeftOrientation)
+
         return image
 
     def _colorspace(self, image, colorspace):

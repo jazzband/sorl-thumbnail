@@ -109,6 +109,17 @@ ImageMagick ``convert`` or  GraphicsMagic ``gm convert`` command. Features:
 * Can handle CMYK sources
 * It is a command line command, that is less than ideal,
 
+Wand
+----------------------------
+``'sorl.thumbnail.engines.wand_engine.Engine'``. This engine uses `Wand
+<http://wand-py.org>`_, a ctypes-based simple ImageMagick binding for Python. 
+Features:
+
+* Easy to install
+* Produces high quality images
+* Can handle CMYK sources
+* Works on Python 2.6, 2.7, 3.2, 3.3, and PyPy
+
 ``THUMBNAIL_CONVERT``
 =====================
 
@@ -201,6 +212,14 @@ The generated thumbnails filename prefix.
 Default image format, supported formats are: ``'JPEG'``, ``'PNG'``. This also implicitly
 sets the filename extension. This can be overridden by individual options.
 
+``THUMBNAIL_PRESERVE_FORMAT``
+=============================
+
+- Default: ``False``
+
+If ``True``, the format of the input file will be preserved. If ``False``,
+``THUMBNAIL_FORMAT`` will be used.
+
 
 ``THUMBNAIL_COLORSPACE``
 ========================
@@ -272,6 +291,7 @@ This value sets an image ratio to all thumbnails that are not defined by width
 **and** height since we cannot determine from the file input (since we don't
 have that).
 
+<<<<<<< HEAD
 ``THUMBNAIL_ALTERNATIVE_RESOLUTONS``
 ====================================
 
@@ -279,3 +299,12 @@ have that).
 
 This value enables creation of additional high-resolution ("Retina") thumbnails
 for every thumbnail.
+=======
+``THUMBNAIL_FILTER_WIDTH``
+=========================
+
+- Default: ``500``
+
+This value sets the width of thumbnails inserted when running filters one texts
+that regex replaces references to images with thumbnails.
+>>>>>>> 5d8f1a6eabc57f1349db7d47cd48cad45bb67938
