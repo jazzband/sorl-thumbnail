@@ -12,14 +12,16 @@ __all__ = ('ImageField', 'ImageFormField')
 class ImageField(models.FileField):
     def delete_file(self, instance, sender, **kwargs):
         """
-        Adds deletion of thumbnails and key kalue store references to the
+        Adds deletion of thumbnails and key value store references to the
         parent class implementation. Only called in Django < 1.2.5
         """
         file_ = getattr(instance, self.attname)
+
         # If no other object of this type references the file, and it's not the
         # default value for future objects, delete it from the backend.
         query = Q(**{self.name: file_.name}) & ~Q(pk=instance.pk)
         qs = sender._default_manager.filter(query)
+
         if (file_ and file_.name != self.default and not qs):
             default.backend.delete(file_)
         elif file_:
@@ -37,7 +39,8 @@ class ImageField(models.FileField):
 
     def south_field_triple(self):
         from south.modelsinspector import introspector
-        cls_name = '%s.%s' % (self.__class__.__module__ , self.__class__.__name__)
+
+        cls_name = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
         args, kwargs = introspector(self)
         return (cls_name, args, kwargs)
 
@@ -56,6 +59,7 @@ class ImageFormField(forms.FileField):
         f = super(ImageFormField, self).to_python(data)
         if f is None:
             return None
+
         # We need to get a file raw data to validate it.
         if hasattr(data, 'temporary_file_path'):
             with open(data.temporary_file_path(), 'rb') as fp:
@@ -64,9 +68,11 @@ class ImageFormField(forms.FileField):
             raw_data = data.read()
         else:
             raw_data = data['content']
+
         if not default.engine.is_valid_image(raw_data):
-            raise forms.ValidationError(self.error_messages['invalid_image'])
+            raise forms.ValidationError(self.default_error_messages['invalid_image'])
         if hasattr(f, 'seek') and callable(f.seek):
             f.seek(0)
+
         return f
 

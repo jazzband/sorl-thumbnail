@@ -1,7 +1,12 @@
+import logging
+
 from django import forms
 from django.utils.safestring import mark_safe
 from sorl.thumbnail.fields import ImageField
 from sorl.thumbnail.shortcuts import get_thumbnail
+
+
+logger = logging.getLogger(__name__)
 
 
 class AdminImageWidget(forms.ClearableFileInput):
@@ -18,8 +23,8 @@ class AdminImageWidget(forms.ClearableFileInput):
         if value and hasattr(value, 'url'):
             try:
                 mini = get_thumbnail(value, 'x80', upscale=False)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warn("Unable to get the thumbnail", exc_info=e)
             else:
                 output = (
                     u'<div style="float:left">'

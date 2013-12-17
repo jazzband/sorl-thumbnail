@@ -2,21 +2,36 @@
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop
+from sorl.thumbnail.parsers import parse_cropbox
 
 
 class EngineBase(object):
     """
     ABC for Thumbnail engines, methods are static
     """
+
     def create(self, image, geometry, options):
         """
         Processing conductor, returns the thumbnail as an image engine instance
         """
+        image = self.cropbox(image, geometry, options)
         image = self.orientation(image, geometry, options)
         image = self.colorspace(image, geometry, options)
         image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
+        image = self.rounded(image, geometry, options)
+        image = self.blur(image, geometry, options)
         return image
+
+    def cropbox(self, image, geometry, options):
+        """
+        Wrapper for ``_cropbox``
+        """
+        cropbox = options['cropbox']
+        if not cropbox:
+            return image
+        x, y, x2, y2 = parse_cropbox(cropbox)
+        return self._cropbox(image, x, y, x2, y2)
 
     def orientation(self, image, geometry, options):
         """
@@ -63,6 +78,25 @@ class EngineBase(object):
         x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
         return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
 
+
+    def rounded(self, image, geometry, options):
+        """
+        Wrapper for ``_rounded``
+        """
+        r = options['rounded']
+        if not r:
+            return image
+        return self._rounded(image, int(r))
+
+    def blur(self, image, geometry, options):
+        """
+        Wrapper for ``_blur``
+        """
+        if options.get('blur'):
+            return self._blur(image, int(options.get('blur')))
+        return image
+
+
     def write(self, image, options, thumbnail):
         """
         Wrapper for ``_write``
@@ -72,15 +106,22 @@ class EngineBase(object):
         # additional non-default-value options:
         progressive = options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
         raw_data = self._get_raw_data(image, format_, quality,
-            progressive=progressive
-            )
+                                      progressive=progressive
+        )
         thumbnail.write(raw_data)
 
-    def get_image_ratio(self, image):
+    def get_image_ratio(self, image, options):
         """
-        Calculates the image ratio
+        Calculates the image ratio. If cropbox option is used, the ratio
+        may have changed.
         """
-        x, y = self.get_image_size(image)
+        cropbox = options['cropbox']
+        if cropbox:
+            x, y, x2, y2 = parse_cropbox(cropbox)
+            x = x2 - x
+            y = y2 - y
+        else:
+            x, y = self.get_image_size(image)
         return float(x) / y
 
     #

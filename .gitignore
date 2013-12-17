@@ -1,13 +1,51 @@
-*.pyc
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Translations
+*.mo
+
+# Related to Desktops and OS
 .DS_Store
+.AppleDouble
+.LSOverride
 ._*
-.~*#
+.~
+.bak
 *.swp
 *.swo
 *.swn
+
+# VCS and DVCS
 .svn
-*.orig
-_build
-build
-dist
-*.egg-info
+
+# Common IDE's
+.idea
+.project
+.pydevproject
+
+# Sphinx documentation
+docs/_build/
+
+# Virtualenv
+
+.env/
