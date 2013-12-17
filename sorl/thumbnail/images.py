@@ -85,12 +85,9 @@ class ImageFile(BaseImageFile):
         else:
             self.storage = default_storage
 
-    @cached_property
     def file_hash(self):
         if self.exists():
-            image = default.engine.get_image(self)
-            my_hash = md5(image.tostring()).hexdigest()
-            return my_hash
+            return "%s%s" % (self.storage.size(self.name), self.storage.modified_time(self.name))
 
         return ''
 
