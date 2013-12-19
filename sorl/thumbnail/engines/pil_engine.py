@@ -9,7 +9,7 @@ except ImportError:
 
 def round_corner(radius, fill):
     """Draw a round corner"""
-    corner = Image.new('L', (radius, radius), 0)  #(0, 0, 0, 0))
+    corner = Image.new('L', (radius, radius), 0)  # (0, 0, 0, 0))
     draw = ImageDraw.Draw(corner)
     draw.pieslice((0, 0, radius * 2, radius * 2), 180, 270, fill=fill)
     return corner
@@ -18,8 +18,8 @@ def round_corner(radius, fill):
 def round_rectangle(size, radius, fill):
     """Draw a rounded rectangle"""
     width, height = size
-    rectangle = Image.new('L', size, 255)  #fill
-    corner = round_corner(radius, 255)  #fill
+    rectangle = Image.new('L', size, 255)  # fill
+    corner = round_corner(radius, 255)  # fill
     rectangle.paste(corner, (0, 0))
     rectangle.paste(corner.rotate(90),
                     (0, height - radius))  # Rotate the corner and paste it
@@ -45,6 +45,9 @@ class Engine(EngineBase):
 
     def get_image_size(self, image):
         return image.size
+
+    def get_image_info(self, image):
+        return image.info or {}
 
     def is_valid_image(self, raw_data):
         buffer = BufferIO(raw_data)
@@ -84,7 +87,7 @@ class Engine(EngineBase):
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             if image.mode == 'RGBA':
-                return image # RGBA is just RGB + Alpha
+                return image  # RGBA is just RGB + Alpha
             if image.mode == 'P' and 'transparency' in image.info:
                 return image.convert('RGBA')
             return image.convert('RGB')
@@ -116,9 +119,9 @@ class Engine(EngineBase):
         im.paste(image, (left, top))
         return im
 
-    def _get_raw_data(self, image, format_, quality, progressive=False):
+    def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
         ImageFile.MAXBLOCK = image.size[0] * image.size[1]
-        buffer = BufferIO()
+        bf = BufferIO()
 
         params = {
             'format': format_,
@@ -126,25 +129,26 @@ class Engine(EngineBase):
             'optimize': 1,
         }
 
+        params.update(image_info)
+
         if format_ == 'JPEG' and progressive:
             params['progressive'] = True
         try:
-            image.save(buffer, **params)
+            image.save(bf, **params)
         except IOError:
             maxblock = ImageFile.MAXBLOCK
 
             try:
                 # Temporary encrease ImageFile MAXBLOCK
                 ImageFile.MAXBLOCK = image.size[0] * image.size[1]
-                image.save(buffer, **params)
+                image.save(bf, **params)
             except IOError:
                 params.pop('optimize')
-                image.save(buffer, **params)
+                image.save(bf, **params)
             finally:
                 ImageFile.MAXBLOCK = maxblock
 
-        raw_data = buffer.getvalue()
-        buffer.close()
+        raw_data = bf.getvalue()
+        bf.close()
 
         return raw_data
-

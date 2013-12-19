@@ -101,6 +101,8 @@ class ThumbnailBackend(object):
                             geometry_string)
                 return thumbnail
                 # We might as well set the size since we have the image in memory
+            image_info = default.engine.get_image_info(source_image)
+            options['image_info'] = image_info
             size = default.engine.get_image_size(source_image)
             source.set_size(size)
             self._create_thumbnail(source_image, geometry_string, options,
