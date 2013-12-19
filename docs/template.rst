@@ -156,6 +156,28 @@ the shipped engines are ``'JPEG'`` and ``'PNG'``. Default value is ``'JPEG'``.
 This controls the resulting thumbnails color space, valid values are: ``'RGB'``
 and ``'GRAY'``. Default value is ``'RGB'``.
 
+``padding``
+^^^^^^^^^^^
+Padding is a boolean and controls if the image should be padded to fit the
+specified geometry.
+
+If your image is ``200x100``::
+
+  {% thumbnail image "100x100" padding=True as im %}
+
+``im`` will be ``100x100`` with white padding at the top and bottom. The color
+of the padding can be controlled with ``padding_color`` or the setting
+``THUMBNAIL_PADDING_COLOR`` which defaults to ``#ffffff``.
+
+Images are not padded by default, but this can be changed by setting
+``THUMBNAIL_PADDING`` to ``True``.
+
+``padding_color``
+^^^^^^^^^^^^^^^^^
+This is the color to use for padding the image. It defaults to ``#ffffff`` and
+can be globally set with the setting ``THUBMNAIL_PADDING_COLOR``.
+
+
 ``options``
 ^^^^^^^^^^^
 Yes this option is called ``options``. This needs to be a context variable that
