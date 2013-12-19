@@ -47,6 +47,9 @@ class Engine(EngineBase):
     def get_image_size(self, image):
         return image.size
 
+    def get_image_info(self, image):
+        return image.info or {}
+
     def is_valid_image(self, raw_data):
         buffer = BytesIO(raw_data)
         try:
@@ -109,7 +112,7 @@ class Engine(EngineBase):
     def _blur(self, image, radius):
         return image.filter(GaussianBlur(radius))
 
-    def _get_raw_data(self, image, format_, quality, progressive=False):
+    def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
         ImageFile.MAXBLOCK = image.size[0] * image.size[1]
         buffer = BufferIO()
 
@@ -118,7 +121,7 @@ class Engine(EngineBase):
             'quality': quality,
             'optimize': 1,
         }
-
+        params.update(image_info)
         if format_ == 'JPEG' and progressive:
             params['progressive'] = True
         try:
