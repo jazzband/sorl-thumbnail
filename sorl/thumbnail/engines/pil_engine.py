@@ -1,4 +1,3 @@
-from io import BytesIO
 from sorl.thumbnail.engines.base import EngineBase
 from sorl.thumbnail.compat import BufferIO
 
@@ -41,14 +40,14 @@ class GaussianBlur(ImageFilter.Filter):
 
 class Engine(EngineBase):
     def get_image(self, source):
-        buffer = BytesIO(source.read())
+        buffer = BufferIO(source.read())
         return Image.open(buffer)
 
     def get_image_size(self, image):
         return image.size
 
     def is_valid_image(self, raw_data):
-        buffer = BytesIO(raw_data)
+        buffer = BufferIO(raw_data)
         try:
             trial_image = Image.open(buffer)
             trial_image.verify()
