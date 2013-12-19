@@ -31,7 +31,7 @@ else:
 if PY3:
     from urllib.error import URLError
     from urllib.request import urlopen
-    from urllib.request import quote, quote_plus
+    from urllib.parse import quote, quote_plus
 
     import urllib.parse as urlparse
 
