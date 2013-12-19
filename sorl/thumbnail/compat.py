@@ -40,8 +40,8 @@ if PY3:
     text_type = str
     string_type = str
 
-    def encode(value):
-        return value.encode('utf-8')
+    def encode(value, charset='utf-8', errors='ignore'):
+        return value.encode(charset)
 
 elif PY2:
     from urllib2 import URLError
@@ -55,5 +55,7 @@ elif PY2:
     text_type = unicode
     string_type = basestring
 
-    def encode(value):
-        return unicode(value, errors='ignore').encode('utf-8')
+    def encode(value, charset='utf-8', errors='ignore'):
+        if isinstance(value, unicode):
+            return value.encode(charset, errors)
+        return unicode(value, errors=errors).encode(charset)

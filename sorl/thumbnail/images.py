@@ -9,7 +9,7 @@ from sorl.thumbnail.conf import settings
 
 from sorl.thumbnail.compat import json, urlopen, urlparse, \
     quote, quote_plus, \
-    URLError, force_unicode
+    URLError, force_unicode, encode
 from sorl.thumbnail.helpers import ThumbnailError, \
     tokey, get_module_class, deserialize
 from sorl.thumbnail.parsers import parse_geometry
@@ -176,15 +176,13 @@ class DummyImageFile(BaseImageFile):
 
 class UrlStorage(Storage):
 
-    def normalize_url(self, s, charset='utf-8'):
-        if isinstance(s, unicode):
-            s = s.encode(charset, 'replace')
+    def normalize_url(self, url, charset='utf-8'):
+        url = encode(url, charset, 'ignore')
 
-        scheme, netloc, path, qs, anchor = urlparse.urlsplit(s)
+        scheme, netloc, path, qs, anchor = urlparse.urlsplit(url)
 
         # Encode to utf8 to prevent urllib KeyError
-        if isinstance(path, unicode):
-            path = path.encode(charset, 'replace')
+        path = encode(path, charset, 'replace')
 
         path = quote(path, '/%')
         qs = quote_plus(qs, ':&%=')
