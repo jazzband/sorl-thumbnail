@@ -1,11 +1,15 @@
 import sys
-
 import django
+
 
 __all__ = [
     'json',
     'BufferIO',
-    'urlopen', 'URLError',
+    'urlopen',
+    'urlparse',
+    'quote',
+    'quote_plus',
+    'URLError',
     'force_unicode', 'text_type'
 ]
 
@@ -25,8 +29,11 @@ else:
 # Python 2 and 3
 
 if PY3:
-    from urllib.request import urlopen
     from urllib.error import URLError
+    from urllib.request import urlopen
+    from urllib.request import quote, quote_plus
+
+    import urllib.parse as urlparse
 
     from io import BytesIO as BufferIO
 
@@ -39,6 +46,9 @@ if PY3:
 elif PY2:
     from urllib2 import URLError
     from urllib import urlopen
+    from urllib import quote, quote_plus
+
+    import urlparse
 
     from cStringIO import StringIO as BufferIO
 

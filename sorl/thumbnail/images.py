@@ -2,13 +2,16 @@ import re
 
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, default_storage
-
 from django.utils.functional import LazyObject
 
 from sorl.thumbnail import default
-from sorl.thumbnail.compat import json, urlopen, URLError, force_unicode
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class, deserialize
+
+from sorl.thumbnail.compat import json, urlopen, urlparse, \
+    quote, quote_plus, \
+    URLError, force_unicode
+from sorl.thumbnail.helpers import ThumbnailError, \
+    tokey, get_module_class, deserialize
 from sorl.thumbnail.parsers import parse_geometry
 
 
@@ -172,8 +175,28 @@ class DummyImageFile(BaseImageFile):
 
 
 class UrlStorage(Storage):
-    def open(self, name, mode='rb'):
-        return urlopen(name, None, settings.THUMBNAIL_URL_TIMEOUT)
+
+    def normalize_url(self, s, charset='utf-8'):
+        if isinstance(s, unicode):
+            s = s.encode(charset, 'replace')
+
+        scheme, netloc, path, qs, anchor = urlparse.urlsplit(s)
+
+        # Encode to utf8 to prevent urllib KeyError
+        if isinstance(path, unicode):
+            path = path.encode(charset, 'replace')
+
+        path = quote(path, '/%')
+        qs = quote_plus(qs, ':&%=')
+
+        return urlparse.urlunsplit((scheme, netloc, path, qs, anchor))
+
+    def open(self, name):
+        return urlopen(
+            self.normalize_url(name),
+            None,
+            settings.THUMBNAIL_URL_TIMEOUT
+        )
 
     def exists(self, name):
         try:
