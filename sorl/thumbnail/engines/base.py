@@ -21,6 +21,7 @@ class EngineBase(object):
         image = self.crop(image, geometry, options)
         image = self.rounded(image, geometry, options)
         image = self.blur(image, geometry, options)
+        image = self.padding(image, geometry, options)
         return image
 
     def cropbox(self, image, geometry, options):
@@ -96,6 +97,13 @@ class EngineBase(object):
             return self._blur(image, int(options.get('blur')))
         return image
 
+    def padding(self, image, geometry, options):
+        """
+        Wrapper for ``_padding``
+        """
+        if options.get('padding') and self.get_image_size(image) != geometry:
+            return self._padding(image, geometry, options)
+        return image
 
     def write(self, image, options, thumbnail):
         """
