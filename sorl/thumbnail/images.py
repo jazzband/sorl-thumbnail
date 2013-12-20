@@ -177,7 +177,7 @@ class DummyImageFile(BaseImageFile):
 class UrlStorage(Storage):
 
     def normalize_url(self, url, charset='utf-8'):
-        url = encode(url, charset, 'ignore')
+        url = encode(url, charset, 'ignore').decode(charset)
 
         scheme, netloc, path, qs, anchor = urlparse.urlsplit(url)
 
