@@ -75,7 +75,7 @@ class UrlStorageTestCase(unittest.TestCase):
         storage = get_module_class('sorl.thumbnail.images.UrlStorage')()
         self.assertEqual(
             storage.normalize_url('El jovencito emponzoñado de whisky, qué figura exhibe'),
-            'El%20jovencito%20emponzoado%20de%20whisky%2C%20qu%20figura%20exhibe'
+            'El%20jovencito%20emponzo%C3%B1ado%20de%20whisky%2C%20qu%C3%A9%20figura%20exhibe'
         )
 
 
