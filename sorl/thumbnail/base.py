@@ -2,7 +2,7 @@ import re
 
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
-from sorl.thumbnail.images import ImageFile
+from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
 
@@ -94,20 +94,24 @@ class ThumbnailBackend(object):
             try:
                 source_image = default.engine.get_image(source)
             except IOError:
-                # if S3Storage says file doesn't exist remotely, don't try to
-                # create it, exit early
-                # Will return working empty image type; 404'd image
-                logger.warn('Remote file [%s] at [%s] does not exist', file_,
-                            geometry_string)
-                return thumbnail
-                # We might as well set the size since we have the image in memory
+                if settings.THUMBNAIL_DUMMY:
+                    return DummyImageFile(geometry_string)
+                else:
+                    # if S3Storage says file doesn't exist remotely, don't try to
+                    # create it and exit early.
+                    # Will return working empty image type; 404'd image
+                    logger.warn('Remote file [%s] at [%s] does not exist', file_, geometry_string)
+                    return thumbnail
+
+            # We might as well set the size since we have the image in memory
             image_info = default.engine.get_image_info(source_image)
             options['image_info'] = image_info
             size = default.engine.get_image_size(source_image)
             source.set_size(size)
             self._create_thumbnail(source_image, geometry_string, options,
                                    thumbnail)
-            # If the thumbnail exists we don't create it, the other option is
+
+        # If the thumbnail exists we don't create it, the other option is
         # to delete and write but this could lead to race conditions so I
         # will just leave that out for now.
         default.kvstore.get_or_set(source)
