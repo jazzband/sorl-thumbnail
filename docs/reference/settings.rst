@@ -300,6 +300,15 @@ This value sets an image ratio to all thumbnails that are not defined by width
 **and** height since we cannot determine from the file input (since we don't
 have that).
 
+<<<<<<< HEAD
+``THUMBNAIL_ALTERNATIVE_RESOLUTONS``
+====================================
+
+- Default: ``[1.5, 2]``
+
+This value enables creation of additional high-resolution ("Retina") thumbnails
+for every thumbnail.
+=======
 ``THUMBNAIL_FILTER_WIDTH``
 =========================
 
@@ -307,3 +316,4 @@ have that).
 
 This value sets the width of thumbnails inserted when running filters one texts
 that regex replaces references to images with thumbnails.
+>>>>>>> 5d8f1a6eabc57f1349db7d47cd48cad45bb67938

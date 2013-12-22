@@ -42,7 +42,10 @@ class Engine(EngineBase):
             thumbnail.write(fp.read())
         os.close(handle)
         os.remove(out)
-        os.remove(image['source'])  # we should not need this now
+        try:
+            os.remove(image['source'])  # we should not need this now
+        except OSError:
+            pass  # alternative resolution has the same source
 
     def get_image(self, source):
         """

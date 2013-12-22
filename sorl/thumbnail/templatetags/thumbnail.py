@@ -195,6 +195,15 @@ def margin(file_, geometry_string):
     return ' '.join(['%dpx' % n for n in margin])
 
 
+@register.filter
+def resolution(file_, resolution_string):
+    """
+    A filter to return the URL for the provided resolution of the thumbnail.
+    """
+    filename, extension = os.path.splitext(file_)
+    return '%s@%s%s' % (filename, resolution_string, extension)
+
+
 @safe_filter(error_output='auto')
 @register.filter
 def background_margin(file_, geometry_string):
