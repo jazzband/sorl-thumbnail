@@ -125,7 +125,7 @@ class ThumbnailNode(ThumbnailNodeBase):
 
         thumbnail = get_thumbnail(file_, geometry, **options)
 
-        if not thumbnail or isinstance(thumbnail, DummyImageFile):
+        if not thumbnail or isinstance(thumbnail, DummyImageFile) and self.nodelist_empty:
             if self.nodelist_empty:
                 return self.nodelist_empty.render(context)
             else:
