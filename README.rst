@@ -1,6 +1,6 @@
 |travis| |pypi|
 
-Thumbnails for Django. The original and the best
+Thumbnails for Django.
 
 Features at a glance
 ====================

@@ -61,7 +61,7 @@ class StorageTestCase(unittest.TestCase):
             'save: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@2x.jpg',
             'get_available_name: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@2x.jpg',
             'exists: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@2x.jpg'
-       ]
+        ]
         self.assertEqual(log, actions)
 
     def test_b_cached(self):
@@ -79,6 +79,15 @@ class StorageTestCase(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
+
+
+class UrlStorageTestCase(unittest.TestCase):
+    def test_encode_utf8_filenames(self):
+        storage = get_module_class('sorl.thumbnail.images.UrlStorage')()
+        self.assertEqual(
+            storage.normalize_url('El jovencito emponzoñado de whisky, qué figura exhibe'),
+            'El%20jovencito%20emponzoado%20de%20whisky%2C%20qu%20figura%20exhibe'
+        )
 
 
 class ParsersTestCase(unittest.TestCase):
@@ -171,12 +180,12 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.assertEqual(
             set([th1.key, th2.key, th3.key]),
             set(self.kvstore._get(im.key, identity='thumbnails'))
-            )
+        )
         self.kvstore.delete_thumbnails(im)
         self.assertEqual(
             None,
             self.kvstore._get(im.key, identity='thumbnails')
-            )
+        )
 
     @skip('stall')
     def testIsPortrait(self):
@@ -272,13 +281,13 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
             'thumbnail_tests.storage.TestStorage',
-            )
+        )
         im = ImageFile('http://dummyimage.com/300x300/')
         default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
             'sorl.thumbnail.images.UrlStorage',
-            )
+        )
 
     def test_abspath(self):
         item = Item.objects.get(image='500x500.jpg')
@@ -303,14 +312,14 @@ class SimpleTestCase(SimpleTestCaseBase):
         val = render_to_string('htmlfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('<img alt="A image!" src="/media/test/cache/df/d5/dfd560ae0c3a15a28b73306f34d1f6e0.jpg" />', val)
+        self.assertEqual('<img alt="A image!" src="/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg" />', val)
 
     def test_markdown_filter(self):
         text = '![A image!](http://dummyimage.com/800x800)'
         val = render_to_string('markdownfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('![A image!](/media/test/cache/df/d5/dfd560ae0c3a15a28b73306f34d1f6e0.jpg)', val)
+        self.assertEqual('![A image!](/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg)', val)
 
 
 class TemplateTestCaseA(SimpleTestCaseBase):

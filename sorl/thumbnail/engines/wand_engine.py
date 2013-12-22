@@ -14,6 +14,9 @@ class Engine(EngineBase):
     def get_image_size(self, image):
         return image.size
 
+    def get_image_info(self, image):
+        return image.info or {}
+
     def is_valid_image(self, raw_data):
         '''
         Wand library makes sure when opening any image that is fine, when
@@ -64,7 +67,7 @@ class Engine(EngineBase):
         image.crop(x_offset, y_offset, width=width, height=height)
         return image
 
-    def _get_raw_data(self, image, format_, quality, progressive=False):
+    def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
         image.compression_quality = quality
         if format_ == 'JPEG' and progressive:
             image.format = 'pjpeg'

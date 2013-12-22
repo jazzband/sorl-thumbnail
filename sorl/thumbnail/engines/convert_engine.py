@@ -23,14 +23,12 @@ class Engine(EngineBase):
         Writes the thumbnail image
         """
         handle, out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])
-        if (
-                    options['format'] == 'JPEG' and
-                options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
-        ):
+        if (options['format'] == 'JPEG' and options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)):
             image['options']['interlace'] = 'line'
         image['options']['quality'] = options['quality']
         args = settings.THUMBNAIL_CONVERT.split(' ')
-        args.append(image['source'])
+
+        args.append(image['source']+'[0]')
         for k in image['options']:
             v = image['options'][k]
             args.append('-%s' % k)
@@ -44,7 +42,7 @@ class Engine(EngineBase):
             thumbnail.write(fp.read())
         os.close(handle)
         os.remove(out)
-        os.remove(image['source']) # we should not need this now
+        os.remove(image['source'])  # we should not need this now
 
     def get_image(self, source):
         """
@@ -139,7 +137,7 @@ class Engine(EngineBase):
         image['options']['crop'] = '%sx%s+%s+%s' % (
             width, height, x_offset, y_offset
         )
-        image['size'] = (width, height) # update image size
+        image['size'] = (width, height)  # update image size
         return image
 
     def _scale(self, image, width, height):
@@ -147,6 +145,5 @@ class Engine(EngineBase):
         Does the resizing of the image
         """
         image['options']['scale'] = '%sx%s!' % (width, height)
-        image['size'] = (width, height) # update image size
+        image['size'] = (width, height)  # update image size
         return image
-

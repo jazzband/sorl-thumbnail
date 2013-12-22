@@ -40,6 +40,9 @@ THUMBNAIL_REDIS_UNIX_SOCKET_PATH = None
 # maximum or ``0`` if your caching backend can handle that as infinate.
 THUMBNAIL_CACHE_TIMEOUT = 3600 * 24 * 365 * 10 # 10 years
 
+# The cache configuration to use for storing thumbnail data
+THUMBNAIL_CACHE = 'default'
+
 # Key prefix used by the key value store
 THUMBNAIL_KEY_PREFIX = 'sorl-thumbnail'
 
@@ -64,6 +67,10 @@ THUMBNAIL_QUALITY = 95
 
 # Gaussian blur radius
 THUMBNAIL_BLUR = 0
+
+# Adds padding around the image to match the requested size without cropping
+THUMBNAIL_PADDING = False
+THUMBNAIL_PADDING_COLOR = '#ffffff'
 
 # Save as progressive when saving as jpeg
 THUMBNAIL_PROGRESSIVE = True

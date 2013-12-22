@@ -21,6 +21,7 @@ class EngineBase(object):
         image = self.crop(image, geometry, options)
         image = self.rounded(image, geometry, options)
         image = self.blur(image, geometry, options)
+        image = self.padding(image, geometry, options)
         return image
 
     def cropbox(self, image, geometry, options):
@@ -96,6 +97,13 @@ class EngineBase(object):
             return self._blur(image, int(options.get('blur')))
         return image
 
+    def padding(self, image, geometry, options):
+        """
+        Wrapper for ``_padding``
+        """
+        if options.get('padding') and self.get_image_size(image) != geometry:
+            return self._padding(image, geometry, options)
+        return image
 
     def write(self, image, options, thumbnail):
         """
@@ -103,9 +111,11 @@ class EngineBase(object):
         """
         format_ = options['format']
         quality = options['quality']
+        image_info = options['image_info']
         # additional non-default-value options:
         progressive = options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
         raw_data = self._get_raw_data(image, format_, quality,
+                                      image_info=image_info,
                                       progressive=progressive
         )
         thumbnail.write(raw_data)
@@ -123,6 +133,12 @@ class EngineBase(object):
         else:
             x, y = self.get_image_size(image)
         return float(x) / y
+
+    def get_image_info(self, image):
+        """
+        Returns metadata of an ImageFile instance
+        """
+        return {}
 
     #
     # Methods which engines need to implement
@@ -174,7 +190,7 @@ class EngineBase(object):
         """
         raise NotImplemented()
 
-    def _get_raw_data(self, image, format_, quality, progressive=False):
+    def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
         """
         Gets raw data given the image, format and quality. This method is
         called from :meth:`write`

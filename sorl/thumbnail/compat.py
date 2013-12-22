@@ -1,11 +1,15 @@
 import sys
-
 import django
+
 
 __all__ = [
     'json',
     'BufferIO',
-    'urlopen', 'URLError',
+    'urlopen',
+    'urlparse',
+    'quote',
+    'quote_plus',
+    'URLError',
     'force_unicode', 'text_type'
 ]
 
@@ -25,25 +29,39 @@ else:
 # Python 2 and 3
 
 if PY3:
-    from urllib.request import urlopen
     from urllib.error import URLError
+    from urllib.request import urlopen
+    from urllib.parse import quote, quote_plus
+
+    import urllib.parse as urlparse
 
     from io import BytesIO as BufferIO
 
     text_type = str
     string_type = str
 
-    def encode(value):
-        return value.encode('utf-8')
+    def encode(value, charset='utf-8', errors='ignore'):
+        if isinstance(value, bytes):
+            return value
+        return value.encode(charset, errors)
+
+    def urlsplit(url):
+        return urlparse.urlsplit(url.decode('ascii', 'ignore'))
 
 elif PY2:
     from urllib2 import URLError
     from urllib import urlopen
+    from urllib import quote, quote_plus
+
+    import urlparse
 
     from cStringIO import StringIO as BufferIO
 
     text_type = unicode
     string_type = basestring
+    urlsplit = urlparse.urlsplit
 
-    def encode(value):
-        return unicode(value, errors='ignore').encode('utf-8')
+    def encode(value, charset='utf-8', errors='ignore'):
+        if isinstance(value, unicode):
+            return value.encode(charset, errors)
+        return unicode(value, errors=errors).encode(charset)
