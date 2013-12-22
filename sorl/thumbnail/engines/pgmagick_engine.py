@@ -81,4 +81,3 @@ class Engine(EngineBase):
         blob = Blob()
         image.write(blob)
         return get_blob_data(blob)
-

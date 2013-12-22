@@ -14,9 +14,6 @@ class Engine(EngineBase):
     def get_image_size(self, image):
         return image.size
 
-    def get_image_info(self, image):
-        return image.info or {}
-
     def is_valid_image(self, raw_data):
         '''
         Wand library makes sure when opening any image that is fine, when
