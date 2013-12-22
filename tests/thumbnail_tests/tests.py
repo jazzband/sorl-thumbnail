@@ -43,24 +43,22 @@ class StorageTestCase(unittest.TestCase):
         get_thumbnail(self.im, '50x50')
         log = slog.stop_log()
         actions = [
-            # first see if the file exists
-            'exists: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4.jpg',
             # open the original for thumbnailing
             'open: org.jpg',
             # save the file
-            'save: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4.jpg',
+            'save: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115.jpg',
             # check for filename
-            'get_available_name: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4.jpg',
+            'get_available_name: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115.jpg',
             # called by get_available_name
-            'exists: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4.jpg',
+            'exists: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115.jpg',
             # save the 1.5 resolution version
-            'save: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@1.5x.jpg',
-            'get_available_name: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@1.5x.jpg',
-            'exists: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@1.5x.jpg',
+            'save: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115@1.5x.jpg',
+            'get_available_name: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115@1.5x.jpg',
+            'exists: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115@1.5x.jpg',
             # save the 2 resolution version
-            'save: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@2x.jpg',
-            'get_available_name: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@2x.jpg',
-            'exists: test/cache/cc/33/cc33e9e8b2355e7e2a9437319c046ad4@2x.jpg'
+            'save: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115@2x.jpg',
+            'get_available_name: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115@2x.jpg',
+            'exists: test/cache/0a/fc/0afce0c49e4094d359c71bcb06894115@2x.jpg'
         ]
         self.assertEqual(log, actions)
 
@@ -312,14 +310,14 @@ class SimpleTestCase(SimpleTestCaseBase):
         val = render_to_string('htmlfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('<img alt="A image!" src="/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg" />', val)
+        self.assertEqual('<img alt="A image!" src="/media/test/cache/54/b4/54b435b1067b0c681d376db53429fb68.jpg" />', val)
 
     def test_markdown_filter(self):
         text = '![A image!](http://dummyimage.com/800x800)'
         val = render_to_string('markdownfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('![A image!](/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg)', val)
+        self.assertEqual('![A image!](/media/test/cache/54/b4/54b435b1067b0c681d376db53429fb68.jpg)', val)
 
 
 class TemplateTestCaseA(SimpleTestCaseBase):
@@ -340,8 +338,8 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         val = render_to_string('thumbnail6.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, ('<a href="/media/test/cache/ee/75/ee75afefa6c50e2bb69040bd230adb8c.jpg">'
-                               '<img src="/media/test/cache/f2/dd/f2ddc6972adc006de1635e4b30141267.jpg" width="400" height="400">'
+        self.assertEqual(val, ('<a href="/media/test/cache/6b/0c/6b0cbbe47acfc78ae4210b9bea7f6ed8.jpg">'
+                               '<img src="/media/test/cache/df/ca/dfca350caa11f62987f3acb053203040.jpg" width="400" height="400">'
                                '</a>'))
 
     def test_serialization_options(self):
@@ -433,7 +431,7 @@ class TemplateTestCaseB(unittest.TestCase):
             'source': 'http://dummyimage.com/120x100/',
             'dims': 'x66',
         }).strip()
-        self.assertEqual(val, '<img src="/media/test/cache/11/b5/11b5d54b6ab2c9cda20a064153f90d2f.jpg" width="1985" height="666" class="landscape">')
+        self.assertEqual(val, '<img src="/media/test/cache/c1/49/c1495b6938df6b018b9c5ecc07ece86e.jpg" width="79" height="66" class="landscape">')
 
     def testEmpty(self):
         val = render_to_string('thumbnail5.html', {}).strip()
@@ -616,7 +614,7 @@ class TestInputCase(unittest.TestCase):
         th = get_thumbnail(self.name, '200x200')
         self.assertEqual(
             th.url,
-            '/media/test/cache/e7/2b/e72b64151559ea9c5cdd6aefc626bb7f.jpg'
+            '/media/test/cache/da/4f/da4f636c9a67b123610d84bbdbe4659f.jpg'
         )
 
     def tearDown(self):

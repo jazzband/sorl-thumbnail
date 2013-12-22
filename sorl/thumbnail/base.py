@@ -5,6 +5,7 @@ from sorl.thumbnail.helpers import tokey, serialize
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
+from sorl.thumbnail.compat import string_type
 
 import logging
 
@@ -160,16 +161,16 @@ class ThumbnailBackend(object):
         if not options['alternative_resolutions']:
             return
 
-        ratio = default.engine.get_image_ratio(source_image)
+        ratio = default.engine.get_image_ratio(source_image, options)
         geometry = parse_geometry(geometry_string, ratio)
         file_type = name.split('.')[len(name.split('.')) - 1]
 
         for resolution in options['alternative_resolutions']:
             resolution_geometry = (int(geometry[0] * resolution), int(geometry[1] * resolution))
             resolution_options = options.copy()
-            if 'crop' in options and isinstance(options['crop'], basestring):
+            if 'crop' in options and isinstance(options['crop'], string_type):
                 crop = options['crop'].split(" ")
-                for i in xrange(len(crop)):
+                for i in range(len(crop)):
                     s = re.match("(\d+)px", crop[i])
                     if s:
                         crop[i] = "%spx" % int(int(s.group(1)) * resolution)
