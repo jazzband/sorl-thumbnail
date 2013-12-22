@@ -7,7 +7,7 @@ from django.utils.functional import LazyObject
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
 
-from sorl.thumbnail.compat import json, urlopen, urlparse, \
+from sorl.thumbnail.compat import json, urlopen, urlparse, urlsplit, \
     quote, quote_plus, \
     URLError, force_unicode, encode
 from sorl.thumbnail.helpers import ThumbnailError, \
@@ -177,12 +177,11 @@ class DummyImageFile(BaseImageFile):
 class UrlStorage(Storage):
 
     def normalize_url(self, url, charset='utf-8'):
-        url = encode(url, charset, 'ignore').decode(charset)
-
-        scheme, netloc, path, qs, anchor = urlparse.urlsplit(url)
+        url = encode(url, charset, 'ignore')
+        scheme, netloc, path, qs, anchor = urlsplit(url)
 
         # Encode to utf8 to prevent urllib KeyError
-        path = encode(path, charset, 'replace')
+        path = encode(path, charset, 'ignore')
 
         path = quote(path, '/%')
         qs = quote_plus(qs, ':&%=')
