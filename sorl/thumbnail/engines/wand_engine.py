@@ -15,7 +15,10 @@ class Engine(EngineBase):
         return image.size
 
     def get_image_info(self, image):
-        return image.info or {}
+        try:
+            return image.info
+        except AttributeError:
+            return {}
 
     def is_valid_image(self, raw_data):
         '''
