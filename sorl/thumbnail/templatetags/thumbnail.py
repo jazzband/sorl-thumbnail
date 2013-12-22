@@ -1,6 +1,5 @@
 import logging
 import re
-import os
 import sys
 from functools import wraps
 from django.template import Library, Node, NodeList, TemplateSyntaxError
@@ -10,7 +9,7 @@ from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail.parsers import parse_geometry
-from sorl.thumbnail.compat import text_type, string_type
+from sorl.thumbnail.compat import text_type
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 register = Library()
@@ -86,8 +85,6 @@ class ThumbnailNode(ThumbnailNodeBase):
 
     def __init__(self, parser, token):
         bits = token.split_contents()
-        #if len(bits) < 5:
-        #    raise TemplateSyntaxError(self.error_msg)
         self.file_ = parser.compile_filter(bits[1])
         self.geometry = parser.compile_filter(bits[2])
         self.options = []
@@ -116,7 +113,6 @@ class ThumbnailNode(ThumbnailNodeBase):
 
     def _render(self, context):
         file_ = self.file_.resolve(context)
-        lazy_fill = settings.THUMBNAIL_LAZY_FILL_EMPTY
         geometry = self.geometry.resolve(context)
         options = {}
         for key, expr in self.options:
@@ -127,23 +123,9 @@ class ThumbnailNode(ThumbnailNodeBase):
             else:
                 options[key] = value
 
-        if isinstance(file_, string_type):
-            path = file_
-            exists = re.search('^https?://', path) or os.path.exists(path)
-        else:
-            path = getattr(file_, 'path', None) or \
-                getattr(file_, 'name', None) or ''
-            exists = os.path.exists(path)
+        thumbnail = get_thumbnail(file_, geometry, **options)
 
-        if file_ and exists:
-            thumbnail = default.backend.get_thumbnail(
-                file_, geometry, **options
-            )
-        elif self.nodelist_empty:
-            return self.nodelist_empty.render(context)
-        elif settings.THUMBNAIL_DUMMY or lazy_fill:
-            thumbnail = DummyImageFile(geometry)
-        else:
+        if not thumbnail or isinstance(thumbnail, DummyImageFile) and self.nodelist_empty:
             if self.nodelist_empty:
                 return self.nodelist_empty.render(context)
             else:

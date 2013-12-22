@@ -65,9 +65,14 @@ class ThumbnailBackend(object):
         """
         logger.debug('Getting thumbnail for file [%s] at [%s]', file_,
                      geometry_string)
-        source = ImageFile(file_)
+        if file_:
+            source = ImageFile(file_)
+        elif settings.THUMBNAIL_DUMMY:
+            return DummyImageFile(geometry_string)
+        else:
+            return None
 
-        #preserve image filetype
+        # preserve image filetype
         if settings.THUMBNAIL_PRESERVE_FORMAT:
             self.default_options['format'] = self._get_format(file_)
 
@@ -152,4 +157,3 @@ class ThumbnailBackend(object):
         path = '%s/%s/%s' % (key[:2], key[2:4], key)
         return '%s%s.%s' % (settings.THUMBNAIL_PREFIX, path,
                             EXTENSIONS[options['format']])
-
