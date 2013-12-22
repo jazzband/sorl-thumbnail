@@ -41,7 +41,12 @@ if PY3:
     string_type = str
 
     def encode(value, charset='utf-8', errors='ignore'):
-        return value.encode(charset)
+        if isinstance(value, bytes):
+            return value
+        return value.encode(charset, errors)
+
+    def urlsplit(url):
+        return urlparse.urlsplit(url.decode('ascii', 'ignore'))
 
 elif PY2:
     from urllib2 import URLError
@@ -54,6 +59,7 @@ elif PY2:
 
     text_type = unicode
     string_type = basestring
+    urlsplit = urlparse.urlsplit
 
     def encode(value, charset='utf-8', errors='ignore'):
         if isinstance(value, unicode):
