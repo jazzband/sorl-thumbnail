@@ -176,22 +176,26 @@ def margin(file_, geometry_string):
     """
     Returns the calculated margin for an image and geometry
     """
-    if not file_ or settings.THUMBNAIL_DUMMY or isinstance(file_,
-                                                           DummyImageFile):
+    if not file_ or settings.THUMBNAIL_DUMMY or isinstance(file_, DummyImageFile):
         return 'auto'
+
     margin = [0, 0, 0, 0]
     image_file = default.kvstore.get_or_set(ImageFile(file_))
     x, y = parse_geometry(geometry_string, image_file.ratio)
     ex = x - image_file.x
     margin[3] = ex / 2
     margin[1] = ex / 2
+
     if ex % 2:
         margin[1] += 1
+
     ey = y - image_file.y
     margin[0] = ey / 2
     margin[2] = ey / 2
+
     if ey % 2:
         margin[2] += 1
+
     return ' '.join(['%dpx' % n for n in margin])
 
 
@@ -203,6 +207,7 @@ def background_margin(file_, geometry_string):
     """
     if not file_ or settings.THUMBNAIL_DUMMY:
         return 'auto'
+
     margin = [0, 0]
     image_file = default.kvstore.get_or_set(ImageFile(file_))
     x, y = parse_geometry(geometry_string, image_file.ratio)
@@ -210,6 +215,7 @@ def background_margin(file_, geometry_string):
     margin[0] = ex / 2
     ey = y - image_file.y
     margin[1] = ey / 2
+
     return ' '.join(['%spx' % n for n in margin])
 
 
@@ -223,10 +229,12 @@ def text_filter(regex_base, value):
         're_img': u'[a-zA-Z0-9\.:/_\-\% ]+'
     }
     images = re.findall(regex, value)
+
     for i in images:
         image = i[1]
         im = get_thumbnail(image, str(settings.THUMBNAIL_FILTER_WIDTH))
         value = value.replace(image, im.url)
+
     return value
 
 
