@@ -7,7 +7,7 @@ from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
 from subprocess import Popen, PIPE
-from tempfile import mkstemp
+from tempfile import NamedTemporaryFile
 
 
 size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
@@ -22,45 +22,43 @@ class Engine(EngineBase):
         """
         Writes the thumbnail image
         """
-        handle, out = mkstemp(suffix='.%s' % EXTENSIONS[options['format']])
         if (options['format'] == 'JPEG' and options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)):
             image['options']['interlace'] = 'line'
         image['options']['quality'] = options['quality']
-        args = settings.THUMBNAIL_CONVERT.split(' ')
 
-        args.append(image['source']+'[0]')
+        args = settings.THUMBNAIL_CONVERT.split(' ')
+        args.append(image['source'] + '[0]')
+
         for k in image['options']:
             v = image['options'][k]
             args.append('-%s' % k)
             if v is not None:
                 args.append('%s' % v)
 
-        flatten = "on"
-        if 'flatten' in options:
-            flatten = options['flatten']
+        try:
+            with NamedTemporaryFile(suffix='.%s' % EXTENSIONS[options['format']], mode='rb') as fp:
+                flatten = "on"
+                if 'flatten' in options:
+                    flatten = options['flatten']
 
-        if settings.THUMBNAIL_FLATTEN and not flatten == "off":
-            args.append('-flatten')
+                if settings.THUMBNAIL_FLATTEN and not flatten == "off":
+                    args.append('-flatten')
 
-        args.append(out)
-        args = map(smart_str, args)
-        p = Popen(args)
-        p.wait()
-        with open(out, 'rb') as fp:
-            thumbnail.write(fp.read())
-        os.close(handle)
-        os.remove(out)
-        os.remove(image['source'])  # we should not need this now
+                args.append(fp.name)
+                args = map(smart_str, args)
+                p = Popen(args)
+                p.wait()
+                thumbnail.write(fp.read())
+        finally:
+            os.remove(image['source'])  # we should not need this now
 
     def get_image(self, source):
         """
         Returns the backend image objects from a ImageFile instance
         """
-        handle, tmp = mkstemp()
-        with open(tmp, 'wb') as fp:
+        with NamedTemporaryFile(mode='wb', delete=False) as fp:
             fp.write(source.read())
-        os.close(handle)
-        return {'source': tmp, 'options': SortedDict(), 'size': None}
+        return {'source': fp.name, 'options': SortedDict(), 'size': None}
 
     def get_image_size(self, image):
         """
@@ -80,16 +78,13 @@ class Engine(EngineBase):
         This is not very good for imagemagick because it will say anything is
         valid that it can use as input.
         """
-        handle, tmp = mkstemp()
-        with open(tmp, 'wb') as fp:
+        with NamedTemporaryFile(mode='wb') as fp:
             fp.write(raw_data)
             fp.flush()
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
-            args.append(tmp)
+            args.append(fp.name)
             p = Popen(args)
             retcode = p.wait()
-        os.close(handle)
-        os.remove(tmp)
         return retcode == 0
 
     def _orientation(self, image):

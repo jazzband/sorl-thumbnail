@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 
 # Distribution / packaging
+env/
 bin/
 build/
 develop-eggs/
@@ -42,6 +43,7 @@ pip-delete-this-directory.txt
 .idea
 .project
 .pydevproject
+.ropeproject
 
 # Sphinx documentation
 docs/_build/
