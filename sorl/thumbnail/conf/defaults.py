@@ -103,3 +103,7 @@ THUMBNAIL_PIL_MAXBLOCK_FALLBACK = 2 ** 24
 
 # Default width when using filters for texts
 THUMBNAIL_FILTER_WIDTH = 500
+
+# Should we flatten images by default (fixes a lot of transparency issues with
+# imagemagick)
+THUMBNAIL_FLATTEN = False

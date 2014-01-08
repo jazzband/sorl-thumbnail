@@ -34,6 +34,14 @@ class Engine(EngineBase):
             args.append('-%s' % k)
             if v is not None:
                 args.append('%s' % v)
+
+        flatten = "on"
+        if 'flatten' in options:
+            flatten = options['flatten']
+
+        if settings.THUMBNAIL_FLATTEN and not flatten == "off":
+            args.append('-flatten')
+
         args.append(out)
         args = map(smart_str, args)
         p = Popen(args)
