@@ -17,6 +17,8 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+.coverage
+tests/htmlcov
 
 # Installer logs
 pip-log.txt

@@ -148,6 +148,7 @@ class KVStoreBase(object):
         """
         Finds and returns all keys for identity,
         """
+        dict()
         prefix = add_prefix('', identity)
         raw_keys = self._find_keys_raw(prefix) or []
         for raw_key in raw_keys:
