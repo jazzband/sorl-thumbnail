@@ -6,7 +6,6 @@ import logging
 import shutil
 from os.path import join as pjoin
 from subprocess import Popen, PIPE
-from unittest import skip, skipIf
 
 from PIL import Image
 from django.utils.six import StringIO
@@ -14,7 +13,11 @@ from django.core import management
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.test.client import Client
+
+from django.utils import unittest
 from django.test import TestCase
+from django.test.utils import override_settings
+from django.utils.unittest.case import skip, skipIf
 
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
@@ -24,6 +27,8 @@ from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.log import ThumbnailLogHandler
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
+
+from sorl.thumbnail.base import ThumbnailBackend
 
 from thumbnail_tests.models import Item
 from thumbnail_tests.storage import slog
@@ -698,3 +703,37 @@ class CommandTests(SimpleTestCase):
         out = StringIO()
         management.call_command('thumbnail', 'cleanup', verbosity=1, stdout=out)
         self.assertEqual(out.getvalue(), "Cleanup thumbnails ... [Done]\n")
+
+
+class FakeFile(object):
+    """
+    Used to test the _get_format method.
+    """
+
+    def __init__(self, name):
+        self.name = name
+
+
+@override_settings(THUMBNAIL_PRESERVE_FORMAT=True,
+                   THUMBNAIL_FORMAT='XXX')
+class PreserveFormatTest(TestCase):
+    def setUp(self):
+        self.backend = ThumbnailBackend()
+
+    def test_with_various_formats(self):
+        self.assertEqual(self.backend._get_format(FakeFile('foo.jpg')), 'JPEG')
+        self.assertEqual(self.backend._get_format(FakeFile('foo.jpeg')), 'JPEG')
+        self.assertEqual(self.backend._get_format(FakeFile('foo.png')), 'PNG')
+
+    def test_double_extension(self):
+        self.assertEqual(self.backend._get_format(FakeFile('foo.ext.jpg')), 'JPEG')
+
+    def test_that_capitalization_doesnt_matter(self):
+        self.assertEqual(self.backend._get_format(FakeFile('foo.PNG')), 'PNG')
+        self.assertEqual(self.backend._get_format(FakeFile('foo.JPG')), 'JPEG')
+
+    def test_fallback_format(self):
+        self.assertEqual(self.backend._get_format(FakeFile('foo.txt')), 'XXX')
+
+    def test_with_nonascii(self):
+        self.assertEqual(self.backend._get_format(FakeFile('你好.jpg')), 'JPEG')

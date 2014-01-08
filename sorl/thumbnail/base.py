@@ -1,4 +1,5 @@
 import re
+import os
 
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
@@ -40,22 +41,19 @@ class ThumbnailBackend(object):
         ('blur', 'THUMBNAIL_BLUR'),
     )
 
-    file_extension = lambda inst, file_: str(file_).split('.')[-1].lower()
+    def file_extension(self, file_):
+        return os.path.splitext(file_.name)[1].lower()
 
     def _get_format(self, file_):
         file_extension = self.file_extension(file_)
 
-        is_jpeg = re.match('jpg|jpeg', file_extension)
-        is_png = re.match('png', file_extension)
-
-        if is_jpeg:
-            format_ = 'JPEG'
-        elif is_png:
-            format_ = 'PNG'
+        if file_extension == '.jpg' or file_extension == '.jpeg':
+            return 'JPEG'
+        elif file_extension == '.png':
+            return 'PNG'
         else:
-            format_ = default_settings.THUMBNAIL_FORMAT
-
-        return str(format_)
+            from django.conf import settings
+            return getattr(settings, 'THUMBNAIL_FORMAT', default_settings.THUMBNAIL_FORMAT)
 
     def get_thumbnail(self, file_, geometry_string, **options):
         """
@@ -72,13 +70,12 @@ class ThumbnailBackend(object):
         else:
             return None
 
-        # preserve image filetype
-        if settings.THUMBNAIL_PRESERVE_FORMAT:
-            self.default_options['format'] = self._get_format(file_)
+        for key, value in self.default_options.items():
+            options.setdefault(key, value)
 
-        for key in self.default_options.keys():
-            if not key in options:
-                options.update({key: self.default_options[key]})
+        #preserve image filetype
+        if settings.THUMBNAIL_PRESERVE_FORMAT:
+            options.setdefault('format', self._get_format(file_))
 
         # For the future I think it is better to add options only if they
         # differ from the default settings as below. This will ensure the same
