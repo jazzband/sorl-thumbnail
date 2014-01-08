@@ -1,15 +1,19 @@
 #coding=utf-8
+from io import StringIO
 import os
 import re
 import sys
 import logging
 import shutil
+from os.path import join as pjoin
+from subprocess import Popen, PIPE
+from unittest import skip, skipIf
+
 from PIL import Image
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from django.test.client import Client
 from django.test import TestCase
-from os.path import join as pjoin
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
@@ -18,12 +22,11 @@ from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.log import ThumbnailLogHandler
 from sorl.thumbnail.parsers import parse_crop, parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
-from subprocess import Popen, PIPE
 from thumbnail_tests.models import Item
 from thumbnail_tests.storage import slog
 from thumbnail_tests.compat import unittest, PY3
+from .utils import same_open_fd_count
 
-from unittest import skip, skipIf
 
 handler = ThumbnailLogHandler()
 handler.setLevel(logging.ERROR)
@@ -610,3 +613,30 @@ class TestInputCase(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
+
+
+@skipIf(sys.platform.startswith("win"), 'Cant easily count descriptors on windows')
+class TestDescriptiors(unittest.TestCase):
+    """Make sure we're not leaving open descriptors on file exceptions"""
+
+    def setUp(self):
+        self.engine = get_module_class(settings.THUMBNAIL_ENGINE)()
+
+    def test_no_source_get_image(self):
+        """If source image does not exists, properly close all file descriptors"""
+        source = ImageFile('nonexistent.jpeg')
+
+        with same_open_fd_count(self):
+            with self.assertRaises(IOError):
+                self.engine.get_image(source)
+
+    def test_is_valid_image(self):
+        with same_open_fd_count(self):
+            self.engine.is_valid_image(b'invalidbinaryimage')
+
+    def test_write(self):
+        with same_open_fd_count(self):
+            with self.assertRaises(Exception):
+                self.engine.write(image=self.engine.get_image(StringIO(b'xxx')),
+                                  options={'format': 'JPEG', 'quality': 90, 'image_info': {}},
+                                  thumbnail=ImageFile('whatever_thumb.jpeg', default.storage))
