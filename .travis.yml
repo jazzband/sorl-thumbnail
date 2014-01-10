@@ -1,5 +1,6 @@
 language: python
 
+
 python:
   - "2.7"
   - "3.3"
@@ -34,11 +35,7 @@ before_install:
   - sudo apt-get install -qq $APT
 
 install:
-  - pip install Wheel
-  - pip install https://github.com/mariocesar/sorl-thumbnail/raw/wheels/wheel/Pillow-2.3.0-cp27-none-linux_x86_64.whl
-  - pip install $PIP
-  - pip install django==$DJANGO_VERSION
-  - pip install coveralls
+  - ./.travis.sh
 
 script:
   - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
@@ -54,4 +51,9 @@ branches:
     - master
 
 notifications:
-    irc: "irc.freenode.org#sorl-thumbnail"
+  irc:
+    channels:
+      - "irc.freenode.org#sorl-thumbnail"
+    on_success: always
+    on_failure: always
+
