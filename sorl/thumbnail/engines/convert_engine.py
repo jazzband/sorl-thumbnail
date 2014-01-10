@@ -1,12 +1,14 @@
 from __future__ import with_statement
 import re
 import os
+import subprocess
+
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
 from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
-from subprocess import Popen, PIPE
+
 from tempfile import NamedTemporaryFile
 
 
@@ -35,20 +37,28 @@ class Engine(EngineBase):
             if v is not None:
                 args.append('%s' % v)
 
+        flatten = "on"
+        if 'flatten' in options:
+            flatten = options['flatten']
+
+        if settings.THUMBNAIL_FLATTEN and not flatten == "off":
+            args.append('-flatten')
+
         try:
-            with NamedTemporaryFile(suffix='.%s' % EXTENSIONS[options['format']], mode='rb') as fp:
-                flatten = "on"
-                if 'flatten' in options:
-                    flatten = options['flatten']
+            suffix = '.%s' % EXTENSIONS[options['format']]
 
-                if settings.THUMBNAIL_FLATTEN and not flatten == "off":
-                    args.append('-flatten')
-
+            with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
                 args.append(fp.name)
                 args = map(smart_str, args)
-                p = Popen(args)
+                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 p.wait()
+                out, err = p.communicate()
+
+                if err:
+                    raise Exception(err)
+
                 thumbnail.write(fp.read())
+
         finally:
             os.remove(image['source'])  # we should not need this now
 
@@ -67,7 +77,7 @@ class Engine(EngineBase):
         if image['size'] is None:
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
             args.append(image['source'])
-            p = Popen(args, stdout=PIPE)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
             m = size_re.match(str(p.stdout.read()))
             image['size'] = int(m.group('x')), int(m.group('y'))
@@ -83,7 +93,7 @@ class Engine(EngineBase):
             fp.flush()
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
             args.append(fp.name)
-            p = Popen(args)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             retcode = p.wait()
         return retcode == 0
 
@@ -94,7 +104,7 @@ class Engine(EngineBase):
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
             args = settings.THUMBNAIL_IDENTIFY.split()
             args.extend(['-format', '%[exif:orientation]', image['source']])
-            p = Popen(args, stdout=PIPE)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
             result = p.stdout.read().strip()
             if result and result != 'unknown':

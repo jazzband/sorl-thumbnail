@@ -59,7 +59,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     failures = runtests(
-        verbosity=1,
+        verbosity=2,
         interactive=args.interactive,
         failfast=args.failfast,
         settings_module=args.settings_module)
