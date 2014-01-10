@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import serialize, deserialize, ThumbnailError
 from sorl.thumbnail.images import serialize_image_file, deserialize_image_file
@@ -14,7 +15,7 @@ def del_prefix(key):
     """
     Removes prefixes from the key
     """
-    return key.split('||')[-1]
+    return ('%s' % key).split('||')[-1]
 
 
 class KVStoreBase(object):
