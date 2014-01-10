@@ -1,7 +1,7 @@
 {% load thumbnail %}{% spaceless %}
-{% thumbnail "invalid" "30x30" crop="50% 50%" as im %}
+{% thumbnail "invalid_image.jpg" "30x30" crop="50% 50%" as im %}
     <img style="margin:{{ im|margin:"30x30" }}" width="{{ im.x }}" height="{{ im.y }}">
 {% empty %}
-    <p>empty{{ im }}</p>
+    <p>empty</p>
 {% endthumbnail %}
 {% endspaceless %}
