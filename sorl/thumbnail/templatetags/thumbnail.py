@@ -1,3 +1,5 @@
+# -*- encoding: utf8 -*-
+from __future__ import unicode_literals
 import logging
 import re
 import sys
@@ -116,7 +118,7 @@ class ThumbnailNode(ThumbnailNodeBase):
         geometry = self.geometry.resolve(context)
         options = {}
         for key, expr in self.options:
-            noresolve = {u'True': True, u'False': False, u'None': None}
+            noresolve = {'True': True, 'False': False, 'None': None}
             value = noresolve.get(text_type(expr), expr.resolve(context))
             if key == 'options':
                 options.update(value)
@@ -225,8 +227,8 @@ def text_filter(regex_base, value):
     """
 
     regex = regex_base % {
-        're_cap': u'[a-zA-Z0-9\.\,:;/_ \(\)\-\!\?\"]+',
-        're_img': u'[a-zA-Z0-9\.:/_\-\% ]+'
+        're_cap': '[a-zA-Z0-9\.\,:;/_ \(\)\-\!\?\"]+',
+        're_img': '[a-zA-Z0-9\.:/_\-\% ]+'
     }
     images = re.findall(regex, value)
 
@@ -241,10 +243,10 @@ def text_filter(regex_base, value):
 @safe_filter(error_output='auto')
 @register.filter
 def markdown_thumbnails(value):
-    return text_filter(u'!\[(%(re_cap)s)?\][ ]?\((%(re_img)s)\)', value)
+    return text_filter('!\[(%(re_cap)s)?\][ ]?\((%(re_img)s)\)', value)
 
 
 @safe_filter(error_output='auto')
 @register.filter
 def html_thumbnails(value):
-    return text_filter(u'<img(?: alt="(%(re_cap)s)?")? src="(%(re_img)s)"', value)
+    return text_filter('<img(?: alt="(%(re_cap)s)?")? src="(%(re_img)s)"', value)

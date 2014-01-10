@@ -1,10 +1,12 @@
 # -*- encoding: utf8 -*-
+from __future__ import unicode_literals
+
 import logging
 
 __author__ = "Mikko Hellsing"
 __license__ = "BSD"
 __version__ = '12.0'
-__maintainer__ = u"Mario César Señoranis Ayala"
+__maintainer__ = "Mario César Señoranis Ayala"
 __email__ = "mariocesar@creat1va.com"
 __status__ = "Production"
 

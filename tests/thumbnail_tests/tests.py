@@ -1,4 +1,6 @@
-#coding=utf-8
+# coding=utf-8
+from __future__ import unicode_literals
+
 import os
 import re
 import sys
@@ -17,7 +19,6 @@ from django.test.client import Client
 from django.utils import unittest
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.utils.unittest.case import skip, skipIf
 
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
@@ -30,11 +31,13 @@ from sorl.thumbnail.templatetags.thumbnail import margin
 
 from sorl.thumbnail.base import ThumbnailBackend
 
-from thumbnail_tests.models import Item
-from thumbnail_tests.storage import slog
-from thumbnail_tests.compat import unittest, PY3
-
+from .models import Item
+from .storage import slog, SlogHandler
+from .compat import unittest, PY3
 from .utils import same_open_fd_count
+
+skip = unittest.skip
+skipIf = unittest.skipIf
 
 handler = ThumbnailLogHandler()
 handler.setLevel(logging.ERROR)
@@ -350,11 +353,11 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         val = render_to_string('thumbnail1.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, u'<img style="margin:0px 0px 0px 0px" width="200" height="100">')
+        self.assertEqual(val, '<img style="margin:0px 0px 0px 0px" width="200" height="100">')
         val = render_to_string('thumbnail2.html', {
             'item': item,
         }).strip()
-        self.assertEqual(val, u'<img style="margin:0px 50px 0px 50px" width="100" height="100">')
+        self.assertEqual(val, '<img style="margin:0px 50px 0px 50px" width="100" height="100">')
 
     def test_nested(self):
         item = Item.objects.get(image='500x500.jpg')
@@ -645,7 +648,7 @@ class TestInputCase(unittest.TestCase):
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
 
-        self.name = u'åäö.jpg'
+        self.name = 'åäö.jpg'
 
         fn = pjoin(settings.MEDIA_ROOT, self.name)
         im = Image.new('L', (666, 666))

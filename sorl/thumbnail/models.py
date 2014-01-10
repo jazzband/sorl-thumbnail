@@ -9,5 +9,5 @@ class KVStore(models.Model):
     )
     value = models.TextField()
 
-    def __unicode(self):
-        return u'%s' % self.key
+    def __unicode__(self):
+        return self.key
