@@ -690,6 +690,8 @@ class TestDescriptors(unittest.TestCase):
         with same_open_fd_count(self):
             self.engine.is_valid_image(b'invalidbinaryimage.jpg')
 
+    @skipIf(os.environ.get('SETTINGS', None) == 'pgmagick' and  sys.version_info.major == 2,
+            'No output has been received in the last 10 minutes, this potentially indicates something wrong with the build itself.')
     def test_write(self):
         with same_open_fd_count(self):
             with self.assertRaises(Exception):
