@@ -1,4 +1,4 @@
-|travis| |pypi|
+|travis| |pypi| |coveralls|
 
 Thumbnails for Django.
 
@@ -99,6 +99,9 @@ See more examples in the section `Low level API examples`_ in the Documentation
     :target: https://travis-ci.org/mariocesar/sorl-thumbnail
 .. |pypi| image:: https://badge.fury.io/py/sorl-thumbnail.png
     :target: http://badge.fury.io/py/sorl-thumbnail
+.. |coveralls| image:: https://coveralls.io/repos/mariocesar/sorl-thumbnail/badge.png?branch=master
+    :target: https://coveralls.io/r/mariocesar/sorl-thumbnail?branch=master
+
 
 .. _`Pillow`: http://pillow.readthedocs.org/en/latest/
 .. _`ImageMagick`: http://www.imagemagick.org/script/index.php

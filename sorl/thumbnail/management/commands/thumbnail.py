@@ -14,7 +14,7 @@ class Command(BaseCommand):
         verbosity = int(options.get('verbosity'))
 
         if not labels:
-            print self.print_help('thumbnail', '')
+            print(self.print_help('thumbnail', ''))
             sys.exit(1)
 
         if len(labels) != 1:

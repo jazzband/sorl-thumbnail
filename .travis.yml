@@ -48,9 +48,13 @@ install:
   - pip install Pillow
   - pip install $PIP
   - pip install django==$DJANGO_VERSION
+  - pip install coveralls
 
 script:
-  - cd tests && python runtests.py --settings=settings.$SETTINGS
+  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
+
+after_success:
+  - coveralls
 
 services:
   - redis-server
