@@ -135,7 +135,7 @@ class Engine(EngineBase):
             params['progressive'] = True
         try:
             image.save(bf, **params)
-        except IOError, OSError:
+        except (IOError, OSError):
             maxblock = ImageFile.MAXBLOCK
 
             try:
