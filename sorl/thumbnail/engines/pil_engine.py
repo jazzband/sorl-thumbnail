@@ -120,7 +120,8 @@ class Engine(EngineBase):
         return im
 
     def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
-        ImageFile.MAXBLOCK = image.size[0] * image.size[1]
+        # Increase (but never decrease) PIL buffer size
+        ImageFile.MAXBLOCK = max(ImageFile.MAXBLOCK, image.size[0] * image.size[1])
         bf = BufferIO()
 
         params = {
@@ -131,24 +132,19 @@ class Engine(EngineBase):
 
         params.update(image_info)
 
+        raw_data = None
+
         if format_ == 'JPEG' and progressive:
             params['progressive'] = True
         try:
             image.save(bf, **params)
         except (IOError, OSError):
-            maxblock = ImageFile.MAXBLOCK
-
-            try:
-                # Temporary encrease ImageFile MAXBLOCK
-                ImageFile.MAXBLOCK = image.size[0] * image.size[1]
-                image.save(bf, **params)
-            except IOError:
-                params.pop('optimize')
-                image.save(bf, **params)
-            finally:
-                ImageFile.MAXBLOCK = maxblock
-
-        raw_data = bf.getvalue()
-        bf.close()
+            # Try without optimization.
+            params.pop('optimize')
+            image.save(bf, **params)
+        else:
+            raw_data = bf.getvalue()
+        finally:
+            bf.close()
 
         return raw_data
