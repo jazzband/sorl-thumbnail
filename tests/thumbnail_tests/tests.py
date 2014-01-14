@@ -54,7 +54,6 @@ class StorageTestCase(unittest.TestCase):
         Image.new('L', (100, 100)).save(fn)
         self.im = ImageFile(name)
 
-    @skip('stall')
     def test_a_new(self):
         slog.start_log()
         get_thumbnail(self.im, '50x50')
@@ -70,14 +69,12 @@ class StorageTestCase(unittest.TestCase):
         ]
         self.assertEqual(log, actions)
 
-    @skip('stall')
     def test_b_cached(self):
         slog.start_log()
         get_thumbnail(self.im, '50x50')
         log = slog.stop_log()
         self.assertEqual(log, [])  # now this should all be in cache
 
-    @skip('stall')
     def test_c_safe_methods(self):
         slog.start_log()
         im = default.kvstore.get(self.im)
@@ -236,7 +233,6 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.kvstore.set(im)
         self.assertEqual(im.size, [500, 500])
 
-    @skip('stall')
     def test_cleanup1(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         self.kvstore.delete_thumbnails(im)
@@ -250,7 +246,6 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.assertEqual(self.kvstore.get(th), None)
         self.kvstore.delete(im)
 
-    @skip('stall')
     def test_cleanup2(self):
         self.kvstore.clear()
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
