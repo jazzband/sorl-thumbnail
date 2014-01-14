@@ -66,8 +66,10 @@ class Engine(EngineBase):
             exif = image._getexif()
         except (AttributeError, IOError, KeyError, IndexError):
             exif = None
+
         if exif:
             orientation = exif.get(0x0112)
+
             if orientation == 2:
                 image = image.transpose(Image.FLIP_LEFT_RIGHT)
             elif orientation == 3:
@@ -82,6 +84,7 @@ class Engine(EngineBase):
                 image = image.rotate(90).transpose(Image.FLIP_LEFT_RIGHT)
             elif orientation == 8:
                 image = image.rotate(90)
+
         return image
 
     def _colorspace(self, image, colorspace):

@@ -3,7 +3,7 @@ Wand (>=v0.3.0) engine for Sorl-thumbnail
 '''
 
 from wand.image import Image
-from wand.exceptions import CorruptImageError, MissingDelegateError
+from wand import exceptions
 from sorl.thumbnail.engines.base import EngineBase
 
 
@@ -23,7 +23,7 @@ class Engine(EngineBase):
         try:
             Image(blob=raw_data)
             return True
-        except (CorruptImageError, MissingDelegateError):
+        except (exceptions.CorruptImageError, exceptions.MissingDelegateError):
             return False
 
     def _orientation(self, image):

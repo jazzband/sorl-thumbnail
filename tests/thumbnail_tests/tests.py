@@ -197,7 +197,6 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.assertEqual(t.x, 400)
         self.assertEqual(t.y, 300)
 
-    @skip('stall')
     def test_kvstore(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         self.kvstore.delete_thumbnails(im)
@@ -214,7 +213,6 @@ class SimpleTestCase(SimpleTestCaseBase):
             self.kvstore._get(im.key, identity='thumbnails')
         )
 
-    @skip('stall')
     def test_is_portrait(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         th = self.backend.get_thumbnail(im, '50x200', crop='center')
@@ -350,7 +348,7 @@ class SimpleTestCase(SimpleTestCaseBase):
 
 
 class TemplateTestCaseA(SimpleTestCaseBase):
-    @skip('evaluated as string')
+
     def test_model(self):
         item = Item.objects.get(image='500x500.jpg')
         val = render_to_string('thumbnail1.html', {
@@ -442,6 +440,7 @@ class TemplateTestCaseA(SimpleTestCaseBase):
             self.assertLess(epsilon(top, im.getpixel((14, 7))), 10)
             self.assertLess(epsilon(left, im.getpixel((7, 14))), 10)
             exif = im._getexif()
+
             if exif:
                 self.assertEqual(exif.get(0x0112), 1)
 
@@ -453,7 +452,6 @@ class TemplateTestCaseB(unittest.TestCase):
         except Exception:
             pass
 
-    @skip('stalling. It does not dowlonad the dummy image')
     def test_url(self):
         val = render_to_string('thumbnail3.html', {}).strip()
         self.assertEqual(val, '<img style="margin:0px 0px 0px 0px" width="20" height="20">')
