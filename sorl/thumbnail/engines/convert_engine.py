@@ -44,23 +44,22 @@ class Engine(EngineBase):
         if settings.THUMBNAIL_FLATTEN and not flatten == "off":
             args.append('-flatten')
 
-        try:
-            suffix = '.%s' % EXTENSIONS[options['format']]
+        suffix = '.%s' % EXTENSIONS[options['format']]
 
-            with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
-                args.append(fp.name)
-                args = map(smart_str, args)
-                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                p.wait()
-                out, err = p.communicate()
+        with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
+            args.append(fp.name)
+            args = map(smart_str, args)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p.wait()
+            out, err = p.communicate()
 
-                if err:
-                    raise Exception(err)
+            if err:
+                raise Exception(err)
 
-                thumbnail.write(fp.read())
+            thumbnail.write(fp.read())
 
-        finally:
-            os.remove(image['source'])  # we should not need this now
+    def cleanup(self, image):
+        os.remove(image['source'])  # we should not need this now
 
     def get_image(self, source):
         """

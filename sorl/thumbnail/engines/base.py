@@ -120,6 +120,10 @@ class EngineBase(object):
         )
         thumbnail.write(raw_data)
 
+    def cleanup(self, image):
+        """Some backends need to manually cleanup after thumbnails are created"""
+        pass
+
     def get_image_ratio(self, image, options):
         """
         Calculates the image ratio. If cropbox option is used, the ratio

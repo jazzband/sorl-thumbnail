@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import logging
 import re
 import sys
+import os
 from functools import wraps
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
@@ -157,6 +158,15 @@ class ThumbnailNode(ThumbnailNodeBase):
             yield node
         for node in self.nodelist_empty:
             yield node
+
+
+@register.filter
+def resolution(file_, resolution_string):
+    """
+    A filter to return the URL for the provided resolution of the thumbnail.
+    """
+    filename, extension = os.path.splitext(file_)
+    return '%s@%s%s' % (filename, resolution_string, extension)
 
 
 @register.tag
