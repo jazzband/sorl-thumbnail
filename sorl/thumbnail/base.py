@@ -1,5 +1,7 @@
 import os
 import logging
+import re
+from sorl.thumbnail.compat import string_type
 
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
@@ -160,6 +162,15 @@ class ThumbnailBackend(object):
 
         for resolution in settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS:
             resolution_geometry = (int(geometry[0] * resolution), int(geometry[1] * resolution))
+            resolution_options = options.copy()
+            if 'crop' in options and isinstance(options['crop'], string_type):
+                crop = options['crop'].split(" ")
+                for i in xrange(len(crop)):
+                    s = re.match("(\d+)px", crop[i])
+                    if s:
+                        crop[i] = "%spx" % int(int(s.group(1)) * resolution)
+                resolution_options['crop'] = " ".join(crop)
+
             image = default.engine.create(source_image, resolution_geometry, options)
             thumbnail_name = '%(file_name)s%(suffix)s%(file_ext)s' % {
                 'file_name': file_name,
@@ -167,7 +178,7 @@ class ThumbnailBackend(object):
                 'file_ext': dot_file_ext
             }
             thumbnail = ImageFile(thumbnail_name, default.storage)
-            default.engine.write(image, options, thumbnail)
+            default.engine.write(image, resolution_options, thumbnail)
             size = default.engine.get_image_size(image)
             thumbnail.set_size(size)
 
