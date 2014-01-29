@@ -32,7 +32,7 @@ from sorl.thumbnail.templatetags.thumbnail import margin
 from sorl.thumbnail.base import ThumbnailBackend
 
 from .models import Item
-from .storage import slog, SlogHandler
+from .storage import MockLoggingHandler
 from .compat import unittest, PY3
 from .utils import same_open_fd_count
 
@@ -53,11 +53,14 @@ class StorageTestCase(unittest.TestCase):
         fn = pjoin(settings.MEDIA_ROOT, name)
         Image.new('L', (100, 100)).save(fn)
         self.im = ImageFile(name)
+        logger = logging.getLogger('slog')
+        logger.setLevel(logging.DEBUG)
+        handler = MockLoggingHandler(level=logging.DEBUG)
+        logger.addHandler(handler)
+        self.log = handler.messages['debug']
 
     def test_a_new(self):
-        slog.start_log()
         get_thumbnail(self.im, '50x50')
-        log = slog.stop_log()
         actions = [
             'open: org.jpg',  # open the original for thumbnailing
             # save the file
@@ -67,20 +70,16 @@ class StorageTestCase(unittest.TestCase):
             # called by get_available_name
             'exists: test/cache/ca/1a/ca1afb02b7250c125d8830c0e8a492ad.jpg',
         ]
-        self.assertEqual(log, actions)
+        self.assertEqual(self.log, actions)
 
     def test_b_cached(self):
-        slog.start_log()
         get_thumbnail(self.im, '50x50')
-        log = slog.stop_log()
-        self.assertEqual(log, [])  # now this should all be in cache
+        self.assertEqual(self.log, [])  # now this should all be in cache
 
     def test_c_safe_methods(self):
-        slog.start_log()
         im = default.kvstore.get(self.im)
         im.url, im.x, im.y
-        log = slog.stop_log()
-        self.assertEqual(log, [])
+        self.assertEqual(self.log, [])
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
