@@ -25,5 +25,6 @@ class KVStore(KVStoreBase):
 
     def _find_keys_raw(self, prefix):
         pattern = prefix + '*'
-        return self.connection.keys(pattern=pattern)
+        return list(map(lambda key: key.decode('utf-8'),
+                        self.connection.keys(pattern=pattern)))
 

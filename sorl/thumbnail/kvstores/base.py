@@ -15,7 +15,7 @@ def del_prefix(key):
     """
     Removes prefixes from the key
     """
-    return ('%s' % key).split('||')[-1]
+    return key.split('||')[-1]
 
 
 class KVStoreBase(object):
