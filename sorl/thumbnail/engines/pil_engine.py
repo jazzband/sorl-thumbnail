@@ -140,6 +140,8 @@ class Engine(EngineBase):
         if format_ == 'JPEG' and progressive:
             params['progressive'] = True
         try:
+            # Do not save unnecessary exif data for smaller thumbnail size
+            params.pop('exif', {})
             image.save(bf, **params)
         except (IOError, OSError):
             # Try without optimization.

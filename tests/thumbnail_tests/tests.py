@@ -412,7 +412,6 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         m = re.search('Interlace: None', str(p.stdout.read()))
         self.assertEqual(bool(m), True)
 
-    @skip('stall')
     def test_orientation(self):
         data_dir = pjoin(settings.MEDIA_ROOT, 'data')
         shutil.copytree(settings.DATA_ROOT, data_dir)
