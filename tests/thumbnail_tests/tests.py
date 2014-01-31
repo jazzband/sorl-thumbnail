@@ -597,7 +597,6 @@ class DummyTestCase(TestCase):
 
 class ModelTestCase(SimpleTestCaseBase):
 
-    @skip("Skip due 100% cpu usage without fail")
     def test_field1(self):
         self.kvstore.clear()
         item = Item.objects.get(image='100x100.jpg')
