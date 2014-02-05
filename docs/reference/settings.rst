@@ -317,3 +317,11 @@ of regular size x\*y, additional thumbnail of 2x\*2y size is created.
 
 This value sets the width of thumbnails inserted when running filters one texts
 that regex replaces references to images with thumbnails.
+
+``THUMBNAIL_URL_TIMEOUT``
+=========================
+
+- Default: ``None``
+
+This value sets the timeout value when retrieving a source image from a URL. If no
+timeout value is specified, it will wait indefinitely for a response.
