@@ -1,13 +1,13 @@
-import re
 import os
+import logging
+import re
+from sorl.thumbnail.compat import string_type
 
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
 from sorl.thumbnail.parsers import parse_geometry
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -110,8 +110,13 @@ class ThumbnailBackend(object):
             options['image_info'] = image_info
             size = default.engine.get_image_size(source_image)
             source.set_size(size)
-            self._create_thumbnail(source_image, geometry_string, options,
-                                   thumbnail)
+            try:
+                self._create_thumbnail(source_image, geometry_string, options,
+                                       thumbnail)
+                self._create_alternative_resolutions(source_image, geometry_string,
+                                                     options, thumbnail.name)
+            finally:
+                default.engine.cleanup(source_image)
 
         # If the thumbnail exists we don't create it, the other option is
         # to delete and write but this could lead to race conditions so I
@@ -144,6 +149,38 @@ class ThumbnailBackend(object):
         # It's much cheaper to set the size here
         size = default.engine.get_image_size(image)
         thumbnail.set_size(size)
+
+    def _create_alternative_resolutions(self, source_image, geometry_string,
+                                        options, name):
+        """
+        Creates the thumbnail by using default.engine with multiple output
+        sizes.  Appends @<ratio>x to the file name.
+        """
+        ratio = default.engine.get_image_ratio(source_image, options)
+        geometry = parse_geometry(geometry_string, ratio)
+        file_name, dot_file_ext = os.path.splitext(name)
+
+        for resolution in settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS:
+            resolution_geometry = (int(geometry[0] * resolution), int(geometry[1] * resolution))
+            resolution_options = options.copy()
+            if 'crop' in options and isinstance(options['crop'], string_type):
+                crop = options['crop'].split(" ")
+                for i in xrange(len(crop)):
+                    s = re.match("(\d+)px", crop[i])
+                    if s:
+                        crop[i] = "%spx" % int(int(s.group(1)) * resolution)
+                resolution_options['crop'] = " ".join(crop)
+
+            image = default.engine.create(source_image, resolution_geometry, options)
+            thumbnail_name = '%(file_name)s%(suffix)s%(file_ext)s' % {
+                'file_name': file_name,
+                'suffix': '@%sx' % resolution,
+                'file_ext': dot_file_ext
+            }
+            thumbnail = ImageFile(thumbnail_name, default.storage)
+            default.engine.write(image, resolution_options, thumbnail)
+            size = default.engine.get_image_size(image)
+            thumbnail.set_size(size)
 
     def _get_thumbnail_filename(self, source, geometry_string, options):
         """

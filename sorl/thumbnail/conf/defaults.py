@@ -92,6 +92,10 @@ THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
 # or height given
 THUMBNAIL_DUMMY_RATIO = 1.5
 
+# Enables creation of multiple-resolution (aka "Retina") images.
+# We don't create retina images by default to optimize performance.
+THUMBNAIL_ALTERNATIVE_RESOLUTIONS = []
+
 # Lazy fill empty thumbnail like THUMBNAIL_DUMMY
 THUMBNAIL_LAZY_FILL_EMPTY = False
 

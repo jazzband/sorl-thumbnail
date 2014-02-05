@@ -44,20 +44,27 @@ handler.setLevel(logging.ERROR)
 logging.getLogger('sorl.thumbnail').addHandler(handler)
 
 
-class StorageTestCase(unittest.TestCase):
+class BaseStorageTestCase(unittest.TestCase):
     im = None
 
     def setUp(self):
-        name = 'org.jpg'
         os.makedirs(settings.MEDIA_ROOT)
-        fn = pjoin(settings.MEDIA_ROOT, name)
+        fn = pjoin(settings.MEDIA_ROOT, self.name)
         Image.new('L', (100, 100)).save(fn)
-        self.im = ImageFile(name)
+        self.im = ImageFile(self.name)
+        
         logger = logging.getLogger('slog')
         logger.setLevel(logging.DEBUG)
         handler = MockLoggingHandler(level=logging.DEBUG)
         logger.addHandler(handler)
-        self.log = handler.messages['debug']
+        self.log = handler.messages['debug']        
+
+    def tearDown(self):
+        shutil.rmtree(settings.MEDIA_ROOT)
+
+
+class StorageTestCase(BaseStorageTestCase):
+    name = 'org.jpg'
 
     def test_a_new(self):
         get_thumbnail(self.im, '50x50')
@@ -81,8 +88,43 @@ class StorageTestCase(unittest.TestCase):
         im.url, im.x, im.y
         self.assertEqual(self.log, [])
 
+
+class AlternativeResolutionsTest(BaseStorageTestCase):
+    name = 'retina.jpg'
+
+    def setUp(self):
+        settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS = [1.5, 2]
+        super(AlternativeResolutionsTest, self).setUp()
+
     def tearDown(self):
-        shutil.rmtree(settings.MEDIA_ROOT)
+        super(AlternativeResolutionsTest, self).tearDown()
+        settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS = []
+
+    def test_retina(self):
+        get_thumbnail(self.im, '50x50')
+
+        actions = [
+             # save regular resolution, same as in StorageTestCase
+             'open: retina.jpg',
+             'save: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19.jpg',
+             'get_available_name: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19.jpg',
+             'exists: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19.jpg',
+
+             # save the 1.5x resolution version
+             'save: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@1.5x.jpg',
+             'get_available_name: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@1.5x.jpg',
+             'exists: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@1.5x.jpg',
+
+             # save the 2x resolution version
+             'save: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@2x.jpg',
+             'get_available_name: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@2x.jpg',
+             'exists: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@2x.jpg'
+        ]
+        self.assertEqual(self.log, actions)
+
+        with open(pjoin(settings.MEDIA_ROOT, 'test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@1.5x.jpg')) as fp:
+            engine = PILEngine()
+            self.assertEqual(engine.get_image_size(engine.get_image(ImageFile(file_=fp))), (75, 75))
 
 
 class UrlStorageTestCase(unittest.TestCase):
