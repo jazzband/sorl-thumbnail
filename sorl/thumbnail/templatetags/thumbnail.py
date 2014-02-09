@@ -33,10 +33,10 @@ def safe_filter(error_output=''):
         def wrapper(*args, **kwargs):
             try:
                 return f(*args, **kwargs)
-            except:
+            except Exception as err:
                 if settings.THUMBNAIL_DEBUG:
                     raise
-                logger.error('Thumbnail filter failed:',
+                logger.error('Thumbnail filter failed: %s' % err.message,
                              exc_info=sys.exc_info())
                 return error_output
 
