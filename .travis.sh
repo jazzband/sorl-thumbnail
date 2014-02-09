@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPO_WHEEL=https://github.com/mariocesar/sorl-thumbnail/raw/wheels/wheel
+REPO_WHEEL=http://github.com/mariocesar/sorl-thumbnail/raw/wheels/wheel
 
 pip install Wheel
 
