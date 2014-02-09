@@ -23,12 +23,12 @@ matrix:
     - python: "2.7"
       env: 
         - DJANGO_VERSION=1.5 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - PIP=https://github.com/mariocesar/sorl-thumbnail/raw/wheels/wheel/pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+        - PIP=pgmagick
 
     - python: "2.7"
       env: 
         - DJANGO_VERSION=1.6 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - PIP=https://github.com/mariocesar/sorl-thumbnail/raw/wheels/wheel/pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+        - PIP=pgmagick
 
 before_install:
   - sudo apt-get update -qq
