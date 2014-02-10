@@ -46,7 +46,7 @@ class ImageField(models.ImageField):
         return (cls_name, args, kwargs)
 
 
-class ImageFormField(forms.FileField):
+class ImageFormField(forms.ImageField):
     default_error_messages = {
         'invalid_image': _("Upload a valid image. The file you uploaded was "
                            "either not an image or a corrupted image."),
