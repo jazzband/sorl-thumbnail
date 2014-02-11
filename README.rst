@@ -20,6 +20,14 @@ Features at a glance
 
 Read more in `the documentation (latest version) <http://sorl-thumbnail.rtfd.org/>`_
 
+Developers
+==========
+
+Feel free to create a new Pull request if you want to propose a new feature. If you need development support
+or want to discuss with other developers join us in the channel #sorl-thumnbnail at freenode.net
+
+   irc://irc.freenode.net/#sorl-thumbnail
+
 How to Use
 ==========
 
