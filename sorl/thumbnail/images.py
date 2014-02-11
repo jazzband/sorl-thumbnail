@@ -2,7 +2,7 @@ import re
 
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, default_storage
-from django.utils.functional import LazyObject
+from django.utils.functional import LazyObject, empty
 
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
@@ -143,7 +143,8 @@ class ImageFile(BaseImageFile):
         if isinstance(self.storage, LazyObject):
             # if storage is wrapped in a lazy object we need to get the real
             # thing.
-            self.storage._setup()
+            if self.storage._wrapped is empty:
+                self.storage._setup()
             cls = self.storage._wrapped.__class__
         else:
             cls = self.storage.__class__
