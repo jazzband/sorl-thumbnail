@@ -10,4 +10,5 @@ apt-get install -qq python2.7 python2.7-dev python3.3 python3.3-dev
 
 pip install tox
 
-echo 'alias runtests="sh /vagrant/sandbox/tox.sh"' >> /home/vagrant/.bash_aliases
+# Start in project dir by default
+echo "\n\ncd /vagrant" >> /home/vagrant/.bashrc
