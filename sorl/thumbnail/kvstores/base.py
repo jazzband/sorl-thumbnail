@@ -134,10 +134,13 @@ class KVStoreBase(object):
         Deserializing, prefix wrapper for _get_raw
         """
         value = self._get_raw(add_prefix(key, identity))
-        if value is None:
+
+        if not value:
             return None
+
         if identity == 'image':
             return deserialize_image_file(value)
+
         return deserialize(value)
 
     def _set(self, key, value, identity='image'):
