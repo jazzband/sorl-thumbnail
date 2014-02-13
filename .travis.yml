@@ -37,7 +37,7 @@ matrix:
         - DJANGO_VERSION=1.4.10 SETTINGS=wand APT=libmagickwand-dev PIP=wand
 
     - python: "2.7"
-          env:
+      env:
         - DJANGO_VERSION=1.4.10 SETTINGS=redis PIP=redis
 
     - python: "2.7"
