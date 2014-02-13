@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 REPO_WHEEL=https://raw.github.com/mariocesar/sorl-thumbnail/wheels/wheel
 
 pip install -U pip
@@ -9,10 +11,14 @@ pip install Wheel
 if python --version 2>&1 >/dev/null | grep -q 'Python 3'; then
     pip install Pillow;
 else
-    pip install $REPO_WHEEL/Pillow-2.3.0-cp27-none-linux_x86_64.whl;
+    wget $REPO_WHEEL/Pillow-2.3.0-cp27-none-linux_x86_64.whl;
+    pip install Pillow-2.3.0-cp27-none-linux_x86_64.whl
 fi
 
-pip install Pillow
+if [[ -z "$WHEEL" ]]; then
+    wget $REPO_WHEEL/$WHEEL;
+    pip install $WHEEL
+fi
 
 pip install $PIP
 

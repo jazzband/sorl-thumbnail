@@ -1,6 +1,5 @@
 language: python
 
-
 python:
   - "2.7"
   - "3.3"
@@ -43,30 +42,35 @@ matrix:
     - python: "2.7"
       env:
         - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - PIP=https://raw.github.com/mariocesar/sorl-thumbnail/wheels/wheel/pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
 
     - python: "2.7"
       env: 
         - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - PIP=https://raw.github.com/mariocesar/sorl-thumbnail/wheels/wheel/pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
 
     - python: "2.7"
       env: 
         - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - PIP=https://raw.github.com/mariocesar/sorl-thumbnail/wheels/wheel/pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
 
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq $APT
+
+after_failure:
+  - pip freeze
+  - cat /home/travis/.pip/pip.log
+
+after_success:
+  - pip freeze
+  - coveralls
 
 install:
   - ./.travis.sh
 
 script:
   - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
-
-after_success:
-  - coveralls
 
 services:
   - redis-server
