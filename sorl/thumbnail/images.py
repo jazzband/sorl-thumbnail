@@ -133,8 +133,11 @@ class ImageFile(BaseImageFile):
     def write(self, content):
         if not isinstance(content, File):
             content = ContentFile(content)
+
         self._size = None
-        return self.storage.save(self.name, content)
+        self.name = self.storage.save(self.name, content)
+
+        return self.name
 
     def delete(self):
         return self.storage.delete(self.name)
