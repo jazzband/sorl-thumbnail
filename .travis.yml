@@ -23,14 +23,24 @@ matrix:
     - python: "2.7"
       env:
         - DJANGO_VERSION=1.4.10 SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+
+    - python: "2.7"
       env:
         - DJANGO_VERSION=1.4.10 SETTINGS=imagemagick APT=imagemagick
+
+    - python: "2.7"
       env:
         - DJANGO_VERSION=1.4.10 SETTINGS=graphicsmagick APT=graphicsmagick
+
+    - python: "2.7"
       env:
         - DJANGO_VERSION=1.4.10 SETTINGS=wand APT=libmagickwand-dev PIP=wand
-      env:
+
+    - python: "2.7"
+          env:
         - DJANGO_VERSION=1.4.10 SETTINGS=redis PIP=redis
+
+    - python: "2.7"
       env:
         - DJANGO_VERSION=1.4.10 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
         - PIP=pgmagick
