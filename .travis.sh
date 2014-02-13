@@ -16,11 +16,15 @@ else
 fi
 
 if [[ -z "$WHEEL" ]]; then
-    wget $REPO_WHEEL/$WHEEL;
+else:
+    wget $REPO_WHEEL/$WHEEL
     pip install $WHEEL
 fi
 
-pip install $PIP
+if [[ -z "$PIP" ]]; then
+else:
+    pip install $PIP
+fi
 
 pip install Django$DJANGO_VERSION
 
