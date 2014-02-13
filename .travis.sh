@@ -26,12 +26,14 @@ else
 fi
 
 if [[ -z "$WHEEL" ]]; then
+    :
 else
     wget $REPO_WHEEL/$WHEEL
     pip install $WHEEL
 fi
 
 if [[ -z "$PIP" ]]; then
+    :
 else
     pip install $PIP
 fi
