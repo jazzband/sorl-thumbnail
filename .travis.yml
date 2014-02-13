@@ -6,28 +6,43 @@ python:
   - "3.3"
 
 env:
-  - DJANGO_VERSION=1.5 SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - DJANGO_VERSION=1.5 SETTINGS=imagemagick APT=imagemagick
-  - DJANGO_VERSION=1.5 SETTINGS=graphicsmagick APT=graphicsmagick
-  - DJANGO_VERSION=1.5 SETTINGS=wand APT=libmagickwand-dev PIP=wand
-  - DJANGO_VERSION=1.5 SETTINGS=redis PIP=redis
+  - DJANGO_VERSION=1.5.5 SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - DJANGO_VERSION=1.5.5 SETTINGS=imagemagick APT=imagemagick
+  - DJANGO_VERSION=1.5.5 SETTINGS=graphicsmagick APT=graphicsmagick
+  - DJANGO_VERSION=1.5.5 SETTINGS=wand APT=libmagickwand-dev PIP=wand
+  - DJANGO_VERSION=1.5.5 SETTINGS=redis PIP=redis
 
-  - DJANGO_VERSION=1.6 SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - DJANGO_VERSION=1.6 SETTINGS=imagemagick APT=imagemagick
-  - DJANGO_VERSION=1.6 SETTINGS=graphicsmagick APT=graphicsmagick
-  - DJANGO_VERSION=1.6 SETTINGS=wand APT=libmagickwand-dev PIP=wand
-  - DJANGO_VERSION=1.6 SETTINGS=redis PIP=redis
+  - DJANGO_VERSION=1.6.2 SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - DJANGO_VERSION=1.6.2 SETTINGS=imagemagick APT=imagemagick
+  - DJANGO_VERSION=1.6.2 SETTINGS=graphicsmagick APT=graphicsmagick
+  - DJANGO_VERSION=1.6.2 SETTINGS=wand APT=libmagickwand-dev PIP=wand
+  - DJANGO_VERSION=1.6.2 SETTINGS=redis PIP=redis
 
 matrix:
   include:
     - python: "2.7"
-      env: 
-        - DJANGO_VERSION=1.5 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
+      env:
+        - DJANGO_VERSION=1.4.10 SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+      env:
+        - DJANGO_VERSION=1.4.10 SETTINGS=imagemagick APT=imagemagick
+      env:
+        - DJANGO_VERSION=1.4.10 SETTINGS=graphicsmagick APT=graphicsmagick
+      env:
+        - DJANGO_VERSION=1.4.10 SETTINGS=wand APT=libmagickwand-dev PIP=wand
+      env:
+        - DJANGO_VERSION=1.4.10 SETTINGS=redis PIP=redis
+      env:
+        - DJANGO_VERSION=1.4.10 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
         - PIP=pgmagick
 
     - python: "2.7"
       env: 
-        - DJANGO_VERSION=1.6 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
+        - DJANGO_VERSION=1.5.5 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
+        - PIP=pgmagick
+
+    - python: "2.7"
+      env: 
+        - DJANGO_VERSION=1.6.2 SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
         - PIP=pgmagick
 
 before_install:
