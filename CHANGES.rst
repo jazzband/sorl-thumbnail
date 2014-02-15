@@ -1,8 +1,9 @@
+=========
 Changelog
 =========
 
 12.0 (TBA)
-~~~~~~~~~~
+==========
 
 * [Feature] #145 Python 3 support
 * [Feature] #165 Django 1.5-1.6 support

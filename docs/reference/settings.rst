@@ -301,7 +301,7 @@ This value sets an image ratio to all thumbnails that are not defined by width
 have that).
 
 ``THUMBNAIL_ALTERNATIVE_RESOLUTIONS``
-====================================
+=====================================
 
 - Default: ``[]``
 - Example: ``[1.5, 2]``
@@ -311,7 +311,7 @@ for every thumbnail. Resolution multiplicators, e.g. value 2 means for every thu
 of regular size x\*y, additional thumbnail of 2x\*2y size is created.
 
 ``THUMBNAIL_FILTER_WIDTH``
-=========================
+==========================
 
 - Default: ``500``
 
