@@ -49,20 +49,24 @@ class EngineBase(object):
         colorspace = options['colorspace']
         return self._colorspace(image, colorspace)
 
+    def _calculate_scaling_factor(self, x_image, y_image, geometry, options):
+        crop = options['crop']
+        factors = (geometry[0] / x_image, geometry[1] / y_image)
+        return max(factors) if crop else min(factors)
+
     def scale(self, image, geometry, options):
         """
         Wrapper for ``_scale``
         """
-        crop = options['crop']
         upscale = options['upscale']
         x_image, y_image = map(float, self.get_image_size(image))
-        # calculate scaling factor
-        factors = (geometry[0] / x_image, geometry[1] / y_image)
-        factor = max(factors) if crop else min(factors)
+        factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
+
         if factor < 1 or upscale:
             width = toint(x_image * factor)
             height = toint(y_image * factor)
             image = self._scale(image, width, height)
+
         return image
 
     def crop(self, image, geometry, options):
@@ -70,15 +74,17 @@ class EngineBase(object):
         Wrapper for ``_crop``
         """
         crop = options['crop']
-        if not crop or crop == 'noop':
-            return image
+        upscale = options['upscale']
         x_image, y_image = self.get_image_size(image)
-        if geometry[0] > x_image and geometry[1] > y_image:
+        factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
+
+        if not crop or crop == 'noop' or (not upscale and factor >= 1):
             return image
+
         geometry = (min(x_image, geometry[0]), min(y_image, geometry[1]))
         x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
-        return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
 
+        return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
 
     def rounded(self, image, geometry, options):
         """
@@ -114,9 +120,10 @@ class EngineBase(object):
         image_info = options['image_info']
         # additional non-default-value options:
         progressive = options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
-        raw_data = self._get_raw_data(image, format_, quality,
-                                      image_info=image_info,
-                                      progressive=progressive
+        raw_data = self._get_raw_data(
+            image, format_, quality,
+            image_info=image_info,
+            progressive=progressive
         )
         thumbnail.write(raw_data)
 
