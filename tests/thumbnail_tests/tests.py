@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 import sys
 import logging
-import shutil
 from subprocess import Popen, PIPE
 
+import shutil
 import os
 import re
 from os.path import join as pjoin
@@ -616,20 +616,22 @@ class DummyTestCase(TestCase):
     def setUp(self):
         self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
 
-    @skip('stalling')
     def test_dummy_tags(self):
-        with self.settings(THUMBNAIL_DUMMY=True):
-            val = render_to_string('thumbnaild1.html', {
-                'anything': 'AINO',
-            }).strip()
-            self.assertEqual(val, '<img style="margin:auto" width="200" height="100">')
-            val = render_to_string('thumbnaild2.html', {
-                'anything': None,
-            }).strip()
-            self.assertEqual(val, '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>')
-            val = render_to_string('thumbnaild3.html', {
-            }).strip()
-            self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
+        settings.THUMBNAIL_DUMMY = True
+
+        val = render_to_string('thumbnaild1.html', {
+            'anything': 'AINO',
+        }).strip()
+        self.assertEqual(val, '<img style="margin:auto" width="200" height="100">')
+        val = render_to_string('thumbnaild2.html', {
+            'anything': None,
+        }).strip()
+        self.assertEqual(val, '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>')
+        val = render_to_string('thumbnaild3.html', {
+        }).strip()
+        self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
+
+        settings.THUMBNAIL_DUMMY = False
 
 
 class ModelTestCase(SimpleTestCaseBase):

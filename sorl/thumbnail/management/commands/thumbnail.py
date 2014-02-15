@@ -2,7 +2,6 @@
 
 from __future__ import unicode_literals, print_function
 
-import os
 import sys
 
 from django.core.management.base import BaseCommand, CommandError

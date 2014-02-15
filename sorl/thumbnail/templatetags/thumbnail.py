@@ -1,15 +1,16 @@
 # -*- encoding: utf8 -*-
 from __future__ import unicode_literals
 import logging
-import re
+
 import sys
+
+import re
 import os
 from functools import wraps
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from django.conf import settings
 from sorl.thumbnail.conf import settings as sorl_settings
-
 from sorl.thumbnail import default
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail.parsers import parse_geometry

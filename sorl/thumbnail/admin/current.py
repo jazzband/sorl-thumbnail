@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import logging
 
 from django import forms
@@ -15,8 +16,8 @@ class AdminImageWidget(forms.ClearableFileInput):
     image as well as a link to the current one if it hase one.
     """
 
-    template_with_initial = u'%(clear_template)s<br />%(input_text)s: %(input)s'
-    template_with_clear = u'%(clear)s <label style="width:auto" for="%(clear_checkbox_id)s">%(clear_checkbox_label)s</label>'
+    template_with_initial = '%(clear_template)s<br />%(input_text)s: %(input)s'
+    template_with_clear = '%(clear)s <label style="width:auto" for="%(clear_checkbox_id)s">%(clear_checkbox_label)s</label>'
 
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
@@ -27,10 +28,10 @@ class AdminImageWidget(forms.ClearableFileInput):
                 logger.warn("Unable to get the thumbnail", exc_info=e)
             else:
                 output = (
-                    u'<div style="float:left">'
-                    u'<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
-                    u'<img src="%s"></a>%s</div>'
-                    ) % (mini.width, value.url, mini.url, output)
+                             '<div style="float:left">'
+                             '<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
+                             '<img src="%s"></a>%s</div>'
+                         ) % (mini.width, value.url, mini.url, output)
         return mark_safe(output)
 
 
@@ -39,6 +40,7 @@ class AdminImageMixin(object):
     This is a mix-in for InlineModelAdmin subclasses to make ``ImageField``
     show nicer form widget
     """
+
     def formfield_for_dbfield(self, db_field, **kwargs):
         if isinstance(db_field, ImageField):
             return db_field.formfield(widget=AdminImageWidget)

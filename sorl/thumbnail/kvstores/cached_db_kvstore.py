@@ -9,7 +9,6 @@ class EMPTY_VALUE(object):
 
 
 class KVStore(KVStoreBase):
-
     def __init__(self):
         super(KVStore, self).__init__()
         try:

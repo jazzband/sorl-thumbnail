@@ -1,5 +1,7 @@
 #coding=utf-8
 import re
+
+from django.utils import six
 from sorl.thumbnail.helpers import ThumbnailError, toint
 
 
@@ -82,7 +84,7 @@ def parse_crop(crop, xy_image, xy_window):
         m = bgpos_pat.match(crop)
         if not m:
             syntax_error()
-        value = int(m.group('value')) # we only take ints in the regexp
+        value = int(m.group('value'))  # we only take ints in the regexp
         unit = m.group('unit')
         if unit == '%':
             value = epsilon * value / 100.0
@@ -99,7 +101,7 @@ def parse_cropbox(cropbox):
     """
     Returns x, y, x2, y2 tuple for cropping.
     """
-    if isinstance(cropbox, unicode):
+    if isinstance(cropbox, six.text_type):
         return tuple([int(x.strip()) for x in cropbox.split(',')])
     else:
         return tuple(cropbox)

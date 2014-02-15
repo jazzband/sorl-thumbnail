@@ -1,8 +1,4 @@
-"""
-This is for Django < 1.3
-I hate this shit and hopefully I will never have to touch this ever again.
-"""
-
+from __future__ import unicode_literals
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -15,7 +11,7 @@ class ClearableImageFormField(forms.MultiValueField):
         fields = (
             ImageFormField(max_length=max_length, **kwargs),
             forms.BooleanField()
-            )
+        )
         super(ClearableImageFormField, self).__init__(fields, **kwargs)
 
     def compress(self, data_list):
@@ -30,6 +26,7 @@ class AdminImageWidget(forms.FileInput):
     An ImageField Widget for django.contrib.admin that shows a thumbnailed
     image as well as a link to the current one if it hase one.
     """
+
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
         if value and hasattr(value, 'url'):
@@ -39,10 +36,10 @@ class AdminImageWidget(forms.FileInput):
                 pass
             else:
                 output = (
-                    u'<div style="float:left">'
-                    u'<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
-                    u'<img src="%s"></a>%s</div>'
-                    ) % (mini.width, value.url, mini.url, output)
+                             '<div style="float:left">'
+                             '<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
+                             '<img src="%s"></a>%s</div>'
+                         ) % (mini.width, value.url, mini.url, output)
         return mark_safe(output)
 
 
@@ -50,10 +47,10 @@ class AdminClearWidget(forms.CheckboxInput):
     def render(self, name, value, attrs=None):
         output = super(AdminClearWidget, self).render(name, value, attrs)
         output = (
-            u'<div style="clear:both;padding-top:5px">'
-            u'<label for="id_%s">%s:</label>%s'
-            u'</div>'
-            ) % (name, _('Clear image'), output)
+                     '<div style="clear:both;padding-top:5px">'
+                     '<label for="id_%s">%s:</label>%s'
+                     '</div>'
+                 ) % (name, _('Clear image'), output)
         return mark_safe(output)
 
 
@@ -73,6 +70,7 @@ class AdminImageMixin(object):
     This is a mix-in for ModelAdmin subclasses to make ``ImageField`` show nicer
     form class and widget
     """
+
     def formfield_for_dbfield(self, db_field, **kwargs):
         if isinstance(db_field, ImageField):
             if not db_field.blank:
@@ -80,7 +78,7 @@ class AdminImageMixin(object):
             return db_field.formfield(
                 form_class=ClearableImageFormField,
                 widget=AdminClearableImageWidget,
-                )
+            )
         sup = super(AdminImageMixin, self)
         return sup.formfield_for_dbfield(db_field, **kwargs)
 

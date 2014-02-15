@@ -179,7 +179,6 @@ class DummyImageFile(BaseImageFile):
 
 
 class UrlStorage(Storage):
-
     def normalize_url(self, url, charset='utf-8'):
         url = encode(url, charset, 'ignore')
         scheme, netloc, path, qs, anchor = urlsplit(url)
@@ -192,7 +191,7 @@ class UrlStorage(Storage):
 
         return urlparse.urlunsplit((scheme, netloc, path, qs, anchor))
 
-    def open(self, name):
+    def open(self, name, mode='rb'):
         return urlopen(
             self.normalize_url(name),
             None,
