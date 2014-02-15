@@ -15,6 +15,7 @@ Contents:
    logging
    operation
    reference/index
+   contributing
 
 Indices and tables
 ==================
