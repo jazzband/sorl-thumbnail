@@ -26,7 +26,4 @@ for sorl-thumbnail is very low. If you are interested in taking over this
 project please send an email to mikko@aino.se explaing why you are the perfect
 fit for owning this project.
 
-Changelog
-=========
-
-.. include:: ../CHANGES.txt
+.. include:: ../CHANGES.rst

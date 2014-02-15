@@ -16,6 +16,7 @@ Contents:
    operation
    reference/index
    contributing
+   news
 
 Indices and tables
 ==================
