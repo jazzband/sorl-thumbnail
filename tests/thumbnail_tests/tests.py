@@ -28,7 +28,7 @@ from sorl.thumbnail.templatetags.thumbnail import margin
 from sorl.thumbnail.base import ThumbnailBackend
 from .models import Item
 from .storage import MockLoggingHandler
-from .compat import unittest, PY3
+from .compat import unittest, PY3, PY2
 from .utils import same_open_fd_count
 
 
@@ -685,13 +685,18 @@ class TestInputCase(unittest.TestCase):
         im = Image.new('L', (666, 666))
         im.save(fn)
 
-    @skipIf(PY3, 'hash is different')
     def test_nonascii(self):
         # also test the get_thumbnail shortcut
         th = get_thumbnail(self.name, '200x200')
+
+        if PY2:
+            hash_file = '/media/test/cache/8e/16/8e1629dd742c05fc3812ace2e7569f85.jpg'
+        elif PY3:
+            hash_file = '/media/test/cache/99/45/9945ad3ee0397274de77abd37d5db7bb.jpg'
+
         self.assertEqual(
             th.url,
-            '/media/test/cache/8e/16/8e1629dd742c05fc3812ace2e7569f85.jpg'
+            hash_file
         )
 
     def tearDown(self):
