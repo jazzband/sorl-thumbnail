@@ -1,6 +1,7 @@
 import hashlib
+
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_text
 from django.utils.importlib import import_module
 from sorl.thumbnail.compat import json, encode
 
@@ -30,9 +31,9 @@ def toint(number):
 
 def tokey(*args):
     """
-    Computes a (hopefully) unique key from arguments given.
+    Computes a unique key from arguments given.
     """
-    salt = '||'.join([smart_str(arg) for arg in args])
+    salt = '||'.join([smart_text(arg) for arg in args])
     hash_ = hashlib.md5(encode(salt))
     return hash_.hexdigest()
 
