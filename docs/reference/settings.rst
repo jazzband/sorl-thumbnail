@@ -266,6 +266,14 @@ Saves jpeg thumbnails as progressive jpegs. This can be overridden by individual
 options.
 
 
+``THUMBNAIL_ORIENTATION``
+========================
+
+- Default: ``True``
+
+Orientate the thumbnail with respect to source EXIF orientation tag
+
+
 ``THUMBNAIL_DUMMY``
 ===================
 
