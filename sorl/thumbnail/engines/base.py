@@ -40,11 +40,13 @@ class EngineBase(object):
         """
         if options.get('orientation', settings.THUMBNAIL_ORIENTATION):
             return self._orientation(image)
+        self.reoriented = True
         return image
 
     def flip_dimensions(self, image, geometry=None, options=None):
         options = options or {}
-        if options.get('orientation', settings.THUMBNAIL_ORIENTATION):
+        reoriented = hasattr(self, 'reoriented')
+        if options.get('orientation', settings.THUMBNAIL_ORIENTATION) and not reoriented:
             return self._flip_dimensions(image)
         return False
 
