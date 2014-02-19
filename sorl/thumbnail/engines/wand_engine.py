@@ -47,6 +47,9 @@ class Engine(EngineBase):
         image.orientation = 'top_left'
         return image
 
+    def _flip_dimensions(self, image):
+        return image.orientation in ['left_top', 'right_top', 'right_bottom', 'left_bottom']
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             image.type = 'truecolor'

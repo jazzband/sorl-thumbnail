@@ -117,7 +117,17 @@ class ImageFile(BaseImageFile):
             # This is the worst case scenario
             image = default.engine.get_image(self)
             size = default.engine.get_image_size(image)
+            if self.flip_dimensions(image):
+                size = list(size)
+                size.reverse()
         self._size = list(size)
+
+    def flip_dimensions(self, image):
+        """
+        Do not manipulate image, but ask engine whether we'd be doing a 90deg
+        rotation at some point.
+        """
+        return default.engine.flip_dimensions(image)
 
     @property
     def size(self):

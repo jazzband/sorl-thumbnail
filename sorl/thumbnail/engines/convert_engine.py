@@ -133,6 +133,17 @@ class Engine(EngineBase):
             image['options']['auto-orient'] = None
         return image
 
+    def _flip_dimensions(self, image):
+        if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
+            args = settings.THUMBNAIL_IDENTIFY.split()
+            args.extend(['-format', '%[exif:orientation]', image['source']])
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p.wait()
+            result = p.stdout.read().strip()
+            return result != 'unknown' and int(result) in [5, 6, 7, 8]
+        else:
+            return False
+
     def _colorspace(self, image, colorspace):
         """
         `Valid colorspaces

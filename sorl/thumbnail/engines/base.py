@@ -42,6 +42,12 @@ class EngineBase(object):
             return self._orientation(image)
         return image
 
+    def flip_dimensions(self, image, geometry=None, options=None):
+        options = options or {}
+        if options.get('orientation', settings.THUMBNAIL_ORIENTATION):
+            return self._flip_dimensions(image)
+        return False
+
     def colorspace(self, image, geometry, options):
         """
         Wrapper for ``_colorspace``
