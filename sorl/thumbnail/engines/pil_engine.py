@@ -95,8 +95,9 @@ class Engine(EngineBase):
 
         if exif:
             orientation = exif.get(0x0112)
+            return orientation in [5, 6, 7, 8]
 
-        return orientation in [5, 6, 7, 8]
+        return False
 
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
