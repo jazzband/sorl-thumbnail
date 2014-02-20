@@ -85,4 +85,9 @@ notifications:
       - "irc.freenode.org#sorl-thumbnail"
     on_success: change
     on_failure: change
-
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/b368c47d69637f9a01a0
+    on_success: change
+    on_failure: change
+    on_start: false     # default: false
