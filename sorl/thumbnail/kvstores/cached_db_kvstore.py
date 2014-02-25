@@ -52,4 +52,3 @@ class KVStore(KVStoreBase):
     def _find_keys_raw(self, prefix):
         qs = KVStoreModel.objects.filter(key__startswith=prefix)
         return qs.values_list('key', flat=True)
-

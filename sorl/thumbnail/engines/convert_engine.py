@@ -26,8 +26,11 @@ class Engine(EngineBase):
         """
         Writes the thumbnail image
         """
-        if (options['format'] == 'JPEG' and options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)):
+
+        if options['format'] == 'JPEG' and options.get(
+                'progressive', settings.THUMBNAIL_PROGRESSIVE):
             image['options']['interlace'] = 'line'
+
         image['options']['quality'] = options['quality']
 
         args = settings.THUMBNAIL_CONVERT.split(' ')
@@ -51,7 +54,11 @@ class Engine(EngineBase):
         with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
             args.append(fp.name)
             args = map(smart_str, args)
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(
+                args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
             p.wait()
             out, err = p.communicate()
 
@@ -78,7 +85,11 @@ class Engine(EngineBase):
         if image['size'] is None:
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
             args.append(image['source'])
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(
+                args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
             p.wait()
             m = size_re.match(str(p.stdout.read()))
             image['size'] = int(m.group('x')), int(m.group('y'))
@@ -94,7 +105,11 @@ class Engine(EngineBase):
             fp.flush()
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
             args.append(fp.name)
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(
+                args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
             retcode = p.wait()
         return retcode == 0
 
@@ -105,7 +120,11 @@ class Engine(EngineBase):
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
             args = settings.THUMBNAIL_IDENTIFY.split()
             args.extend(['-format', '%[exif:orientation]', image['source']])
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(
+                args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
             p.wait()
             result = p.stdout.read().strip()
             if result and result != 'unknown':
@@ -136,7 +155,7 @@ class Engine(EngineBase):
     def _colorspace(self, image, colorspace):
         """
         `Valid colorspaces
-        <http://www.graphicsmagick.org/GraphicsMagick.html#details-colorspace>`_.
+        <http://graphicsmagick.org/GraphicsMagick.html#details-colorspace>`_.
         Backends need to implement the following::
 
             RGB, GRAY

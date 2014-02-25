@@ -41,7 +41,11 @@ class ImageField(models.ImageField):
     def south_field_triple(self):
         from south.modelsinspector import introspector
 
-        cls_name = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
+        cls_name = '%s.%s' % (
+            self.__class__.__module__,
+            self.__class__.__name__
+        )
+
         args, kwargs = introspector(self)
         return (cls_name, args, kwargs)
 
@@ -71,9 +75,10 @@ class ImageFormField(forms.ImageField):
             raw_data = data['content']
 
         if not default.engine.is_valid_image(raw_data):
-            raise forms.ValidationError(self.default_error_messages['invalid_image'])
+            raise forms.ValidationError(
+                self.default_error_messages['invalid_image'])
+
         if hasattr(f, 'seek') and callable(f.seek):
             f.seek(0)
 
         return f
-

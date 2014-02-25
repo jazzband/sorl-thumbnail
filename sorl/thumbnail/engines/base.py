@@ -60,7 +60,12 @@ class EngineBase(object):
         """
         upscale = options['upscale']
         x_image, y_image = map(float, self.get_image_size(image))
-        factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
+        factor = self._calculate_scaling_factor(
+            x_image,
+            y_image,
+            geometry,
+            options
+        )
 
         if factor < 1 or upscale:
             width = toint(x_image * factor)
@@ -76,7 +81,12 @@ class EngineBase(object):
         crop = options['crop']
         upscale = options['upscale']
         x_image, y_image = self.get_image_size(image)
-        factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
+        factor = self._calculate_scaling_factor(
+            x_image,
+            y_image,
+            geometry,
+            options
+        )
 
         if not crop or crop == 'noop' or (not upscale and factor >= 1):
             return image
@@ -118,17 +128,25 @@ class EngineBase(object):
         format_ = options['format']
         quality = options['quality']
         image_info = options['image_info']
+
         # additional non-default-value options:
-        progressive = options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
+        progressive = options.get(
+            'progressive',
+            settings.THUMBNAIL_PROGRESSIVE
+        )
+
         raw_data = self._get_raw_data(
             image, format_, quality,
             image_info=image_info,
             progressive=progressive
         )
+
         thumbnail.write(raw_data)
 
     def cleanup(self, image):
-        """Some backends need to manually cleanup after thumbnails are created"""
+        """
+        Some backends need to manually cleanup after thumbnails are created
+        """
         pass
 
     def get_image_ratio(self, image, options):
@@ -182,7 +200,7 @@ class EngineBase(object):
     def _colorspace(self, image, colorspace):
         """
         `Valid colorspaces
-        <http://www.graphicsmagick.org/GraphicsMagick.html#details-colorspace>`_.
+        <http://graphicsmagick.org/GraphicsMagick.html#details-colorspace>`_.
         Backends need to implement the following::
 
             RGB, GRAY
@@ -207,4 +225,3 @@ class EngineBase(object):
         called from :meth:`write`
         """
         raise NotImplemented()
-

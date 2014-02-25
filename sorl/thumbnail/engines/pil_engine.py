@@ -2,9 +2,9 @@ from sorl.thumbnail.engines.base import EngineBase
 from sorl.thumbnail.compat import BufferIO
 
 try:
-    from PIL import Image, ImageFile, ImageDraw, ImageChops, ImageFilter
+    from PIL import Image, ImageFile, ImageDraw, ImageFilter
 except ImportError:
-    import Image, ImageFile, ImageDraw, ImageChops
+    import Image, ImageFile, ImageDraw, ImageFilter # flake8: noqa
 
 
 def round_corner(radius, fill):
@@ -123,8 +123,13 @@ class Engine(EngineBase):
         return im
 
     def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
+
         # Increase (but never decrease) PIL buffer size
-        ImageFile.MAXBLOCK = max(ImageFile.MAXBLOCK, image.size[0] * image.size[1])
+        ImageFile.MAXBLOCK = max(
+            ImageFile.MAXBLOCK,
+            image.size[0] * image.size[1]
+        )
+
         bf = BufferIO()
 
         params = {

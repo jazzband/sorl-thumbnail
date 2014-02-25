@@ -196,4 +196,3 @@ class KVStoreBase(object):
         Finds all keys with prefix
         """
         raise NotImplemented()
-

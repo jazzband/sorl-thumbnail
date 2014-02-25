@@ -1,5 +1,5 @@
 # -*- encoding: utf8 -*-
-from sorl import __version__, __author__, __maintainer__, __email__, __license__
+import sorl
 from setuptools import setup, find_packages
 from setuptools.command.test import test
 
@@ -13,18 +13,16 @@ class TestCommand(test):
 
 setup(
     name='sorl-thumbnail',
-    version=__version__,
+    version=sorl.__version__,
     description='Thumbnails for Django',
     long_description=open('README.rst').read(),
-    author=__author__,
+    author=sorl.__author__,
     author_email='mikko@aino.se',
-    maintainer=__maintainer__,
-    maintainer_email=__email__,
-    license=__license__,
+    maintainer=sorl.__maintainer__,
+    maintainer_email=sorl.__email__,
+    license=sorl.__license__,
     url='https://github.com/mariocesar/sorl-thumbnail',
     packages=find_packages(exclude=['tests', 'tests.*']),
-    platforms='any',
-    zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -33,7 +31,9 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: Implementation :: CPython',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Multimedia :: Graphics',
         'Framework :: Django',

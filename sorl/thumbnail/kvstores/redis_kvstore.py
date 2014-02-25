@@ -31,4 +31,3 @@ class KVStore(KVStoreBase):
         pattern = prefix + '*'
         return list(map(lambda key: key.decode('utf-8'),
                         self.connection.keys(pattern=pattern)))
-

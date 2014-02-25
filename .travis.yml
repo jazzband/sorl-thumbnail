@@ -5,72 +5,48 @@ python:
   - "3.3"
 
 env:
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=imagemagick APT=imagemagick
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=graphicsmagick APT=graphicsmagick
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=wand APT=libmagickwand-dev PIP=wand
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=redis PIP=redis
+  - TOX_ENV=py27-1.4-pil
+  - TOX_ENV=py27-1.4-imagemagick
+  - TOX_ENV=py27-1.4-graphicsmagick
+  - TOX_ENV=py27-1.4-redis
+  - TOX_ENV=py27-1.4-wand
+  - TOX_ENV=py27-1.4-pgmagick
 
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=imagemagick APT=imagemagick
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=graphicsmagick APT=graphicsmagick
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=wand APT=libmagickwand-dev PIP=wand
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=redis PIP=redis
+  - TOX_ENV=py27-1.5-pil
+  - TOX_ENV=py27-1.5-imagemagick
+  - TOX_ENV=py27-1.5-graphicsmagick
+  - TOX_ENV=py27-1.5-redis
+  - TOX_ENV=py27-1.5-wand
+  - TOX_ENV=py27-1.5-pgmagick
 
-matrix:
-  include:
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py33-1.5-pil
+  - TOX_ENV=py33-1.5-imagemagick
+  - TOX_ENV=py33-1.5-graphicsmagick
+  - TOX_ENV=py33-1.5-redis
+  - TOX_ENV=py33-1.5-wand
 
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=imagemagick APT=imagemagick
+  - TOX_ENV=py27-1.6-pil
+  - TOX_ENV=py27-1.6-imagemagick
+  - TOX_ENV=py27-1.6-graphicsmagick
+  - TOX_ENV=py27-1.6-redis
+  - TOX_ENV=py27-1.6-wand
+  - TOX_ENV=py27-1.6-pgmagick
 
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=graphicsmagick APT=graphicsmagick
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=wand APT=libmagickwand-dev PIP=wand
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=redis PIP=redis
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
-
-    - python: "2.7"
-      env: 
-        - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
-
-    - python: "2.7"
-      env: 
-        - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+  - TOX_ENV=py33-1.6-pil
+  - TOX_ENV=py33-1.6-imagemagick
+  - TOX_ENV=py33-1.6-graphicsmagick
+  - TOX_ENV=py33-1.6-redis
+  - TOX_ENV=py33-1.6-wand
 
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq $APT
 
-after_failure:
-  - pip freeze
-  - cat /home/travis/.pip/pip.log
-
-after_success:
-  - pip freeze
-  - coveralls
-
 install:
   - ./.travis.sh
 
 script:
-  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
+  - script: tox -e $TOX_ENV
 
 services:
   - redis-server
@@ -85,9 +61,10 @@ notifications:
       - "irc.freenode.org#sorl-thumbnail"
     on_success: change
     on_failure: change
+
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/b368c47d69637f9a01a0
     on_success: change
     on_failure: change
-    on_start: false     # default: false
+    on_start: false

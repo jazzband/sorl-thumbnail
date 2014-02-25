@@ -33,7 +33,8 @@ def parse_geometry(geometry, ratio=None):
         x = int(x)
     if y is not None:
         y = int(y)
-        # calculate x or y proportionally if not set but we need the image ratio
+
+    # calculate x or y proportionally if not set but we need the image ratio
     # for this
     if ratio is not None:
         ratio = float(ratio)
@@ -41,6 +42,7 @@ def parse_geometry(geometry, ratio=None):
             x = toint(y * ratio)
         elif y is None:
             y = toint(x / ratio)
+
     return x, y
 
 
