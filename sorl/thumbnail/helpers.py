@@ -1,3 +1,4 @@
+import math
 import hashlib
 
 from django.core.exceptions import ImproperlyConfigured
@@ -25,7 +26,7 @@ def toint(number):
     Helper to return rounded int for a float or just the int it self.
     """
     if isinstance(number, float):
-        number = round(number, 0)
+        number = round(math.ceil(number), 0)
     return int(number)
 
 
