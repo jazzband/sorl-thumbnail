@@ -215,7 +215,7 @@ Examples::
             <img src="{{ im.url }}">
         {% endthumbnail %}
     {% else %}
-        {% thumbnail item.image "100x200" crop="center" %}
+        {% thumbnail item.image "200x100" crop="center" %}
             <img src="{{ im.url }}">
         {% endthumbnail %}
     {% endif %}
