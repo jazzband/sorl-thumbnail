@@ -183,8 +183,8 @@ The port for Redis server. Only applicable for the Redis Key Value Store
 
 - Default: ``3600 * 24 * 365 * 10``
 
-Cache timeout for Cached DB Key Value Store. You should probably keep this at
-maximum or ``None`` if your caching backend can handle that as infinite.
+Cache timeout for Cached DB Key Value Store in seconds. You should probably keep this 
+at maximum or ``None`` if your caching backend can handle that as infinite.
 Only applicable for the Cached DB Key Value Store.
 
 
@@ -331,5 +331,5 @@ that regex replaces references to images with thumbnails.
 
 - Default: ``None``
 
-This value sets the timeout value when retrieving a source image from a URL. If no
-timeout value is specified, it will wait indefinitely for a response.
+This value sets the timeout value in seconds when retrieving a source image from a URL. 
+If no timeout value is specified, it will wait indefinitely for a response.
