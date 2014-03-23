@@ -74,7 +74,7 @@ class KVStoreBase(object):
             for key in thumbnail_keys:
                 thumbnail = self._get(key)
                 if thumbnail:
-                    self.delete(thumbnail)
+                    self.delete(thumbnail, False)
                     thumbnail.delete()  # delete the actual file
 
             # Delete the thumbnails key from store
