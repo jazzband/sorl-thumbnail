@@ -1,5 +1,5 @@
 # coding=utf-8
-from __future__ import unicode_literals
+from __future__ import unicode_literals, division
 
 import sys
 import logging
@@ -17,6 +17,7 @@ from django.template.loader import render_to_string
 from django.test.client import Client
 from django.test import TestCase
 from django.test.utils import override_settings
+import math
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
@@ -348,9 +349,11 @@ class SimpleTestCase(SimpleTestCaseBase):
     def test_abspath(self):
         item = Item.objects.get(image='500x500.jpg')
         image = ImageFile(item.image.path)
+
         val = render_to_string('thumbnail20.html', {
             'image': image,
         }).strip()
+
         im = self.backend.get_thumbnail(image, '32x32', crop='center')
         self.assertEqual('<img src="%s">' % im.url, val)
 
@@ -464,9 +467,21 @@ class TemplateTestCaseA(SimpleTestCaseBase):
                 y = sum(y) / len(y)
             return abs(x - y)
 
-        for name in sorted(os.listdir(data_dir)):
+        data_images = (
+            '1_topleft.jpg',
+            '2_topright.jpg',
+            '3_bottomright.jpg',
+            '4_bottomleft.jpg',
+            '5_lefttop.jpg',
+            '6_righttop.jpg',
+            '7_rightbottom.jpg',
+            '8_leftbottom.jpg'
+        )
+
+        for name in data_images:
             th = self.backend.get_thumbnail('data/%s' % name, '30x30')
             im = engine.get_image(th)
+
             self.assertLess(epsilon(top, im.getpixel((14, 7))), 10)
             self.assertLess(epsilon(left, im.getpixel((7, 14))), 10)
             exif = im._getexif()
@@ -514,14 +529,9 @@ class TemplateTestCaseClient(TestCase):
             self.assertEqual(end, '[Errno 2] No such file or directory')
 
 
-class CropTestCase(unittest.TestCase):
+class CropTestCase(SimpleTestCaseBase):
     def setUp(self):
-        self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
-        self.engine = get_module_class(settings.THUMBNAIL_ENGINE)()
-        self.kvstore = get_module_class(settings.THUMBNAIL_KVSTORE)()
-
-        if not os.path.exists(settings.MEDIA_ROOT):
-            os.makedirs(settings.MEDIA_ROOT)
+        super(CropTestCase, self).setUp()
 
         # portrait
         name = 'portrait.jpg'
@@ -607,6 +617,13 @@ class CropTestCase(unittest.TestCase):
             for x in range(0, 99, 10):
                 for y in range(0, 99, 10):
                     self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
+
+    def test_smart_crop(self):
+        # TODO: Complete test for smart crop
+        thumb = self.backend.get_thumbnail(
+            '32x32',
+            'data/white_border.jpg',
+            crop='smart')
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
