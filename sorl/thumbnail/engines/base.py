@@ -1,4 +1,7 @@
 #coding=utf-8
+from __future__ import division
+import math
+
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop
@@ -17,6 +20,7 @@ class EngineBase(object):
         image = self.cropbox(image, geometry, options)
         image = self.orientation(image, geometry, options)
         image = self.colorspace(image, geometry, options)
+        image = self.remove_border(image, options)
         image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
         image = self.rounded(image, geometry, options)
@@ -48,6 +52,14 @@ class EngineBase(object):
         """
         colorspace = options['colorspace']
         return self._colorspace(image, colorspace)
+        
+    def remove_border(self, image, options):
+    
+        if options.get('remove_border', False):
+            x_image, y_image = self.get_image_size(image)
+            image = self._remove_border(image, x_image, y_image)
+    
+        return image
 
     def _calculate_scaling_factor(self, x_image, y_image, geometry, options):
         crop = options['crop']
@@ -80,10 +92,14 @@ class EngineBase(object):
 
         if not crop or crop == 'noop' or (not upscale and factor >= 1):
             return image
+        elif crop == 'smart':
+            # Smart cropping is suitably different from regular cropping
+            # to warrent it's own function
+            return self._entropy_crop(image, geometry[0], geometry[1], x_image, y_image)
 
+        # Handle any other crop option with the backend crop function.
         geometry = (min(x_image, geometry[0]), min(y_image, geometry[1]))
         x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
-
         return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
 
     def rounded(self, image, geometry, options):
@@ -137,12 +153,14 @@ class EngineBase(object):
         may have changed.
         """
         cropbox = options['cropbox']
+
         if cropbox:
             x, y, x2, y2 = parse_cropbox(cropbox)
             x = x2 - x
             y = y2 - y
         else:
             x, y = self.get_image_size(image)
+
         return float(x) / y
 
     def get_image_info(self, image):
@@ -151,10 +169,8 @@ class EngineBase(object):
         """
         return {}
 
-    #
     # Methods which engines need to implement
     # The ``image`` argument refers to a backend image object
-    #
     def get_image(self, source):
         """
         Returns the backend image objects from an ImageFile instance
@@ -186,6 +202,19 @@ class EngineBase(object):
         Backends need to implement the following::
 
             RGB, GRAY
+        """
+        raise NotImplemented()
+        
+    def _remove_border(self, image, image_width, image_height):
+        """
+        Remove borders around images
+        """
+        raise NotImplemented()
+            
+    def _entropy_crop(self, image, geometry_width, geometry_height, image_width, image_height):
+        """
+        Crop the image to the correct aspect ratio
+        by removing the lowest entropy parts
         """
         raise NotImplemented()
 

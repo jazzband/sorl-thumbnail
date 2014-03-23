@@ -1,3 +1,6 @@
+from __future__ import division
+
+import math
 from sorl.thumbnail.engines.base import EngineBase
 from sorl.thumbnail.compat import BufferIO
 
@@ -98,6 +101,81 @@ class Engine(EngineBase):
             return image.convert('L')
         return image
 
+    def _remove_border(self, image, image_width, image_height):
+
+        image_entropy = self._get_image_entropy(image)
+
+        borders = {
+            'top': lambda iy, dy, y: (dy, dy + y),
+            'right': lambda ix, dx, x: (ix - dx - x, ix - dx),
+            'bottom': lambda iy, dy, y: (iy - dy - y, iy - dy),
+            'left': lambda ix, dx, x: (dx, dx + x),
+        }
+
+        offset = {'top': 0, 'right': 0, 'bottom': 0, 'left': 0, }
+
+        for border in ['top', 'bottom']:
+            # Don't remove too much, the image may just be plain
+            while offset[border] < image_height / 3.5:
+                slice_size = min(image_width / 20, 10)
+                y_range = borders[border](image_height, offset[border], slice_size)
+                section = image.crop((0, y_range[0], image_width, y_range[1]))
+                # If this section is below the threshold; remove it
+                if self._get_image_entropy(section) < 2.0:
+                    offset[border] += slice_size
+                else:
+                    break
+
+        for border in ['left', 'right']:
+            while offset[border] < image_width / 3.5:
+                slice_size = min(image_height / 20, 10)
+                x_range = borders[border](image_width, offset[border], slice_size)
+                section = image.crop((x_range[0], 0, x_range[1], image_height))
+                if self._get_image_entropy(section) < 2.0:
+                    offset[border] += slice_size
+                else:
+                    break
+
+        return image.crop(
+            (offset['left'], offset['top'], image_width - offset['right'], image_height - offset['bottom']))
+
+    # Credit to chrisopherhan https://github.com/christopherhan/pycrop
+    # This is just a slight rework of pycrops implimentation
+    def _entropy_crop(self, image, geometry_width, geometry_height, image_width, image_height):
+        geometry_ratio = geometry_width / geometry_height
+
+        # The is proportionally wider than it should be
+        while image_width / image_height > geometry_ratio:
+
+            slice_width = max(image_width - geometry_width, 10)
+
+            right = image.crop((image_width - slice_width, 0, image_width, image_height))
+            left = image.crop((0, 0, slice_width, image_height))
+
+            if self._get_image_entropy(left) < self._get_image_entropy(right):
+                image = image.crop((slice_width, 0, image_width, image_height))
+            else:
+                image = image.crop((0, 0, image_height - slice_width, image_height))
+
+            image_width -= slice_width
+
+        # The image is proportionally taller than it should be
+        while image_width / image_height < geometry_ratio:
+
+            slice_height = min(image_height - geometry_height, 10)
+
+            bottom = image.crop((0, image_height - slice_height, image_width, image_height))
+            top = image.crop((0, 0, image_width, slice_height))
+
+            if self._get_image_entropy(bottom) < self._get_image_entropy(top):
+                image = image.crop((0, 0, image_width, image_height - slice_height))
+            else:
+                image = image.crop((0, slice_height, image_width, image_height))
+
+            image_height -= slice_height
+
+        return image
+
     def _scale(self, image, width, height):
         return image.resize((width, height), resample=Image.ANTIALIAS)
 
@@ -153,3 +231,10 @@ class Engine(EngineBase):
             bf.close()
 
         return raw_data
+
+    def _get_image_entropy(self, image):
+        """calculate the entropy of an image"""
+        hist = image.histogram()
+        hist_size = sum(hist)
+        hist = [float(h) / hist_size for h in hist]
+        return -sum([p * math.log(p, 2) for p in hist if p != 0])
