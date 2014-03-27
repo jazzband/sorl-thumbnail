@@ -35,7 +35,7 @@ def safe_filter(error_output=''):
             try:
                 return f(*args, **kwargs)
             except Exception as err:
-                if settings.THUMBNAIL_DEBUG:
+                if sorl_settings.THUMBNAIL_DEBUG:
                     raise
                 logger.error('Thumbnail filter failed: %s' % err.message,
                              exc_info=sys.exc_info())
@@ -57,7 +57,7 @@ class ThumbnailNodeBase(Node):
         try:
             return self._render(context)
         except Exception:
-            if settings.THUMBNAIL_DEBUG:
+            if sorl_settings.THUMBNAIL_DEBUG:
                 raise
 
             error_message = 'Thumbnail tag failed'
