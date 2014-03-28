@@ -5,7 +5,7 @@ import logging
 
 __author__ = "Mikko Hellsing"
 __license__ = "BSD"
-__version__ = '11.12b1'
+__version__ = '11.12.1b'
 __maintainer__ = "Mario César Señoranis Ayala"
 __email__ = "mariocesar@creat1va.com"
 __status__ = "Beta"
