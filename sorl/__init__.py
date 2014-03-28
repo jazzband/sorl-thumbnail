@@ -5,10 +5,10 @@ import logging
 
 __author__ = "Mikko Hellsing"
 __license__ = "BSD"
-__version__ = '12.0'
+__version__ = '11.12b1'
 __maintainer__ = "Mario César Señoranis Ayala"
 __email__ = "mariocesar@creat1va.com"
-__status__ = "Production"
+__status__ = "Beta"
 
 
 class NullHandler(logging.Handler):
