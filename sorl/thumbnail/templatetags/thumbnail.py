@@ -10,6 +10,8 @@ from functools import wraps
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from django.conf import settings
+from django.core.exceptions import SuspiciousOperation
+
 from sorl.thumbnail.conf import settings as sorl_settings
 from sorl.thumbnail import default
 from sorl.thumbnail.images import ImageFile, DummyImageFile
@@ -245,7 +247,6 @@ def text_filter(regex_base, value):
     """
     Helper method to regex replace images with captions in different markups
     """
-
     regex = regex_base % {
         're_cap': '[a-zA-Z0-9\.\,:;/_ \(\)\-\!\?\"]+',
         're_img': '[a-zA-Z0-9\.:/_\-\% ]+'
@@ -254,7 +255,11 @@ def text_filter(regex_base, value):
 
     for i in images:
         image = i[1]
-        im = get_thumbnail(image, str(sorl_settings.THUMBNAIL_FILTER_WIDTH))
+        try:
+            im = get_thumbnail(image, str(sorl_settings.THUMBNAIL_FILTER_WIDTH))
+        except SuspiciousOperation:
+            im = get_thumbnail(image[1:], str(sorl_settings.THUMBNAIL_FILTER_WIDTH))
+
         value = value.replace(image, im.url)
 
     return value
