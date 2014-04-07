@@ -379,7 +379,7 @@ class SimpleTestCase(SimpleTestCaseBase):
         val = render_to_string('htmlfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('<img alt="A image!" src="/media/test/cache/9c/a3/9ca37037b8c72fa79557d75d35bba7a1.jpg" />',
+        self.assertEqual('<img alt="A image!" src="/media/test/cache/24/0c/240c761c352624fb055a78d385bd8257.jpg" />',
                          val)
 
     def test_markdown_filter(self):
@@ -394,7 +394,7 @@ class SimpleTestCase(SimpleTestCaseBase):
         val = render_to_string('markdownfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('![A image!](/media/test/cache/c6/68/c66859ae0c6cbd5899cc0a3c907da395.jpg)', val)
+        self.assertEqual('![A image!](/media/test/cache/ea/c2/eac2913de78b7f279ab79a481d4535f7.jpg)', val)
 
 
 class TemplateTestCaseA(SimpleTestCaseBase):

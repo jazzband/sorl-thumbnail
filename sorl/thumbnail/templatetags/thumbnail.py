@@ -10,7 +10,6 @@ from functools import wraps
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from django.conf import settings
-from django.core.exceptions import SuspiciousOperation
 
 from sorl.thumbnail.conf import settings as sorl_settings
 from sorl.thumbnail import default
@@ -255,12 +254,11 @@ def text_filter(regex_base, value):
 
     for i in images:
         image = i[1]
-        try:
-            im = get_thumbnail(image, str(sorl_settings.THUMBNAIL_FILTER_WIDTH))
-        except SuspiciousOperation:
-            im = get_thumbnail(image[1:], str(sorl_settings.THUMBNAIL_FILTER_WIDTH))
+        if image.startswith(settings.MEDIA_URL):
+            image = image.replace(settings.MEDIA_URL, '%s/' % settings.MEDIA_ROOT)
 
-        value = value.replace(image, im.url)
+        im = get_thumbnail(image, str(sorl_settings.THUMBNAIL_FILTER_WIDTH))
+        value = value.replace(i[1], im.url)
 
     return value
 
