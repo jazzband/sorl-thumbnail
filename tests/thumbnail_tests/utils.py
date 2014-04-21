@@ -30,7 +30,7 @@ def get_open_fds_count():
 
 class override_custom_settings(object):
     """
-    settings overrider context maanger.
+    settings overrider context manager.
     https://github.com/django/django/blob/1.6.2/django/test/utils.py#L209-L268
     """
     def __init__(self, settings_obj, **kwargs):
