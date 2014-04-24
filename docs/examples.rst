@@ -166,7 +166,7 @@ Easy to plugin solution example with little code to change::
 
 Low level API examples
 ======================
-How to get make a thumbnail in you python code::
+How to get make a thumbnail in your python code::
 
     from sorl.thumbnail import get_thumbnail
 
