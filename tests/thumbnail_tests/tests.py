@@ -17,7 +17,7 @@ from django.template.loader import render_to_string
 from django.test.client import Client
 from django.test import TestCase
 from django.test.utils import override_settings
-import math
+
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
@@ -30,7 +30,7 @@ from sorl.thumbnail.base import ThumbnailBackend
 from .models import Item
 from .storage import MockLoggingHandler
 from .compat import unittest
-from .utils import same_open_fd_count
+from .utils import same_open_fd_count, override_custom_settings
 
 
 skip = unittest.skip
@@ -516,7 +516,8 @@ class TemplateTestCaseB(unittest.TestCase):
 
 class TemplateTestCaseClient(TestCase):
     def test_empty_error(self):
-        with self.settings(THUMBNAIL_DEBUG=False):
+
+        with override_custom_settings(settings, THUMBNAIL_DEBUG=False):
             from django.core.mail import outbox
 
             client = Client()
