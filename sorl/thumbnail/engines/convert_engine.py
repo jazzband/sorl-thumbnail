@@ -161,3 +161,13 @@ class Engine(EngineBase):
         image['options']['scale'] = '%sx%s!' % (width, height)
         image['size'] = (width, height)  # update image size
         return image
+
+    def _padding(self, image, geometry, options):
+        """
+        Pads the image
+        """
+        # The order is important. The gravity option should come before extent.
+        image['options']['background'] = options.get('padding_color')
+        image['options']['gravity'] = 'center'
+        image['options']['extent'] = '%sx%s' % (geometry[0], geometry[1])
+        return image
