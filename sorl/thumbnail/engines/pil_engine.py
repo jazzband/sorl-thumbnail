@@ -94,7 +94,7 @@ class Engine(EngineBase):
         if colorspace == 'RGB':
             if image.mode == 'RGBA':
                 return image  # RGBA is just RGB + Alpha
-            if image.mode == 'P' and 'transparency' in image.info:
+            if image.mode == 'LA' or (image.mode == 'P' and 'transparency' in image.info):
                 return image.convert('RGBA')
             return image.convert('RGB')
         if colorspace == 'GRAY':
@@ -211,7 +211,9 @@ class Engine(EngineBase):
             'optimize': 1,
         }
 
-        params.update(image_info)
+        # keeps icc_profile
+        if 'icc_profile' in image_info:
+            params['icc_profile'] = image_info['icc_profile']
 
         raw_data = None
 

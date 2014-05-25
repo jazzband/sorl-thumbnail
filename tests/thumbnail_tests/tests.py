@@ -41,6 +41,9 @@ handler.setLevel(logging.ERROR)
 logging.getLogger('sorl.thumbnail').addHandler(handler)
 
 
+DATA_DIR = pjoin(settings.MEDIA_ROOT, 'data')
+
+
 class BaseStorageTestCase(unittest.TestCase):
     im = None
 
@@ -174,6 +177,7 @@ class SimpleTestCaseBase(unittest.TestCase):
 
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
+            shutil.copytree(settings.DATA_ROOT, DATA_DIR)
 
         dims = [
             (500, 500),
@@ -468,9 +472,7 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         self.assertEqual(bool(m), True)
 
     def test_orientation(self):
-        data_dir = pjoin(settings.MEDIA_ROOT, 'data')
-        shutil.copytree(settings.DATA_ROOT, data_dir)
-        ref = Image.open(pjoin(data_dir, '1_topleft.jpg'))
+        ref = Image.open(pjoin(DATA_DIR, '1_topleft.jpg'))
         top = ref.getpixel((14, 7))
         left = ref.getpixel((7, 14))
         engine = PILEngine()
@@ -640,6 +642,20 @@ class CropTestCase(SimpleTestCaseBase):
             '32x32',
             'data/white_border.jpg',
             crop='smart')
+
+    def test_crop_image_with_icc_profile(self):
+        name = 'data/icc_profile_test.jpg'
+        item, _ = Item.objects.get_or_create(image=name)
+
+        im = ImageFile(item.image)
+        th = self.backend.get_thumbnail(im, '100x100')
+
+        engine = PILEngine()
+
+        self.assertEqual(
+            engine.get_image(im).info.get('icc_profile'),
+            engine.get_image(th).info.get('icc_profile')
+        )
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
