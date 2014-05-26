@@ -2,9 +2,8 @@ import math
 import hashlib
 
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import smart_text
 from django.utils.importlib import import_module
-from sorl.thumbnail.compat import json, encode
+from sorl.thumbnail.compat import json, encode, smart_text
 
 
 class ThumbnailError(Exception):
