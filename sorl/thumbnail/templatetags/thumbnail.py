@@ -133,6 +133,8 @@ class ThumbnailNode(ThumbnailNodeBase):
             else:
                 options[key] = value
 
+        retina = options.pop('retina', False)
+
         thumbnail = get_thumbnail(file_, geometry, **options)
 
         if not thumbnail or (isinstance(thumbnail, DummyImageFile) and self.nodelist_empty):
@@ -141,9 +143,18 @@ class ThumbnailNode(ThumbnailNodeBase):
             else:
                 return ''
 
+        if retina:
+            geometry_retina = 'x'.join(part and str(int(part) * 2)
+                                       for part in geometry.split('x'))
+            thumbnail_retina = get_thumbnail(file_, geometry_retina, **options)
+            if not thumbnail_retina or isinstance(thumbnail_retina, DummyImageFile):
+                thumbnail_retina = thumbnail
+
         if self.as_var:
             context.push()
             context[self.as_var] = thumbnail
+            if retina:
+                context['{}_retina'.format(self.as_var)] = thumbnail_retina
             output = self.nodelist_file.render(context)
             context.pop()
         else:
