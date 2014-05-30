@@ -26,9 +26,18 @@ Developers
 ==========
 
 Feel free to create a new Pull request if you want to propose a new feature. If you need development support
-or want to discuss with other developers join us in the channel #sorl-thumnbnail at freenode.net
+or want to discuss with other developers join us in the channel #sorl-thumnbnail at freenode.net or Gitter.
 
-   irc://irc.freenode.net/#sorl-thumbnail
+- IRC Channel: irc://irc.freenode.net/#sorl-thumbnail
+   
+- Gitter: https://gitter.im/mariocesar/sorl-thumbnail
+
+Support
+=======
+
+If you need help using sorl-thumbnail browse http://stackoverflow.com/questions/tagged/sorl-thumbnail
+or posts your questions with the `sorl-thumbnail` tag.
+
 
 How to Use
 ==========
