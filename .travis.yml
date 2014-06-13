@@ -42,17 +42,17 @@ matrix:
     - python: "2.7"
       env:
         - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+        - PIP=pgmagick
 
     - python: "2.7"
       env:
         - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+        - PIP=pgmagick
 
     - python: "2.7"
       env:
         - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
+        - PIP=pgmagick
 
 before_install:
   - sudo apt-get update -qq
@@ -69,8 +69,7 @@ after_success:
 install:
   - pip install -U pip
   - pip install -q coveralls
-  - pip install -q Pillow
-  - pip install -q $PIP
+  - pip install -q Pillow $PIP
   - pip install -q Django$DJANGO_VERSION
 
 script:
