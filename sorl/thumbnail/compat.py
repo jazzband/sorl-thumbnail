@@ -25,6 +25,10 @@ else:
     import json
     from django.utils.encoding import force_text as force_unicode
 
+try:
+    from django.utils.encoding import smart_text
+except ImportError:
+    from django.utils.encoding import smart_unicode as smart_text
 
 # Python 2 and 3
 
