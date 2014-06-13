@@ -21,11 +21,12 @@ class EngineBase(object):
         image = self.orientation(image, geometry, options)
         image = self.colorspace(image, geometry, options)
         image = self.remove_border(image, options)
-        image = self.scale(image, geometry, options)
         image = self.crop(image, geometry, options)
+        image = self.scale(image, geometry, options)
         image = self.rounded(image, geometry, options)
         image = self.blur(image, geometry, options)
         image = self.padding(image, geometry, options)
+
         return image
 
     def cropbox(self, image, geometry, options):
@@ -64,7 +65,7 @@ class EngineBase(object):
     def _calculate_scaling_factor(self, x_image, y_image, geometry, options):
         crop = options['crop']
         factors = (geometry[0] / x_image, geometry[1] / y_image)
-        return max(factors) if crop else min(factors)
+        return max(factors) if geometry[0] > geometry[1] else min(factors)
 
     def scale(self, image, geometry, options):
         """
@@ -81,7 +82,7 @@ class EngineBase(object):
 
         return image
 
-    def crop(self, image, geometry, options):
+    def crop(self, image, options):
         """
         Wrapper for ``_crop``
         """
@@ -101,6 +102,7 @@ class EngineBase(object):
         geometry = (min(x_image, geometry[0]), min(y_image, geometry[1]))
         x_offset, y_offset = parse_crop(crop, (x_image, y_image), geometry)
         return self._crop(image, geometry[0], geometry[1], x_offset, y_offset)
+
 
     def rounded(self, image, geometry, options):
         """
