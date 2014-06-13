@@ -45,12 +45,12 @@ matrix:
         - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
 
     - python: "2.7"
-      env: 
+      env:
         - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
         - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
 
     - python: "2.7"
-      env: 
+      env:
         - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
         - WHEEL=pgmagick-0.5.7-cp27-none-linux_x86_64.whl
 
@@ -67,7 +67,11 @@ after_success:
   - coveralls
 
 install:
-  - ./.travis.sh
+  - pip install -U pip
+  - pip install -q coveralls
+  - pip install -q Pillow
+  - pip install -q $PIP
+  - pip install -q Django$DJANGO_VERSION
 
 script:
   - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS

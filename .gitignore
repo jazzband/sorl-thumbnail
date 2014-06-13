@@ -19,6 +19,7 @@ var/
 *.egg
 .coverage
 tests/htmlcov
+.tox
 
 # Installer logs
 pip-log.txt
