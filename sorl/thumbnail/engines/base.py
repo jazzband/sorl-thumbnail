@@ -237,3 +237,18 @@ class EngineBase(object):
         """
         raise NotImplemented()
 
+    def _padding(image, geometry, options):
+        """
+        Pads the image
+        """
+        raise NotImplemented()
+    
+    def _cropbox(image, x, y, x2, y2):
+        raise NotImplemented()
+    
+    def _rounded(image, r):
+        raise NotImplemented()
+    
+    def _blur(image, radius):
+        raise NotImplemented()
+
