@@ -28,6 +28,9 @@ def toint(number):
         if number > 1:
             number = round(number, 0)
         else:
+            # The following solves when image has small dimensions (like 1x54)
+            # then scale factor 1 * 0.296296 and `number` will store `0`
+            # that will later raise ZeroDivisionError.
             number = round(math.ceil(number), 0)
     return int(number)
 
