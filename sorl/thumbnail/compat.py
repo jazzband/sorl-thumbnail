@@ -54,7 +54,7 @@ if PY3:
 
 elif PY2:
     from urllib2 import URLError
-    from urllib import urlopen
+    from urllib2 import urlopen
     from urllib import quote, quote_plus
 
     import urlparse
