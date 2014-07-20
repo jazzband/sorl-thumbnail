@@ -60,6 +60,19 @@ Features
 * More dependencies
 * Requires a little extra work to transfer data between environments
 
+Dbm
+---
+``sorl.thumbnail.kvstores.dbm_kvstore.KVStore``. A simple Key Value Store has no
+dependencies outside the standard Python library and uses the DBM modules to
+store the data.
+
+Features
+^^^^^^^^
+* No external dependencies, besides the standard library
+* No extra components required, e.g., database or cache
+* Specially indicated for local development environments
+
+
 ``THUMBNAIL_KEY_DBCOLUMN``
 ==========================
 
@@ -176,6 +189,24 @@ The host for Redis server. Only applicable for the Redis Key Value Store
 - Default: ``6379``
 
 The port for Redis server. Only applicable for the Redis Key Value Store
+
+
+``THUMBNAIL_DBM_FILE``
+======================
+
+- Default: ``thumbnail_kvstore``
+
+Filename of the DBM database. Depending on the DBM engine selected by your
+Python installation, this will be used as a prefix because multiple files may be
+created.
+
+
+``THUMBNAIL_DBM_MODE``
+======================
+
+- Default: ``0x644``
+
+Permission bits to use when creating new DBM files
 
 
 ``THUMBNAIL_CACHE_TIMEOUT``
