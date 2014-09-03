@@ -1,4 +1,6 @@
 import re
+import urllib2
+import random
 
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage, default_storage
@@ -173,6 +175,14 @@ class DummyImageFile(BaseImageFile):
 
     @property
     def url(self):
+        if settings.THUMBNAIL_DUMMY_SOURCE == 'placereddit':
+            reddit = random.choice(getattr(settings,'THUMBNAIL_SUBREDDITS',['featured']))
+            n = random.choice(range(10))
+            if '/' in reddit:
+                url = 'http://placereddit.com/%s/%s/%s/%s/'
+            else:
+                url = 'http://placereddit.com/r/%s/%s/%s/%s/'
+            return url%(reddit,self.x,self.y,n)
         return settings.THUMBNAIL_DUMMY_SOURCE % (
             {'width': self.x, 'height': self.y}
         )
