@@ -133,7 +133,7 @@ class EngineBase(object):
         """
         format_ = options['format']
         quality = options['quality']
-        image_info = options['image_info']
+        image_info = options.get('image_info', {})
         # additional non-default-value options:
         progressive = options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)
         raw_data = self._get_raw_data(
