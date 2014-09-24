@@ -42,11 +42,11 @@ class ThumbnailBackend(object):
         ('blur', 'THUMBNAIL_BLUR'),
     )
 
-    def file_extension(self, file_):
-        return os.path.splitext(file_.name)[1].lower()
+    def file_extension(self, source):
+        return os.path.splitext(source.name)[1].lower()
 
-    def _get_format(self, file_):
-        file_extension = self.file_extension(file_)
+    def _get_format(self, source):
+        file_extension = self.file_extension(source)
 
         if file_extension == '.jpg' or file_extension == '.jpeg':
             return 'JPEG'
@@ -74,7 +74,7 @@ class ThumbnailBackend(object):
 
         #preserve image filetype
         if settings.THUMBNAIL_PRESERVE_FORMAT:
-            options.setdefault('format', self._get_format(file_))
+            options.setdefault('format', self._get_format(source))
 
         for key, value in self.default_options.items():
             options.setdefault(key, value)

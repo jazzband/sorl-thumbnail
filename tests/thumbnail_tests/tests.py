@@ -803,3 +803,6 @@ class PreserveFormatTest(TestCase):
 
     def test_with_nonascii(self):
         self.assertEqual(self.backend._get_format(FakeFile('你好.jpg')), 'JPEG')
+
+    def test_image_remote_url(self):
+        self.assertEqual(self.backend._get_format(FakeFile('http://example.com/1.png')), 'PNG')
