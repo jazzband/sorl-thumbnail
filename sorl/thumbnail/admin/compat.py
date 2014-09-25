@@ -30,8 +30,15 @@ class AdminImageWidget(forms.FileInput):
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
         if value and hasattr(value, 'url'):
+            ext = 'JPG'
             try:
-                mini = get_thumbnail(value, 'x80', upscale=False)
+                aux_ext = str(value).split('.')
+                if aux_ext[len(aux_ext)-1] == 'png' or aux_ext[len(aux_ext)-1] == 'PNG':
+                    ext = 'PNG'
+            except: 
+                pass
+            try:
+                mini = get_thumbnail(value, 'x80', upscale=False, format=ext)
             except Exception:
                 pass
             else:
