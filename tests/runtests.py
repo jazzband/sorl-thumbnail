@@ -2,6 +2,8 @@
 import os
 import sys
 from os.path import abspath, dirname, join as pjoin
+
+import django
 from django.conf import settings
 
 
@@ -12,6 +14,9 @@ def runtests(verbosity=1, interactive=True, failfast=True,
 
     sys.path[0:0] = [here, root, pjoin(root, 'sorl')]
     os.environ['DJANGO_SETTINGS_MODULE'] = settings_module
+
+    if django.VERSION >= (1, 7):
+        django.setup()
 
     from django.test.utils import get_runner
 
@@ -62,7 +67,8 @@ if __name__ == '__main__':
         verbosity=2,
         interactive=args.interactive,
         failfast=args.failfast,
-        settings_module=args.settings_module)
+        settings_module=args.settings_module
+    )
 
     if failures:
         sys.exit(bool(failures))
