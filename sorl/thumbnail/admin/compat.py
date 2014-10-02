@@ -33,7 +33,7 @@ class AdminImageWidget(forms.FileInput):
             ext = 'JPG'
             try:
                 aux_ext = str(value).split('.')
-                if aux_ext[len(aux_ext)-1] == 'png' or aux_ext[len(aux_ext)-1] == 'PNG':
+                if aux_ext[len(aux_ext)-1].lower() == 'png':
                     ext = 'PNG'
             except: 
                 pass
