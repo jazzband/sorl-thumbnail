@@ -22,8 +22,15 @@ class AdminImageWidget(forms.ClearableFileInput):
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
         if value and hasattr(value, 'url'):
+            ext = 'JPG'
             try:
-                mini = get_thumbnail(value, 'x80', upscale=False)
+                aux_ext = str(value).split('.')
+                if aux_ext[len(aux_ext)-1].lower() == 'png':
+                    ext = 'PNG'
+            except: 
+                pass
+            try:
+                mini = get_thumbnail(value, 'x80', upscale=False, format=ext)
             except Exception as e:
                 logger.warn("Unable to get the thumbnail", exc_info=e)
             else:
