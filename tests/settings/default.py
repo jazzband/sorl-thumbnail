@@ -25,10 +25,17 @@ MEDIA_ROOT = pjoin(PROJ_ROOT, 'media')
 MEDIA_URL = '/media/'
 ROOT_URLCONF = 'thumbnail_tests.urls'
 INSTALLED_APPS = (
-    'thumbnail',
-    'thumbnail_tests',
+    'sorl.thumbnail',
+    'tests.thumbnail_tests',
 )
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
 )
-
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)

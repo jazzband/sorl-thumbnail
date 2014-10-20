@@ -51,7 +51,7 @@ class override_custom_settings(object):
         self.settings._wrapped = override
         for key, new_value in self.options.items():
             setting_changed.send(sender=self.settings._wrapped.__class__,
-                                 setting=key, value=new_value)
+                                 setting=key, value=new_value, enter=True)
 
     def disable(self):
         self.settings._wrapped = self.wrapped
@@ -59,4 +59,4 @@ class override_custom_settings(object):
         for key in self.options:
             new_value = getattr(self.settings, key, None)
             setting_changed.send(sender=self.settings._wrapped.__class__,
-                                 setting=key, value=new_value)
+                                 setting=key, value=new_value, enter=False)
