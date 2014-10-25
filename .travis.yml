@@ -77,9 +77,11 @@ install:
   - pip install -q coveralls
   - pip install -q Pillow $PIP
   - pip install -q Django$DJANGO_VERSION
+  - pip install flake8
 
 script:
-  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
+  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS; cd ..
+  - flake8
 
 services:
   - redis-server

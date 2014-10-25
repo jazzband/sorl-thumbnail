@@ -1,6 +1,5 @@
 from __future__ import with_statement
 import re
-
 import os
 
 import subprocess
@@ -26,7 +25,8 @@ class Engine(EngineBase):
         """
         Writes the thumbnail image
         """
-        if (options['format'] == 'JPEG' and options.get('progressive', settings.THUMBNAIL_PROGRESSIVE)):
+        if (options['format'] == 'JPEG' and options.get('progressive',
+                                                        settings.THUMBNAIL_PROGRESSIVE)):
             image['options']['interlace'] = 'line'
         image['options']['quality'] = options['quality']
 
@@ -99,7 +99,7 @@ class Engine(EngineBase):
         return retcode == 0
 
     def _orientation(self, image):
-        #return image
+        # return image
         # XXX need to get the dimensions right after a transpose.
 
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):

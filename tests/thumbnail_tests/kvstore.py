@@ -38,4 +38,3 @@ class TestKvStoreMixin(object):
 
 class TestKVStore(TestKvStoreMixin, KVStore):
     pass
-

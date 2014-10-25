@@ -72,13 +72,12 @@ class ThumbnailBackend(object):
         else:
             return None
 
-        #preserve image filetype
+        # preserve image filetype
         if settings.THUMBNAIL_PRESERVE_FORMAT:
             options.setdefault('format', self._get_format(source))
 
         for key, value in self.default_options.items():
             options.setdefault(key, value)
-
 
         # For the future I think it is better to add options only if they
         # differ from the default settings as below. This will ensure the same
@@ -105,7 +104,8 @@ class ThumbnailBackend(object):
                     # if S3Storage says file doesn't exist remotely, don't try to
                     # create it and exit early.
                     # Will return working empty image type; 404'd image
-                    logger.warn(text_type('Remote file [%s] at [%s] does not exist'), file_, geometry_string)
+                    logger.warn(text_type('Remote file [%s] at [%s] does not exist'), file_,
+                                geometry_string)
                     return thumbnail
 
             # We might as well set the size since we have the image in memory
