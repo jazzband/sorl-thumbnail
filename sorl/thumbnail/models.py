@@ -11,3 +11,6 @@ class KVStore(models.Model):
 
     def __unicode__(self):
         return self.key
+
+    class Meta:
+        managed = settings.THUMBNAIL_KVSTORE != 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
