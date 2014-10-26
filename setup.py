@@ -40,4 +40,3 @@ setup(
     ],
     cmdclass={"test": TestCommand},
 )
-

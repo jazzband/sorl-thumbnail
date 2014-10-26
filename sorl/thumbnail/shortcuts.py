@@ -13,4 +13,3 @@ def delete(file_, delete_file=True):
     A shortcut for the Backend ``delete`` method
     """
     return default.backend.delete(file_, delete_file)
-

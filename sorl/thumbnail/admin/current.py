@@ -17,7 +17,8 @@ class AdminImageWidget(forms.ClearableFileInput):
     """
 
     template_with_initial = '%(clear_template)s<br />%(input_text)s: %(input)s'
-    template_with_clear = '%(clear)s <label style="width:auto" for="%(clear_checkbox_id)s">%(clear_checkbox_label)s</label>'
+    template_with_clear = ('%(clear)s <label style="width:auto" for="%(clear_checkbox_id)s">'
+                           '%(clear_checkbox_label)s</label>')
 
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
@@ -37,7 +38,8 @@ class AdminImageWidget(forms.ClearableFileInput):
                 try:
                     output = (
                         '<div style="float:left">'
-                        '<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
+                        '<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" '
+                        'target="_blank" href="%s">'
                         '<img src="%s"></a>%s</div>'
                     ) % (mini.width, value.url, mini.url, output)
                 except AttributeError:
@@ -56,4 +58,3 @@ class AdminImageMixin(object):
             return db_field.formfield(widget=AdminImageWidget)
         sup = super(AdminImageMixin, self)
         return sup.formfield_for_dbfield(db_field, **kwargs)
-

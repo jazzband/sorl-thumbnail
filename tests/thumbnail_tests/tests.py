@@ -122,7 +122,8 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
         ]
         self.assertEqual(self.log, actions)
 
-        with open(pjoin(settings.MEDIA_ROOT, 'test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@1.5x.jpg')) as fp:
+        p = pjoin(settings.MEDIA_ROOT, 'test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@1.5x.jpg')
+        with open(p) as fp:
             engine = PILEngine()
             self.assertEqual(engine.get_image_size(engine.get_image(ImageFile(file_=fp))), (75, 75))
 
@@ -375,30 +376,42 @@ class SimpleTestCase(SimpleTestCaseBase):
         val = render_to_string('htmlfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('<img alt="A image!" src="/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg" />',
-                         val)
+        self.assertEqual(
+            '<img alt="A image!" '
+            'src="/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg" />',
+            val
+        )
 
     def test_html_filter_local_url(self):
         text = '<img alt="A image!" src="/media/500x500.jpg" />'
         val = render_to_string('htmlfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('<img alt="A image!" src="/media/test/cache/eb/e2/ebe265f43a7c1f972accb0cf9e2bbda5.jpg" />',
-                         val)
+        self.assertEqual(
+            '<img alt="A image!" '
+            'src="/media/test/cache/eb/e2/ebe265f43a7c1f972accb0cf9e2bbda5.jpg" />',
+            val
+        )
 
     def test_markdown_filter(self):
         text = '![A image!](http://dummyimage.com/800x800)'
         val = render_to_string('markdownfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('![A image!](/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg)', val)
+        self.assertEqual(
+            '![A image!](/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg)',
+            val
+        )
 
     def test_markdown_filter_local_url(self):
         text = '![A image!](/media/500x500.jpg)'
         val = render_to_string('markdownfilter.html', {
             'text': text,
         }).strip()
-        self.assertEqual('![A image!](/media/test/cache/eb/e2/ebe265f43a7c1f972accb0cf9e2bbda5.jpg)', val)
+        self.assertEqual(
+            '![A image!](/media/test/cache/eb/e2/ebe265f43a7c1f972accb0cf9e2bbda5.jpg)',
+            val
+        )
 
 
 class TemplateTestCaseA(SimpleTestCaseBase):
@@ -420,7 +433,8 @@ class TemplateTestCaseA(SimpleTestCaseBase):
         }).strip()
         self.assertEqual(val, (
             '<a href="/media/test/cache/ba/d7/bad785264867676a926566150f90f87c.jpg">'
-            '<img src="/media/test/cache/c6/7a/c67a64c3145f8834cd6770f6f80198c9.jpg" width="400" height="400">'
+            '<img src="/media/test/cache/c6/7a/c67a64c3145f8834cd6770f6f80198c9.jpg" '
+            'width="400" height="400">'
             '</a>')
         )
 
@@ -524,7 +538,8 @@ class TemplateTestCaseB(unittest.TestCase):
             'dims': 'x66',
         }).strip()
         self.assertEqual(val,
-                         '<img src="/media/test/cache/7b/cd/7bcd20922c6750649f431df7c3cdbc5e.jpg" width="79" height="66" class="landscape">')
+                         '<img src="/media/test/cache/7b/cd/7bcd20922c6750649f431df7c3cdbc5e.jpg" '
+                         'width="79" height="66" class="landscape">')
 
     def test_empty(self):
         val = render_to_string('thumbnail5.html', {}).strip()
@@ -638,10 +653,11 @@ class CropTestCase(SimpleTestCaseBase):
 
     def test_smart_crop(self):
         # TODO: Complete test for smart crop
-        thumb = self.backend.get_thumbnail(
+        self.backend.get_thumbnail(
             '32x32',
             'data/white_border.jpg',
-            crop='smart')
+            crop='smart'
+        )
 
     def test_crop_image_with_icc_profile(self):
         name = 'data/icc_profile_test.jpg'
@@ -675,7 +691,10 @@ class DummyTestCase(TestCase):
         val = render_to_string('thumbnaild2.html', {
             'anything': None,
         }).strip()
-        self.assertEqual(val, '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>')
+        self.assertEqual(
+            val,
+            '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>'
+        )
         val = render_to_string('thumbnaild3.html', {
         }).strip()
         self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
@@ -765,7 +784,8 @@ class TestDescriptors(unittest.TestCase):
             self.engine.is_valid_image(b'invalidbinaryimage.jpg')
 
     @skipIf('pgmagick_engine' in settings.THUMBNAIL_ENGINE and sys.version_info.major == 2,
-            'No output has been received in the last 10 minutes, this potentially indicates something wrong with the build itself.')
+            'No output has been received in the last 10 minutes,'
+            'this potentially indicates something wrong with the build itself.')
     def test_write(self):
         with same_open_fd_count(self):
             with self.assertRaises(Exception):

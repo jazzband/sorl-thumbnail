@@ -35,7 +35,7 @@ class AdminImageWidget(forms.FileInput):
                 aux_ext = str(value).split('.')
                 if aux_ext[len(aux_ext)-1].lower() == 'png':
                     ext = 'PNG'
-            except: 
+            except:
                 pass
             try:
                 mini = get_thumbnail(value, 'x80', upscale=False, format=ext)
@@ -43,10 +43,11 @@ class AdminImageWidget(forms.FileInput):
                 pass
             else:
                 output = (
-                             '<div style="float:left">'
-                             '<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail" target="_blank" href="%s">'
-                             '<img src="%s"></a>%s</div>'
-                         ) % (mini.width, value.url, mini.url, output)
+                    '<div style="float:left">'
+                    '<a style="width:%spx;display:block;margin:0 0 10px" class="thumbnail"'
+                    'target="_blank" href="%s">'
+                    '<img src="%s"></a>%s</div>'
+                ) % (mini.width, value.url, mini.url, output)
         return mark_safe(output)
 
 
@@ -54,10 +55,10 @@ class AdminClearWidget(forms.CheckboxInput):
     def render(self, name, value, attrs=None):
         output = super(AdminClearWidget, self).render(name, value, attrs)
         output = (
-                     '<div style="clear:both;padding-top:5px">'
-                     '<label for="id_%s">%s:</label>%s'
-                     '</div>'
-                 ) % (name, _('Clear image'), output)
+            '<div style="clear:both;padding-top:5px">'
+            '<label for="id_%s">%s:</label>%s'
+            '</div>'
+        ) % (name, _('Clear image'), output)
         return mark_safe(output)
 
 
@@ -88,4 +89,3 @@ class AdminImageMixin(object):
             )
         sup = super(AdminImageMixin, self)
         return sup.formfield_for_dbfield(db_field, **kwargs)
-

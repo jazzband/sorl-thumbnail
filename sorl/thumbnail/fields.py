@@ -76,4 +76,3 @@ class ImageFormField(forms.ImageField):
             f.seek(0)
 
         return f
-

@@ -36,4 +36,3 @@ class ThumbnailLogHandler(logging.Handler):
             connection=None
         )
         msg.send(fail_silently=True)
-
