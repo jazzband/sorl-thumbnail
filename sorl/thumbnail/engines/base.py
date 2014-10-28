@@ -87,9 +87,8 @@ class EngineBase(object):
         crop = options['crop']
         upscale = options['upscale']
         x_image, y_image = self.get_image_size(image)
-        factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
 
-        if not crop or crop == 'noop' or (not upscale and factor >= 1):
+        if not crop or crop == 'noop':
             return image
         elif crop == 'smart':
             # Smart cropping is suitably different from regular cropping
