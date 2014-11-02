@@ -85,7 +85,6 @@ class EngineBase(object):
         Wrapper for ``_crop``
         """
         crop = options['crop']
-        upscale = options['upscale']
         x_image, y_image = self.get_image_size(image)
 
         if not crop or crop == 'noop':
