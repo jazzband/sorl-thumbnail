@@ -27,3 +27,6 @@ run this if you do not reference the generated thumbnails by name somewhere
 else in your code. The Key Value store will update when you hit the template
 tags, and if the thumbnails still exist they will be used and not overwritten.
 
+If you want to have all your thumbnails re-generated, e.g. when changing your backend,
+you can use the option ``--delete`` or ``-d`` to empty the Key Value Store and have
+all thumbnails removed as well.

@@ -810,6 +810,22 @@ class CommandTests(SimpleTestCaseBase):
         self.assertTrue(os.path.isfile(name1))
         self.assertTrue(os.path.isfile(name2))
 
+    def test_clear_with_delete_action(self):
+        """ Clear KV store and delete thumbnails """
+        item = Item.objects.get(image='500x500.jpg')
+        th1 = self.backend.get_thumbnail(item.image, '400x300', crop='center')
+        th2 = self.backend.get_thumbnail(item.image, '250x250')
+        name1 = os.path.join(settings.MEDIA_ROOT, th1.name)
+        name2 = os.path.join(settings.MEDIA_ROOT, th2.name)
+        self.assertTrue(os.path.isfile(name1))
+        self.assertTrue(os.path.isfile(name2))
+        out = StringIO('')
+        management.call_command('thumbnail', 'clear', delete=True, verbosity=1,
+                                stdout=out)
+        self.assertEqual(out.getvalue(), "Clear the Key Value Store ... [Done]\n")
+        self.assertFalse(os.path.isfile(name1))
+        self.assertFalse(os.path.isfile(name2))
+
     def test_cleanup_action(self):
         out = StringIO('')
         management.call_command('thumbnail', 'cleanup', verbosity=1, stdout=out)

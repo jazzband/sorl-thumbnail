@@ -1,4 +1,6 @@
 from django.core.cache import cache, get_cache, InvalidCacheBackendError
+import os
+import shutil
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
@@ -16,7 +18,7 @@ class KVStore(KVStoreBase):
         except InvalidCacheBackendError:
             self.cache = cache
 
-    def clear(self):
+    def clear(self, delete_thumbnails=False):
         """
         We can clear the database more efficiently using the prefix here rather
         than calling :meth:`_delete_raw`.
@@ -25,6 +27,8 @@ class KVStore(KVStoreBase):
         for key in self._find_keys_raw(prefix):
             self.cache.delete(key)
         KVStoreModel.objects.filter(key__startswith=prefix).delete()
+        if delete_thumbnails:
+            shutil.rmtree(os.path.join(settings.MEDIA_ROOT, settings.THUMBNAIL_PREFIX))
 
     def _get_raw(self, key):
         value = self.cache.get(key)

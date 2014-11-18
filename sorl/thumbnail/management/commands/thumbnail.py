@@ -3,8 +3,8 @@
 from __future__ import unicode_literals, print_function
 
 import sys
-
 from django.core.management.base import BaseCommand, CommandError
+from optparse import make_option
 from sorl.thumbnail import default
 
 
@@ -13,7 +13,13 @@ class Command(BaseCommand):
         'Handles thumbnails and key value store'
     )
     args = '[cleanup, clear]'
-    option_list = BaseCommand.option_list
+    option_list = BaseCommand.option_list + (
+        make_option('-d', '--delete',
+            action='store_true',
+            dest='delete',
+            default=False,
+            help='Delete poll instead of closing it'),
+    )
 
     def handle(self, *labels, **options):
         verbosity = int(options.get('verbosity'))
@@ -50,7 +56,7 @@ class Command(BaseCommand):
             if verbosity >= 1:
                 print("Clear the Key Value Store", end=' ... ', file=stdout)
 
-            default.kvstore.clear()
+            default.kvstore.clear(delete_thumbnails=options['delete'])
 
             if verbosity >= 1:
                 print('[Done]', file=stdout)
