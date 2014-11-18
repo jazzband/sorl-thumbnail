@@ -794,11 +794,21 @@ class TestDescriptors(unittest.TestCase):
                                   thumbnail=ImageFile('whatever_thumb.jpg', default.storage))
 
 
-class CommandTests(SimpleTestCase):
+class CommandTests(SimpleTestCaseBase):
     def test_clear_action(self):
+        """ By default, only the KV store is cleared. """
+        item = Item.objects.get(image='500x500.jpg')
+        th1 = self.backend.get_thumbnail(item.image, '400x300', crop='center')
+        th2 = self.backend.get_thumbnail(item.image, '250x250')
+        name1 = os.path.join(settings.MEDIA_ROOT, th1.name)
+        name2 = os.path.join(settings.MEDIA_ROOT, th2.name)
+        self.assertTrue(os.path.isfile(name1))
+        self.assertTrue(os.path.isfile(name2))
         out = StringIO('')
         management.call_command('thumbnail', 'clear', verbosity=1, stdout=out)
         self.assertEqual(out.getvalue(), "Clear the Key Value Store ... [Done]\n")
+        self.assertTrue(os.path.isfile(name1))
+        self.assertTrue(os.path.isfile(name2))
 
     def test_cleanup_action(self):
         out = StringIO('')
