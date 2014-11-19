@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
+from django.core.files.storage import get_storage_class
 import os
-import shutil
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import serialize, deserialize, ThumbnailError
 from sorl.thumbnail.images import serialize_image_file, deserialize_image_file
@@ -132,7 +132,18 @@ class KVStoreBase(object):
         if all_keys:
             self._delete_raw(*all_keys)
         if delete_thumbnails:
-            shutil.rmtree(os.path.join(settings.MEDIA_ROOT, settings.THUMBNAIL_PREFIX))
+            self._delete_all_thumbnails()
+
+    def _delete_all_thumbnails(self):
+        storage = get_storage_class(settings.THUMBNAIL_STORAGE)()
+        path = os.path.join(storage.location, settings.THUMBNAIL_PREFIX)
+        def walk(path):
+            dirs, files = storage.listdir(path)
+            for f in files:
+                storage.delete(os.path.join(path, f))
+            for dir in dirs:
+                walk(os.path.join(path, dir))
+        walk(path)
 
     def _get(self, key, identity='image'):
         """

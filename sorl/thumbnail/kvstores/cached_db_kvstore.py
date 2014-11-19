@@ -1,6 +1,6 @@
 from django.core.cache import cache, get_cache, InvalidCacheBackendError
+from django.core.files.storage import get_storage_class
 import os
-import shutil
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
@@ -28,7 +28,7 @@ class KVStore(KVStoreBase):
             self.cache.delete(key)
         KVStoreModel.objects.filter(key__startswith=prefix).delete()
         if delete_thumbnails:
-            shutil.rmtree(os.path.join(settings.MEDIA_ROOT, settings.THUMBNAIL_PREFIX))
+            self._delete_all_thumbnails()
 
     def _get_raw(self, key):
         value = self.cache.get(key)
