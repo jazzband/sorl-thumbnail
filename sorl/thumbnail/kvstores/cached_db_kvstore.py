@@ -1,6 +1,4 @@
 from django.core.cache import cache, get_cache, InvalidCacheBackendError
-from django.core.files.storage import get_storage_class
-import os
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel

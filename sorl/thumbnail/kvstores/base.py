@@ -137,12 +137,13 @@ class KVStoreBase(object):
     def _delete_all_thumbnails(self):
         storage = get_storage_class(settings.THUMBNAIL_STORAGE)()
         path = os.path.join(storage.location, settings.THUMBNAIL_PREFIX)
+
         def walk(path):
             dirs, files = storage.listdir(path)
             for f in files:
                 storage.delete(os.path.join(path, f))
-            for dir in dirs:
-                walk(os.path.join(path, dir))
+            for directory in dirs:
+                walk(os.path.join(path, directory))
         walk(path)
 
     def _get(self, key, identity='image'):
