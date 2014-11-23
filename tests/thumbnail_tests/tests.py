@@ -311,6 +311,19 @@ class SimpleTestCase(SimpleTestCaseBase):
         self.kvstore.clear()
         keys_test(0, 0, 0)
 
+    def test_clear_doesnt_regenerate(self):
+        self.kvstore.clear()
+        im = ImageFile(Item.objects.get(image='500x500.jpg').image)
+        th = self.backend.get_thumbnail(im, '27x27')
+        th_name_orig = self.kvstore.get(th).name
+        self.kvstore.clear()
+        th = self.backend.get_thumbnail(im, '27x27')
+        th_name_new = self.kvstore.get(th).name
+        self.assertEqual(
+            th_name_orig,
+            th_name_new,
+        )
+
     def test_storage_serialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         self.assertEqual(im.serialize_storage(), 'thumbnail_tests.storage.TestStorage')
