@@ -80,7 +80,7 @@ install:
   - pip install flake8
 
 script:
-  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS; cd ..
+  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
   - flake8
 
 services:
