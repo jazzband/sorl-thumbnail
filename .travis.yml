@@ -86,10 +86,6 @@ script:
 services:
   - redis-server
 
-branches:
-  only:
-    - master
-
 notifications:
   irc:
     channels:
