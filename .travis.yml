@@ -80,15 +80,11 @@ install:
   - pip install flake8
 
 script:
-  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS; cd ..
-  - flake8
+  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
+  - cd .. && flake8
 
 services:
   - redis-server
-
-branches:
-  only:
-    - master
 
 notifications:
   irc:
