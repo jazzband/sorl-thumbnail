@@ -69,6 +69,8 @@ class StorageTestCase(BaseStorageTestCase):
     def test_a_new(self):
         get_thumbnail(self.im, '50x50')
         actions = [
+            'exists: test/cache/ca/1a/ca1afb02b7250c125d8830c0e8a492ad.jpg',
+
             'open: org.jpg',  # open the original for thumbnailing
             # save the file
             'save: test/cache/ca/1a/ca1afb02b7250c125d8830c0e8a492ad.jpg',
@@ -104,6 +106,8 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
         get_thumbnail(self.im, '50x50')
 
         actions = [
+            'exists: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19.jpg',
+
             # save regular resolution, same as in StorageTestCase
             'open: retina.jpg',
             'save: test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19.jpg',
@@ -389,7 +393,7 @@ class SimpleTestCase(SimpleTestCaseBase):
         }).strip()
         self.assertEqual(
             '<img alt="A image!" '
-            'src="/media/test/cache/eb/e2/ebe265f43a7c1f972accb0cf9e2bbda5.jpg" />',
+            'src="/media/test/cache/73/4c/734c426a910415e59dc0aebce5d13b2c.jpg" />',
             val
         )
 
@@ -409,7 +413,7 @@ class SimpleTestCase(SimpleTestCaseBase):
             'text': text,
         }).strip()
         self.assertEqual(
-            '![A image!](/media/test/cache/eb/e2/ebe265f43a7c1f972accb0cf9e2bbda5.jpg)',
+            '![A image!](/media/test/cache/73/4c/734c426a910415e59dc0aebce5d13b2c.jpg)',
             val
         )
 
