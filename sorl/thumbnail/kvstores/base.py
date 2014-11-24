@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+from django.core.files.storage import get_storage_class
+import os
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import serialize, deserialize, ThumbnailError
 from sorl.thumbnail.images import serialize_image_file, deserialize_image_file
@@ -54,7 +56,7 @@ class KVStoreBase(object):
 
     def delete(self, image_file, delete_thumbnails=True):
         """
-        Deletes the referense to the ``image_file`` and deletes the references
+        Deletes the reference to the ``image_file`` and deletes the references
         to thumbnails as well as thumbnail files if ``delete_thumbnails`` is
         `True``. Does not delete the ``image_file`` is self.
         """
@@ -119,15 +121,30 @@ class KVStoreBase(object):
             # reason for keeping it either
             self._delete(key, identity='thumbnails')
 
-    def clear(self):
+    def clear(self, delete_thumbnails=False):
         """
         Brutely clears the key value store for keys with THUMBNAIL_KEY_PREFIX
         prefix. Use this in emergency situations. Normally you would probably
         want to use the ``cleanup`` method instead.
+        Optionally deletes all thumbnail images by removing the 'cache' folder.
         """
         all_keys = self._find_keys_raw(settings.THUMBNAIL_KEY_PREFIX)
         if all_keys:
             self._delete_raw(*all_keys)
+        if delete_thumbnails:
+            self._delete_all_thumbnails()
+
+    def _delete_all_thumbnails(self):
+        storage = get_storage_class(settings.THUMBNAIL_STORAGE)()
+        path = os.path.join(storage.location, settings.THUMBNAIL_PREFIX)
+
+        def walk(path):
+            dirs, files = storage.listdir(path)
+            for f in files:
+                storage.delete(os.path.join(path, f))
+            for directory in dirs:
+                walk(os.path.join(path, directory))
+        walk(path)
 
     def _get(self, key, identity='image'):
         """
