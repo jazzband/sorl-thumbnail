@@ -58,7 +58,7 @@ if __name__ == '__main__':
         '--failfast',
         dest='failfast',
         action='store_true',
-        default=True,
+        default=False,
         help='Stop running the test suite after first failed test.')
 
     args = parser.parse_args()
