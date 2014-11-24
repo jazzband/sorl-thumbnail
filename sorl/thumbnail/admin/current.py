@@ -23,7 +23,7 @@ class AdminImageWidget(forms.ClearableFileInput):
     def render(self, name, value, attrs=None):
         output = super(AdminImageWidget, self).render(name, value, attrs)
         if value and hasattr(value, 'url'):
-            ext = 'JPG'
+            ext = 'JPEG'
             try:
                 aux_ext = str(value).split('.')
                 if aux_ext[len(aux_ext) - 1].lower() == 'png':
