@@ -95,6 +95,13 @@ class ImageFile(BaseImageFile):
         else:
             self.storage = default_storage
 
+        if hasattr(self.storage, 'location'):
+            location = self.storage.location
+            if not self.storage.location.endswith("/"):
+                location += "/"
+            if self.name.startswith(self.storage.location):
+                self.name = self.name[len(location):]
+
     def __unicode__(self):
         return self.name
 
