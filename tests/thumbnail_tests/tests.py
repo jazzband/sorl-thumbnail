@@ -430,6 +430,12 @@ class SimpleTestCase(SimpleTestCaseBase):
             val
         )
 
+    def test_relative_absolute_same_key(self):
+        image = Item.objects.get(image='500x500.jpg').image
+        imref1 = ImageFile(image.name)
+        imref2 = ImageFile(pjoin(settings.MEDIA_ROOT, image.name))
+        self.assertEqual(imref1.key, imref2.key)
+
 
 class TemplateTestCaseA(SimpleTestCaseBase):
     def test_model(self):
