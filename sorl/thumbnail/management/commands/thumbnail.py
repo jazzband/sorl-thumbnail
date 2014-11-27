@@ -3,17 +3,16 @@
 from __future__ import unicode_literals, print_function
 
 import sys
-
 from django.core.management.base import BaseCommand, CommandError
 from sorl.thumbnail import default
+from sorl.thumbnail.images import delete_all_thumbnails
 
 
 class Command(BaseCommand):
     help = (
         'Handles thumbnails and key value store'
     )
-    args = '[cleanup, clear]'
-    option_list = BaseCommand.option_list
+    args = '[cleanup, clear clear_delete_referenced clear_delete_all]'
 
     def handle(self, *labels, **options):
         verbosity = int(options.get('verbosity'))
@@ -34,7 +33,7 @@ class Command(BaseCommand):
 
         label = labels[0]
 
-        if label not in ['cleanup', 'clear']:
+        if label not in ['cleanup', 'clear', 'clear_delete_referenced', 'clear_delete_all']:
             raise CommandError('`%s` unknown action' % label)
 
         if label == 'cleanup':
@@ -46,11 +45,31 @@ class Command(BaseCommand):
             if verbosity >= 1:
                 print("[Done]", file=stdout)
 
-        elif label == 'clear':
-            if verbosity >= 1:
-                print("Clear the Key Value Store", end=' ... ', file=stdout)
+            return
 
-            default.kvstore.clear()
+        if label == 'clear_delete_referenced':
+            if verbosity >= 1:
+                print("Delete all thumbnail files referenced in " +
+                      "Key Value Store", end=' ... ', file=stdout)
+
+            default.kvstore.delete_all_thumbnail_files()
+
+            if verbosity >= 1:
+                print('[Done]', file=stdout)
+
+        if verbosity >= 1:
+            print("Clear the Key Value Store", end=' ... ', file=stdout)
+
+        default.kvstore.clear()
+
+        if verbosity >= 1:
+            print('[Done]', file=stdout)
+
+        if label == 'clear_delete_all':
+            if verbosity >= 1:
+                print("Delete all thumbnail files in THUMBNAIL_PREFIX", end=' ... ', file=stdout)
+
+            delete_all_thumbnails()
 
             if verbosity >= 1:
                 print('[Done]', file=stdout)

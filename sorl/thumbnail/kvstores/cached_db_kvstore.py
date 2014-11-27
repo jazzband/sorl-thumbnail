@@ -16,7 +16,7 @@ class KVStore(KVStoreBase):
         except InvalidCacheBackendError:
             self.cache = cache
 
-    def clear(self):
+    def clear(self, delete_thumbnails=False):
         """
         We can clear the database more efficiently using the prefix here rather
         than calling :meth:`_delete_raw`.
@@ -25,6 +25,8 @@ class KVStore(KVStoreBase):
         for key in self._find_keys_raw(prefix):
             self.cache.delete(key)
         KVStoreModel.objects.filter(key__startswith=prefix).delete()
+        if delete_thumbnails:
+            self._delete_all_thumbnails()
 
     def _get_raw(self, key):
         value = self.cache.get(key)
