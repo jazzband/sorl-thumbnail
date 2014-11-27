@@ -255,7 +255,7 @@ def text_filter(regex_base, value):
     for i in images:
         image = i[1]
         if image.startswith(settings.MEDIA_URL):
-            image = image.replace(settings.MEDIA_URL, '%s/' % settings.MEDIA_ROOT)
+            image = image[len(settings.MEDIA_URL):]
 
         im = get_thumbnail(image, str(sorl_settings.THUMBNAIL_FILTER_WIDTH))
         value = value.replace(i[1], im.url)
