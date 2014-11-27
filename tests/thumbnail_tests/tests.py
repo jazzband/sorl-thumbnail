@@ -406,7 +406,7 @@ class SimpleTestCase(SimpleTestCaseBase):
         }).strip()
         self.assertEqual(
             '<img alt="A image!" '
-            'src="/media/test/cache/73/4c/734c426a910415e59dc0aebce5d13b2c.jpg" />',
+            'src="/media/test/cache/36/1f/361fdc861e17bc1d108844b980454627.jpg" />',
             val
         )
 
@@ -426,7 +426,7 @@ class SimpleTestCase(SimpleTestCaseBase):
             'text': text,
         }).strip()
         self.assertEqual(
-            '![A image!](/media/test/cache/73/4c/734c426a910415e59dc0aebce5d13b2c.jpg)',
+            '![A image!](/media/test/cache/36/1f/361fdc861e17bc1d108844b980454627.jpg)',
             val
         )
 
