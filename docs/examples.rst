@@ -87,7 +87,7 @@ Using markdown filter::
 Model examples
 ==============
 Using the ImageField that automatically deletes references to itself in the key
-value store and its thumbnail references and the thumbnail files when deleted::
+value store and its thumbnail references when deleted::
 
     from django.db import models
     from sorl.thumbnail import ImageField
