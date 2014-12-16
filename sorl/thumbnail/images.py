@@ -100,7 +100,7 @@ class ImageFile(BaseImageFile):
             location = self.storage.location
             if not self.storage.location.endswith("/"):
                 location += "/"
-            if self.name.startswith(self.storage.location):
+            if self.name.startswith(location):
                 self.name = self.name[len(location):]
 
     def __unicode__(self):
