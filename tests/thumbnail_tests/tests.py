@@ -186,7 +186,6 @@ class SimpleTestCaseBase(unittest.TestCase):
         im.save(fn)
         Item.objects.get_or_create(image=name)
 
-
     def setUp(self):
         self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
         self.engine = get_module_class(settings.THUMBNAIL_ENGINE)()
@@ -456,7 +455,6 @@ class SimpleTestCase(SimpleTestCaseBase):
         imref1 = ImageFile(image.name)
         imref2 = ImageFile(pjoin(settings.MEDIA_ROOT, image.name))
         self.assertEqual(imref1.key, imref2.key)
-
 
 
 class TemplateTestCaseA(SimpleTestCaseBase):
