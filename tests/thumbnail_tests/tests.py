@@ -175,6 +175,18 @@ class SimpleTestCaseBase(unittest.TestCase):
     engine = None
     kvstore = None
 
+    def create_image(self, name, dim):
+        """
+        Creates an image and prepends the MEDIA ROOT path.
+        :param name: e.g. 500x500.jpg
+        :param dim: a dimension tuple e.g. (500, 500)
+        """
+        fn = pjoin(settings.MEDIA_ROOT, name)
+        im = Image.new('L', dim)
+        im.save(fn)
+        Item.objects.get_or_create(image=name)
+
+
     def setUp(self):
         self.backend = get_module_class(settings.THUMBNAIL_BACKEND)()
         self.engine = get_module_class(settings.THUMBNAIL_ENGINE)()
@@ -192,10 +204,7 @@ class SimpleTestCaseBase(unittest.TestCase):
 
         for dim in dims:
             name = '%sx%s.jpg' % dim
-            fn = pjoin(settings.MEDIA_ROOT, name)
-            im = Image.new('L', dim)
-            im.save(fn)
-            Item.objects.get_or_create(image=name)
+            self.create_image(name, dim)
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
@@ -435,6 +444,19 @@ class SimpleTestCase(SimpleTestCaseBase):
         imref1 = ImageFile(image.name)
         imref2 = ImageFile(pjoin(settings.MEDIA_ROOT, image.name))
         self.assertEqual(imref1.key, imref2.key)
+
+        self.create_image('medialibrary.jpg', (100, 100))
+        image = Item.objects.get(image='medialibrary.jpg').image
+        imref1 = ImageFile(image.name)
+        imref2 = ImageFile(pjoin(settings.MEDIA_ROOT, image.name))
+        self.assertEqual(imref1.key, imref2.key)
+
+        self.create_image('mediaäöü.jpg', (100, 100))
+        image = Item.objects.get(image='mediaäöü.jpg').image
+        imref1 = ImageFile(image.name)
+        imref2 = ImageFile(pjoin(settings.MEDIA_ROOT, image.name))
+        self.assertEqual(imref1.key, imref2.key)
+
 
 
 class TemplateTestCaseA(SimpleTestCaseBase):
