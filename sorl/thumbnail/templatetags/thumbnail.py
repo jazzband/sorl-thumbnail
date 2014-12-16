@@ -117,10 +117,18 @@ class ThumbnailNode(ThumbnailNodeBase):
 
         if bits[-2] == 'as':
             self.as_var = bits[-1]
-            self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
-            if parser.next_token().contents == 'empty':
-                self.nodelist_empty = parser.parse(('endthumbnail',))
-                parser.delete_first_token()
+            original_tokens = parser.tokens[:]
+            try:
+                self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
+                if parser.next_token().contents == 'empty':
+                    self.nodelist_empty = parser.parse(('endthumbnail',))
+                    parser.delete_first_token()
+            except TemplateSyntaxError:
+                parser.tokens = original_tokens
+                self.nodelist_file = None
+
+            else:
+                del original_tokens
 
     def _render(self, context):
         file_ = self.file_.resolve(context)
@@ -143,10 +151,14 @@ class ThumbnailNode(ThumbnailNodeBase):
                 return ''
 
         if self.as_var:
-            context.push()
-            context[self.as_var] = thumbnail
-            output = self.nodelist_file.render(context)
-            context.pop()
+            if self.nodelist_file:
+                context.push()
+                context[self.as_var] = thumbnail
+                output = self.nodelist_file.render(context)
+                context.pop()
+            else:
+                context[self.as_var] = thumbnail
+                return ''
         else:
             output = thumbnail.url
 
