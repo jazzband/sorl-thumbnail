@@ -564,6 +564,22 @@ class TemplateTestCaseB(unittest.TestCase):
         self.assertEqual(val, '<p>empty</p>')
 
 
+class TemplateTestCaseC(unittest.TestCase):
+    def tearDown(self):
+        try:
+            shutil.rmtree(settings.MEDIA_ROOT)
+        except Exception:
+            pass
+
+    def test_unquoted_geometry(self):
+        val = render_to_string('thumbnail10.html', {}).strip()
+        self.assertEqual(val, '<img style="margin:0px 0px 0px 0px" width="20" height="20">')
+
+    def test_missing_endtag(self):
+        val = render_to_string('thumbnail10a.html', {}).strip()
+        self.assertEqual(val, '<img src="/media/test/cache/82/e9/82e9e1526b850cddc7c9327cce97c70a.jpg">')
+
+
 class TemplateTestCaseClient(TestCase):
     def test_empty_error(self):
         with override_custom_settings(settings, THUMBNAIL_DEBUG=False):
