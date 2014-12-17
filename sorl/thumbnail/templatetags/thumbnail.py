@@ -133,6 +133,8 @@ class ThumbnailNode(ThumbnailNodeBase):
     def _render(self, context):
         file_ = self.file_.resolve(context)
         geometry = self.geometry.resolve(context)
+        if not geometry:
+            geometry = str(self.geometry)
         options = {}
         for key, expr in self.options:
             noresolve = {'True': True, 'False': False, 'None': None}
