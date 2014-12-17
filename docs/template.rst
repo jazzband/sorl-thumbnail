@@ -88,6 +88,10 @@ into a valid geometry string. Examples::
         <img src="{{ im.url }}">
     {% endthumbnail %}
 
+     {% thumbnail item.image 200x200 as im %}
+        <img src="{{ im.url }}">
+    {% endthumbnail %}
+
 If width and height are given the image is rescaled to maximum values of height
 and width given. Aspect ratio preserved.
 
@@ -265,8 +269,8 @@ get the 2x DPI version of it.  You would simply write::
 
 backward compatibility
 ======================
-To help with transitioning to the latest version, support for the previous
-syntax with no ``{% endthumbnail %}`` tag and un-quoted geometry will work.
+To help with transitioning to the latest version you can disable the
+``{% endthumbnail %}`` by setting ``THUMBNAIL_REQUIRE_END_TAG`` to False.
 If no end tag is given it will set the image url to the variable provided. This
 syntax does not provide the width or height attributes. To use it write::
 
