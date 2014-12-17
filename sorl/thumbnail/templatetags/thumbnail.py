@@ -157,7 +157,7 @@ class ThumbnailNode(ThumbnailNodeBase):
                 output = self.nodelist_file.render(context)
                 context.pop()
             else:
-                context[self.as_var] = thumbnail
+                context[self.as_var] = thumbnail.url
                 return ''
         else:
             output = thumbnail.url
