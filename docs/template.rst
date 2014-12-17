@@ -261,3 +261,15 @@ get the 2x DPI version of it.  You would simply write::
     <div class="millxmill">
         <img src="{{ item.image.url|resolution:"2x" }}">
     </div>
+
+
+backward compatibility
+======================
+To help with transitioning to the latest version, support for the previous
+syntax with no ``{% endthumbnail %}`` tag and un-quoted geometry will work.
+If no end tag is given it will set the image url to the variable provided. This
+syntax does not provide the width or height attributes. To use it write::
+
+    {% thumbnail item.image 200x100 as im %}
+    <img src="{{ im }}">
+
