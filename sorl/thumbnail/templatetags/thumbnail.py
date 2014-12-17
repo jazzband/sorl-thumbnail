@@ -6,6 +6,7 @@ import sys
 
 import re
 import os
+import copy
 from functools import wraps
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
@@ -117,18 +118,19 @@ class ThumbnailNode(ThumbnailNodeBase):
 
         if bits[-2] == 'as':
             self.as_var = bits[-1]
-            original_tokens = parser.tokens[:]
+            original_parser = copy.deepcopy(parser)
             try:
                 self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
                 if parser.next_token().contents == 'empty':
                     self.nodelist_empty = parser.parse(('endthumbnail',))
                     parser.delete_first_token()
             except TemplateSyntaxError:
-                parser.tokens = original_tokens
+                for k, v in original_parser.__dict__.items():
+                    setattr(parser, k, v)
                 self.nodelist_file = None
 
             else:
-                del original_tokens
+                del original_parser
 
     def _render(self, context):
         file_ = self.file_.resolve(context)
