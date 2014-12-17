@@ -112,3 +112,5 @@ THUMBNAIL_FILTER_WIDTH = 500
 # Should we flatten images by default (fixes a lot of transparency issues with
 # imagemagick)
 THUMBNAIL_FLATTEN = False
+
+THUMBNAIL_REQUIRE_END_TAG = True
