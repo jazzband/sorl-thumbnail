@@ -1,11 +1,13 @@
+from __future__ import unicode_literals
+
 import redis
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 
 
 class KVStore(KVStoreBase):
-    def __init__(self, *args, **kwargs):
-        super(KVStore, self).__init__(*args, **kwargs)
+    def __init__(self):
+        super(KVStore, self).__init__()
 
         if hasattr(settings, 'THUMBNAIL_REDIS_URL'):
             self.connection = redis.from_url(settings.THUMBNAIL_REDIS_URL)

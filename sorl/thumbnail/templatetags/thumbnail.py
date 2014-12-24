@@ -1,12 +1,11 @@
 # -*- encoding: utf8 -*-
 from __future__ import unicode_literals
 import logging
-
 import sys
-
 import re
 import os
 from functools import wraps
+
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
 from django.conf import settings

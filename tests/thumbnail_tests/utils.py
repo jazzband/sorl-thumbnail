@@ -1,7 +1,9 @@
 # coding: utf-8
+from __future__ import unicode_literals
 import os
 from contextlib import contextmanager
 from subprocess import check_output
+
 from django.test.signals import setting_changed
 from django.conf import UserSettingsHolder
 
@@ -13,8 +15,7 @@ def same_open_fd_count(testcase):
     num_opened_fd_after = get_open_fds_count()
     testcase.assertEqual(
         num_opened_fd_before, num_opened_fd_after,
-        'Open descriptors count changed, was %s, now %s' % (num_opened_fd_before,
-                                                            num_opened_fd_after)
+        'Open descriptors count changed, was %s, now %s' % (num_opened_fd_before, num_opened_fd_after)
     )
 
 
@@ -36,6 +37,7 @@ class override_custom_settings(object):
     settings overrider context manager.
     https://github.com/django/django/blob/1.6.2/django/test/utils.py#L209-L268
     """
+
     def __init__(self, settings_obj, **kwargs):
         self.settings = settings_obj
         self.options = kwargs

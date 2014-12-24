@@ -1,4 +1,5 @@
 from django.utils.functional import LazyObject
+
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 

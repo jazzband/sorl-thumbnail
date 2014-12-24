@@ -2,6 +2,7 @@
 import re
 
 from django.utils import six
+
 from sorl.thumbnail.helpers import ThumbnailError, toint
 
 
@@ -50,9 +51,6 @@ def parse_crop(crop, xy_image, xy_window):
     image but it works out anyway
     """
 
-    def syntax_error():
-        raise ThumbnailParseError('Unrecognized crop option: %s' % crop)
-
     x_alias_percent = {
         'left': '0%',
         'center': '50%',
@@ -64,6 +62,7 @@ def parse_crop(crop, xy_image, xy_window):
         'bottom': '100%',
     }
     xy_crop = crop.split(' ')
+
     if len(xy_crop) == 1:
         if crop in x_alias_percent:
             x_crop = x_alias_percent[crop]
@@ -78,12 +77,12 @@ def parse_crop(crop, xy_image, xy_window):
         x_crop = x_alias_percent.get(x_crop, x_crop)
         y_crop = y_alias_percent.get(y_crop, y_crop)
     else:
-        syntax_error()
+        raise ThumbnailParseError('Unrecognized crop option: %s' % crop)
 
     def get_offset(crop, epsilon):
         m = bgpos_pat.match(crop)
         if not m:
-            syntax_error()
+            raise ThumbnailParseError('Unrecognized crop option: %s' % crop)
         value = int(m.group('value'))  # we only take ints in the regexp
         unit = m.group('unit')
         if unit == '%':

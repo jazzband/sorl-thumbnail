@@ -1,8 +1,10 @@
+from __future__ import unicode_literals
 import math
 import hashlib
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.importlib import import_module
+
 from sorl.thumbnail.compat import json, encode, smart_text
 
 

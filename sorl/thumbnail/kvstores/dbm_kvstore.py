@@ -1,6 +1,10 @@
+from __future__ import unicode_literals
 import os
+
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
+
+
 try:
     import anydbm as dbm
 except ImportError:
@@ -56,8 +60,8 @@ class KVStore(KVStoreBase):
     # semantics, not performance.  Therefore, use this store only in development
     # environments.
 
-    def __init__(self, *args, **kwargs):
-        super(KVStore, self).__init__(*args, **kwargs)
+    def __init__(self):
+        super(KVStore, self).__init__()
         self.filename = settings.THUMBNAIL_DBM_FILE
         self.mode = settings.THUMBNAIL_DBM_MODE
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import unicode_literals
 import os
 import sys
 from os.path import abspath, dirname, join as pjoin
@@ -7,8 +8,7 @@ import django
 from django.conf import settings
 
 
-def runtests(verbosity=1, interactive=True, failfast=True,
-             settings_module='settings.default'):
+def runtests(verbosity=1, interactive=True, failfast=True, settings_module='settings.default'):
     here = abspath(dirname(__file__))
     root = pjoin(here, os.pardir)
 

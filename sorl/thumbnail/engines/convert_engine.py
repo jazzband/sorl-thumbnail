@@ -1,16 +1,15 @@
-from __future__ import with_statement
+from __future__ import unicode_literals, with_statement
 import re
 import os
-
 import subprocess
+from tempfile import NamedTemporaryFile
 
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
+
 from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
-
-from tempfile import NamedTemporaryFile
 
 
 size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
@@ -25,9 +24,9 @@ class Engine(EngineBase):
         """
         Writes the thumbnail image
         """
-        if (options['format'] == 'JPEG' and options.get('progressive',
-                                                        settings.THUMBNAIL_PROGRESSIVE)):
+        if options['format'] == 'JPEG' and options.get('progressive', settings.THUMBNAIL_PROGRESSIVE):
             image['options']['interlace'] = 'line'
+
         image['options']['quality'] = options['quality']
 
         args = settings.THUMBNAIL_CONVERT.split(' ')
@@ -148,9 +147,7 @@ class Engine(EngineBase):
         """
         Crops the image
         """
-        image['options']['crop'] = '%sx%s+%s+%s' % (
-            width, height, x_offset, y_offset
-        )
+        image['options']['crop'] = '%sx%s+%s+%s' % (width, height, x_offset, y_offset)
         image['size'] = (width, height)  # update image size
         return image
 

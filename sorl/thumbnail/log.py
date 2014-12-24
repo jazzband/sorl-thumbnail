@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.core.mail.message import EmailMessage
+
 from sorl.thumbnail.conf import settings
 
 

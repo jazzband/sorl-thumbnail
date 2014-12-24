@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import unicode_literals, division
 
 import math
 from sorl.thumbnail.engines.base import EngineBase

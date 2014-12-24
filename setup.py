@@ -1,7 +1,8 @@
 # -*- encoding: utf8 -*-
-from sorl import __version__, __author__, __maintainer__, __email__, __license__
 from setuptools import setup, find_packages
 from setuptools.command.test import test
+
+from sorl import __version__, __author__, __maintainer__, __email__, __license__
 
 
 class TestCommand(test):

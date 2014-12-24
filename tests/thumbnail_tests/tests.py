@@ -4,11 +4,11 @@ from __future__ import unicode_literals, division
 import sys
 import logging
 from subprocess import Popen, PIPE
-
 import shutil
 import os
 import re
 from os.path import join as pjoin
+
 from PIL import Image
 from django.utils.six import StringIO
 from django.core import management
@@ -40,7 +40,6 @@ handler = ThumbnailLogHandler()
 handler.setLevel(logging.ERROR)
 logging.getLogger('sorl.thumbnail').addHandler(handler)
 
-
 DATA_DIR = pjoin(settings.MEDIA_ROOT, 'data')
 
 
@@ -70,8 +69,8 @@ class StorageTestCase(BaseStorageTestCase):
         get_thumbnail(self.im, '50x50')
         actions = [
             'exists: test/cache/ca/1a/ca1afb02b7250c125d8830c0e8a492ad.jpg',
-
-            'open: org.jpg',  # open the original for thumbnailing
+            # open the original for thumbnailing
+            'open: org.jpg',
             # save the file
             'save: test/cache/ca/1a/ca1afb02b7250c125d8830c0e8a492ad.jpg',
             # check for filename
@@ -87,7 +86,7 @@ class StorageTestCase(BaseStorageTestCase):
 
     def test_c_safe_methods(self):
         im = default.kvstore.get(self.im)
-        im.url, im.x, im.y
+        url, x, y = (im.url, im.x, im.y)
         self.assertEqual(self.log, [])
 
 
@@ -127,6 +126,7 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
         self.assertEqual(self.log, actions)
 
         p = pjoin(settings.MEDIA_ROOT, 'test/cache/19/10/1910dc350bbe9ee55fd9d8d3d5e38e19@1.5x.jpg')
+
         with open(p) as fp:
             engine = PILEngine()
             self.assertEqual(engine.get_image_size(engine.get_image(ImageFile(file_=fp))), (75, 75))
@@ -195,11 +195,7 @@ class SimpleTestCaseBase(unittest.TestCase):
             os.makedirs(settings.MEDIA_ROOT)
             shutil.copytree(settings.DATA_ROOT, DATA_DIR)
 
-        dims = [
-            (500, 500),
-            (100, 100),
-            (200, 100),
-        ]
+        dims = [(500, 500), (100, 100), (200, 100),]
 
         for dim in dims:
             name = '%sx%s.jpg' % dim
@@ -379,10 +375,7 @@ class SimpleTestCase(SimpleTestCaseBase):
     def test_abspath(self):
         item = Item.objects.get(image='500x500.jpg')
         image = ImageFile(item.image.path)
-
-        val = render_to_string('thumbnail20.html', {
-            'image': image,
-        }).strip()
+        val = render_to_string('thumbnail20.html', {'image': image,}).strip()
 
         im = self.backend.get_thumbnail(image, '32x32', crop='center')
         self.assertEqual('<img src="%s">' % im.url, val)
@@ -390,17 +383,15 @@ class SimpleTestCase(SimpleTestCaseBase):
     def test_new_tag_style(self):
         item = Item.objects.get(image='500x500.jpg')
         image = ImageFile(item.image.path)
-        val = render_to_string('thumbnail20a.html', {
-            'image': image,
-        }).strip()
+        val = render_to_string('thumbnail20a.html', {'image': image,}).strip()
+
         im = self.backend.get_thumbnail(image, '32x32', crop='center')
         self.assertEqual('<img src="%s">' % im.url, val)
 
     def test_html_filter(self):
         text = '<img alt="A image!" src="http://dummyimage.com/800x800" />'
-        val = render_to_string('htmlfilter.html', {
-            'text': text,
-        }).strip()
+        val = render_to_string('htmlfilter.html', {'text': text,}).strip()
+
         self.assertEqual(
             '<img alt="A image!" '
             'src="/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg" />',
@@ -409,9 +400,8 @@ class SimpleTestCase(SimpleTestCaseBase):
 
     def test_html_filter_local_url(self):
         text = '<img alt="A image!" src="/media/500x500.jpg" />'
-        val = render_to_string('htmlfilter.html', {
-            'text': text,
-        }).strip()
+        val = render_to_string('htmlfilter.html', {'text': text,}).strip()
+
         self.assertEqual(
             '<img alt="A image!" '
             'src="/media/test/cache/36/1f/361fdc861e17bc1d108844b980454627.jpg" />',
@@ -420,9 +410,8 @@ class SimpleTestCase(SimpleTestCaseBase):
 
     def test_markdown_filter(self):
         text = '![A image!](http://dummyimage.com/800x800)'
-        val = render_to_string('markdownfilter.html', {
-            'text': text,
-        }).strip()
+        val = render_to_string('markdownfilter.html', {'text': text,}).strip()
+
         self.assertEqual(
             '![A image!](/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg)',
             val
@@ -430,9 +419,8 @@ class SimpleTestCase(SimpleTestCaseBase):
 
     def test_markdown_filter_local_url(self):
         text = '![A image!](/media/500x500.jpg)'
-        val = render_to_string('markdownfilter.html', {
-            'text': text,
-        }).strip()
+        val = render_to_string('markdownfilter.html', {'text': text,}).strip()
+
         self.assertEqual(
             '![A image!](/media/test/cache/36/1f/361fdc861e17bc1d108844b980454627.jpg)',
             val
@@ -460,20 +448,14 @@ class SimpleTestCase(SimpleTestCaseBase):
 class TemplateTestCaseA(SimpleTestCaseBase):
     def test_model(self):
         item = Item.objects.get(image='500x500.jpg')
-        val = render_to_string('thumbnail1.html', {
-            'item': item,
-        }).strip()
+        val = render_to_string('thumbnail1.html', {'item': item,}).strip()
         self.assertEqual(val, '<img style="margin:0px 0px 0px 0px" width="200" height="100">')
-        val = render_to_string('thumbnail2.html', {
-            'item': item,
-        }).strip()
+        val = render_to_string('thumbnail2.html', {'item': item,}).strip()
         self.assertEqual(val, '<img style="margin:0px 50px 0px 50px" width="100" height="100">')
 
     def test_nested(self):
         item = Item.objects.get(image='500x500.jpg')
-        val = render_to_string('thumbnail6.html', {
-            'item': item,
-        }).strip()
+        val = render_to_string('thumbnail6.html', {'item': item,}).strip()
         self.assertEqual(val, (
             '<a href="/media/test/cache/ba/d7/bad785264867676a926566150f90f87c.jpg">'
             '<img src="/media/test/cache/c6/7a/c67a64c3145f8834cd6770f6f80198c9.jpg" '
@@ -501,13 +483,8 @@ class TemplateTestCaseA(SimpleTestCaseBase):
             'upscale': True,
             'quality': 77,
         }
-        val0 = render_to_string('thumbnail8.html', {
-            'item': item,
-            'options': options,
-        }).strip()
-        val1 = render_to_string('thumbnail8a.html', {
-            'item': item,
-        }).strip()
+        val0 = render_to_string('thumbnail8.html', {'item': item, 'options': options, }).strip()
+        val1 = render_to_string('thumbnail8a.html', {'item': item,}).strip()
         self.assertEqual(val0, val1)
 
     def test_progressive(self):
@@ -591,7 +568,6 @@ class TemplateTestCaseB(unittest.TestCase):
 
 class TemplateTestCaseClient(TestCase):
     def test_empty_error(self):
-
         with override_custom_settings(settings, THUMBNAIL_DEBUG=False):
             from django.core.mail import outbox
 
@@ -638,6 +614,7 @@ class CropTestCase(SimpleTestCaseBase):
             th = self.backend.get_thumbnail(self.portrait, '100x100', crop=crop)
             engine = PILEngine()
             im = engine.get_image(th)
+
             self.assertEqual(mean_pixel(50, 0), 255)
             self.assertEqual(mean_pixel(50, 45), 255)
             self.assertEqual(250 <= mean_pixel(50, 49) <= 255, True, mean_pixel(50, 49))
@@ -672,6 +649,7 @@ class CropTestCase(SimpleTestCaseBase):
             th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
             engine = PILEngine()
             im = engine.get_image(th)
+
             self.assertEqual(mean_pixel(0, 50), 255)
             self.assertEqual(mean_pixel(45, 50), 255)
             self.assertEqual(250 < mean_pixel(49, 50) <= 255, True)
@@ -690,17 +668,14 @@ class CropTestCase(SimpleTestCaseBase):
             th = self.backend.get_thumbnail(self.landscape, '100x100', crop=crop)
             engine = PILEngine()
             im = engine.get_image(th)
-            for x in range(0, 99, 10):
-                for y in range(0, 99, 10):
-                    self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
+            coords = ((x, y) for y in range(0, 99, 10) for x in range(0, 99, 10))
+
+            for x, y in coords:
+                self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
 
     def test_smart_crop(self):
         # TODO: Complete test for smart crop
-        self.backend.get_thumbnail(
-            '32x32',
-            'data/white_border.jpg',
-            crop='smart'
-        )
+        self.backend.get_thumbnail('32x32', 'data/white_border.jpg', crop='smart' )
 
     def test_crop_image_with_icc_profile(self):
         name = 'data/icc_profile_test.jpg'
@@ -727,19 +702,11 @@ class DummyTestCase(TestCase):
     def test_dummy_tags(self):
         settings.THUMBNAIL_DUMMY = True
 
-        val = render_to_string('thumbnaild1.html', {
-            'anything': 'AINO',
-        }).strip()
+        val = render_to_string('thumbnaild1.html', {'anything': 'AINO',}).strip()
         self.assertEqual(val, '<img style="margin:auto" width="200" height="100">')
-        val = render_to_string('thumbnaild2.html', {
-            'anything': None,
-        }).strip()
-        self.assertEqual(
-            val,
-            '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>'
-        )
-        val = render_to_string('thumbnaild3.html', {
-        }).strip()
+        val = render_to_string('thumbnaild2.html', {'anything': None,}).strip()
+        self.assertEqual(val, '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>' )
+        val = render_to_string('thumbnaild3.html', {}).strip()
         self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
 
         settings.THUMBNAIL_DUMMY = False
@@ -863,11 +830,9 @@ class CommandTests(SimpleTestCaseBase):
         management.call_command('thumbnail', 'clear', verbosity=0)
         name3, = self.make_test_thumbnails('100x100')
         out = StringIO('')
-        management.call_command('thumbnail', 'clear_delete_referenced', verbosity=1,
-                                stdout=out)
+        management.call_command('thumbnail', 'clear_delete_referenced', verbosity=1, stdout=out)
         lines = out.getvalue().split("\n")
-        self.assertEqual(lines[0], "Delete all thumbnail files referenced in " +
-                         "Key Value Store ... [Done]")
+        self.assertEqual(lines[0], "Delete all thumbnail files referenced in Key Value Store ... [Done]")
         self.assertEqual(lines[1], "Clear the Key Value Store ... [Done]")
         self.assertTrue(os.path.isfile(name1))
         self.assertTrue(os.path.isfile(name2))
@@ -879,8 +844,7 @@ class CommandTests(SimpleTestCaseBase):
         management.call_command('thumbnail', 'clear', verbosity=0)
         name3, = self.make_test_thumbnails('100x100')
         out = StringIO('')
-        management.call_command('thumbnail', 'clear_delete_all', verbosity=1,
-                                stdout=out)
+        management.call_command('thumbnail', 'clear_delete_all', verbosity=1, stdout=out)
         lines = out.getvalue().split("\n")
         self.assertEqual(lines[0], "Clear the Key Value Store ... [Done]")
         self.assertEqual(lines[1], "Delete all thumbnail files in THUMBNAIL_PREFIX ... [Done]")
@@ -903,8 +867,7 @@ class FakeFile(object):
         self.name = name
 
 
-@override_settings(THUMBNAIL_PRESERVE_FORMAT=True,
-                   THUMBNAIL_FORMAT='XXX')
+@override_settings(THUMBNAIL_PRESERVE_FORMAT=True, THUMBNAIL_FORMAT='XXX')
 class PreserveFormatTest(TestCase):
     def setUp(self):
         self.backend = ThumbnailBackend()

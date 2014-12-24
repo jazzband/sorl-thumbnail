@@ -26,7 +26,7 @@ class KVStore(KVStoreBase):
             self.cache.delete(key)
         KVStoreModel.objects.filter(key__startswith=prefix).delete()
         if delete_thumbnails:
-            self._delete_all_thumbnails()
+            self.delete_all_thumbnail_files()
 
     def _get_raw(self, key):
         value = self.cache.get(key)

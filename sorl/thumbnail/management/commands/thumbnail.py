@@ -3,7 +3,9 @@
 from __future__ import unicode_literals, print_function
 
 import sys
+
 from django.core.management.base import BaseCommand, CommandError
+
 from sorl.thumbnail import default
 from sorl.thumbnail.images import delete_all_thumbnails
 

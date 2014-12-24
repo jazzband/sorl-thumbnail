@@ -1,6 +1,7 @@
 '''
 Wand (>=v0.3.0) engine for Sorl-thumbnail
 '''
+from __future__ import unicode_literals
 
 from wand.image import Image
 from wand import exceptions

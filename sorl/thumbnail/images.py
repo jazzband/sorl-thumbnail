@@ -1,3 +1,5 @@
+# coding=utf8
+from __future__ import unicode_literals, division
 import os
 import re
 
@@ -7,12 +9,10 @@ from django.utils.functional import LazyObject, empty
 
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
-
-from sorl.thumbnail.compat import json, urlopen, urlparse, urlsplit, \
-    quote, quote_plus, \
-    URLError, force_unicode, encode
-from sorl.thumbnail.helpers import ThumbnailError, \
-    tokey, get_module_class, deserialize
+from sorl.thumbnail.compat import (json, urlopen, urlparse, urlsplit,
+                                   quote, quote_plus,
+                                   URLError, force_unicode, encode)
+from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class, deserialize
 from sorl.thumbnail.parsers import parse_geometry
 
 
@@ -44,18 +44,20 @@ def deserialize_image_file(s):
 
 
 class BaseImageFile(object):
+    size = []
+
     def exists(self):
         raise NotImplemented()
 
     @property
     def width(self):
-        return self.size[0]
+        return float(self.size[0])
 
     x = width
 
     @property
     def height(self):
-        return self.size[1]
+        return float(self.size[1])
 
     y = height
 
@@ -64,7 +66,7 @@ class BaseImageFile(object):
 
     @property
     def ratio(self):
-        return float(self.x) / self.y
+        return self.x / self.y
 
     @property
     def url(self):
@@ -236,4 +238,5 @@ def delete_all_thumbnails():
             except Exception:
                 continue
             os.rmdir(full_path)
+
     walk(path)
