@@ -24,7 +24,8 @@ class Engine(EngineBase):
         """
         Writes the thumbnail image
         """
-        if options['format'] == 'JPEG' and options.get('progressive', settings.THUMBNAIL_PROGRESSIVE):
+        if options['format'] == 'JPEG' and options.get(
+                'progressive', settings.THUMBNAIL_PROGRESSIVE):
             image['options']['interlace'] = 'line'
 
         image['options']['quality'] = options['quality']
