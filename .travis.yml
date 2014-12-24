@@ -81,7 +81,7 @@ install:
 
 script:
   - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
-  - flake8 --show-source sorl/
+  - cd .. && flake8 --show-source sorl/
 
 services:
   - redis-server
