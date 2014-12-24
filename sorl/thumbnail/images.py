@@ -51,13 +51,13 @@ class BaseImageFile(object):
 
     @property
     def width(self):
-        return float(self.size[0])
+        return self.size[0]
 
     x = width
 
     @property
     def height(self):
-        return float(self.size[1])
+        return self.size[1]
 
     y = height
 
@@ -66,7 +66,7 @@ class BaseImageFile(object):
 
     @property
     def ratio(self):
-        return self.x / self.y
+        return float(self.x) / float(self.y)
 
     @property
     def url(self):

@@ -1,14 +1,13 @@
 # coding=utf-8
 from __future__ import unicode_literals, division
-
 import sys
 import logging
 from subprocess import Popen, PIPE
 import shutil
 import os
+
 import re
 from os.path import join as pjoin
-
 from PIL import Image
 from django.utils.six import StringIO
 from django.core import management
@@ -17,7 +16,6 @@ from django.template.loader import render_to_string
 from django.test.client import Client
 from django.test import TestCase
 from django.test.utils import override_settings
-
 from sorl.thumbnail import default, get_thumbnail, delete
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
@@ -195,7 +193,7 @@ class SimpleTestCaseBase(unittest.TestCase):
             os.makedirs(settings.MEDIA_ROOT)
             shutil.copytree(settings.DATA_ROOT, DATA_DIR)
 
-        dims = [(500, 500), (100, 100), (200, 100),]
+        dims = [(500, 500), (100, 100), (200, 100), ]
 
         for dim in dims:
             name = '%sx%s.jpg' % dim
@@ -366,7 +364,6 @@ class SimpleTestCase(SimpleTestCaseBase):
             'thumbnail_tests.storage.TestStorage',
         )
         im = ImageFile('http://dummyimage.com/300x300/')
-        default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
             'sorl.thumbnail.images.UrlStorage',
@@ -375,7 +372,7 @@ class SimpleTestCase(SimpleTestCaseBase):
     def test_abspath(self):
         item = Item.objects.get(image='500x500.jpg')
         image = ImageFile(item.image.path)
-        val = render_to_string('thumbnail20.html', {'image': image,}).strip()
+        val = render_to_string('thumbnail20.html', {'image': image, }).strip()
 
         im = self.backend.get_thumbnail(image, '32x32', crop='center')
         self.assertEqual('<img src="%s">' % im.url, val)
@@ -383,14 +380,14 @@ class SimpleTestCase(SimpleTestCaseBase):
     def test_new_tag_style(self):
         item = Item.objects.get(image='500x500.jpg')
         image = ImageFile(item.image.path)
-        val = render_to_string('thumbnail20a.html', {'image': image,}).strip()
+        val = render_to_string('thumbnail20a.html', {'image': image, }).strip()
 
         im = self.backend.get_thumbnail(image, '32x32', crop='center')
         self.assertEqual('<img src="%s">' % im.url, val)
 
     def test_html_filter(self):
         text = '<img alt="A image!" src="http://dummyimage.com/800x800" />'
-        val = render_to_string('htmlfilter.html', {'text': text,}).strip()
+        val = render_to_string('htmlfilter.html', {'text': text, }).strip()
 
         self.assertEqual(
             '<img alt="A image!" '
@@ -400,7 +397,7 @@ class SimpleTestCase(SimpleTestCaseBase):
 
     def test_html_filter_local_url(self):
         text = '<img alt="A image!" src="/media/500x500.jpg" />'
-        val = render_to_string('htmlfilter.html', {'text': text,}).strip()
+        val = render_to_string('htmlfilter.html', {'text': text, }).strip()
 
         self.assertEqual(
             '<img alt="A image!" '
@@ -410,7 +407,7 @@ class SimpleTestCase(SimpleTestCaseBase):
 
     def test_markdown_filter(self):
         text = '![A image!](http://dummyimage.com/800x800)'
-        val = render_to_string('markdownfilter.html', {'text': text,}).strip()
+        val = render_to_string('markdownfilter.html', {'text': text, }).strip()
 
         self.assertEqual(
             '![A image!](/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg)',
@@ -419,7 +416,7 @@ class SimpleTestCase(SimpleTestCaseBase):
 
     def test_markdown_filter_local_url(self):
         text = '![A image!](/media/500x500.jpg)'
-        val = render_to_string('markdownfilter.html', {'text': text,}).strip()
+        val = render_to_string('markdownfilter.html', {'text': text, }).strip()
 
         self.assertEqual(
             '![A image!](/media/test/cache/36/1f/361fdc861e17bc1d108844b980454627.jpg)',
@@ -448,14 +445,14 @@ class SimpleTestCase(SimpleTestCaseBase):
 class TemplateTestCaseA(SimpleTestCaseBase):
     def test_model(self):
         item = Item.objects.get(image='500x500.jpg')
-        val = render_to_string('thumbnail1.html', {'item': item,}).strip()
+        val = render_to_string('thumbnail1.html', {'item': item, }).strip()
         self.assertEqual(val, '<img style="margin:0px 0px 0px 0px" width="200" height="100">')
-        val = render_to_string('thumbnail2.html', {'item': item,}).strip()
+        val = render_to_string('thumbnail2.html', {'item': item, }).strip()
         self.assertEqual(val, '<img style="margin:0px 50px 0px 50px" width="100" height="100">')
 
     def test_nested(self):
         item = Item.objects.get(image='500x500.jpg')
-        val = render_to_string('thumbnail6.html', {'item': item,}).strip()
+        val = render_to_string('thumbnail6.html', {'item': item, }).strip()
         self.assertEqual(val, (
             '<a href="/media/test/cache/ba/d7/bad785264867676a926566150f90f87c.jpg">'
             '<img src="/media/test/cache/c6/7a/c67a64c3145f8834cd6770f6f80198c9.jpg" '
@@ -484,7 +481,7 @@ class TemplateTestCaseA(SimpleTestCaseBase):
             'quality': 77,
         }
         val0 = render_to_string('thumbnail8.html', {'item': item, 'options': options, }).strip()
-        val1 = render_to_string('thumbnail8a.html', {'item': item,}).strip()
+        val1 = render_to_string('thumbnail8a.html', {'item': item, }).strip()
         self.assertEqual(val0, val1)
 
     def test_progressive(self):
@@ -675,7 +672,7 @@ class CropTestCase(SimpleTestCaseBase):
 
     def test_smart_crop(self):
         # TODO: Complete test for smart crop
-        self.backend.get_thumbnail('32x32', 'data/white_border.jpg', crop='smart' )
+        self.backend.get_thumbnail('32x32', 'data/white_border.jpg', crop='smart')
 
     def test_crop_image_with_icc_profile(self):
         name = 'data/icc_profile_test.jpg'
@@ -702,10 +699,10 @@ class DummyTestCase(TestCase):
     def test_dummy_tags(self):
         settings.THUMBNAIL_DUMMY = True
 
-        val = render_to_string('thumbnaild1.html', {'anything': 'AINO',}).strip()
+        val = render_to_string('thumbnaild1.html', {'anything': 'AINO', }).strip()
         self.assertEqual(val, '<img style="margin:auto" width="200" height="100">')
-        val = render_to_string('thumbnaild2.html', {'anything': None,}).strip()
-        self.assertEqual(val, '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>' )
+        val = render_to_string('thumbnaild2.html', {'anything': None, }).strip()
+        self.assertEqual(val, '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>')
         val = render_to_string('thumbnaild3.html', {}).strip()
         self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
 
