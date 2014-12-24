@@ -364,6 +364,7 @@ class SimpleTestCase(SimpleTestCaseBase):
             'thumbnail_tests.storage.TestStorage',
         )
         im = ImageFile('http://dummyimage.com/300x300/')
+        default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
             'sorl.thumbnail.images.UrlStorage',
