@@ -69,6 +69,7 @@ after_failure:
   - cat /home/travis/.pip/pip.log
 
 after_success:
+  - flake8
   - pip freeze
   - coveralls
 
@@ -81,7 +82,6 @@ install:
 
 script:
   - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
-  - cd .. && flake8
 
 services:
   - redis-server
