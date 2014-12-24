@@ -70,7 +70,10 @@ class KVStore(KVStoreBase):
 
     def _get_raw(self, key):
         with DBMContext(self.filename, self.mode, True) as db:
-            return db.get(self._cast_key(key))
+            try:
+                return db[self._cast_key(key)]
+            except KeyError:
+                return None
 
     def _set_raw(self, key, value):
         with DBMContext(self.filename, self.mode, False) as db:
@@ -79,9 +82,10 @@ class KVStore(KVStoreBase):
     def _delete_raw(self, *keys):
         with DBMContext(self.filename, self.mode, False) as db:
             for key in keys:
-                k = self._cast_key(key)
-                if k in db:
-                    del db[k]
+                try:
+                    del db[self._cast_key(key)]
+                except KeyError:
+                    pass
 
     def _find_keys_raw(self, prefix):
         with DBMContext(self.filename, self.mode, True) as db:
