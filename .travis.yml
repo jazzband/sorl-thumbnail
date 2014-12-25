@@ -1,87 +1,76 @@
 language: python
 
 python:
-  - "2.7"
-  - "3.3"
+  - "3.4"
 
 env:
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=imagemagick APT=imagemagick
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=graphicsmagick APT=graphicsmagick
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=wand APT=libmagickwand-dev PIP=wand
-  - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=redis PIP=redis
-
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=imagemagick APT=imagemagick
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=graphicsmagick APT=graphicsmagick
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=wand APT=libmagickwand-dev PIP=wand
-  - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=redis PIP=redis
-
-  - DJANGO_VERSION=">=1.7,<1.8" SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - DJANGO_VERSION=">=1.7,<1.8" SETTINGS=imagemagick APT=imagemagick
-  - DJANGO_VERSION=">=1.7,<1.8" SETTINGS=graphicsmagick APT=graphicsmagick
-  - DJANGO_VERSION=">=1.7,<1.8" SETTINGS=wand APT=libmagickwand-dev PIP=wand
-  - DJANGO_VERSION=">=1.7,<1.8" SETTINGS=redis PIP=redis
-
-matrix:
-  include:
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=imagemagick APT=imagemagick
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=graphicsmagick APT=graphicsmagick
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=wand APT=libmagickwand-dev PIP=wand
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=redis PIP=redis
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.4,<1.5" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - PIP=pgmagick
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.5,<1.6" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - PIP=pgmagick
-
-    - python: "2.7"
-      env:
-        - DJANGO_VERSION=">=1.6,<1.7" SETTINGS=pgmagick APT='libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev'
-        - PIP=pgmagick
+  - TOX_ENV=py27-django14-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py27-django14-imagemagick APT=imagemagick
+  - TOX_ENV=py27-django14-graphicsmagick APT=imagemagick
+  - TOX_ENV=py27-django14-redis
+  - TOX_ENV=py27-django14-wand
+  - TOX_ENV=py27-django14-pgmagick
+  - TOX_ENV=py27-django14-dbm
+  - TOX_ENV=py27-django15-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py27-django15-imagemagick APT=imagemagick
+  - TOX_ENV=py27-django15-graphicsmagick APT=imagemagick
+  - TOX_ENV=py27-django15-redis
+  - TOX_ENV=py27-django15-wand
+  - TOX_ENV=py27-django15-pgmagick
+  - TOX_ENV=py27-django15-dbm
+  - TOX_ENV=py27-django16-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py27-django16-imagemagick APT=imagemagick
+  - TOX_ENV=py27-django16-graphicsmagick APT=imagemagick
+  - TOX_ENV=py27-django16-redis
+  - TOX_ENV=py27-django16-wand
+  - TOX_ENV=py27-django16-pgmagick
+  - TOX_ENV=py27-django16-dbm
+  - TOX_ENV=py27-django17-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py27-django17-imagemagick APT=imagemagick
+  - TOX_ENV=py27-django17-graphicsmagick APT=imagemagick
+  - TOX_ENV=py27-django17-redis
+  - TOX_ENV=py27-django17-wand
+  - TOX_ENV=py27-django17-pgmagick
+  - TOX_ENV=py27-django17-dbm
+  - TOX_ENV=py34-django15-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py34-django15-imagemagick APT=imagemagick
+  - TOX_ENV=py34-django15-graphicsmagick APT=imagemagick
+  - TOX_ENV=py34-django15-redis
+  - TOX_ENV=py34-django15-wand
+  - TOX_ENV=py34-django15-pgmagick
+  - TOX_ENV=py34-django15-dbm
+  - TOX_ENV=py34-django16-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py34-django16-imagemagick APT=imagemagick
+  - TOX_ENV=py34-django16-graphicsmagick APT=imagemagick
+  - TOX_ENV=py34-django16-redis
+  - TOX_ENV=py34-django16-wand
+  - TOX_ENV=py34-django16-pgmagick
+  - TOX_ENV=py34-django16-dbm
+  - TOX_ENV=py34-django17-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py34-django17-imagemagick APT=imagemagick
+  - TOX_ENV=py34-django17-graphicsmagick APT=imagemagick
+  - TOX_ENV=py34-django17-redis
+  - TOX_ENV=py34-django17-wand
+  - TOX_ENV=py34-django17-pgmagick
+  - TOX_ENV=py34-django17-dbm
 
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq $APT
 
 after_failure:
-  - pip freeze
   - cat /home/travis/.pip/pip.log
 
 after_success:
-  - pip freeze
   - coveralls
 
 install:
   - pip install -U pip
-  - pip install -q coveralls
-  - pip install -q Pillow $PIP
-  - pip install -q Django$DJANGO_VERSION
-  - pip install flake8
+  - pip install -q coveralls flake8 tox
 
 script:
-  - cd tests && coverage run --source=sorl runtests.py --settings=settings.$SETTINGS
-  - cd .. && flake8 --show-source sorl/
+  - tox -e $TOX_ENV
+  - flake8 --show-source sorl/
 
 services:
   - redis-server
