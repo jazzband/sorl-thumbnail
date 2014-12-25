@@ -8,6 +8,7 @@ import os
 
 import re
 from os.path import join as pjoin
+import pytest
 from PIL import Image
 from django.utils.six import StringIO
 from django.core import management
@@ -33,6 +34,8 @@ from .utils import same_open_fd_count, override_custom_settings
 
 skip = unittest.skip
 skipIf = unittest.skipIf
+
+pytestmark = pytest.mark.django_db
 
 handler = ThumbnailLogHandler()
 handler.setLevel(logging.ERROR)
