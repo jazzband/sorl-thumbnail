@@ -7,7 +7,8 @@ from PIL import Image
 
 import pytest
 from django.utils.six import StringIO
-from django.test import override_settings, TestCase
+from django.test import TestCase
+from django.test.utils import override_settings
 
 from sorl.thumbnail import default, delete, get_thumbnail
 from sorl.thumbnail.base import ThumbnailBackend
