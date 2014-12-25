@@ -144,4 +144,3 @@ class TemplateTestCaseClient(TestCase):
             end = outbox[0].body.split('\n\n')[-2].split(':')[1].strip()
 
             self.assertEqual(end, '[Errno 2] No such file or directory')
-

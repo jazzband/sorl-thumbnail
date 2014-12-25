@@ -346,10 +346,11 @@ class DummyTestCase(unittest.TestCase):
         val = render_to_string('thumbnaild1.html', {'anything': 'AINO', }).strip()
         self.assertEqual(val, '<img style="margin:auto" width="200" height="100">')
         val = render_to_string('thumbnaild2.html', {'anything': None, }).strip()
-        self.assertEqual(val,
-                         '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>')
+        self.assertEqual(
+            val,
+            '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>'
+        )
         val = render_to_string('thumbnaild3.html', {}).strip()
         self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
 
         settings.THUMBNAIL_DUMMY = False
-

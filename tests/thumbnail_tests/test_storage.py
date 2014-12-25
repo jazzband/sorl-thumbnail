@@ -37,7 +37,9 @@ class StorageTestCase(BaseStorageTestCase):
 
     def test_safe_methods(self):
         im = default.kvstore.get(self.image)
-        url, x, y = (im.url, im.x, im.y)
+        self.assertIsNotNone(im.url)
+        self.assertIsNotNone(im.x)
+        self.assertIsNotNone(im.y)
         self.assertEqual(self.log, [])
 
 
@@ -48,4 +50,3 @@ class UrlStorageTestCase(unittest.TestCase):
             storage.normalize_url('El jovencito emponzoñado de whisky, qué figura exhibe'),
             'El%20jovencito%20emponzoado%20de%20whisky%2C%20qu%20figura%20exhibe'
         )
-

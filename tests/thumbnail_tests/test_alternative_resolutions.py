@@ -50,9 +50,9 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
         ]
         self.assertEqual(self.log, actions)
 
-        path = os.path.join(settings.MEDIA_ROOT, 'test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg')
+        path = os.path.join(settings.MEDIA_ROOT,
+                            'test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg')
 
         with open(path) as fp:
             engine = PILEngine()
             self.assertEqual(engine.get_image_size(engine.get_image(ImageFile(file_=fp))), (75, 75))
-

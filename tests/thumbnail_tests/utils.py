@@ -32,7 +32,8 @@ def same_open_fd_count(testcase):
     num_opened_fd_after = get_open_fds_count()
     testcase.assertEqual(
         num_opened_fd_before, num_opened_fd_after,
-        'Open descriptors count changed, was %s, now %s' % (num_opened_fd_before, num_opened_fd_after)
+        'Open descriptors count changed, was %s, now %s' % (num_opened_fd_before,
+                                                            num_opened_fd_after)
     )
 
 
@@ -145,4 +146,3 @@ class BaseStorageTestCase(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
-

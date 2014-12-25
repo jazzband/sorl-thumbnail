@@ -41,7 +41,8 @@ class CommandTests(BaseTestCase):
         out = StringIO('')
         management.call_command('thumbnail', 'clear_delete_referenced', verbosity=1, stdout=out)
         lines = out.getvalue().split("\n")
-        self.assertEqual(lines[0], "Delete all thumbnail files referenced in Key Value Store ... [Done]")
+        self.assertEqual(lines[0],
+                         "Delete all thumbnail files referenced in Key Value Store ... [Done]")
         self.assertEqual(lines[1], "Clear the Key Value Store ... [Done]")
         self.assertTrue(os.path.isfile(name1))
         self.assertTrue(os.path.isfile(name2))
@@ -65,4 +66,3 @@ class CommandTests(BaseTestCase):
         out = StringIO('')
         management.call_command('thumbnail', 'cleanup', verbosity=1, stdout=out)
         self.assertEqual(out.getvalue(), "Cleanup thumbnails ... [Done]\n")
-

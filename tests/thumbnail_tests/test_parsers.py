@@ -34,4 +34,3 @@ class GeometryParserTestCase(unittest.TestCase):
         self.assertEqual(g, (222, None))
         g = parse_geometry('x999')
         self.assertEqual(g, (None, 999))
-
