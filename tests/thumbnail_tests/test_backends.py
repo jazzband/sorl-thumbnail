@@ -134,8 +134,7 @@ class TestInputCase(unittest.TestCase):
     def test_nonascii(self):
         # also test the get_thumbnail shortcut
         th = get_thumbnail(self.name, '200x200')
-        hash_file = '/media/test/cache/99/45/9945ad3ee0397274de77abd37d5db7bb.jpg'
-        self.assertEqual(th.url, hash_file)
+        self.assertEqual(th.url, '/media/test/cache/f5/26/f52608b56718f62abc45a90ff9459f2c.jpg')
 
     def tearDown(self):
         shutil.rmtree(settings.MEDIA_ROOT)
