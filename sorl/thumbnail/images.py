@@ -48,7 +48,7 @@ class BaseImageFile(object):
     size = []
 
     def exists(self):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     def width(self):
@@ -71,7 +71,7 @@ class BaseImageFile(object):
 
     @property
     def url(self):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     src = url
 

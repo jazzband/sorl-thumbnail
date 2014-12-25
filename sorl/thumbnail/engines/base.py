@@ -172,19 +172,19 @@ class EngineBase(object):
         """
         Returns the backend image objects from an ImageFile instance
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def get_image_size(self, image):
         """
         Returns the image width and height as a tuple
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def is_valid_image(self, raw_data):
         """
         Checks if the supplied raw data is valid image data
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _orientation(self, image):
         """
@@ -200,51 +200,51 @@ class EngineBase(object):
 
             RGB, GRAY
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _remove_border(self, image, image_width, image_height):
         """
         Remove borders around images
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _entropy_crop(self, image, geometry_width, geometry_height, image_width, image_height):
         """
         Crop the image to the correct aspect ratio
         by removing the lowest entropy parts
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _scale(self, image, width, height):
         """
         Does the resizing of the image
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _crop(self, image, width, height, x_offset, y_offset):
         """
         Crops the image
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
         """
         Gets raw data given the image, format and quality. This method is
         called from :meth:`write`
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _padding(self, image, geometry, options):
         """
         Pads the image
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _cropbox(self, image, x, y, x2, y2):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _rounded(self, image, r):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _blur(self, image, radius):
-        raise NotImplemented()
+        raise NotImplementedError()
