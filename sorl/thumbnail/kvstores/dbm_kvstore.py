@@ -7,6 +7,8 @@ from sorl.thumbnail.conf import settings
 
 try:
     import anydbm as dbm
+except KeyError:
+    import dbm
 except ImportError:
     # Python 3, hopefully
     import dbm
