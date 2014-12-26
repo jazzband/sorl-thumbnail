@@ -86,7 +86,7 @@ class ThumbnailNodeBase(Node):
             return self.nodelist_empty.render(context)
 
     def _render(self, context):
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class ThumbnailNode(ThumbnailNodeBase):

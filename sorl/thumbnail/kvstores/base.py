@@ -184,7 +184,7 @@ class KVStoreBase(object):
         """
         Gets the value from keystore, returns `None` if not found.
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _set_raw(self, key, value):
         """
@@ -192,16 +192,16 @@ class KVStoreBase(object):
         chars. Value is a ``unicode`` object with an unknown (reasonable)
         length.
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _delete_raw(self, *keys):
         """
         Deletes the keys. Silent failure for missing keys.
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def _find_keys_raw(self, prefix):
         """
         Finds all keys with prefix
         """
-        raise NotImplemented()
+        raise NotImplementedError()
