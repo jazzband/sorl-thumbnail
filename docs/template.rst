@@ -175,7 +175,7 @@ Images are not padded by default, but this can be changed by setting
 ``padding_color``
 ^^^^^^^^^^^^^^^^^
 This is the color to use for padding the image. It defaults to ``#ffffff`` and
-can be globally set with the setting ``THUBMNAIL_PADDING_COLOR``.
+can be globally set with the setting ``THUMBNAIL_PADDING_COLOR``.
 
 
 ``options``
