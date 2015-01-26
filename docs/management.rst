@@ -32,7 +32,7 @@ you're switching Key Value Store backend.
 .. _thumbnail-clear-delete-referenced:
 
 thumbnail clear_delete_referenced
-===============
+=================================
 ``python manage.py thumbnail clear_delete_referenced``
 
 Equivalent to to ``clear`` but first it will delete all thumbnail files
@@ -42,10 +42,10 @@ long as all the original images still exist this will trigger a regeneration of
 all the thumbnails the Key Value Store knows about.
 
 
-.. _thumbnail-clear:
+.. _thumbnail-clear-delete-all:
 
 thumbnail clear_delete_all
-===============
+==========================
 ``python manage.py thumbnail clear_delete_all``
 
 Equivalent to to ``clear`` but afterwards it will delete all thumbnail files
