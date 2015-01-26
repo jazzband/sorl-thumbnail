@@ -298,7 +298,7 @@ options.
 
 
 ``THUMBNAIL_ORIENTATION``
-========================
+=========================
 
 - Default: ``True``
 
