@@ -1,0 +1,5 @@
+{% load thumbnail %}{% spaceless %}
+{% thumbnail "http://dummyimage.com/100x100/" 20x20 as im %}
+    <img src="{{ im }}">
+    {% block foo %}{% endblock foo %}
+{% endspaceless %}

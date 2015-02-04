@@ -364,3 +364,12 @@ that regex replaces references to images with thumbnails.
 
 This value sets the timeout value in seconds when retrieving a source image from a URL. 
 If no timeout value is specified, it will wait indefinitely for a response.
+
+
+``THUMBNAIL_REQUIRE_END_TAG``
+=========================
+
+- Default: ``True``
+
+You can disable the ``endthumbnail`` tag  by setting this setting to False.
+Use this setting to maintain existing templates with the previous syntax.

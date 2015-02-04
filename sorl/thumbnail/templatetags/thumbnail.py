@@ -5,6 +5,7 @@ import logging
 import sys
 import re
 import os
+import copy
 from functools import wraps
 
 from django.template import Library, Node, NodeList, TemplateSyntaxError
@@ -117,14 +118,19 @@ class ThumbnailNode(ThumbnailNodeBase):
 
         if bits[-2] == 'as':
             self.as_var = bits[-1]
-            self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
-            if parser.next_token().contents == 'empty':
-                self.nodelist_empty = parser.parse(('endthumbnail',))
-                parser.delete_first_token()
+            if sorl_settings.THUMBNAIL_REQUIRE_END_TAG:
+                self.nodelist_file = parser.parse(('empty', 'endthumbnail',))
+                if parser.next_token().contents == 'empty':
+                    self.nodelist_empty = parser.parse(('endthumbnail',))
+                    parser.delete_first_token()
+            else:
+                self.nodelist_file = None
 
     def _render(self, context):
         file_ = self.file_.resolve(context)
         geometry = self.geometry.resolve(context)
+        if not geometry:
+            geometry = str(self.geometry)
         options = {}
         for key, expr in self.options:
             noresolve = {'True': True, 'False': False, 'None': None}
@@ -143,10 +149,14 @@ class ThumbnailNode(ThumbnailNodeBase):
                 return ''
 
         if self.as_var:
-            context.push()
-            context[self.as_var] = thumbnail
-            output = self.nodelist_file.render(context)
-            context.pop()
+            if self.nodelist_file:
+                context.push()
+                context[self.as_var] = thumbnail
+                output = self.nodelist_file.render(context)
+                context.pop()
+            else:
+                context[self.as_var] = thumbnail.url
+                return ''
         else:
             output = thumbnail.url
 
