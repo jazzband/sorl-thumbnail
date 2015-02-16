@@ -107,7 +107,7 @@ class Engine(EngineBase):
             args.extend(['-format', '%[exif:orientation]', image['source']])
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
-            result = p.stdout.read().strip()
+            result = p.stdout.read().strip().split('\n')[0]
             if result and result != 'unknown':
                 result = int(result)
                 options = image['options']
