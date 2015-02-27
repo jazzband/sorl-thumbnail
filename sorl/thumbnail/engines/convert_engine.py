@@ -2,6 +2,7 @@ from __future__ import unicode_literals, with_statement
 import re
 import os
 import subprocess
+import tempfile
 from tempfile import NamedTemporaryFile
 
 from django.utils.datastructures import SortedDict
@@ -48,16 +49,18 @@ class Engine(EngineBase):
 
         suffix = '.%s' % EXTENSIONS[options['format']]
 
-        with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
-            args.append(fp.name)
-            args = map(smart_str, args)
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
-            out, err = p.communicate()
+        os_handle, file_path = tempfile.mkstemp(suffix=suffix)
 
-            if err:
-                raise Exception(err)
+        args.append(file_path)
+        args = map(smart_str, args)
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p.wait()
+        out, err = p.communicate()
 
+        if err:
+            raise Exception(err)
+
+        with open(file_path, 'rb') as fp:
             thumbnail.write(fp.read())
 
     def cleanup(self, image):
