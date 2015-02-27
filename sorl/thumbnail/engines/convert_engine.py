@@ -49,19 +49,32 @@ class Engine(EngineBase):
 
         suffix = '.%s' % EXTENSIONS[options['format']]
 
-        os_handle, file_path = tempfile.mkstemp(suffix=suffix)
+        if os.name == 'nt':
+            os_handle, file_path = tempfile.mkstemp(suffix=suffix)
 
-        args.append(file_path)
-        args = map(smart_str, args)
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-        out, err = p.communicate()
+            args.append(file_path)
+            args = map(smart_str, args)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p.wait()
+            out, err = p.communicate()
 
-        if err:
-            raise Exception(err)
+            if err:
+                raise Exception(err)
 
-        with open(file_path, 'rb') as fp:
-            thumbnail.write(fp.read())
+            with open(file_path, 'rb') as fp:
+                thumbnail.write(fp.read())
+        else:
+            with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
+                args.append(fp.name)
+                args = map(smart_str, args)
+                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                p.wait()
+                out, err = p.communicate()
+
+                if err:
+                    raise Exception(err)
+
+                thumbnail.write(fp.read())
 
     def cleanup(self, image):
         os.remove(image['source'])  # we should not need this now
