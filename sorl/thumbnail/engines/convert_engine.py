@@ -51,6 +51,7 @@ class Engine(EngineBase):
 
         if os.name == 'nt':
             os_handle, file_path = tempfile.mkstemp(suffix=suffix)
+            os.close(os_handle)
 
             args.append(file_path)
             args = map(smart_str, args)
