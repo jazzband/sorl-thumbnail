@@ -108,13 +108,28 @@ class Engine(EngineBase):
         This is not very good for imagemagick because it will say anything is
         valid that it can use as input.
         """
-        with NamedTemporaryFile(mode='wb') as fp:
-            fp.write(raw_data)
-            fp.flush()
+        if os.name == 'nt':
+            os_handle, file_path = tempfile.mkstemp()
+            os.close(os_handle)
+
+            with open(file_path, 'wb') as fp:
+                fp.write(raw_data)
+                fp.flush()
+
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
             args.append(fp.name)
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             retcode = p.wait()
+
+            os.remove(file_path)
+        else:
+            with NamedTemporaryFile(mode='wb') as fp:
+                fp.write(raw_data)
+                fp.flush()
+                args = settings.THUMBNAIL_IDENTIFY.split(' ')
+                args.append(fp.name)
+                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                retcode = p.wait()
         return retcode == 0
 
     def _orientation(self, image):
