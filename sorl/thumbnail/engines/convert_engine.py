@@ -64,6 +64,8 @@ class Engine(EngineBase):
 
             with open(file_path, 'rb') as fp:
                 thumbnail.write(fp.read())
+
+            os.remove(file_path)
         else:
             with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
                 args.append(fp.name)
