@@ -36,7 +36,8 @@ try:
     # Python >= 2.7
     from importlib import import_module
 except ImportError:
-    from django.utils.importlib import import_module
+    if django.VERSION < (1, 8):
+        from django.utils.importlib import import_module
 
 # Python 2 and 3
 
