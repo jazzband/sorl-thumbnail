@@ -1,8 +1,10 @@
-from django.core.cache import cache, get_cache, InvalidCacheBackendError
+import django
+from django.core.cache import cache, InvalidCacheBackendError
+
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
-
+from sorl.thumbnail.compat import get_cache
 
 class EMPTY_VALUE(object):
     pass

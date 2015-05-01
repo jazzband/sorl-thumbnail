@@ -4,12 +4,12 @@ import os
 import subprocess
 from tempfile import NamedTemporaryFile
 
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import smart_str
 
 from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
+from sorl.thumbnail.compat import OrderedDict
 
 
 size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
@@ -69,7 +69,7 @@ class Engine(EngineBase):
         """
         with NamedTemporaryFile(mode='wb', delete=False) as fp:
             fp.write(source.read())
-        return {'source': fp.name, 'options': SortedDict(), 'size': None}
+        return {'source': fp.name, 'options': OrderedDict(), 'size': None}
 
     def get_image_size(self, image):
         """

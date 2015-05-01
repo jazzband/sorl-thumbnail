@@ -5,8 +5,8 @@ Thumbnails for Django.
 Features at a glance
 ====================
 
-- Support for Django 1.4, 1.5, 1.6 and 1.7
-- Python 3 support (for Django 1.5, 1.6, 1.7)
+- Support for Django 1.4, 1.5, 1.6, 1.7 and 1.8
+- Python 3 support (for Django 1.5, 1.6, 1.7, 1.8)
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_ and `pgmagick`_
 - Pluggable Key Value Store support (cached db, redis)
