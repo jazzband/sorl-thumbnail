@@ -61,11 +61,6 @@ class EngineBase(object):
         return image
 
     def _calculate_scaling_factor(self, x_image, y_image, geometry, options):
-        """
-        crop = options['crop']
-        factors = (geometry[0] / x_image, geometry[1] / y_image)
-        return max(factors) if crop else min(factors)
-        """
         return geometry[0] / x_image
 
     def scale(self, image, geometry, options):
