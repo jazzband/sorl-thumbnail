@@ -5,6 +5,7 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
 from sorl.thumbnail.compat import get_cache
 
+
 class EMPTY_VALUE(object):
     pass
 
