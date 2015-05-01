@@ -1,4 +1,3 @@
-import django
 from django.core.cache import cache, InvalidCacheBackendError
 
 from sorl.thumbnail.kvstores.base import KVStoreBase
