@@ -46,6 +46,19 @@ try:
 except ImportError:
     from django.utils.importlib import import_module
 
+if django.VERSION >= (1, 7):
+    from django.core.cache import caches
+    def get_cache(name):
+        return caches[name]
+else:
+    from django.core.cache import get_cache
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    from django.utils.datastructures import SortedDict as OrderedDict
+
+
 # Python 2 and 3
 
 if PY3:
