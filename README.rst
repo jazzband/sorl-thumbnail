@@ -83,7 +83,7 @@ your project's settings. ::
 
 
 Templates Usage
-----------------
+---------------
 
 All of the examples assume that you first load the thumbnail template tag in
 your template.::
@@ -126,6 +126,22 @@ You can use the 'get_thumbnail'::
 
 See more examples in the section `Low level API examples`_ in the Documentation
 
+--------------------------
+Frequently asked questions
+--------------------------
+
+Is so slow in Amazon S3 !
+-------------------------
+
+Posible related to the implementation of your Amazon S3 Backend, see the issue `#351`_
+due the storage backend reviews if there is an existing thumbnail when tries to
+generate the thumbnail that makes an extensive use of the S3 API
+
+A fast workaround if you are not willing to tweak your storage backend is to set
+the `THUMBNAIL_FORCE_OVERWRITE` setting to `True` by default is `False`, so it will
+avoid to overly query the S3 API
+
+
 
 
 .. |travis| image:: https://secure.travis-ci.org/mariocesar/sorl-thumbnail.png?branch=master
@@ -134,7 +150,6 @@ See more examples in the section `Low level API examples`_ in the Documentation
     :target: http://badge.fury.io/py/sorl-thumbnail
 .. |coveralls| image:: https://coveralls.io/repos/mariocesar/sorl-thumbnail/badge.png?branch=master
     :target: https://coveralls.io/r/mariocesar/sorl-thumbnail?branch=master
-
 
 .. _`Pillow`: http://pillow.readthedocs.org/en/latest/
 .. _`ImageMagick`: http://www.imagemagick.org/script/index.php
@@ -145,3 +160,4 @@ See more examples in the section `Low level API examples`_ in the Documentation
 .. _`Template examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#template-examples
 .. _`Model examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#model-examples
 .. _`Low level API examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#low-level-api-examples
+.. _ `#351`: https://github.com/mariocesar/sorl-thumbnail/issues/351
