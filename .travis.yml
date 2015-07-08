@@ -3,6 +3,12 @@ language: python
 python:
   - "3.4"
 
+cache:
+  pip:
+  apt:
+  directories:
+    - .tox
+
 env:
   - TOX_ENV=py27-django14-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
   - TOX_ENV=py27-django14-imagemagick APT=imagemagick
@@ -75,10 +81,11 @@ after_success:
   - coveralls
 
 install:
-  - pip install -U pip
+  - pip install pip wheel
   - pip install -q coveralls flake8 tox
 
 script:
+  - env | sort
   - tox -e $TOX_ENV
   - flake8 --show-source sorl/
 
