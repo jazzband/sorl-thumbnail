@@ -79,6 +79,10 @@ if PY3:
     string_type = str
 
 
+    def b(s):
+        return s.encode("latin-1")
+
+
     def encode(value, charset='utf-8', errors='ignore'):
         if isinstance(value, bytes):
             return value
@@ -100,6 +104,10 @@ elif PY2:
     text_type = unicode
     string_type = basestring
     urlsplit = urlparse.urlsplit
+
+
+    def b(s):
+        return s
 
 
     def encode(value, charset='utf-8', errors='ignore'):
