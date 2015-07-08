@@ -21,7 +21,10 @@ PythonVersion = sys.version_info[0]
 PY2 = PythonVersion == 2
 PY3 = PythonVersion == 3
 
-# Django version
+# -- import_module
+from importlib import import_module
+
+# -- Related to django 1.5 incompatibility
 
 if django.VERSION < (1, 5):
     from django.utils import simplejson as json
@@ -30,6 +33,8 @@ else:
     import json
     from django.utils.encoding import force_text as force_unicode
 
+# -- Cache
+
 if django.VERSION >= (1, 7):
     from django.core.cache import caches
 
@@ -37,25 +42,14 @@ if django.VERSION >= (1, 7):
 else:
     from django.core.cache import get_cache
 
+# -- Text
+
 try:
     from django.utils.encoding import smart_text
 except ImportError:
     from django.utils.encoding import smart_unicode as smart_text
 
-try:
-    # Python >= 2.7
-    from importlib import import_module
-except ImportError:
-    from django.utils.importlib import import_module
-
-if django.VERSION >= (1, 7):
-    from django.core.cache import caches
-
-
-    def get_cache(name):
-        return caches[name]
-else:
-    from django.core.cache import get_cache
+# -- Ordered Dict
 
 try:
     from collections import OrderedDict
@@ -63,7 +57,7 @@ except ImportError:
     from django.utils.datastructures import SortedDict as OrderedDict
 
 
-# Python 2 and 3
+# -- Python 2 and 3
 
 if PY3:
     from urllib.error import URLError
@@ -115,6 +109,8 @@ elif PY2:
             return value.encode(charset, errors)
         return unicode(value, errors=errors).encode(charset)
 
+
+# -- Urlopen with a proper default user agent
 
 def urlopen(url):
     from sorl.thumbnail.conf import settings
