@@ -4,17 +4,17 @@ from __future__ import unicode_literals, print_function
 
 import sys
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import LabelCommand, CommandError
 
 from sorl.thumbnail import default
 from sorl.thumbnail.images import delete_all_thumbnails
 
 
-class Command(BaseCommand):
+class Command(LabelCommand):
     help = (
         'Handles thumbnails and key value store'
     )
-    args = '[cleanup, clear clear_delete_referenced clear_delete_all]'
+    missing_args_message = 'Enter one of [cleanup, clear clear_delete_referenced clear_delete_all]'
 
     def handle(self, *labels, **options):
         verbosity = int(options.get('verbosity'))
