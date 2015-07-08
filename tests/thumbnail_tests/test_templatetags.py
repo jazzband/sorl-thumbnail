@@ -139,7 +139,7 @@ class TemplateTestCaseClient(TestCase):
             client = Client()
             response = client.get('/thumbnail9.html')
             self.assertEqual(response.content.strip(), b'<p>empty</p>')
-            self.assertEqual(outbox[0].subject, '[sorl-thumbnail] ERROR: /thumbnail9.html')
+            self.assertEqual(outbox[0].subject, '[sorl-thumbnail] ERROR: Unknown URL')
 
             end = outbox[0].body.split('\n\n')[-2].split(':')[1].strip()
 
