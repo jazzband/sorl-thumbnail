@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
 import sys
-import django
 
+import django
 
 __all__ = [
     'json',
@@ -12,6 +12,7 @@ __all__ = [
     'quote',
     'quote_plus',
     'URLError',
+    'get_cache',
     'force_unicode', 'text_type'
 ]
 
@@ -26,6 +27,13 @@ if django.VERSION < (1, 5):
 else:
     import json
     from django.utils.encoding import force_text as force_unicode
+
+if django.VERSION >= (1, 7):
+    from django.core.cache import caches
+
+    get_cache = lambda cache_name: caches[cache_name]
+else:
+    from django.core.cache import get_cache
 
 try:
     from django.utils.encoding import smart_text
@@ -52,10 +60,12 @@ if PY3:
     text_type = str
     string_type = str
 
+
     def encode(value, charset='utf-8', errors='ignore'):
         if isinstance(value, bytes):
             return value
         return value.encode(charset, errors)
+
 
     def urlsplit(url):
         return urlparse.urlsplit(url.decode('ascii', 'ignore'))
@@ -72,6 +82,7 @@ elif PY2:
     text_type = unicode
     string_type = basestring
     urlsplit = urlparse.urlsplit
+
 
     def encode(value, charset='utf-8', errors='ignore'):
         if isinstance(value, unicode):
