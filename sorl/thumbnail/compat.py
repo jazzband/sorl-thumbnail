@@ -16,8 +16,10 @@ __all__ = [
     'force_unicode', 'text_type'
 ]
 
-PY2 = sys.version_info[0] == 2
-PY3 = sys.version_info[0] == 3
+PythonVersion = sys.version_info[0]
+
+PY2 = PythonVersion == 2
+PY3 = PythonVersion == 3
 
 # Django version
 
@@ -48,6 +50,8 @@ except ImportError:
 
 if django.VERSION >= (1, 7):
     from django.core.cache import caches
+
+
     def get_cache(name):
         return caches[name]
 else:
@@ -63,7 +67,8 @@ except ImportError:
 
 if PY3:
     from urllib.error import URLError
-    from urllib.request import urlopen
+    from urllib.request import Request
+    from urllib.request import urlopen as _urlopen
     from urllib.parse import quote, quote_plus
 
     import urllib.parse as urlparse
@@ -84,8 +89,8 @@ if PY3:
         return urlparse.urlsplit(url.decode('ascii', 'ignore'))
 
 elif PY2:
-    from urllib2 import URLError
-    from urllib2 import urlopen
+    from urllib2 import URLError, Request
+    from urllib2 import urlopen as _urlopen
     from urllib import quote, quote_plus
 
     import urlparse
@@ -101,3 +106,13 @@ elif PY2:
         if isinstance(value, unicode):
             return value.encode(charset, errors)
         return unicode(value, errors=errors).encode(charset)
+
+
+def urlopen(url):
+    from sorl.thumbnail.conf import settings
+
+    req = Request(
+        url,
+        headers={'User-Agent': "python-urllib%s/0.6" % PythonVersion}
+    )
+    return _urlopen(req, timeout=settings.THUMBNAIL_URL_TIMEOUT)
