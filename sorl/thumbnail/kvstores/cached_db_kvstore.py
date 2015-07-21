@@ -12,10 +12,14 @@ class EMPTY_VALUE(object):
 class KVStore(KVStoreBase):
     def __init__(self):
         super(KVStore, self).__init__()
+
+    @property
+    def cache(self):
         try:
-            self.cache = get_cache(settings.THUMBNAIL_CACHE)
+            kv_cache = get_cache(settings.THUMBNAIL_CACHE)
         except InvalidCacheBackendError:
-            self.cache = cache
+            kv_cache = cache
+        return kv_cache
 
     def clear(self, delete_thumbnails=False):
         """
