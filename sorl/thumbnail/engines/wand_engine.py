@@ -50,9 +50,15 @@ class Engine(EngineBase):
 
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
-            image.type = 'truecolor'
+            if image.alpha_channel:
+                image.type = 'truecolormatte'
+            else:
+                image.type = 'truecolor'
         elif colorspace == 'GRAY':
-            image.type = 'grayscale'
+            if image.alpha_channel:
+                image.type = 'grayscalematte'
+            else:
+                image.type = 'grayscale'
         else:
             return image
         return image

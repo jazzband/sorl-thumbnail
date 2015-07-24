@@ -176,6 +176,13 @@ class SimpleTestCase(BaseTestCase):
         output = p2.communicate()[0].strip()
         self.assertEqual(output.decode('utf-8'), '1')
 
+    def test_transparency(self):
+        item, _created = self.create_image(
+            '50x50_transparent.png', (50, 50), transparent=True)
+        th = self.BACKEND.get_thumbnail(item.image, '11x11', format='PNG')
+        img = Image.open(th.storage.path(th.name))
+        self.assertTrue(self.is_transparent(img))
+
     def test_image_file_deserialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         default.kvstore.set(im)

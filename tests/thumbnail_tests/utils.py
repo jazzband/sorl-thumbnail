@@ -7,7 +7,7 @@ import logging
 from contextlib import contextmanager
 from subprocess import check_output
 
-from PIL import Image
+from PIL import Image, ImageDraw
 from django.test.signals import setting_changed
 from django.conf import UserSettingsHolder
 
@@ -100,7 +100,7 @@ class BaseTestCase(unittest.TestCase):
     ENGINE = None
     KVSTORE = None
 
-    def create_image(self, name, dim):
+    def create_image(self, name, dim, transparent=False):
         """
         Creates an image and prepends the MEDIA ROOT path.
         :param name: e.g. 500x500.jpg
@@ -108,8 +108,20 @@ class BaseTestCase(unittest.TestCase):
         """
         filename = os.path.join(settings.MEDIA_ROOT, name)
         im = Image.new('L', dim)
-        im.save(filename)
+
+        if transparent:
+            draw = ImageDraw.Draw(im)
+            draw.line((0, 0) + im.size, fill=128)
+            draw.line((0, im.size[1], im.size[0], 0), fill=128)
+
+            im.save(filename, transparency=0)
+        else:
+            im.save(filename)
+
         return Item.objects.get_or_create(image=name)
+
+    def is_transparent(self, img):
+        return img.mode in ('RGBA', 'LA') or 'transparency' in img.info
 
     def setUp(self):
         self.BACKEND = get_module_class(settings.THUMBNAIL_BACKEND)()
