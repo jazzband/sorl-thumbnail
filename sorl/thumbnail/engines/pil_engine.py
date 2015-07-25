@@ -99,7 +99,7 @@ class Engine(EngineBase):
             if image.mode == 'LA' or (image.mode == 'P' and 'transparency' in image.info):
                 newimage = image.convert('RGBA')
                 transparency = image.info.get('transparency')
-                if transparency:
+                if transparency is not None:
                     mask = Image.new('L', image.size, color=transparency)
                     newimage.putalpha(mask)
                 return newimage
