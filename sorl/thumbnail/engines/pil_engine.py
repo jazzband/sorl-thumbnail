@@ -97,7 +97,12 @@ class Engine(EngineBase):
             if image.mode == 'RGBA':
                 return image  # RGBA is just RGB + Alpha
             if image.mode == 'LA' or (image.mode == 'P' and 'transparency' in image.info):
-                return image.convert('RGBA')
+                newimage = image.convert('RGBA')
+                transparency = image.info.get('transparency')
+                if transparency is not None:
+                    mask = Image.new('L', image.size, color=transparency)
+                    newimage.putalpha(mask)
+                return newimage
             return image.convert('RGB')
         if colorspace == 'GRAY':
             return image.convert('L')
