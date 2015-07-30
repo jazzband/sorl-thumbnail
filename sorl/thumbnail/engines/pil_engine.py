@@ -69,7 +69,7 @@ class Engine(EngineBase):
     def _orientation(self, image):
         try:
             exif = image._getexif()
-        except (AttributeError, IOError, KeyError, IndexError):
+        except:
             exif = None
 
         if exif:
