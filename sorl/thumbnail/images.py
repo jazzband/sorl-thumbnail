@@ -5,7 +5,7 @@ import os
 import re
 
 from django.core.files.base import File, ContentFile
-from django.core.files.storage import Storage#, default_storage
+from django.core.files.storage import Storage  # , default_storage
 from django.utils.functional import LazyObject, empty
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
