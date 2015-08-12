@@ -1,8 +1,5 @@
 [run]
 source = sorl
-exclude_lines =
-    pragma: no cover
-    if __name__ == .__main__.:
 
 omit =
     */sorl-thumbnail/sorl/__init__.py
