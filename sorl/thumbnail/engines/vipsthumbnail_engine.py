@@ -7,7 +7,6 @@ from django.utils.encoding import smart_str
 from django.core.files.temp import NamedTemporaryFile
 
 from sorl.thumbnail.base import EXTENSIONS
-from sorl.thumbnail.compat import b
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
 from sorl.thumbnail.compat import OrderedDict
@@ -37,7 +36,7 @@ class Engine(EngineBase):
 
         suffix = '.%s' % EXTENSIONS[options['format']]
 
-        write_options=[]
+        write_options = []
         if options['format'] == 'JPEG' and options.get(
                 'progressive', settings.THUMBNAIL_PROGRESSIVE):
             write_options.append("interlace")
@@ -121,6 +120,3 @@ class Engine(EngineBase):
         image['options']['size'] = '%sx%s' % (width, height)
         image['size'] = (width, height)  # update image size
         return image
-
-
-
