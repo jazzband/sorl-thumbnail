@@ -28,7 +28,7 @@ class KVStore(KVStoreBase):
             item = self.table.new_item()
             item['key'] = key
         item['value'] = value
-        item.save()
+        item.save(overwrite=True)
 
     def _delete_raw(self, *keys):
         [self.table.delete_item(key=k) for k in keys]
