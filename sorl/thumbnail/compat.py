@@ -26,7 +26,7 @@ from importlib import import_module
 
 # -- Related to django 1.5 incompatibility
 
-if django.VERSION < (1, 5):
+if django.VERSION[:2] < (1, 5):
     from django.utils import simplejson as json
     from django.utils.encoding import force_unicode
 else:
@@ -35,7 +35,7 @@ else:
 
 # -- Cache
 
-if django.VERSION >= (1, 7):
+if django.VERSION[:2] >= (1, 7):
     from django.core.cache import caches
 
     get_cache = lambda cache_name: caches[cache_name]
