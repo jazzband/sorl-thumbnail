@@ -1,8 +1,5 @@
 [run]
 source = sorl
-exclude_lines =
-    pragma: no cover
-    if __name__ == .__main__.:
 
 omit =
     */sorl-thumbnail/sorl/__init__.py
@@ -11,3 +8,8 @@ omit =
     */sorl/thumbnail/admin/compat.py
     */sorl/thumbnail/admin/__init__.py
     */sorl/thumbnail/compat.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
