@@ -17,7 +17,8 @@ addons:
       - libboost-python-dev
 
 cache:
-  pip:
+  apt: true
+  pip: true
   directories:
     - .tox
 
