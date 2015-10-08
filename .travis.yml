@@ -8,16 +8,47 @@ sudo: false
 addons:
   apt:
     packages:
-    - libgraphicsmagick1-dev
-    - libgraphicsmagick++1-dev
-    - libboost-python-dev
-    - graphicsmagick
+      - libgraphicsmagick1-dev
+      - libgraphicsmagick++1-dev
+      - libboost-python-dev
+      - graphicsmagick
 
-cache:
-  apt: true
-  pip: true
-  directories:
-    - .tox
+services:
+  - redis-server
+
+install:
+  - pip install --upgrade pip wheel
+  - pip install -q coveralls flake8 tox
+
+script:
+  - env | sort
+  - tox -e $TOX_ENV
+  - flake8 --show-source sorl/
+
+after_failure:
+ - cat /home/travis/.pip/pip.log
+
+after_success:
+ - coveralls
+
+notifications:
+ irc:
+   channels:
+     - "irc.freenode.org#sorl-thumbnail"
+   on_success: change
+   on_failure: change
+ webhooks:
+   urls:
+     - https://webhooks.gitter.im/e/b368c47d69637f9a01a0
+   on_success: change
+   on_failure: change
+   on_start: false     # default: false
+
+# cache:
+#  apt: true
+#  pip: true
+#  directories:
+#    - .tox
 
 env:
   - TOX_ENV=py27-django14-pil
@@ -79,34 +110,3 @@ env:
   - TOX_ENV=py34-django18-redis
   - TOX_ENV=py34-django18-wand
   - TOX_ENV=py34-django18-dbm
-
-after_failure:
-  - cat /home/travis/.pip/pip.log
-
-after_success:
-  - coveralls
-
-install:
-  - pip install pip wheel
-  - pip install -q coveralls flake8 tox
-
-script:
-  - env | sort
-  - tox -e $TOX_ENV
-  - flake8 --show-source sorl/
-
-services:
-  - redis-server
-
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#sorl-thumbnail"
-    on_success: change
-    on_failure: change
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/b368c47d69637f9a01a0
-    on_success: change
-    on_failure: change
-    on_start: false     # default: false
