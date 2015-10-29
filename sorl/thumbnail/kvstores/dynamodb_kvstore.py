@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from boto.dynamodb2.table import Table
 import boto
-import json
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 
@@ -10,9 +9,11 @@ from sorl.thumbnail.conf import settings
 class KVStore(KVStoreBase):
     def __init__(self):
         super(KVStore, self).__init__()
-        conn = boto.dynamodb2.connect_to_region(settings.AWS_REGION_NAME,
-                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+        region = settings.AWS_REGION_NAME
+        access_key = settings.AWS_ACCESS_KEY_ID
+        secret = settings.AWS_SECRET_ACCESS_KEY
+        conn = boto.dynamodb2.connect_to_region(region, aws_access_key_id=access_key,
+                                                aws_secret_access_key=secret)
         self.table = Table(settings.THUMBNAIL_DYNAMODB_NAME, connection=conn)
 
     def _get_raw(self, key):
