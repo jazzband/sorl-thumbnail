@@ -86,6 +86,8 @@ class ImageFile(BaseImageFile):
             self.name = file_.name
         else:
             self.name = force_unicode(file_)
+        if self.name.startswith('//'):
+            self.name = 'http:' + self.name
 
         # figure out storage
         if storage is not None:
