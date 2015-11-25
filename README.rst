@@ -126,9 +126,9 @@ You can use the 'get_thumbnail'::
 
 See more examples in the section `Low level API examples`_ in the Documentation
 
---------------------------
+
 Frequently asked questions
---------------------------
+==========================
 
 Is so slow in Amazon S3 !
 -------------------------
@@ -137,10 +137,11 @@ Posible related to the implementation of your Amazon S3 Backend, see the issue `
 due the storage backend reviews if there is an existing thumbnail when tries to
 generate the thumbnail that makes an extensive use of the S3 API
 
-A fast workaround if you are not willing to tweak your storage backend is to set
-the `THUMBNAIL_FORCE_OVERWRITE` setting to `True` by default is `False`, so it will
-avoid to overly query the S3 API
+A fast workaround if you are not willing to tweak your storage backend is to set::
 
+   THUMBNAIL_FORCE_OVERWRITE = True
+   
+So it will avoid to overly query the S3 API.
 
 
 
