@@ -2,9 +2,9 @@ from __future__ import unicode_literals, with_statement
 import re
 import os
 import subprocess
+import tempfile
 
 from django.utils.encoding import smart_str
-from django.core.files.temp import NamedTemporaryFile
 
 from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.compat import b
@@ -49,17 +49,21 @@ class Engine(EngineBase):
 
         suffix = '.%s' % EXTENSIONS[options['format']]
 
-        with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
-            args.append(fp.name)
-            args = map(smart_str, args)
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
-            out, err = p.communicate()
+        fd, temp_path = tempfile.mkstemp(suffix=suffix)
 
-            if err:
-                raise Exception(err)
+        args.append(temp_path)
+        args = map(smart_str, args)
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p.wait()
+        out, err = p.communicate()
 
-            thumbnail.write(fp.read())
+        if err:
+            raise Exception(err)
+
+        fp = os.fdopen(fd, 'rb')
+        thumbnail.write(fp.read())
+        fp.close()
+        os.remove(temp_path)
 
     def cleanup(self, image):
         os.remove(image['source'])  # we should not need this now
@@ -68,9 +72,11 @@ class Engine(EngineBase):
         """
         Returns the backend image objects from a ImageFile instance
         """
-        with NamedTemporaryFile(mode='wb', delete=False) as fp:
-            fp.write(source.read())
-        return {'source': fp.name, 'options': OrderedDict(), 'size': None}
+        fd, temp_path = tempfile.mkstemp()
+        fp = os.fdopen(fd, 'wb')
+        fp.write(source.read())
+        fp.close()
+        return {'source': temp_path, 'options': OrderedDict(), 'size': None}
 
     def get_image_size(self, image):
         """
@@ -90,13 +96,19 @@ class Engine(EngineBase):
         This is not very good for imagemagick because it will say anything is
         valid that it can use as input.
         """
-        with NamedTemporaryFile(mode='wb') as fp:
-            fp.write(raw_data)
-            fp.flush()
-            args = settings.THUMBNAIL_IDENTIFY.split(' ')
-            args.append(fp.name)
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            retcode = p.wait()
+        fd, temp_path = tempfile.mkstemp()
+
+        fp = os.fdopen(fd, 'wb')
+        fp.write(raw_data)
+        fp.close()
+
+        args = settings.THUMBNAIL_IDENTIFY.split(' ')
+        args.append(temp_path)
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        retcode = p.wait()
+
+        os.remove(temp_path)
+
         return retcode == 0
 
     def _orientation(self, image):
@@ -139,7 +151,6 @@ class Engine(EngineBase):
         `Valid colorspaces
         <http://www.graphicsmagick.org/GraphicsMagick.html#details-colorspace>`_.
         Backends need to implement the following::
-
             RGB, GRAY
         """
         image['options']['colorspace'] = colorspace
