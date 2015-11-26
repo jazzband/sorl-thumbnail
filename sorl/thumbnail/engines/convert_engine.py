@@ -58,6 +58,8 @@ class Engine(EngineBase):
         out, err = p.communicate()
 
         if err:
+            os.close(fd)
+            os.remove(temp_path)
             raise Exception(err)
 
         fp = os.fdopen(fd, 'rb')
