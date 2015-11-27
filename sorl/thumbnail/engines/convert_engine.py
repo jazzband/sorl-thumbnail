@@ -63,8 +63,10 @@ class Engine(EngineBase):
             raise Exception(err)
 
         fp = os.fdopen(fd, 'rb')
-        thumbnail.write(fp.read())
-        fp.close()
+        try:
+            thumbnail.write(fp.read())
+        finally:
+            fp.close()
         os.remove(temp_path)
 
     def cleanup(self, image):
@@ -76,8 +78,10 @@ class Engine(EngineBase):
         """
         fd, temp_path = tempfile.mkstemp()
         fp = os.fdopen(fd, 'wb')
-        fp.write(source.read())
-        fp.close()
+        try:
+            fp.write(source.read())
+        finally:
+            fp.close()
         return {'source': temp_path, 'options': OrderedDict(), 'size': None}
 
     def get_image_size(self, image):
@@ -101,8 +105,10 @@ class Engine(EngineBase):
         fd, temp_path = tempfile.mkstemp()
 
         fp = os.fdopen(fd, 'wb')
-        fp.write(raw_data)
-        fp.close()
+        try:
+            fp.write(raw_data)
+        finally:
+            fp.close()
 
         args = settings.THUMBNAIL_IDENTIFY.split(' ')
         args.append(temp_path)
