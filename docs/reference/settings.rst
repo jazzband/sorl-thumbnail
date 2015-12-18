@@ -198,7 +198,7 @@ The port for Redis server. Only applicable for the Redis Key Value Store
 
 Filename of the DBM database. Depending on the DBM engine selected by your
 Python installation, this will be used as a prefix because multiple files may be
-created.
+created. This can be an absolute path.
 
 
 ``THUMBNAIL_DBM_MODE``
