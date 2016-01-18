@@ -19,6 +19,10 @@ Django versions, we provide an easy way to test locally across all of them.
 We use `Vagrant`_ for simple interaction with virtual machines and
 `tox`_ for managing python virtual environments.
 
+Some dependencies like pgmagick takes a lot of time to compiling. To speed up your
+vagrant box you can edit `Vagrant file`_ with mem and cpu or simply install `vagrant-faster`_.
+The resulting .tox folder containing all virtualenvs requires ~
+
 * `Install Vagrant`_
 * ``cd`` in your source directory
 * Run ``vagrant up`` to prepare VM. It will download Ubuntu image and install all necessary dependencies.
@@ -27,9 +31,9 @@ We use `Vagrant`_ for simple interaction with virtual machines and
 
 To run only tests against only one configuration use ``-e`` option::
 
-    tox -e py33-1.6-pil
+    tox -e py34-django16-pil
 
-Py33 stands for python version, 1.6 is Django version and the latter is image library.
+Py34 stands for python version, 1.6 is Django version and the latter is image library.
 For full list of tox environments, see ``tox.ini``
 
 You can get away without using Vagrant if you install all packages locally yourself,
@@ -39,6 +43,8 @@ however, this is not recommended.
 .. _Vagrant: http://www.vagrantup.com/
 .. _tox: https://testrun.org/tox/latest/
 .. _Install Vagrant: http://docs.vagrantup.com/v2/installation/index.html
+.. _Vagrant file: https://docs.vagrantup.com/v2/virtualbox/configuration.html
+.. _vagrant-faster: https://github.com/rdsubhas/vagrant-faster
 
 Sending pull requests
 =====================
