@@ -8,8 +8,8 @@ Features at a glance
 - Support for Django 1.4, 1.5, 1.6, 1.7, 1.8, 1.9
 - Python 3 support (for Django 1.5, 1.6, 1.7, 1.8, 1.9)
 - Storage support
-- Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_ and `pgmagick`_
-- Pluggable Key Value Store support (cached db, redis, dynamodb by AWS)
+- Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and`vipsthumbnail`_
+- Pluggable Key Value Store support (cached db, redis, and dynamodb by AWS)
 - Pluggable Backend support
 - Admin integration with possibility to delete
 - Dummy generation (placeholders)
@@ -140,7 +140,7 @@ generate the thumbnail that makes an extensive use of the S3 API
 A fast workaround if you are not willing to tweak your storage backend is to set::
 
    THUMBNAIL_FORCE_OVERWRITE = True
-   
+
 So it will avoid to overly query the S3 API.
 
 
@@ -157,6 +157,7 @@ So it will avoid to overly query the S3 API.
 .. _`PIL`: http://www.pythonware.com/products/pil/
 .. _`Wand`: http://docs.wand-py.org/
 .. _`pgmagick`: http://pgmagick.readthedocs.org/en/latest/
+.. _`vipsthumbnail`: http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS
 
 .. _`Template examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#template-examples
 .. _`Model examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#model-examples

@@ -3,6 +3,7 @@ apt-get update
 apt-get install -qq git python-software-properties python-pip
 apt-get install -qq libjpeg62 libjpeg62-dev zlib1g-dev imagemagick graphicsmagick redis-server
 apt-get install -qq libmagickwand-dev libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev
+apt-get install -qq libvips-tools
 
 add-apt-repository -y ppa:fkrull/deadsnakes
 apt-get update
