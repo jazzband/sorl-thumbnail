@@ -27,6 +27,8 @@ MEDIA_ROOT = pjoin(PROJ_ROOT, 'media')
 MEDIA_URL = '/media/'
 ROOT_URLCONF = 'tests.thumbnail_tests.urls'
 INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     'sorl.thumbnail',
     'tests.thumbnail_tests',
 )
