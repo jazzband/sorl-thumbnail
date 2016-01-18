@@ -9,7 +9,7 @@ Features at a glance
 - Python 3 support (for Django 1.5, 1.6, 1.7, 1.8, 1.9)
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_ and `pgmagick`_
-- Pluggable Key Value Store support (cached db, redis)
+- Pluggable Key Value Store support (cached db, redis, dynamodb by AWS)
 - Pluggable Backend support
 - Admin integration with possibility to delete
 - Dummy generation (placeholders)
