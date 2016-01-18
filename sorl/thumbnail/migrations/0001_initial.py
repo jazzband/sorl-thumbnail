@@ -13,7 +13,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='KVStore',
             fields=[
-                ('key', models.CharField(serialize=False, db_column='key', max_length=200, primary_key=True)),
+                ('key', models.CharField(serialize=False,
+                                         db_column='key',
+                                         max_length=200,
+                                         primary_key=True)),
                 ('value', models.TextField()),
             ],
         ),
