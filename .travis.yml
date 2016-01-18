@@ -83,12 +83,13 @@ before_install:
 after_failure:
   - cat /home/travis/.pip/pip.log
 
-after_success:
-  - coveralls
+# after_success:
+#  - coveralls
 
 install:
   - pip install pip wheel
-  - pip install -q coveralls flake8 tox
+#  - pip install -q coveralls flake8 tox
+  - pip install -q flake8 tox
 
 script:
   - env | sort
