@@ -5,13 +5,14 @@ import os
 import re
 
 from django.core.files.base import File, ContentFile
-from django.core.files.storage import Storage, default_storage
+from django.core.files.storage import Storage  # , default_storage
 from django.utils.functional import LazyObject, empty
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.compat import (json, urlopen, urlparse, urlsplit,
                                    quote, quote_plus,
                                    URLError, force_unicode, encode)
+from sorl.thumbnail.default import storage as default_storage
 from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class, deserialize
 from sorl.thumbnail.parsers import parse_geometry
 
