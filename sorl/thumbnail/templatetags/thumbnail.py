@@ -1,6 +1,7 @@
 # encoding=utf-8
 
 from __future__ import unicode_literals
+import decimal
 import logging
 import sys
 import re
@@ -167,6 +168,20 @@ def resolution(file_, resolution_string):
     """
     A filter to return the URL for the provided resolution of the thumbnail.
     """
+    if sorl_settings.THUMBNAIL_DUMMY:
+        dummy_source = sorl_settings.THUMBNAIL_DUMMY_SOURCE
+        source = dummy_source.replace('%(width)s', '(?P<width>[0-9]+)')
+        source = source.replace('%(height)s', '(?P<height>[0-9]+)')
+        source = re.compile(source)
+        try:
+            resolution = decimal.Decimal(resolution_string.strip('x'))
+            info = source.match(file_).groupdict()
+            info = {dimension: int(int(size) * resolution) for (dimension, size) in info.items()}
+            return dummy_source % info
+        except (AttributeError, TypeError, KeyError):
+            # If we can't manipulate the dummy we shouldn't change it at all
+            return file_
+
     filename, extension = os.path.splitext(file_)
     return '%s@%s%s' % (filename, resolution_string, extension)
 

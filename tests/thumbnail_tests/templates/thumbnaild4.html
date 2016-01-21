@@ -1,0 +1,5 @@
+{% load thumbnail %}{% spaceless %}
+{% thumbnail "" "x400" as im %}
+<img src="{{ im.url }}" width="{{ im.x }}" height="{{ im.y }}" srcset="{{ im.url|resolution:'2x' }} 2x; {{ im.url|resolution:'1.5x' }} 1.5x">
+{% endthumbnail %}
+{% endspaceless %}
