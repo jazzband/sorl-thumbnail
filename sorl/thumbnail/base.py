@@ -112,9 +112,10 @@ class ThumbnailBackend(object):
                     # if S3Storage says file doesn't exist remotely, don't try to
                     # create it and exit early.
                     # Will return working empty image type; 404'd image
-                    logger.warn(text_type('Remote file [%s] at [%s] does not exist'),
-                                file_, geometry_string)
-
+                    logger.warning(
+                        'Remote file [%s] at [%s] does not exist',
+                        file_, geometry_string,
+                    )
                     return thumbnail
 
             # We might as well set the size since we have the image in memory
