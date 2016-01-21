@@ -4,7 +4,7 @@ import logging
 import os
 import re
 
-from sorl.thumbnail.compat import string_type, text_type
+from sorl.thumbnail.compat import string_type
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
 from sorl.thumbnail.images import ImageFile, DummyImageFile
@@ -68,7 +68,7 @@ class ThumbnailBackend(object):
         options given. First it will try to get it from the key value store,
         secondly it will create it.
         """
-        logger.debug(text_type('Getting thumbnail for file [%s] at [%s]'), file_, geometry_string)
+        logger.debug('Getting thumbnail for file [%s] at [%s]', file_, geometry_string)
 
         if file_:
             source = ImageFile(file_)
@@ -154,7 +154,7 @@ class ThumbnailBackend(object):
         """
         Creates the thumbnail by using default.engine
         """
-        logger.debug(text_type('Creating thumbnail file [%s] at [%s] with [%s]'),
+        logger.debug('Creating thumbnail file [%s] at [%s] with [%s]',
                      thumbnail.name, geometry_string, options)
         ratio = default.engine.get_image_ratio(source_image, options)
         geometry = parse_geometry(geometry_string, ratio)
