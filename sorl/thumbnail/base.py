@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 EXTENSIONS = {
     'JPEG': 'jpg',
     'PNG': 'png',
+    'GIF': 'gif',
 }
 
 
@@ -54,6 +55,8 @@ class ThumbnailBackend(object):
             return 'JPEG'
         elif file_extension == '.png':
             return 'PNG'
+        elif file_extension == '.gif':
+            return 'GIF'
         else:
             from django.conf import settings
 
