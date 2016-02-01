@@ -59,6 +59,7 @@ class PreserveFormatTest(TestCase):
         self.assertEqual(self.backend._get_format(FakeFile('foo.jpg')), 'JPEG')
         self.assertEqual(self.backend._get_format(FakeFile('foo.jpeg')), 'JPEG')
         self.assertEqual(self.backend._get_format(FakeFile('foo.png')), 'PNG')
+        self.assertEqual(self.backend._get_format(FakeFile('foo.gif')), 'GIF')
 
     def test_double_extension(self):
         self.assertEqual(self.backend._get_format(FakeFile('foo.ext.jpg')), 'JPEG')

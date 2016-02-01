@@ -30,6 +30,8 @@ class AdminImageWidget(forms.ClearableFileInput):
                 aux_ext = str(value).split('.')
                 if aux_ext[len(aux_ext) - 1].lower() == 'png':
                     ext = 'PNG'
+                elif aux_ext[len(aux_ext) - 1].lower() == 'gif':
+                    ext = 'GIF'
             except:
                 pass
             try:
