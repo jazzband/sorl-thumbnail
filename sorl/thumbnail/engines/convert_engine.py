@@ -5,6 +5,7 @@ import subprocess
 import tempfile
 
 from django.utils.encoding import smart_str
+from django.core.files.temp import NamedTemporaryFile
 
 from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.compat import b
@@ -49,25 +50,38 @@ class Engine(EngineBase):
 
         suffix = '.%s' % EXTENSIONS[options['format']]
 
-        fd, temp_path = tempfile.mkstemp(suffix=suffix)
+        if os.name == 'nt':
+            fd, temp_path = tempfile.mkstemp(suffix=suffix)
 
-        args.append(temp_path)
-        args = map(smart_str, args)
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-        out, err = p.communicate()
+            args.append(temp_path)
+            args = map(smart_str, args)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p.wait()
+            out, err = p.communicate()
 
-        if err:
-            os.close(fd)
+            if err:
+                os.close(fd)
+                os.remove(temp_path)
+                raise Exception(err)
+
+            fp = os.fdopen(fd, 'rb')
+            try:
+                thumbnail.write(fp.read())
+            finally:
+                fp.close()
             os.remove(temp_path)
-            raise Exception(err)
+        else:
+            with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
+                args.append(fp.name)
+                args = map(smart_str, args)
+                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                p.wait()
+                out, err = p.communicate()
 
-        fp = os.fdopen(fd, 'rb')
-        try:
-            thumbnail.write(fp.read())
-        finally:
-            fp.close()
-        os.remove(temp_path)
+                if err:
+                    raise Exception(err)
+
+                thumbnail.write(fp.read())
 
     def cleanup(self, image):
         os.remove(image['source'])  # we should not need this now
@@ -76,13 +90,18 @@ class Engine(EngineBase):
         """
         Returns the backend image objects from a ImageFile instance
         """
-        fd, temp_path = tempfile.mkstemp()
-        fp = os.fdopen(fd, 'wb')
-        try:
+        if os.name == 'nt':
+            fd, temp_path = tempfile.mkstemp()
+            fp = os.fdopen(fd, 'wb')
+            try:
+                fp.write(source.read())
+            finally:
+                fp.close()
+            return {'source': temp_path, 'options': OrderedDict(), 'size': None}
+
+        with NamedTemporaryFile(mode='wb', delete=False) as fp:
             fp.write(source.read())
-        finally:
-            fp.close()
-        return {'source': temp_path, 'options': OrderedDict(), 'size': None}
+        return {'source': fp.name, 'options': OrderedDict(), 'size': None}
 
     def get_image_size(self, image):
         """
@@ -102,21 +121,31 @@ class Engine(EngineBase):
         This is not very good for imagemagick because it will say anything is
         valid that it can use as input.
         """
-        fd, temp_path = tempfile.mkstemp()
+        if os.name == 'nt':
+            fd, temp_path = tempfile.mkstemp()
 
-        fp = os.fdopen(fd, 'wb')
-        try:
+            fp = os.fdopen(fd, 'wb')
+            try:
+                fp.write(raw_data)
+            finally:
+                fp.close()
+
+            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args.append(temp_path)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            retcode = p.wait()
+
+            os.remove(temp_path)
+
+            return retcode == 0
+
+        with NamedTemporaryFile(mode='wb') as fp:
             fp.write(raw_data)
-        finally:
-            fp.close()
-
-        args = settings.THUMBNAIL_IDENTIFY.split(' ')
-        args.append(temp_path)
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        retcode = p.wait()
-
-        os.remove(temp_path)
-
+            fp.flush()
+            args = settings.THUMBNAIL_IDENTIFY.split(' ')
+            args.append(fp.name)
+            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            retcode = p.wait()
         return retcode == 0
 
     def _orientation(self, image):
