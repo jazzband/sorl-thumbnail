@@ -87,8 +87,7 @@ class ImageFile(BaseImageFile):
             self.name = file_.name
         else:
             self.name = force_unicode(file_)
-
-	self.name = self.name.split('?')[0]
+            self.name = self.name.split('?')[0]
 
         # figure out storage
         if storage is not None:
