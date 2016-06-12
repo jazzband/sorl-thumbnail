@@ -330,6 +330,20 @@ class CropTestCase(BaseTestCase):
         # TODO: Complete test for smart crop
         self.BACKEND.get_thumbnail('32x32', 'data/white_border.jpg', crop='smart')
 
+    def test_image_with_orientation(self):
+        name = 'data/aspect_test.jpg'
+        item, _ = Item.objects.get_or_create(image=name)
+
+        im = ImageFile(item.image)
+        th = self.BACKEND.get_thumbnail(im, '50x50')
+
+        engine = PILEngine()
+
+        # this is a 100x200 image with orientation 6 (90 degrees CW rotate)
+        # the thumbnail should end up 25x50
+        self.assertEqual(th.x, 25)
+        self.assertEqual(th.y, 50)
+
     def test_crop_image_with_icc_profile(self):
         name = 'data/icc_profile_test.jpg'
         item, _ = Item.objects.get_or_create(image=name)
