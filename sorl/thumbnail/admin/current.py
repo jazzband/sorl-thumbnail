@@ -37,7 +37,7 @@ class AdminImageWidget(forms.ClearableFileInput):
             try:
                 mini = get_thumbnail(value, 'x80', upscale=False, format=ext)
             except Exception as e:
-                logger.warn("Unable to get the thumbnail", exc_info=e)
+                logger.warning("Unable to get the thumbnail", exc_info=e)
             else:
                 try:
                     output = (
