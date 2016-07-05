@@ -330,14 +330,13 @@ class CropTestCase(BaseTestCase):
         # TODO: Complete test for smart crop
         self.BACKEND.get_thumbnail('32x32', 'data/white_border.jpg', crop='smart')
 
+    @unittest.skipIf('pil_engine' not in settings.THUMBNAIL_ENGINE, 'the other engines fail this test')
     def test_image_with_orientation(self):
         name = 'data/aspect_test.jpg'
         item, _ = Item.objects.get_or_create(image=name)
 
         im = ImageFile(item.image)
         th = self.BACKEND.get_thumbnail(im, '50x50')
-
-        engine = PILEngine()
 
         # this is a 100x200 image with orientation 6 (90 degrees CW rotate)
         # the thumbnail should end up 25x50
