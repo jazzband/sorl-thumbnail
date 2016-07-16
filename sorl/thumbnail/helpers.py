@@ -1,10 +1,11 @@
 from __future__ import unicode_literals
 
 import hashlib
+import json
 import math
 
 from django.core.exceptions import ImproperlyConfigured
-from sorl.thumbnail.compat import encode, json, smart_text, import_module
+from sorl.thumbnail.compat import encode, smart_text, import_module
 
 
 class ThumbnailError(Exception):

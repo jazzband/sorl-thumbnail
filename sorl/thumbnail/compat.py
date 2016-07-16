@@ -5,7 +5,6 @@ import sys
 import django
 
 __all__ = [
-    'json',
     'BufferIO',
     'urlopen',
     'urlparse',
@@ -23,13 +22,6 @@ PY3 = PythonVersion == 3
 
 # -- import_module
 from importlib import import_module
-
-# -- Related to django 1.5 incompatibility
-
-if django.VERSION < (1, 5):
-    from django.utils import simplejson as json
-else:
-    import json
 
 # -- Cache
 
