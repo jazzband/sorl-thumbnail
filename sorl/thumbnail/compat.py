@@ -2,8 +2,6 @@ from __future__ import unicode_literals
 
 import sys
 
-import django
-
 __all__ = [
     'BufferIO',
     'urlopen',
@@ -11,7 +9,6 @@ __all__ = [
     'quote',
     'quote_plus',
     'URLError',
-    'get_cache',
     'text_type'
 ]
 
@@ -19,15 +16,6 @@ PythonVersion = sys.version_info[0]
 
 PY2 = PythonVersion == 2
 PY3 = PythonVersion == 3
-
-# -- Cache
-
-if django.VERSION >= (1, 7):
-    from django.core.cache import caches
-
-    get_cache = lambda cache_name: caches[cache_name]
-else:
-    from django.core.cache import get_cache
 
 # -- Text
 
