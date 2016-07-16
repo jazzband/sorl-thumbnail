@@ -6,7 +6,8 @@ import math
 from importlib import import_module
 
 from django.core.exceptions import ImproperlyConfigured
-from sorl.thumbnail.compat import encode, smart_text
+from django.utils.encoding import force_text
+from sorl.thumbnail.compat import encode
 
 
 class ThumbnailError(Exception):
@@ -42,7 +43,7 @@ def tokey(*args):
     """
     Computes a unique key from arguments given.
     """
-    salt = '||'.join([smart_text(arg) for arg in args])
+    salt = '||'.join([force_text(arg) for arg in args])
     hash_ = hashlib.md5(encode(salt))
     return hash_.hexdigest()
 

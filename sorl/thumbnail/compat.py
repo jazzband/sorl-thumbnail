@@ -17,13 +17,6 @@ PythonVersion = sys.version_info[0]
 PY2 = PythonVersion == 2
 PY3 = PythonVersion == 3
 
-# -- Text
-
-try:
-    from django.utils.encoding import smart_text
-except ImportError:
-    from django.utils.encoding import smart_unicode as smart_text
-
 # -- Ordered Dict
 
 try:
