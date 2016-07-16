@@ -5,7 +5,7 @@ Thumbnails for Django.
 Features at a glance
 ====================
 
-- Support for Django 1.8, 1.9
+- Support for Django 1.8, 1.9, 1.10
 - Python 3 support
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and`vipsthumbnail`_

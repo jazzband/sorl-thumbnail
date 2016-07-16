@@ -64,7 +64,7 @@ class ThumbnailNodeBase(Node):
 
             error_message = 'Thumbnail tag failed'
 
-            if settings.TEMPLATE_DEBUG:
+            if context.template.engine.debug:
                 try:
                     error_message_template = (
                         "Thumbnail tag failed "
