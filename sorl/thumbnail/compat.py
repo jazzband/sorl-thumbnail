@@ -13,7 +13,7 @@ __all__ = [
     'quote_plus',
     'URLError',
     'get_cache',
-    'force_unicode', 'text_type'
+    'text_type'
 ]
 
 PythonVersion = sys.version_info[0]
@@ -28,10 +28,8 @@ from importlib import import_module
 
 if django.VERSION < (1, 5):
     from django.utils import simplejson as json
-    from django.utils.encoding import force_unicode
 else:
     import json
-    from django.utils.encoding import force_text as force_unicode
 
 # -- Cache
 
