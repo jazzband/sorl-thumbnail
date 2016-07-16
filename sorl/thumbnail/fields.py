@@ -39,13 +39,6 @@ class ImageField(models.ImageField):
         if data is not None:
             setattr(instance, self.name, data or '')
 
-    def south_field_triple(self):
-        from south.modelsinspector import introspector
-
-        cls_name = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
-        args, kwargs = introspector(self)
-        return (cls_name, args, kwargs)
-
 
 class ImageFormField(forms.FileField):
     default_error_messages = {
