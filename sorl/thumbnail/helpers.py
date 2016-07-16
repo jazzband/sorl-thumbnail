@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 import hashlib
 import json
 import math
+from importlib import import_module
 
 from django.core.exceptions import ImproperlyConfigured
-from sorl.thumbnail.compat import encode, smart_text, import_module
+from sorl.thumbnail.compat import encode, smart_text
 
 
 class ThumbnailError(Exception):

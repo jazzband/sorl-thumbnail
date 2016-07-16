@@ -20,9 +20,6 @@ PythonVersion = sys.version_info[0]
 PY2 = PythonVersion == 2
 PY3 = PythonVersion == 3
 
-# -- import_module
-from importlib import import_module
-
 # -- Cache
 
 if django.VERSION >= (1, 7):
