@@ -17,14 +17,6 @@ PythonVersion = sys.version_info[0]
 PY2 = PythonVersion == 2
 PY3 = PythonVersion == 3
 
-# -- Ordered Dict
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    from django.utils.datastructures import SortedDict as OrderedDict
-
-
 # -- Python 2 and 3
 
 if PY3:
