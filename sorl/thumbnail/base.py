@@ -4,7 +4,8 @@ import logging
 import os
 import re
 
-from sorl.thumbnail.compat import string_type
+from django.utils.six import string_types
+
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize
 from sorl.thumbnail.images import ImageFile, DummyImageFile
@@ -177,7 +178,7 @@ class ThumbnailBackend(object):
         for resolution in settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS:
             resolution_geometry = (int(geometry[0] * resolution), int(geometry[1] * resolution))
             resolution_options = options.copy()
-            if 'crop' in options and isinstance(options['crop'], string_type):
+            if 'crop' in options and isinstance(options['crop'], string_types):
                 crop = options['crop'].split(" ")
                 for i in range(len(crop)):
                     s = re.match("(\d+)px", crop[i])

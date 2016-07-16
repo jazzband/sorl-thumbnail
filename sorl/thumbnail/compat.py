@@ -9,7 +9,6 @@ __all__ = [
     'quote',
     'quote_plus',
     'URLError',
-    'text_type'
 ]
 
 PythonVersion = sys.version_info[0]
@@ -28,9 +27,6 @@ if PY3:
     import urllib.parse as urlparse
 
     from io import BytesIO as BufferIO
-
-    text_type = str
-    string_type = str
 
 
     def b(s):
@@ -55,8 +51,6 @@ elif PY2:
 
     from cStringIO import StringIO as BufferIO
 
-    text_type = unicode
-    string_type = basestring
     urlsplit = urlparse.urlsplit
 
 
