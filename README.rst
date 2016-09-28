@@ -5,7 +5,7 @@ Thumbnails for Django.
 Features at a glance
 ====================
 
-- Support for Django 1.8, 1.9, 1.10
+- Support for Django 1.8, 1.9, 1.10, following the `Django supported versions policy`_
 - Python 3 support
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and `vipsthumbnail`_
@@ -133,7 +133,7 @@ Frequently asked questions
 Is so slow in Amazon S3 !
 -------------------------
 
-Posible related to the implementation of your Amazon S3 Backend, see the issue `#351`_
+Posible related to the implementation of your Amazon S3 Backend, see the `issue #351`_
 due the storage backend reviews if there is an existing thumbnail when tries to
 generate the thumbnail that makes an extensive use of the S3 API
 
@@ -162,4 +162,5 @@ So it will avoid to overly query the S3 API.
 .. _`Template examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#template-examples
 .. _`Model examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#model-examples
 .. _`Low level API examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#low-level-api-examples
-.. _ `#351`: https://github.com/mariocesar/sorl-thumbnail/issues/351
+.. _`issue #351`: https://github.com/mariocesar/sorl-thumbnail/issues/351
+.. _`Django supported versions policy`: https://www.djangoproject.com/download/#supported-versions
