@@ -89,6 +89,12 @@ class ImageFile(BaseImageFile):
         else:
             self.name = force_text(file_)
 
+        # Remove query args from names. Fixes cache and signature arguments
+        # from third party services, like Amazon S3 and signature args.
+        self.name = self.name.split('?')[0]
+
+        # TODO: Add a customizable naming method as a signal
+
         # figure out storage
         if storage is not None:
             self.storage = storage
