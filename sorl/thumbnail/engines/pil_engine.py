@@ -100,7 +100,7 @@ class Engine(EngineBase):
                 newimage = image.convert('RGBA')
                 transparency = image.info.get('transparency')
                 if transparency is not None:
-                    mask = Image.new('L', image.size, color=transparency)
+                    mask = image.convert('RGBA').split()[-1]
                     newimage.putalpha(mask)
                 return newimage
             return image.convert('RGB')
