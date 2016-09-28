@@ -2,60 +2,19 @@ from __future__ import unicode_literals
 
 import sys
 
-import django
-
 __all__ = [
-    'json',
     'BufferIO',
     'urlopen',
     'urlparse',
     'quote',
     'quote_plus',
     'URLError',
-    'get_cache',
-    'force_unicode', 'text_type'
 ]
 
 PythonVersion = sys.version_info[0]
 
 PY2 = PythonVersion == 2
 PY3 = PythonVersion == 3
-
-# -- import_module
-from importlib import import_module
-
-# -- Related to django 1.5 incompatibility
-
-if django.VERSION < (1, 5):
-    from django.utils import simplejson as json
-    from django.utils.encoding import force_unicode
-else:
-    import json
-    from django.utils.encoding import force_text as force_unicode
-
-# -- Cache
-
-if django.VERSION >= (1, 7):
-    from django.core.cache import caches
-
-    get_cache = lambda cache_name: caches[cache_name]
-else:
-    from django.core.cache import get_cache
-
-# -- Text
-
-try:
-    from django.utils.encoding import smart_text
-except ImportError:
-    from django.utils.encoding import smart_unicode as smart_text
-
-# -- Ordered Dict
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    from django.utils.datastructures import SortedDict as OrderedDict
-
 
 # -- Python 2 and 3
 
@@ -68,9 +27,6 @@ if PY3:
     import urllib.parse as urlparse
 
     from io import BytesIO as BufferIO
-
-    text_type = str
-    string_type = str
 
 
     def b(s):
@@ -95,8 +51,6 @@ elif PY2:
 
     from cStringIO import StringIO as BufferIO
 
-    text_type = unicode
-    string_type = basestring
     urlsplit = urlparse.urlsplit
 
 

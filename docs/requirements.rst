@@ -4,11 +4,11 @@ Requirements
 
 Base requirements
 =================
-- `Python`_ 2.5+
+- `Python`_ 2.7+
 - `Django`_
 - :ref:`kvstore-requirements`
 - :ref:`image-library`
-  
+
 .. _kvstore-requirements:
 
 Key Value Store
@@ -42,7 +42,7 @@ Image Library
 You need to have an image library installed. sorl-thumbnail ships with support
 for `Python Imaging Library`_, `pgmagick`_, `ImageMagick`_ (or `GraphicsMagick`)
 command line tools. `pgmagick`_ are python bindings for `GraphicsMagick`_
-(Magick++)`, 
+(Magick++)`,
 
 The `ImageMagick`_ based engine ``sorl.thumbnail.engines.convert_engine.Engine``
 by default calls ``convert`` and ``identify`` shell commands. You can change the
@@ -120,4 +120,3 @@ Ubuntu installation::
 .. _Python: http://www.python.org/
 .. _pgmagick: http://bitbucket.org/hhatto/pgmagick/src
 .. _wand: http://wand-py.org
-
