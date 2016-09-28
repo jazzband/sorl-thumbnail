@@ -10,34 +10,6 @@ cache:
     - .tox
 
 env:
-  - TOX_ENV=py27-django14-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py27-django14-imagemagick APT=imagemagick
-  - TOX_ENV=py27-django14-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py27-django14-redis
-  - TOX_ENV=py27-django14-wand
-  - TOX_ENV=py27-django14-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
-  - TOX_ENV=py27-django14-dbm
-  - TOX_ENV=py27-django15-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py27-django15-imagemagick APT=imagemagick
-  - TOX_ENV=py27-django15-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py27-django15-redis
-  - TOX_ENV=py27-django15-wand
-  - TOX_ENV=py27-django15-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
-  - TOX_ENV=py27-django15-dbm
-  - TOX_ENV=py27-django16-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py27-django16-imagemagick APT=imagemagick
-  - TOX_ENV=py27-django16-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py27-django16-redis
-  - TOX_ENV=py27-django16-wand
-  - TOX_ENV=py27-django16-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
-  - TOX_ENV=py27-django16-dbm
-  - TOX_ENV=py27-django17-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py27-django17-imagemagick APT=imagemagick
-  - TOX_ENV=py27-django17-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py27-django17-redis
-  - TOX_ENV=py27-django17-wand
-  - TOX_ENV=py27-django17-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
-  - TOX_ENV=py27-django17-dbm
   - TOX_ENV=py27-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
   - TOX_ENV=py27-django18-imagemagick APT=imagemagick
   - TOX_ENV=py27-django18-graphicsmagick APT=graphicsmagick
@@ -45,24 +17,6 @@ env:
   - TOX_ENV=py27-django18-wand
   - TOX_ENV=py27-django18-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
   - TOX_ENV=py27-django18-dbm
-  - TOX_ENV=py34-django15-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py34-django15-imagemagick APT=imagemagick
-  - TOX_ENV=py34-django15-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py34-django15-redis
-  - TOX_ENV=py34-django15-wand
-  - TOX_ENV=py34-django15-dbm
-  - TOX_ENV=py34-django16-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py34-django16-imagemagick APT=imagemagick
-  - TOX_ENV=py34-django16-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py34-django16-redis
-  - TOX_ENV=py34-django16-wand
-  - TOX_ENV=py34-django16-dbm
-  - TOX_ENV=py34-django17-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py34-django17-imagemagick APT=imagemagick
-  - TOX_ENV=py34-django17-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py34-django17-redis
-  - TOX_ENV=py34-django17-wand
-  - TOX_ENV=py34-django17-dbm
   - TOX_ENV=py34-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
   - TOX_ENV=py34-django18-imagemagick APT=imagemagick
   - TOX_ENV=py34-django18-graphicsmagick APT=graphicsmagick
@@ -75,6 +29,12 @@ env:
   - TOX_ENV=py34-django19-redis
   - TOX_ENV=py34-django19-wand
   - TOX_ENV=py34-django19-dbm
+  - TOX_ENV=py34-django110-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOX_ENV=py34-django110-imagemagick APT=imagemagick
+  - TOX_ENV=py34-django110-graphicsmagick APT=graphicsmagick
+  - TOX_ENV=py34-django110-redis
+  - TOX_ENV=py34-django110-wand
+  - TOX_ENV=py34-django110-dbm
 
 before_install:
   - sudo apt-get update -qq

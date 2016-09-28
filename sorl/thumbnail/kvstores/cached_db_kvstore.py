@@ -1,5 +1,4 @@
-from django.core.cache import cache, InvalidCacheBackendError
-from sorl.thumbnail.compat import get_cache
+from django.core.cache import cache, caches, InvalidCacheBackendError
 from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
@@ -16,7 +15,7 @@ class KVStore(KVStoreBase):
     @property
     def cache(self):
         try:
-            kv_cache = get_cache(settings.THUMBNAIL_CACHE)
+            kv_cache = caches[settings.THUMBNAIL_CACHE]
         except InvalidCacheBackendError:
             kv_cache = cache
         return kv_cache

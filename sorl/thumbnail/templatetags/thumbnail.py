@@ -10,13 +10,13 @@ from functools import wraps
 
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
+from django.utils.six import text_type
 from django.conf import settings
 
 from sorl.thumbnail.conf import settings as sorl_settings
 from sorl.thumbnail import default
 from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail.parsers import parse_geometry
-from sorl.thumbnail.compat import text_type
 from sorl.thumbnail.shortcuts import get_thumbnail
 
 
@@ -64,7 +64,7 @@ class ThumbnailNodeBase(Node):
 
             error_message = 'Thumbnail tag failed'
 
-            if settings.TEMPLATE_DEBUG:
+            if context.template.engine.debug:
                 try:
                     error_message_template = (
                         "Thumbnail tag failed "
