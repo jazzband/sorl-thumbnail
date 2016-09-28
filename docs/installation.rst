@@ -21,5 +21,6 @@ Setup
 3. If you are using the cached database key value store you need to sync the
    database::
 
-    python manage.py syncdb
+    python manage.py makemigrations thumbnail
+    python manage.py migrate
 
