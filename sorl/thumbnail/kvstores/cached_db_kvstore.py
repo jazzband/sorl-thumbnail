@@ -46,8 +46,11 @@ class KVStore(KVStoreBase):
         return value
 
     def _set_raw(self, key, value):
-        KVStoreModel.objects.get_or_create(
+        kvstore_value, created = KVStoreModel.objects.get_or_create(
             key=key, defaults={'value': value})
+        if not created:
+            kvstore_value.value = value
+            kvstore_value.save()
         self.cache.set(key, value, settings.THUMBNAIL_CACHE_TIMEOUT)
 
     def _delete_raw(self, *keys):
