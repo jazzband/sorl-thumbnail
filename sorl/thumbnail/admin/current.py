@@ -46,7 +46,7 @@ class AdminImageWidget(forms.ClearableFileInput):
                         'target="_blank" href="%s">'
                         '<img src="%s"></a>%s</div>'
                     ) % (mini.width, value.url, mini.url, output)
-                except AttributeError:
+                except (AttributeError, TypeError):
                     pass
         return mark_safe(output)
 
