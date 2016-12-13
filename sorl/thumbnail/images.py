@@ -228,7 +228,7 @@ class UrlStorage(Storage):
 
 def delete_all_thumbnails():
     storage = default.storage
-    path = os.path.join(storage.location, settings.THUMBNAIL_PREFIX)
+    path = settings.THUMBNAIL_PREFIX
 
     def walk(path):
         dirs, files = storage.listdir(path)
