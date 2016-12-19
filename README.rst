@@ -133,7 +133,7 @@ Frequently asked questions
 Is so slow in Amazon S3 !
 -------------------------
 
-Posible related to the implementation of your Amazon S3 Backend, see the `issue #351`_
+Possible related to the implementation of your Amazon S3 Backend, see the `issue #351`_
 due the storage backend reviews if there is an existing thumbnail when tries to
 generate the thumbnail that makes an extensive use of the S3 API
 
