@@ -149,7 +149,8 @@ class ImageFile(BaseImageFile):
         return self.storage.url(self.name)
 
     def read(self):
-        return self.storage.open(self.name).read()
+        with self.storage.open(self.name) as f:
+            return f.read()
 
     def write(self, content):
         if not isinstance(content, File):
