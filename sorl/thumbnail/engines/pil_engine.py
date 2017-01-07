@@ -92,6 +92,18 @@ class Engine(EngineBase):
 
         return image
 
+    def _flip_dimensions(self, image):
+        try:
+            exif = image._getexif()
+        except (AttributeError, IOError, KeyError, IndexError):
+            exif = None
+
+        if exif:
+            orientation = exif.get(0x0112)
+            return orientation in [5, 6, 7, 8]
+
+        return False
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             if image.mode == 'RGBA':

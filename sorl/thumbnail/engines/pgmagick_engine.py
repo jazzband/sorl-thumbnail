@@ -56,6 +56,14 @@ class Engine(EngineBase):
 
         return image
 
+    def flip_dimensions(self, image):
+        return image.orientation() in [
+            OrientationType.LeftTopOrientation,
+            OrientationType.RightTopOrientation,
+            OrientationType.RightBottomOrientation,
+            OrientationType.LeftBottomOrientation,
+        ]
+
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             image.type(ImageType.TrueColorMatteType)
