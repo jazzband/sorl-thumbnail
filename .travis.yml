@@ -43,12 +43,7 @@ before_install:
 after_failure:
   - cat /home/travis/.pip/pip.log
 
-# after_success:
-#  - coveralls
-
 install:
-  - pip install pip wheel
-#  - pip install -q coveralls flake8 tox
   - pip install -q flake8 tox
 
 script:
@@ -70,4 +65,4 @@ notifications:
       - https://webhooks.gitter.im/e/b368c47d69637f9a01a0
     on_success: change
     on_failure: change
-    on_start: false     # default: false
+    on_start: false
