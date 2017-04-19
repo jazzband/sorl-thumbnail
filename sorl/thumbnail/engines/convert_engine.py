@@ -53,10 +53,10 @@ class Engine(EngineBase):
             args.append(fp.name)
             args = map(smart_str, args)
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
+            returncode = p.wait()
             out, err = p.communicate()
 
-            if err:
+            if returncode:
                 raise Exception(err)
 
             thumbnail.write(fp.read())
