@@ -79,7 +79,7 @@ class ThumbnailBackend(object):
         else:
             if settings.THUMBNAIL_DUMMY:
                 return DummyImageFile(geometry_string)
-            else:            
+            else:
                 raise ValueError('missing file_ argument in get_thumbnail()')
 
         # preserve image filetype
