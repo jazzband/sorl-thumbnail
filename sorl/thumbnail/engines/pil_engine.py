@@ -5,11 +5,15 @@ from sorl.thumbnail.engines.base import EngineBase
 from sorl.thumbnail.compat import BufferIO
 
 try:
-    from PIL import Image, ImageFile, ImageDraw, ImageFilter
+    from PIL import Image, ImageFile, ImageDraw, ImageFilter, ExifTags
+
+    EXIF_ORIENTATION = ExifTags.TAGS['Orientation']
 except ImportError:
     import Image
     import ImageFile
     import ImageDraw
+
+    EXIF_ORIENTATION = 0x0112
 
 
 def round_corner(radius, fill):
@@ -73,7 +77,7 @@ class Engine(EngineBase):
             exif = None
 
         if exif:
-            orientation = exif.get(0x0112)
+            orientation = exif.get(EXIF_ORIENTATION)
 
             if orientation == 2:
                 image = image.transpose(Image.FLIP_LEFT_RIGHT)
