@@ -5,15 +5,13 @@ from sorl.thumbnail.engines.base import EngineBase
 from sorl.thumbnail.compat import BufferIO
 
 try:
-    from PIL import Image, ImageFile, ImageDraw, ImageFilter, ExifTags
-
-    EXIF_ORIENTATION = ExifTags.TAGS['Orientation']
+    from PIL import Image, ImageFile, ImageDraw, ImageFilter
 except ImportError:
     import Image
     import ImageFile
     import ImageDraw
 
-    EXIF_ORIENTATION = 0x0112
+EXIF_ORIENTATION = 0x0112
 
 
 def round_corner(radius, fill):
