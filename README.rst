@@ -1,4 +1,4 @@
-|travis| |pypi| |coveralls|
+|travis| |pypi| |coveralls| |jazzband|
 
 Thumbnails for Django.
 
@@ -24,6 +24,10 @@ Read more in `the documentation (latest version) <http://sorl-thumbnail.rtfd.org
 
 Developers
 ==========
+
+This is a `Jazzband <https://jazzband.co>`_ project. By contributing you agree to 
+abide by the `Contributor Code of Conduct <https://jazzband.co/about/conduct>`_ 
+and follow the `guidelines <https://jazzband.co/about/guidelines>`_.
 
 Feel free to create a new Pull request if you want to propose a new feature.
 If you need development support or want to discuss with other developers
@@ -144,13 +148,15 @@ A fast workaround if you are not willing to tweak your storage backend is to set
 So it will avoid to overly query the S3 API.
 
 
-
 .. |travis| image:: https://secure.travis-ci.org/mariocesar/sorl-thumbnail.png?branch=master
     :target: https://travis-ci.org/mariocesar/sorl-thumbnail
 .. |pypi| image:: https://badge.fury.io/py/sorl-thumbnail.png
     :target: http://badge.fury.io/py/sorl-thumbnail
 .. |coveralls| image:: https://coveralls.io/repos/mariocesar/sorl-thumbnail/badge.png?branch=master
     :target: https://coveralls.io/r/mariocesar/sorl-thumbnail?branch=master
+.. |jazzband| image:: https://jazzband.co/static/img/jazzband.svg
+   :target: https://jazzband.co/
+   :alt: Jazzband
 
 .. _`Pillow`: http://pillow.readthedocs.org/en/latest/
 .. _`ImageMagick`: http://www.imagemagick.org/script/index.php
