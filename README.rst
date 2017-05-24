@@ -1,4 +1,4 @@
-|travis| |pypi| |coveralls| |jazzband|
+|travis| |pypi| |coveralls|
 
 Thumbnails for Django.
 
@@ -24,6 +24,8 @@ Read more in `the documentation (latest version) <http://sorl-thumbnail.rtfd.org
 
 Developers
 ==========
+
+|jazzband|
 
 This is a `Jazzband <https://jazzband.co>`_ project. By contributing you agree to 
 abide by the `Contributor Code of Conduct <https://jazzband.co/about/conduct>`_ 
