@@ -43,8 +43,10 @@ before_install:
 after_failure:
   - cat /home/travis/.pip/pip.log
 
+after_success: coveralls
+
 install:
-  - pip install -q flake8 tox
+  - pip install -q flake8 tox coveralls
 
 script:
   - env | sort
@@ -55,14 +57,4 @@ services:
   - redis-server
 
 notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#sorl-thumbnail"
-    on_success: change
-    on_failure: change
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/b368c47d69637f9a01a0
-    on_success: change
-    on_failure: change
-    on_start: false
+  email: false
