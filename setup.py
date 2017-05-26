@@ -22,7 +22,7 @@ setup(
     maintainer=__maintainer__,
     maintainer_email=__email__,
     license=__license__,
-    url='https://github.com/mariocesar/sorl-thumbnail',
+    url='https://github.com/jazzband/sorl-thumbnail',
     packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
     zip_safe=False,
