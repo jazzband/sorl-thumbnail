@@ -40,7 +40,7 @@ in Google Groups.
 
 - IRC Channel: irc://irc.freenode.net/#sorl-thumbnail
 
-- Gitter: https://gitter.im/mariocesar/sorl-thumbnail
+- Gitter: https://gitter.im/jazzband/sorl-thumbnail
 
 - Mailing List: sorl-thumbnail@googlegroups.com https://groups.google.com/d/forum/sorl-thumbnail
 
@@ -150,12 +150,12 @@ A fast workaround if you are not willing to tweak your storage backend is to set
 So it will avoid to overly query the S3 API.
 
 
-.. |travis| image:: https://secure.travis-ci.org/mariocesar/sorl-thumbnail.png?branch=master
-    :target: https://travis-ci.org/mariocesar/sorl-thumbnail
+.. |travis| image:: https://secure.travis-ci.org/jazzband/sorl-thumbnail.png?branch=master
+    :target: https://travis-ci.org/jazzband//sorl-thumbnail
 .. |pypi| image:: https://badge.fury.io/py/sorl-thumbnail.png
     :target: http://badge.fury.io/py/sorl-thumbnail
-.. |coveralls| image:: https://coveralls.io/repos/mariocesar/sorl-thumbnail/badge.png?branch=master
-    :target: https://coveralls.io/r/mariocesar/sorl-thumbnail?branch=master
+.. |coveralls| image:: https://coveralls.io/repos/jazzband//sorl-thumbnail/badge.png?branch=master
+    :target: https://coveralls.io/r/jazzband//sorl-thumbnail?branch=master
 .. |jazzband| image:: https://jazzband.co/static/img/jazzband.svg
    :target: https://jazzband.co/
    :alt: Jazzband
@@ -170,5 +170,5 @@ So it will avoid to overly query the S3 API.
 .. _`Template examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#template-examples
 .. _`Model examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#model-examples
 .. _`Low level API examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#low-level-api-examples
-.. _`issue #351`: https://github.com/mariocesar/sorl-thumbnail/issues/351
+.. _`issue #351`: https://github.com/jazzband/sorl-thumbnail/issues/351
 .. _`Django supported versions policy`: https://www.djangoproject.com/download/#supported-versions
