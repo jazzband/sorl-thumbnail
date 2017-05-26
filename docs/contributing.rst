@@ -39,7 +39,7 @@ For full list of tox environments, see ``tox.ini``
 You can get away without using Vagrant if you install all packages locally yourself,
 however, this is not recommended.
 
-.. _Travis CI: https://travis-ci.org/mariocesar/sorl-thumbnail
+.. _Travis CI: https://travis-ci.org/jazzband/sorl-thumbnail
 .. _Vagrant: http://www.vagrantup.com/
 .. _tox: https://testrun.org/tox/latest/
 .. _Install Vagrant: http://docs.vagrantup.com/v2/installation/index.html
@@ -51,7 +51,7 @@ Sending pull requests
 
 1. Fork the repo::
 
-    git@github.com:mariocesar/sorl-thumbnail.git
+    git@github.com:jazzband/sorl-thumbnail.git
 
 2. Create a branch for your specific changes::
 
