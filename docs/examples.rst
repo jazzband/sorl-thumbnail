@@ -31,6 +31,12 @@ Using external images and advanced cropping::
         <img src="{{ im.url }}">
     {% endthumbnail %}
 
+Responsive srcset with retina option::
+
+    {% thumbnail item.image "100x100" retina=1 as im %}
+        <img srcset="{{ im.url }} 1x, {{ im_retina.url }} 2x" src="{{ im.url }}">
+    {% endthumbnail %}
+
 Using the empty feature, the empty section is rendered when the source is
 resolved to an empty value or an invalid image source, you can think of it as
 rendering when the thumbnail becomes undefined::
