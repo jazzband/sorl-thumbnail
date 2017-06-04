@@ -144,3 +144,69 @@ class TemplateTestCaseClient(TestCase):
             end = outbox[0].body.split('\n\n')[-2].split(':')[1].strip()
 
             self.assertEqual(end, '[Errno 2] No such file or directory')
+
+
+class TemplateTestCaseTemplateTagAlias(BaseTestCase):
+    """Testing alternative template tag (alias)."""
+
+    def test_model(self):
+        item = Item.objects.get(image='500x500.jpg')
+        val = render_to_string(
+            'thumbnail1_alias.html', {'item': item}
+        ).strip()
+        self.assertEqual(
+            val,
+            '<img style="margin:0px 0px 0px 0px" width="200" height="100">'
+        )
+        val = render_to_string(
+            'thumbnail2_alias.html', {'item': item}
+        ).strip()
+        self.assertEqual(
+            val,
+            '<img style="margin:0px 50px 0px 50px" width="100" height="100">'
+        )
+
+    def test_nested(self):
+        item = Item.objects.get(image='500x500.jpg')
+        val = render_to_string(
+            'thumbnail6_alias.html', {'item': item}
+        ).strip()
+        self.assertEqual(
+            val,
+            (
+            '<a href="/media/test/cache/fc/f6/'
+            'fcf65c09cc4bb8671147de41997422bf.jpg">'
+            '<img src="/media/test/cache/67/6b/'
+            '676b2331a071478b0cb280d0edba7818.jpg" '
+            'width="400" height="400"></a>'
+            )
+        )
+
+    def test_serialization_options(self):
+        item = Item.objects.get(image='500x500.jpg')
+
+        for j in range(0, 20):
+            # we could be lucky...
+            val0 = render_to_string('thumbnail7_alias.html', {
+                'item': item,
+            }).strip()
+            val1 = render_to_string('thumbnail7a_alias.html', {
+                'item': item,
+            }).strip()
+            self.assertEqual(val0, val1)
+
+    def test_options(self):
+        item = Item.objects.get(image='500x500.jpg')
+        options = {
+            'crop': "center",
+            'upscale': True,
+            'quality': 77,
+        }
+        val0 = render_to_string(
+            'thumbnail8_alias.html',
+            {'item': item, 'options': options}
+        ).strip()
+        val1 = render_to_string(
+            'thumbnail8a_alias.html', {'item': item}
+        ).strip()
+        self.assertEqual(val0, val1)

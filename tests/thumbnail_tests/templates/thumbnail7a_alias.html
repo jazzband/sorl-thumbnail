@@ -1,0 +1,5 @@
+{% load sorl_thumbnail %}{% spaceless %}
+{% thumbnail item.image "100x100" quality=70 crop="center" upscale="True" as th %}
+{{ th.url }}
+{% endthumbnail %}
+{% endspaceless %}
