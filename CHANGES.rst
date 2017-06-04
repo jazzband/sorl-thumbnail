@@ -5,6 +5,8 @@ Changelog
 12.0 (TBA)
 ==========
 
+* [Feature] #480 ``sorl_thumbnail`` alias for ``thumbnail`` templatetag module 
+  added to allow usage in combination with other thumbnailers.
 * [Feature] #145 Python 3 support
 * [Feature] #165 Django 1.5-1.6 support
 * [Feature] #308 Django 1.7
