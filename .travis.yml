@@ -10,31 +10,31 @@ cache:
     - .tox
 
 env:
-  - TOX_ENV=py27-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py27-django18-imagemagick APT=imagemagick
-  - TOX_ENV=py27-django18-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py27-django18-redis
-  - TOX_ENV=py27-django18-wand
-  - TOX_ENV=py27-django18-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
-  - TOX_ENV=py27-django18-dbm
-  - TOX_ENV=py34-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py34-django18-imagemagick APT=imagemagick
-  - TOX_ENV=py34-django18-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py34-django18-redis
-  - TOX_ENV=py34-django18-wand
-  - TOX_ENV=py34-django18-dbm
-  - TOX_ENV=py34-django19-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py34-django19-imagemagick APT=imagemagick
-  - TOX_ENV=py34-django19-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py34-django19-redis
-  - TOX_ENV=py34-django19-wand
-  - TOX_ENV=py34-django19-dbm
-  - TOX_ENV=py34-django110-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOX_ENV=py34-django110-imagemagick APT=imagemagick
-  - TOX_ENV=py34-django110-graphicsmagick APT=graphicsmagick
-  - TOX_ENV=py34-django110-redis
-  - TOX_ENV=py34-django110-wand
-  - TOX_ENV=py34-django110-dbm
+  - TOXENV=py27-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOXENV=py27-django18-imagemagick APT=imagemagick
+  - TOXENV=py27-django18-graphicsmagick APT=graphicsmagick
+  - TOXENV=py27-django18-redis
+  - TOXENV=py27-django18-wand
+  - TOXENV=py27-django18-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
+  - TOXENV=py27-django18-dbm
+  - TOXENV=py34-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOXENV=py34-django18-imagemagick APT=imagemagick
+  - TOXENV=py34-django18-graphicsmagick APT=graphicsmagick
+  - TOXENV=py34-django18-redis
+  - TOXENV=py34-django18-wand
+  - TOXENV=py34-django18-dbm
+  - TOXENV=py34-django19-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOXENV=py34-django19-imagemagick APT=imagemagick
+  - TOXENV=py34-django19-graphicsmagick APT=graphicsmagick
+  - TOXENV=py34-django19-redis
+  - TOXENV=py34-django19-wand
+  - TOXENV=py34-django19-dbm
+  - TOXENV=py34-django110-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOXENV=py34-django110-imagemagick APT=imagemagick
+  - TOXENV=py34-django110-graphicsmagick APT=graphicsmagick
+  - TOXENV=py34-django110-redis
+  - TOXENV=py34-django110-wand
+  - TOXENV=py34-django110-dbm
 
 before_install:
   - sudo apt-get update -qq
@@ -50,7 +50,7 @@ install:
 
 script:
   - env | sort
-  - tox -e $TOX_ENV
+  - tox
   - flake8 --show-source sorl/
 
 services:
