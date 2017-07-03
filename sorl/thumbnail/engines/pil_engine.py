@@ -65,6 +65,15 @@ class Engine(EngineBase):
             return False
         return True
 
+    def colorspace(self, image, geometry, options):
+        """
+        Wrapper for ``_colorspace``
+        """
+        colorspace = options['colorspace']
+        format = options['format']
+
+        return self._colorspace(image, colorspace, format)
+
     def _cropbox(self, image, x, y, x2, y2):
         return image.crop((x, y, x2, y2))
 
@@ -106,9 +115,10 @@ class Engine(EngineBase):
 
         return False
 
-    def _colorspace(self, image, colorspace):
+    def _colorspace(self, image, colorspace, format):
         if colorspace == 'RGB':
-            if image.mode == 'RGBA':
+            # Pillow JPEG doesn't allow RGBA anymore. It was converted to RGB before.
+            if image.mode == 'RGBA' and format != 'JPEG':
                 return image  # RGBA is just RGB + Alpha
             if image.mode == 'LA' or (image.mode == 'P' and 'transparency' in image.info):
                 newimage = image.convert('RGBA')
