@@ -150,8 +150,8 @@ A fast workaround if you are not willing to tweak your storage backend is to set
 So it will avoid to overly query the S3 API.
 
 
-.. |travis| image:: https://secure.travis-ci.org/jazzband/sorl-thumbnail.png?branch=master
-    :target: https://travis-ci.org/jazzband//sorl-thumbnail
+.. |travis| image:: https://travis-ci.org/jazzband/sorl-thumbnail.svg?branch=master
+    :target: https://travis-ci.org/jazzband/sorl-thumbnail
 .. |pypi| image:: https://badge.fury.io/py/sorl-thumbnail.png
     :target: http://badge.fury.io/py/sorl-thumbnail
 .. |coveralls| image:: https://coveralls.io/repos/jazzband//sorl-thumbnail/badge.png?branch=master
