@@ -405,8 +405,7 @@ class ImageValidationTestCase(unittest.TestCase):
 
         self.assertFalse(engine.is_valid_image(data))
 
-    @unittest.expectedFailure
-    # See issue #427. This seems to not-fail with wand.
+    @unittest.skip("See issue #427. This seems to not-fail with wand")
     def test_truncated_generation_failure(self):
         """
         Confirm that generating a thumbnail for our "broken" image fails.
