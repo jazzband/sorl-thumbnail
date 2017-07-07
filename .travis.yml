@@ -1,7 +1,7 @@
 language: python
 
 python:
-  - "3.4"
+  - "3.6"
 
 cache:
   pip:
@@ -35,6 +35,13 @@ env:
   - TOXENV=py35-django110-redis
   - TOXENV=py35-django110-wand
   - TOXENV=py35-django110-dbm
+  - TOXENV=py36-django111-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+  - TOXENV=py36-django111-imagemagick APT=imagemagick
+  - TOXENV=py36-django111-graphicsmagick APT=graphicsmagick
+  - TOXENV=py36-django111-redis
+  - TOXENV=py36-django111-wand
+  - TOXENV=py36-django111-dbm
+
 
 before_install:
   - sudo apt-get update -qq
