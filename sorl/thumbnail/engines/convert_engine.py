@@ -2,6 +2,7 @@ from __future__ import unicode_literals, with_statement
 import re
 import os
 import subprocess
+import logging
 from collections import OrderedDict
 
 from django.utils.encoding import smart_str
@@ -12,6 +13,7 @@ from sorl.thumbnail.compat import b
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
 
+logger = logging.getLogger(__name__)
 
 size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
 
@@ -53,11 +55,16 @@ class Engine(EngineBase):
             args.append(fp.name)
             args = map(smart_str, args)
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
+            returncode = p.wait()
             out, err = p.communicate()
 
-            if err:
-                raise Exception(err)
+            if returncode:
+                raise EngineError(
+                    "The command %r exited with a non-zero exit code and printed this to stderr: %s"
+                    % (args, err)
+                )
+            elif err:
+                logger.error("Captured stderr: %s", err)
 
             thumbnail.write(fp.read())
 
@@ -181,3 +188,7 @@ class Engine(EngineBase):
         image['options']['gravity'] = 'center'
         image['options']['extent'] = '%sx%s' % (geometry[0], geometry[1])
         return image
+
+
+class EngineError(Exception):
+    pass
