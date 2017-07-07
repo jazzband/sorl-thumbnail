@@ -148,7 +148,7 @@ class Engine(EngineBase):
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
             result = p.stdout.read().strip()
-            return result != 'unknown' and int(result) in [5, 6, 7, 8]
+            return result and result != 'unknown' and int(result) in [5, 6, 7, 8]
         else:
             return False
 
