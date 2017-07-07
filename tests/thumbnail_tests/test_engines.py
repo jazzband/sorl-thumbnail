@@ -392,7 +392,7 @@ class ImageValidationTestCase(unittest.TestCase):
     def setUp(self):
         self.BACKEND = get_module_class(settings.THUMBNAIL_BACKEND)()
 
-    @unittest.expectedFailure  # See issue #427
+    @unittest.skip("See issue #427")
     def test_truncated_validation(self):
         """
         Test that is_valid_image returns false for a truncated image.
