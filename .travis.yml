@@ -59,3 +59,13 @@ services:
 
 notifications:
   email: false
+
+deploy:
+  provider: pypi
+  user: jazzband
+  password:
+    secure:
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: jazzband/sorl-thumbnail
