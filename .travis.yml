@@ -63,9 +63,9 @@ notifications:
 deploy:
   provider: pypi
   user: jazzband
+  distributions: sdist bdist_wheel
   password:
-    secure:
+    secure: VD+63Tnv0VYNfFQv9f1KZ0k79HSX8veNk4dTy42Hriteci50z5uSQdZMnqqD83xQJa4VF6N7DHkxHnBVOWLCqGQZeYqR/5BuDFNUewcr6O14dk31HvxMsWDaN1KW0Qwtus8ZrztwGhZtZ/92ODA6luHI4mCTzqX0gcG0/aKd75s=
   on:
     tags: true
-    distributions: sdist bdist_wheel
     repo: jazzband/sorl-thumbnail
