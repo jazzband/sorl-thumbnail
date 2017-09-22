@@ -52,7 +52,7 @@ install:
 script:
   - env | sort
   - tox
-  - flake8 --show-source sorl/
+  - flake8 --show-source
 
 services:
   - redis-server
