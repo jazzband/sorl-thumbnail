@@ -233,6 +233,13 @@ class SimpleTestCase(BaseTestCase):
         imref2 = ImageFile(os.path.join(settings.MEDIA_ROOT, image.name))
         self.assertEqual(imref1.key, imref2.key)
 
+    def test_rgba_colorspace(self):
+        item = Item.objects.get(image='500x500.jpg')
+
+        t = self.BACKEND.get_thumbnail(item.image, '100x100', colorspace="RGBA", format="JPEG")
+        self.assertEqual(t.x, 100)
+        self.assertEqual(t.y, 100)
+
 
 class CropTestCase(BaseTestCase):
     def setUp(self):
