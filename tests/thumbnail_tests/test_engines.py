@@ -233,6 +233,7 @@ class SimpleTestCase(BaseTestCase):
         imref2 = ImageFile(os.path.join(settings.MEDIA_ROOT, image.name))
         self.assertEqual(imref1.key, imref2.key)
 
+    @unittest.skipIf('pil_engine' not in settings.THUMBNAIL_ENGINE, 'RGBA is only supported in PIL')
     def test_rgba_colorspace(self):
         item = Item.objects.get(image='500x500.jpg')
 
