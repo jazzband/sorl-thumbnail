@@ -5,4 +5,4 @@ by {% load sorl_thumbnail %} instead of traditional
 that do make use of multiple thumbnailer libraries (for
 instance `easy-thumbnails` alongside `sorl-thumbnail`).
 """
-from .thumbnail import *
+from .thumbnail import *  # noqa
