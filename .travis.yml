@@ -12,8 +12,8 @@ matrix:
       env: TOXENV=py27-django18-redis
     - python: "2.7"
       env: TOXENV=py27-django18-wand
-    - python: "2.7"
-      env: TOXENV=py27-django18-pgmagick
+    # - python: "2.7"
+    #  env: TOXENV=py27-django18-pgmagick
     - python: "2.7"
       env: TOXENV=py27-django18-dbm
 
@@ -63,8 +63,8 @@ addons:
   apt:
     packages:
       - libgraphicsmagick1-dev
-      - libgraphicsmagick++1-dev
-      - libboost-python-dev
+      # - libgraphicsmagick++1-dev
+      # - libboost-python-dev
       - graphicsmagick
       - libjpeg62
       - zlib1g-dev
