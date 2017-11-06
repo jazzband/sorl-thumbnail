@@ -1,41 +1,66 @@
 language: python
 
-python:
-  - "3.6"
+matrix:
+  include:
+    - python: "2.7"
+      env: TOXENV=py27-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+    - python: "2.7"
+      env: TOXENV=py27-django18-imagemagick APT=imagemagick
+    - python: "2.7"
+      env: TOXENV=py27-django18-graphicsmagick APT=graphicsmagick
+    - python: "2.7"
+      env: TOXENV=py27-django18-redis
+    - python: "2.7"
+      env: TOXENV=py27-django18-wand
+    - python: "2.7"
+      env: TOXENV=py27-django18-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
+    - python: "2.7"
+      env: TOXENV=py27-django18-dbm
+
+    - python: "3.4"
+      env: TOXENV=py34-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+    - python: "3.4"
+      env: TOXENV=py34-django18-imagemagick APT=imagemagick
+    - python: "3.4"
+      env: TOXENV=py34-django18-graphicsmagick APT=graphicsmagick
+    - python: "3.4"
+      env: TOXENV=py34-django18-redis
+    - python: "3.4"
+      env: TOXENV=py34-django18-wand
+    - python: "3.4"
+      env: TOXENV=py34-django18-dbm
+
+    - python: "3.5"
+      env: TOXENV=py35-django110-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+    - python: "3.5"
+      env: TOXENV=py35-django110-imagemagick APT=imagemagick
+    - python: "3.5"
+      env: TOXENV=py35-django110-graphicsmagick APT=graphicsmagick
+    - python: "3.5"
+      env: TOXENV=py35-django110-redis
+    - python: "3.5"
+      env: TOXENV=py35-django110-wand
+    - python: "3.5"
+      env: TOXENV=py35-django110-dbm
+
+    - python: "3.6"
+      env: TOXENV=py36-django111-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+    - python: "3.6"
+      env: TOXENV=py36-django111-imagemagick APT=imagemagick
+    - python: "3.6"
+      env: TOXENV=py36-django111-graphicsmagick APT=graphicsmagick
+    - python: "3.6"
+      env: TOXENV=py36-django111-redis
+    - python: "3.6"
+      env: TOXENV=py36-django111-wand
+    - python: "3.6"
+      env: TOXENV=py36-django111-dbm
 
 cache:
   pip:
   apt:
   directories:
     - .tox
-
-env:
-  - TOXENV=py27-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOXENV=py27-django18-imagemagick APT=imagemagick
-  - TOXENV=py27-django18-graphicsmagick APT=graphicsmagick
-  - TOXENV=py27-django18-redis
-  - TOXENV=py27-django18-wand
-  - TOXENV=py27-django18-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
-  - TOXENV=py27-django18-dbm
-  - TOXENV=py34-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOXENV=py34-django18-imagemagick APT=imagemagick
-  - TOXENV=py34-django18-graphicsmagick APT=graphicsmagick
-  - TOXENV=py34-django18-redis
-  - TOXENV=py34-django18-wand
-  - TOXENV=py34-django18-dbm
-  - TOXENV=py35-django110-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOXENV=py35-django110-imagemagick APT=imagemagick
-  - TOXENV=py35-django110-graphicsmagick APT=graphicsmagick
-  - TOXENV=py35-django110-redis
-  - TOXENV=py35-django110-wand
-  - TOXENV=py35-django110-dbm
-  - TOXENV=py36-django111-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
-  - TOXENV=py36-django111-imagemagick APT=imagemagick
-  - TOXENV=py36-django111-graphicsmagick APT=graphicsmagick
-  - TOXENV=py36-django111-redis
-  - TOXENV=py36-django111-wand
-  - TOXENV=py36-django111-dbm
-
 
 before_install:
   - sudo apt-get update -qq
