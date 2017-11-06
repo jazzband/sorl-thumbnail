@@ -338,7 +338,10 @@ class CropTestCase(BaseTestCase):
         # TODO: Complete test for smart crop
         self.BACKEND.get_thumbnail('32x32', 'data/white_border.jpg', crop='smart')
 
-    @unittest.skipIf('pil_engine' not in settings.THUMBNAIL_ENGINE, 'the other engines fail this test')
+    @unittest.skipIf(
+        'pil_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
     def test_image_with_orientation(self):
         name = 'data/aspect_test.jpg'
         item, _ = Item.objects.get_or_create(image=name)
@@ -394,7 +397,12 @@ class DummyTestCase(unittest.TestCase):
         settings.THUMBNAIL_DUMMY = True
         settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS = [1.5, 2]
         val = render_to_string('thumbnaild4.html', {}).strip()
-        self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400" srcset="http://dummyimage.com/1200x800 2x; http://dummyimage.com/900x600 1.5x">')
+        self.assertEqual(
+            val,
+            '<img src="http://dummyimage.com/600x400" width="600" '
+            'height="400" srcset="http://dummyimage.com/1200x800 2x; '
+            'http://dummyimage.com/900x600 1.5x">'
+        )
 
 
 class ImageValidationTestCase(unittest.TestCase):
