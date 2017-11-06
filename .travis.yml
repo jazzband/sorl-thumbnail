@@ -70,10 +70,10 @@ addons:
       - zlib1g-dev
 
 cache:
-  pip:
-  apt:
+  apt: true
   directories:
     - .tox
+    - $HOME/.cache/pip
 
 after_failure:
   - cat /home/travis/.pip/pip.log
@@ -86,7 +86,7 @@ install:
 script:
   - env | sort
   - tox
-  - flake8 --show-source sorl/
+  # - flake8 --show-source sorl/
 
 services:
   - redis-server
