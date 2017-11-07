@@ -5,7 +5,7 @@ Thumbnails for Django.
 Features at a glance
 ====================
 
-- Support for Django 1.8, 1.9, 1.10, following the `Django supported versions policy`_
+- Support for Django 1.8, 1.10, 1.11, following the `Django supported versions policy`_
 - Python 3 support
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and `vipsthumbnail`_
@@ -162,8 +162,8 @@ A fast workaround if you are not willing to tweak your storage backend is to set
 So it will avoid to overly query the S3 API.
 
 
-.. |travis| image:: https://secure.travis-ci.org/jazzband/sorl-thumbnail.png?branch=master
-    :target: https://travis-ci.org/jazzband//sorl-thumbnail
+.. |travis| image:: https://travis-ci.org/jazzband/sorl-thumbnail.svg?branch=master
+    :target: https://travis-ci.org/jazzband/sorl-thumbnail
 .. |pypi| image:: https://badge.fury.io/py/sorl-thumbnail.png
     :target: http://badge.fury.io/py/sorl-thumbnail
 .. |coveralls| image:: https://coveralls.io/repos/jazzband//sorl-thumbnail/badge.png?branch=master

@@ -2,13 +2,20 @@
 News
 ====
 
-Next Release
-============
+Announcements
+=============
 
-A final 12.0 version is planned for end of 2013.
+2017-07-07
+----------
 
-Announces
-=========
+@Flimm: sorl-thumbnail was welcomed into the `Jazzband organization and project
+<https://jazzband.co/>`__. Jazzband is open to all, and any member of Jazzband
+can contribute directly to sorl-thumbnail's GitHub repo. We hope this will
+encourage more open source programmers to contribute. Thank you @mariocesar for
+taking this step and for the years of effort in this project.
+
+@Flimm: As part of joining Jazzband, the GitHub repo has been moved to
+https://github.com/jazzband/sorl-thumbnail
 
 2013-11-12
 ----------

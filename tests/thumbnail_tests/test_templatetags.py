@@ -108,7 +108,9 @@ class TemplateTestCaseA(BaseTestCase):
             self.assertLess(epsilon(left, im.getpixel((7, 14))), 10)
             exif = im._getexif()
 
-            if exif:
+            # no exif editor in GraphicsMagick
+            if exif and not (settings.THUMBNAIL_CONVERT.endswith('gm convert') or
+                             'pgmagick_engine' in settings.THUMBNAIL_ENGINE):
                 self.assertEqual(exif.get(0x0112), 1)
 
 

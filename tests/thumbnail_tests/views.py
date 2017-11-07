@@ -1,8 +1,7 @@
-from django.template import loader, RequestContext
+from django.template import loader
 from django.http import HttpResponse
 
 
 def direct_to_template(request, template, mimetype=None, **kwargs):
-    c = RequestContext(request, {})
     t = loader.get_template(template)
-    return HttpResponse(t.render(c), content_type=mimetype)
+    return HttpResponse(t.render({'request': request}), content_type=mimetype)

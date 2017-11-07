@@ -41,7 +41,7 @@ Returns the height of the image in pixels.
 
 ``y``
 -----
-Alias of ``width``
+Alias of ``height``
 
 ``ratio``
 ---------
