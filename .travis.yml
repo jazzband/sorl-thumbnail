@@ -3,26 +3,26 @@ language: python
 matrix:
   include:
     - python: "2.7"
-      env: TOXENV=py27-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+      env: TOXENV=py27-django18-pil
     - python: "2.7"
-      env: TOXENV=py27-django18-imagemagick APT=imagemagick
+      env: TOXENV=py27-django18-imagemagick
     - python: "2.7"
-      env: TOXENV=py27-django18-graphicsmagick APT=graphicsmagick
+      env: TOXENV=py27-django18-graphicsmagick
     - python: "2.7"
       env: TOXENV=py27-django18-redis
     - python: "2.7"
       env: TOXENV=py27-django18-wand
-    - python: "2.7"
-      env: TOXENV=py27-django18-pgmagick APT='libgraphicsmagick++1-dev libboost-python-dev'
+    # - python: "2.7"
+    #  env: TOXENV=py27-django18-pgmagick
     - python: "2.7"
       env: TOXENV=py27-django18-dbm
 
     - python: "3.4"
-      env: TOXENV=py34-django18-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+      env: TOXENV=py34-django18-pil
     - python: "3.4"
-      env: TOXENV=py34-django18-imagemagick APT=imagemagick
+      env: TOXENV=py34-django18-imagemagick
     - python: "3.4"
-      env: TOXENV=py34-django18-graphicsmagick APT=graphicsmagick
+      env: TOXENV=py34-django18-graphicsmagick
     - python: "3.4"
       env: TOXENV=py34-django18-redis
     - python: "3.4"
@@ -31,11 +31,11 @@ matrix:
       env: TOXENV=py34-django18-dbm
 
     - python: "3.5"
-      env: TOXENV=py35-django110-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+      env: TOXENV=py35-django110-pil
     - python: "3.5"
-      env: TOXENV=py35-django110-imagemagick APT=imagemagick
+      env: TOXENV=py35-django110-imagemagick
     - python: "3.5"
-      env: TOXENV=py35-django110-graphicsmagick APT=graphicsmagick
+      env: TOXENV=py35-django110-graphicsmagick
     - python: "3.5"
       env: TOXENV=py35-django110-redis
     - python: "3.5"
@@ -44,11 +44,11 @@ matrix:
       env: TOXENV=py35-django110-dbm
 
     - python: "3.6"
-      env: TOXENV=py36-django111-pil APT='libjpeg62 libjpeg62-dev zlib1g-dev'
+      env: TOXENV=py36-django111-pil
     - python: "3.6"
-      env: TOXENV=py36-django111-imagemagick APT=imagemagick
+      env: TOXENV=py36-django111-imagemagick
     - python: "3.6"
-      env: TOXENV=py36-django111-graphicsmagick APT=graphicsmagick
+      env: TOXENV=py36-django111-graphicsmagick
     - python: "3.6"
       env: TOXENV=py36-django111-redis
     - python: "3.6"
@@ -56,15 +56,24 @@ matrix:
     - python: "3.6"
       env: TOXENV=py36-django111-dbm
 
-cache:
-  pip:
+sudo: false
+dist: trusty
+
+addons:
   apt:
+    packages:
+      - libgraphicsmagick1-dev
+      # - libgraphicsmagick++1-dev
+      # - libboost-python-dev
+      - graphicsmagick
+      - libjpeg62
+      - zlib1g-dev
+
+cache:
+  apt: true
   directories:
     - .tox
-
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq $APT
+    - $HOME/.cache/pip
 
 after_failure:
   - cat /home/travis/.pip/pip.log
@@ -77,7 +86,7 @@ install:
 script:
   - env | sort
   - tox
-  - flake8 --show-source
+  # - flake8 --show-source sorl/
 
 services:
   - redis-server
