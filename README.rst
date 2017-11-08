@@ -132,6 +132,18 @@ You can use the 'get_thumbnail'::
 
 See more examples in the section `Low level API examples`_ in the Documentation
 
+Using in combination with other thumbnalers
+-------------------------------------------
+
+Alternatively, you load the templatetags by {% load sorl_thumbnail %} 
+instead of traditional {% load thumbnail %}. It's especially useful in 
+projects that do make use of multiple thumbnailer libraries that use the 
+same name (``thumbnail``) for the templatetag module::
+
+    {% load sorl_thumbnail %}
+    {% thumbnail item.image "100x100" crop="center" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% endthumbnail %}
 
 Frequently asked questions
 ==========================

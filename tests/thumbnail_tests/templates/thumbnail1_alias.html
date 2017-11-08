@@ -1,0 +1,7 @@
+{% load sorl_thumbnail %}{% spaceless %}
+{% thumbnail item.image "200x100" crop="50% 50%" as im %}
+    <img style="margin:{{ im|margin:"200x100" }}" width="{{ im.x }}" height="{{ im.y }}">
+{% empty %}
+    <crap>
+{% endthumbnail %}
+{% endspaceless %}

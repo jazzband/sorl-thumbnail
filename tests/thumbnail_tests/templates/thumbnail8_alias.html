@@ -1,0 +1,5 @@
+{% load sorl_thumbnail %}{% spaceless %}
+{% thumbnail item.image "100x100" options=options as th %}
+{{ th.url }}
+{% endthumbnail %}
+{% endspaceless %}
