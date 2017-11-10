@@ -37,7 +37,7 @@ class TemplateTestCaseA(BaseTestCase):
     def test_serialization_options(self):
         item = Item.objects.get(image='500x500.jpg')
 
-        for j in range(0, 20):
+        for _ in range(0, 20):
             # we could be lucky...
             val0 = render_to_string('thumbnail7.html', {
                 'item': item,
@@ -187,7 +187,7 @@ class TemplateTestCaseTemplateTagAlias(BaseTestCase):
     def test_serialization_options(self):
         item = Item.objects.get(image='500x500.jpg')
 
-        for j in range(0, 20):
+        for _ in range(0, 20):
             # we could be lucky...
             val0 = render_to_string('thumbnail7_alias.html', {
                 'item': item,
