@@ -39,7 +39,7 @@ def safe_filter(error_output=''):
             except Exception as err:
                 if sorl_settings.THUMBNAIL_DEBUG:
                     raise
-                logger.error('Thumbnail filter failed: %s' % err.message,
+                logger.error('Thumbnail filter failed: %s' % str(err),
                              exc_info=sys.exc_info())
                 return error_output
 
