@@ -176,11 +176,11 @@ class TemplateTestCaseTemplateTagAlias(BaseTestCase):
         self.assertEqual(
             val,
             (
-            '<a href="/media/test/cache/fc/f6/'
-            'fcf65c09cc4bb8671147de41997422bf.jpg">'
-            '<img src="/media/test/cache/67/6b/'
-            '676b2331a071478b0cb280d0edba7818.jpg" '
-            'width="400" height="400"></a>'
+                '<a href="/media/test/cache/fc/f6/'
+                'fcf65c09cc4bb8671147de41997422bf.jpg">'
+                '<img src="/media/test/cache/67/6b/'
+                '676b2331a071478b0cb280d0edba7818.jpg" '
+                'width="400" height="400"></a>'
             )
         )
 
