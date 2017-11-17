@@ -5,7 +5,7 @@ Thumbnails for Django.
 Features at a glance
 ====================
 
-- Support for Django 1.8, 1.10, 1.11, following the `Django supported versions policy`_
+- Support for Django 1.8, 1.10, 1.11, and 2.0 following the `Django supported versions policy`_
 - Python 3 support
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and `vipsthumbnail`_
@@ -27,8 +27,8 @@ Developers
 
 |jazzband|
 
-This is a `Jazzband <https://jazzband.co>`_ project. By contributing you agree to 
-abide by the `Contributor Code of Conduct <https://jazzband.co/about/conduct>`_ 
+This is a `Jazzband <https://jazzband.co>`_ project. By contributing you agree to
+abide by the `Contributor Code of Conduct <https://jazzband.co/about/conduct>`_
 and follow the `guidelines <https://jazzband.co/about/guidelines>`_.
 
 Feel free to create a new Pull request if you want to propose a new feature.
@@ -135,9 +135,9 @@ See more examples in the section `Low level API examples`_ in the Documentation
 Using in combination with other thumbnalers
 -------------------------------------------
 
-Alternatively, you load the templatetags by {% load sorl_thumbnail %} 
-instead of traditional {% load thumbnail %}. It's especially useful in 
-projects that do make use of multiple thumbnailer libraries that use the 
+Alternatively, you load the templatetags by {% load sorl_thumbnail %}
+instead of traditional {% load thumbnail %}. It's especially useful in
+projects that do make use of multiple thumbnailer libraries that use the
 same name (``thumbnail``) for the templatetag module::
 
     {% load sorl_thumbnail %}
