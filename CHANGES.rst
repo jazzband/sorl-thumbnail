@@ -2,10 +2,24 @@
 Changelog
 =========
 
-12.0 (TBA)
-==========
+12.4.1
+======
 
-* [Feature] #480 ``sorl_thumbnail`` alias for ``thumbnail`` templatetag module 
+* Don't skip tests when running flake on travis
+* Fix copy/paste typo
+* Fix RGBA mode not compatible with JPEG on PILLOW >=3.7 (#503)
+* Add test for RGBA mode with JPEG (#503)
+* Don't check EXIF orientation with GraphicsMagick
+* Refactor the Travis build matrix
+* Drop pgmagick tests
+* Add `sorl_thumbnail` templatetag library that mirrors traditional `thumbnail`
+* Added testing for Django 2.0
+
+
+12.0
+====
+
+* [Feature] #480 ``sorl_thumbnail`` alias for ``thumbnail`` templatetag module
   added to allow usage in combination with other thumbnailers.
 * [Feature] #145 Python 3 support
 * [Feature] #165 Django 1.5-1.6 support
@@ -48,4 +62,4 @@ Changelog
 * [Fix] #304 #14 Fix AdminWidget
 * [Fix] #274 Fix issue with transparent PNGs: IOError("cannot use transparency for this mode")
 * [Fix] #265 Better support for LA mode images in PIL engine
-* [Fix] #261 THUMBNAIL_DEBUG has False as default 
+* [Fix] #261 THUMBNAIL_DEBUG has False as default
