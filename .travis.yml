@@ -110,9 +110,10 @@ notifications:
 deploy:
   provider: pypi
   user: jazzband
+  server: https://jazzband.co/projects/sorl-thumbnail/upload
   distributions: sdist bdist_wheel
   password:
-    secure: VD+63Tnv0VYNfFQv9f1KZ0k79HSX8veNk4dTy42Hriteci50z5uSQdZMnqqD83xQJa4VF6N7DHkxHnBVOWLCqGQZeYqR/5BuDFNUewcr6O14dk31HvxMsWDaN1KW0Qwtus8ZrztwGhZtZ/92ODA6luHI4mCTzqX0gcG0/aKd75s=
+    secure: BZlzJyqEbo1nofxEqeE12EyIcM6ldJL40yDRo62qk1dBirUV+eJQN3kTJtKTqVgTMRalQJKqMZgbhWtvxo2wsuBx+JW3LlfjYuY/fNzj/+5x7Tq/NEy4HyBj4RdWdincmdvQ0n4ixar6cDr79KjHUzC9Db3psbTRE6+Vw0EJTM4=
   on:
     tags: true
     repo: jazzband/sorl-thumbnail
