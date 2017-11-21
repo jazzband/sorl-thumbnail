@@ -40,8 +40,6 @@ in Google Groups.
 
 - IRC Channel: irc://irc.freenode.net/#sorl-thumbnail
 
-- Gitter: https://gitter.im/jazzband/sorl-thumbnail
-
 - Mailing List: sorl-thumbnail@googlegroups.com https://groups.google.com/d/forum/sorl-thumbnail
 
 Tests
