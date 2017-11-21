@@ -55,6 +55,9 @@ matrix:
       env: TOXENV=py36-django111-wand
     - python: "3.6"
       env: TOXENV=py36-django111-dbm
+    - python: 3.6
+      env: TOXENV=flake8
+
 
     - python: "3.6"
       env: TOXENV=py36-django20-pil
@@ -94,12 +97,11 @@ after_failure:
 after_success: coveralls
 
 install:
-  - pip install -q flake8 tox coveralls
+  - pip install -q tox coveralls
 
 script:
   - env | sort
   - tox
-  # - flake8 --show-source sorl/
 
 services:
   - redis-server

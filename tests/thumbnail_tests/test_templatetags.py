@@ -37,7 +37,7 @@ class TemplateTestCaseA(BaseTestCase):
     def test_serialization_options(self):
         item = Item.objects.get(image='500x500.jpg')
 
-        for j in range(0, 20):
+        for _ in range(0, 20):
             # we could be lucky...
             val0 = render_to_string('thumbnail7.html', {
                 'item': item,
@@ -176,18 +176,18 @@ class TemplateTestCaseTemplateTagAlias(BaseTestCase):
         self.assertEqual(
             val,
             (
-            '<a href="/media/test/cache/fc/f6/'
-            'fcf65c09cc4bb8671147de41997422bf.jpg">'
-            '<img src="/media/test/cache/67/6b/'
-            '676b2331a071478b0cb280d0edba7818.jpg" '
-            'width="400" height="400"></a>'
+                '<a href="/media/test/cache/fc/f6/'
+                'fcf65c09cc4bb8671147de41997422bf.jpg">'
+                '<img src="/media/test/cache/67/6b/'
+                '676b2331a071478b0cb280d0edba7818.jpg" '
+                'width="400" height="400"></a>'
             )
         )
 
     def test_serialization_options(self):
         item = Item.objects.get(image='500x500.jpg')
 
-        for j in range(0, 20):
+        for _ in range(0, 20):
             # we could be lucky...
             val0 = render_to_string('thumbnail7_alias.html', {
                 'item': item,

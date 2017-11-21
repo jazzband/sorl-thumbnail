@@ -354,7 +354,10 @@ class CropTestCase(BaseTestCase):
         self.assertEqual(th.x, 25)
         self.assertEqual(th.y, 50)
 
-    @unittest.skipIf('pil_engine' not in settings.THUMBNAIL_ENGINE, 'the other engines fail this test')
+    @unittest.skipIf(
+        'pil_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
     def test_crop_image_with_icc_profile(self):
         name = 'data/icc_profile_test.jpg'
         item, _ = Item.objects.get_or_create(image=name)

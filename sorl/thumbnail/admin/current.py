@@ -32,7 +32,7 @@ class AdminImageWidget(forms.ClearableFileInput):
                     ext = 'PNG'
                 elif aux_ext[len(aux_ext) - 1].lower() == 'gif':
                     ext = 'GIF'
-            except:
+            except Exception:
                 pass
             try:
                 mini = get_thumbnail(value, 'x80', upscale=False, format=ext)
