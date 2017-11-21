@@ -1,4 +1,4 @@
-include LICENSE README.rst
+include LICENSE README.rst CHANGES.rst AUTHORS
 recursive-include docs *
 recursive-include tests *
 recursive-exclude * *.pyc
