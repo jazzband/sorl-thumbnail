@@ -57,8 +57,6 @@ matrix:
       env: TOXENV=py36-django111-dbm
     - python: 3.6
       env: TOXENV=flake8
-      script:
-       - flake8 --show-source sorl/
 
 
 sudo: false
