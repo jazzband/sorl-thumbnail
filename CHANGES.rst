@@ -5,61 +5,38 @@ Changelog
 12.4.1
 ======
 
-* Don't skip tests when running flake on travis
-* Fix copy/paste typo
-* Fix RGBA mode not compatible with JPEG on PILLOW >=3.7 (#503)
-* Add test for RGBA mode with JPEG (#503)
+sorl-thumbnail was welcomed into the `Jazzband organization and project
+<https://jazzband.co/>`__. Jazzband is open to all, and any member of Jazzband
+can contribute directly to sorl-thumbnail's GitHub repo. We hope this will
+encourage more open source programmers to contribute. Thank you @mariocesar for
+taking this step and for the years of effort in this project.
+
+12.4.1 is the first release on PyPI since the migration to the Jazzband
+project, and includes two years' worth of changes. Thank you to all
+contributors. These are some of the highlights:
+
+* Target Django versions are now 1.8, 1.10, 1.11 and 2.0
+* Target Python versions are now 2.7, 3.3, 3.4, 3.5 and 3.6
+* Enable GIF support (#263)
+* Enable WebP support (#460)
+* New ``sorl_thumbnail`` templatetag library that mirrors traditional ``thumbnail``
+* Fix bug RGBA mode not compatible with JPEG on PILLOW >=3.7 (#503)
 * Don't check EXIF orientation with GraphicsMagick
-* Refactor the Travis build matrix
-* Drop pgmagick tests
-* Add `sorl_thumbnail` templatetag library that mirrors traditional `thumbnail`
-* Added testing for Django 2.0
+* Bug fix for handling non-ASCII characters in filenames (#434)
+* Better error detection and handling in some cases (#492)
+* Improve automated testing
+* Improve documentation
 
 
-12.0
+12.4
 ====
 
-* [Feature] #480 ``sorl_thumbnail`` alias for ``thumbnail`` templatetag module
-  added to allow usage in combination with other thumbnailers.
-* [Feature] #145 Python 3 support
-* [Feature] #165 Django 1.5-1.6 support
-* [Feature] #308 Django 1.7
-* [Feature] #290 New DBM based Key-Value Store
-* [Feature] Cropbox option
-* [Feature] Rounded corners
-* [Feature] Vagrant testing
-* [Feature] #89 ``THUMBNAIL_URL_TIMEOUT`` setting for retrieving an image with a URL
-* [Feature] #97 New style tag ``<img src="{% thumbnail obj.image "200x150" crop="center" %}"/>``
-* [Feature] Blur support for (PIL) engine
-* [Feature] ``background_margin`` filter
-* [Feature] #135 Ability to preserve file format
-* [Feature] #159 Wand engine
-* [Feature] #178 Improved error logging in templates
-* [Feature] #176 Custom CACHE storage
-* [Feature] #191 Added text filters ``markdown_thumbnails`` and ``html_thumbnails``
-* [Feature] #187 Padding around the thumbnail
-* [Feature] #201 Flatten images (imagemagick)
-* [Fix] #73 Multipage PDFs and animated GIF support (imagemagick)
-* [Fix] #78 Bad resize when upscale is off and image is small
-* [Fix] Multiple docs fixes
-* [Fix] #82 ``ValueError`` errors in orientation (imagemagick)
-* [Fix] #83 ``open()`` calls on windows (imagemagick)
-* [Fix] #92 Improved interaction with S3 storage engine
-* [Fix] #94 Display thumbnail if it exists, even if ``THUMBNAIL_DUMMY`` is ``True``
-* [Fix] #98 #137 #113 Exif errors (PIL)
-* [Fix] #129 #214 Support for very large images (PIL)
-* [Fix] #39 ``get_thumbnail`` doesn't respect ``THUMBNAIL_DUMMY`` setting
-* [Fix] Thumbnail error occurring when file is blank (40fe1b0)
-* [Fix] #148 Error in thumbnail clear command, when storage is empty
-* [Fix] #139 Proper UrlStorage url to prevent HTTP Error 505
-* [Fix] #162 Sporadic IntegrityError when calling get_thumbnail
-* [Fix] #116 KeyError when Image file raw data is not a valid image
-* [Fix] #186 Better expetion handling for ``AdminImageWidget``
-* [Fix] #192 Fixes photo desaturation issue (PIL)
-* [Fix] #203 Remove check if file exists from the templatetag code
-* [Fix] #213 Fixed descriptor leak (imagemagick)
-* [Fix] #216 #217 Fixed OSError handling (PIL)
-* [Fix] #304 #14 Fix AdminWidget
-* [Fix] #274 Fix issue with transparent PNGs: IOError("cannot use transparency for this mode")
-* [Fix] #265 Better support for LA mode images in PIL engine
-* [Fix] #261 THUMBNAIL_DEBUG has False as default
+Although you can find references to this version number in the Git history of
+this project, this version was never released to PyPI.
+
+
+12.4a1
+======
+
+This is the most recent release of this project to PyPI before the migration to
+Jazzband.
