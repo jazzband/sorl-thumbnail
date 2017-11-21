@@ -162,8 +162,9 @@ So it will avoid to overly query the S3 API.
 
 .. |travis| image:: https://travis-ci.org/jazzband/sorl-thumbnail.svg?branch=master
     :target: https://travis-ci.org/jazzband/sorl-thumbnail
-.. |pypi| image:: https://badge.fury.io/py/sorl-thumbnail.png
-    :target: http://badge.fury.io/py/sorl-thumbnail
+.. |pypi| image:: https://img.shields.io/pypi/v/sorl-thumbnail.svg
+    :target: https://pypi.python.org/pypi/sorl-thumbnail
+    :alt: sorl-thumbnail on PyPI
 .. |coveralls| image:: https://coveralls.io/repos/jazzband//sorl-thumbnail/badge.png?branch=master
     :target: https://coveralls.io/r/jazzband//sorl-thumbnail?branch=master
 .. |jazzband| image:: https://jazzband.co/static/img/jazzband.svg
