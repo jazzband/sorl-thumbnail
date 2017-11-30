@@ -1,4 +1,4 @@
-|travis| |docs| |pypi| |coveralls|
+|travis| |docs| |pypi| |jazzband-badge| |coveralls|
 
 Thumbnails for Django.
 
@@ -170,6 +170,9 @@ So it will avoid to overly query the S3 API.
     :alt: sorl-thumbnail on PyPI
 .. |coveralls| image:: https://coveralls.io/repos/jazzband//sorl-thumbnail/badge.png?branch=master
     :target: https://coveralls.io/r/jazzband//sorl-thumbnail?branch=master
+.. |jazzband-badge| image:: https://jazzband.co/static/img/badge.svg
+   :target: https://jazzband.co/
+   :alt: Jazzband
 .. |jazzband| image:: https://jazzband.co/static/img/jazzband.svg
    :target: https://jazzband.co/
    :alt: Jazzband
