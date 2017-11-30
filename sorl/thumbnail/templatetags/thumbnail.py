@@ -135,7 +135,11 @@ class ThumbnailNode(ThumbnailNodeBase):
             else:
                 options[key] = value
 
-        thumbnail = get_thumbnail(file_, geometry, **options)
+        thumbnail = None
+        if file_:
+            thumbnail = get_thumbnail(file_, geometry, **options)
+        elif sorl_settings.THUMBNAIL_DUMMY:
+            thumbnail = DummyImageFile(geometry)
 
         if not thumbnail or (isinstance(thumbnail, DummyImageFile) and self.nodelist_empty):
             if self.nodelist_empty:

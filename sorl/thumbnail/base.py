@@ -77,11 +77,7 @@ class ThumbnailBackend(object):
         if file_:
             source = ImageFile(file_)
         else:
-            if settings.THUMBNAIL_DUMMY:
-                return DummyImageFile(geometry_string)
-            else:
-                logger.error('missing file_ argument in get_thumbnail()')
-                return
+            raise ValueError('falsey file_ argument in get_thumbnail()')
 
         # preserve image filetype
         if settings.THUMBNAIL_PRESERVE_FORMAT:
