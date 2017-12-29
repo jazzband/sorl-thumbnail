@@ -242,6 +242,13 @@ class SimpleTestCase(BaseTestCase):
         self.assertEqual(t.y, 100)
 
 
+    def test_falsey_file_argument(self):
+        with self.assertRaises(ValueError):
+            self.BACKEND.get_thumbnail('', '100x100')
+        with self.assertRaises(ValueError):
+            self.BACKEND.get_thumbnail(None, '100x100')
+
+
 class CropTestCase(BaseTestCase):
     def setUp(self):
         super(CropTestCase, self).setUp()
