@@ -85,7 +85,7 @@ class Engine(EngineBase):
         """
         if image['size'] is None:
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
-            args.append(image['source']+'[0]')
+            args.append(image['source'] + '[0]')
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
             m = size_re.match(str(p.stdout.read()))
@@ -101,7 +101,7 @@ class Engine(EngineBase):
             fp.write(raw_data)
             fp.flush()
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
-            args.append(fp.name+'[0]')
+            args.append(fp.name + '[0]')
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             retcode = p.wait()
         return retcode == 0
@@ -112,7 +112,7 @@ class Engine(EngineBase):
 
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
             args = settings.THUMBNAIL_IDENTIFY.split()
-            args.extend(['-format', '%[exif:orientation]', image['source']+'[0]'])
+            args.extend(['-format', '%[exif:orientation]', image['source'] + '[0]'])
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
             result = p.stdout.read().strip()
@@ -144,7 +144,7 @@ class Engine(EngineBase):
     def _flip_dimensions(self, image):
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
             args = settings.THUMBNAIL_IDENTIFY.split()
-            args.extend(['-format', '%[exif:orientation]', image['source']+'[0]'])
+            args.extend(['-format', '%[exif:orientation]', image['source'] + '[0]'])
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
             result = p.stdout.read().strip()
