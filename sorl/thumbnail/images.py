@@ -1,21 +1,27 @@
 # encoding=utf-8
 
-from __future__ import unicode_literals, division
+from __future__ import division, unicode_literals
+
 import json
 import os
 import re
+import threading
 
-from django.core.files.base import File, ContentFile
+from django.core.files.base import ContentFile, File
 from django.core.files.storage import Storage  # , default_storage
 from django.utils.encoding import force_text
 from django.utils.functional import LazyObject, empty
 from sorl.thumbnail import default
+from sorl.thumbnail.compat import (URLError, encode, quote, quote_plus,
+                                   urlopen, urlparse, urlsplit)
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.compat import (urlopen, urlparse, urlsplit,
-                                   quote, quote_plus, URLError, encode)
 from sorl.thumbnail.default import storage as default_storage
-from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class, deserialize
+from sorl.thumbnail.helpers import (ThumbnailError, deserialize,
+                                    get_module_class, tokey)
 from sorl.thumbnail.parsers import parse_geometry
+
+thread_local_data = threading.local()
+thread_local_data.storage_cache = {}
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')
 
@@ -37,7 +43,12 @@ def deserialize_image_file(s):
 
     class LazyStorage(LazyObject):
         def _setup(self):
-            self._wrapped = get_module_class(data['storage'])()
+            if data['storage'] in thread_local_data.storage_cache:
+                self._wrapped = thread_local_data.storage_cache[data['storage']]
+            else:
+                storage_instance = get_module_class(data['storage'])()
+                thread_local_data.storage_cache[data['storage']] = storage_instance
+                self._wrapped = storage_instance
 
     image_file = ImageFile(data['name'], LazyStorage())
     image_file.set_size(data['size'])
