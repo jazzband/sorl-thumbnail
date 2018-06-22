@@ -3,45 +3,17 @@ language: python
 matrix:
   include:
     - python: "2.7"
-      env: TOXENV=py27-django18-pil
+      env: TOXENV=py27-django111-pil
     - python: "2.7"
-      env: TOXENV=py27-django18-imagemagick
+      env: TOXENV=py27-django111-imagemagick
     - python: "2.7"
-      env: TOXENV=py27-django18-graphicsmagick
+      env: TOXENV=py27-django111-graphicsmagick
     - python: "2.7"
-      env: TOXENV=py27-django18-redis
+      env: TOXENV=py27-django111-redis
     - python: "2.7"
-      env: TOXENV=py27-django18-wand
-    # - python: "2.7"
-    #  env: TOXENV=py27-django18-pgmagick
+      env: TOXENV=py27-django111-wand
     - python: "2.7"
-      env: TOXENV=py27-django18-dbm
-
-    - python: "3.4"
-      env: TOXENV=py34-django18-pil
-    - python: "3.4"
-      env: TOXENV=py34-django18-imagemagick
-    - python: "3.4"
-      env: TOXENV=py34-django18-graphicsmagick
-    - python: "3.4"
-      env: TOXENV=py34-django18-redis
-    - python: "3.4"
-      env: TOXENV=py34-django18-wand
-    - python: "3.4"
-      env: TOXENV=py34-django18-dbm
-
-    - python: "3.5"
-      env: TOXENV=py35-django110-pil
-    - python: "3.5"
-      env: TOXENV=py35-django110-imagemagick
-    - python: "3.5"
-      env: TOXENV=py35-django110-graphicsmagick
-    - python: "3.5"
-      env: TOXENV=py35-django110-redis
-    - python: "3.5"
-      env: TOXENV=py35-django110-wand
-    - python: "3.5"
-      env: TOXENV=py35-django110-dbm
+      env: TOXENV=py27-django111-dbm
 
     - python: "3.6"
       env: TOXENV=py36-django111-pil
