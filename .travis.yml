@@ -72,6 +72,19 @@ matrix:
     - python: "3.6"
       env: TOXENV=py36-django20-dbm
 
+    - python: "3.6"
+      env: TOXENV=py36-django21-pil
+    - python: "3.6"
+      env: TOXENV=py36-django21-imagemagick
+    - python: "3.6"
+      env: TOXENV=py36-django21-graphicsmagick
+    - python: "3.6"
+      env: TOXENV=py36-django21-redis
+    - python: "3.6"
+      env: TOXENV=py36-django21-wand
+    - python: "3.6"
+      env: TOXENV=py36-django21-dbm
+
 sudo: false
 dist: trusty
 
