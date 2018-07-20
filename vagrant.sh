@@ -5,7 +5,7 @@ apt-get install -qq libjpeg62 libjpeg62-dev zlib1g-dev imagemagick graphicsmagic
 apt-get install -qq libmagickwand-dev libgraphicsmagick++-dev libboost-python-dev libboost-thread-dev
 apt-get install -qq libvips-tools
 
-add-apt-repository -y ppa:fkrull/deadsnakes
+add-apt-repository -y ppa:deadsnakes/ppa
 apt-get update
 apt-get install -qq python2.7 python2.7-dev python3.4 python3.4-dev
 
