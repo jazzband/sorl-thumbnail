@@ -82,6 +82,7 @@ after_failure:
 after_success: coveralls
 
 install:
+  - pip install --upgrade pip
   - pip install -q tox coveralls
 
 script:
