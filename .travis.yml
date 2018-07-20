@@ -57,6 +57,12 @@ matrix:
     - python: "3.6"
       env: TOXENV=py36-django21-dbm
 
+    - python: "3.7-dev"
+      env: TOXENV=py37-django20-pil
+
+    - python: "3.7-dev"
+      env: TOXENV=py37-django21-pil
+
 sudo: false
 dist: trusty
 
