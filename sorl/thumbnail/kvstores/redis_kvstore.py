@@ -24,7 +24,8 @@ class KVStore(KVStoreBase):
         return self.connection.get(key)
 
     def _set_raw(self, key, value):
-        return self.connection.set(key, value)
+        return self.connection.set(
+            key, value, ex=settings.THUMBNAIL_REDIS_TIMEOUT)
 
     def _delete_raw(self, *keys):
         return self.connection.delete(*keys)
