@@ -191,6 +191,15 @@ The host for Redis server. Only applicable for the Redis Key Value Store
 The port for Redis server. Only applicable for the Redis Key Value Store
 
 
+``THUMBNAIL_REDIS_TIMEOUT``
+===========================
+
+- Default: ``3600 * 24 * 365 * 10``
+
+Cache timeout for Redis Key Value Store in seconds. You should probably keep this 
+at maximum or ``None``.
+
+
 ``THUMBNAIL_DBM_FILE``
 ======================
 
