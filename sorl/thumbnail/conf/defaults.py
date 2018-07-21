@@ -122,3 +122,6 @@ THUMBNAIL_FLATTEN = False
 # Whenever we will check an existing thumbnail exists and avoid to overwrite or not.
 # Set this to true if you have an slow .exists() implementation on your storage backend of choice.
 THUMBNAIL_FORCE_OVERWRITE = False
+
+# Should we remove GET arguments from URLs? (suggested for Amazon S3 image urls)
+THUMBNAIL_REMOVE_URL_ARGS = True
