@@ -41,6 +41,7 @@ THUMBNAIL_REDIS_HOST = 'localhost'
 THUMBNAIL_REDIS_PORT = 6379
 THUMBNAIL_REDIS_UNIX_SOCKET_PATH = None
 THUMBNAIL_REDIS_SSL = False
+THUMBNAIL_REDIS_TIMEOUT = 3600 * 24 * 365 * 10  # 10 years
 
 # DBM settings
 THUMBNAIL_DBM_FILE = "thumbnail_kvstore"
@@ -122,3 +123,6 @@ THUMBNAIL_FLATTEN = False
 # Whenever we will check an existing thumbnail exists and avoid to overwrite or not.
 # Set this to true if you have an slow .exists() implementation on your storage backend of choice.
 THUMBNAIL_FORCE_OVERWRITE = False
+
+# Should we remove GET arguments from URLs? (suggested for Amazon S3 image urls)
+THUMBNAIL_REMOVE_URL_ARGS = True
