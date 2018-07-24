@@ -16,6 +16,7 @@ class KVStore(KVStoreBase):
                 host=settings.THUMBNAIL_REDIS_HOST,
                 port=settings.THUMBNAIL_REDIS_PORT,
                 db=settings.THUMBNAIL_REDIS_DB,
+                ssl=settings.THUMBNAIL_REDIS_SSL,
                 password=settings.THUMBNAIL_REDIS_PASSWORD,
                 unix_socket_path=settings.THUMBNAIL_REDIS_UNIX_SOCKET_PATH,
             )
