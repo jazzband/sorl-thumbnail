@@ -380,6 +380,64 @@ class CropTestCase(BaseTestCase):
         )
 
 
+class CropBoxTestCase(BaseTestCase):
+    def setUp(self):
+        super(CropBoxTestCase, self).setUp()
+
+        # portrait
+        name = 'portrait.jpg'
+        fn = os.path.join(settings.MEDIA_ROOT, name)
+        im = Image.new('L', (100, 200))
+        im.paste(255, (0, 0, 100, 100))
+        im.save(fn)
+        self.portrait = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+        self.KVSTORE.delete(self.portrait)
+
+        # landscape
+        name = 'landscape.jpg'
+        fn = os.path.join(settings.MEDIA_ROOT, name)
+        im = Image.new('L', (200, 100))
+        im.paste(255, (0, 0, 100, 100))
+        im.save(fn)
+        self.landscape = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+        self.KVSTORE.delete(self.landscape)
+
+    def test_portrait_crop(self):
+        def mean_pixel(x, y):
+            values = im.getpixel((x, y))
+            if not isinstance(values, (tuple, list)):
+                values = [values]
+            return sum(values) / len(values)
+
+        # Center Crop
+        # ('center', '88% 50%', '50px'):
+        th = self.BACKEND.get_thumbnail(self.portrait, cropbox="50,50,50,150")
+        engine = PILEngine()
+        im = engine.get_image(th)
+
+        self.assertEqual(mean_pixel(50, 0), 255)
+        self.assertEqual(mean_pixel(50, 45), 255)
+        self.assertEqual(250 <= mean_pixel(50, 49) <= 255, True, mean_pixel(50, 49))
+        self.assertEqual(mean_pixel(50, 55), 0)
+        self.assertEqual(mean_pixel(50, 99), 0)
+
+        # Top Crop
+        th = self.BACKEND.get_thumbnail(self.portrait, cropbox="0,0,100,100")
+        engine = PILEngine()
+        im = engine.get_image(th)
+        for x in range(0, 99, 10):
+            for y in range(0, 99, 10):
+                self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
+
+        # Bottom Crop
+        th = self.BACKEND.get_thumbnail(self.portrait, cropbox="0,100,100,200")
+        engine = PILEngine()
+        im = engine.get_image(th)
+        for x in range(0, 99, 10):
+            for y in range(0, 99, 10):
+                self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
+
+
 class DummyTestCase(unittest.TestCase):
     def setUp(self):
         self.BACKEND = get_module_class(settings.THUMBNAIL_BACKEND)()
