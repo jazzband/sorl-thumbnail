@@ -410,7 +410,7 @@ class CropBoxTestCase(BaseTestCase):
             return sum(values) / len(values)
 
         # Center Crop
-        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="50,50,150,150")
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="25,50,75,150")
         engine = PILEngine()
         im = engine.get_image(th)
 
