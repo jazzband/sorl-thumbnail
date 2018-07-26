@@ -414,8 +414,9 @@ class CropBoxTestCase(BaseTestCase):
         engine = PILEngine()
         im = engine.get_image(th)
 
+        # Top half should be color, bottom not
         self.assertEqual(mean_pixel(0, 0), 255)
-        self.assertEqual(mean_pixel(50, 0), 0)
+        self.assertEqual(mean_pixel(50, 0), 255)
         self.assertEqual(mean_pixel(50, 45), 255)
         self.assertEqual(mean_pixel(50, 55), 0)
         self.assertEqual(mean_pixel(50, 99), 0)
