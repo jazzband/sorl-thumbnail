@@ -410,8 +410,7 @@ class CropBoxTestCase(BaseTestCase):
             return sum(values) / len(values)
 
         # Center Crop
-        # ('center', '88% 50%', '50px'):
-        th = self.BACKEND.get_thumbnail(self.portrait, cropbox="50,50,50,150")
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="50,50,50,150")
         engine = PILEngine()
         im = engine.get_image(th)
 
@@ -422,7 +421,7 @@ class CropBoxTestCase(BaseTestCase):
         self.assertEqual(mean_pixel(50, 99), 0)
 
         # Top Crop
-        th = self.BACKEND.get_thumbnail(self.portrait, cropbox="0,0,100,100")
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,0,100,100")
         engine = PILEngine()
         im = engine.get_image(th)
         for x in range(0, 99, 10):
@@ -430,7 +429,7 @@ class CropBoxTestCase(BaseTestCase):
                 self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
 
         # Bottom Crop
-        th = self.BACKEND.get_thumbnail(self.portrait, cropbox="0,100,100,200")
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,100,100,200")
         engine = PILEngine()
         im = engine.get_image(th)
         for x in range(0, 99, 10):
