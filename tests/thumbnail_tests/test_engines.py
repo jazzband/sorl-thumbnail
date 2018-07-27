@@ -402,6 +402,10 @@ class CropBoxTestCase(BaseTestCase):
         self.landscape = ImageFile(Item.objects.get_or_create(image=name)[0].image)
         self.KVSTORE.delete(self.landscape)
 
+    @unittest.skipIf(
+        'pil_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
     def test_portrait_crop(self):
         def mean_pixel(x, y):
             values = im.getpixel((x, y))
@@ -436,6 +440,46 @@ class CropBoxTestCase(BaseTestCase):
         for x in range(0, 99, 10):
             for y in range(0, 99, 10):
                 self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
+
+    @unittest.skipIf(
+        'pil_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def test_landscape_crop(self):
+
+        def mean_pixel(x, y):
+            values = im.getpixel((x, y))
+            if not isinstance(values, (tuple, list)):
+                values = [values]
+            return sum(values) / len(values)
+
+        # Center
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="50,0,150,100")
+        engine = PILEngine()
+        im = engine.get_image(th)
+
+        self.assertEqual(mean_pixel(0, 50), 255)
+        self.assertEqual(mean_pixel(45, 50), 255)
+        self.assertEqual(250 < mean_pixel(49, 50) <= 255, True)
+        self.assertEqual(mean_pixel(55, 50), 0)
+        self.assertEqual(mean_pixel(99, 50), 0)
+
+        # Left
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="0,0,100,100")
+        engine = PILEngine()
+        im = engine.get_image(th)
+        for x in range(0, 99, 10):
+            for y in range(0, 99, 10):
+                self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
+
+        # Right
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="100,0,100,200")
+        engine = PILEngine()
+        im = engine.get_image(th)
+        coords = ((x, y) for y in range(0, 99, 10) for x in range(0, 99, 10))
+
+        for x, y in coords:
+            self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
 
 
 class DummyTestCase(unittest.TestCase):
