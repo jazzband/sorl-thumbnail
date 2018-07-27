@@ -17,6 +17,7 @@ from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.parsers import parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
+from sorl.thumbnail.engines.convert_engine import Engine as ConvertEngine
 from .models import Item
 from .compat import is_osx
 from .utils import BaseTestCase
@@ -380,9 +381,9 @@ class CropTestCase(BaseTestCase):
         )
 
 
-class CropBoxTestCase(BaseTestCase):
+class PILCropBoxTestCase(BaseTestCase):
     def setUp(self):
-        super(CropBoxTestCase, self).setUp()
+        super(PILCropBoxTestCase, self).setUp()
 
         # portrait
         name = 'portrait.jpg'
@@ -475,6 +476,108 @@ class CropBoxTestCase(BaseTestCase):
         # Right
         th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="100,0,200,100")
         engine = PILEngine()
+        im = engine.get_image(th)
+        coords = ((x, y) for y in range(0, 99, 10) for x in range(0, 99, 10))
+
+        for x, y in coords:
+            self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
+
+
+class ImageMagickCropBoxTestCase(BaseTestCase):
+    def setUp(self):
+        super(ImageMagickCropBoxTestCase, self).setUp()
+
+        # portrait
+        name = 'portrait.jpg'
+        fn = os.path.join(settings.MEDIA_ROOT, name)
+        im = Image.new('L', (100, 200))
+        im.paste(255, (0, 0, 100, 100))
+        im.save(fn)
+        self.portrait = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+        self.KVSTORE.delete(self.portrait)
+
+        # landscape
+        name = 'landscape.jpg'
+        fn = os.path.join(settings.MEDIA_ROOT, name)
+        im = Image.new('L', (200, 100))
+        im.paste(255, (0, 0, 100, 100))
+        im.save(fn)
+        self.landscape = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+        self.KVSTORE.delete(self.landscape)
+
+    @unittest.skipIf(
+        'convert_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def test_portrait_crop(self):
+        def mean_pixel(x, y):
+            values = im.getpixel((x, y))
+            if not isinstance(values, (tuple, list)):
+                values = [values]
+            return sum(values) / len(values)
+
+        # Center Crop
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,50,100,150")
+        engine = ConvertEngine()
+        im = engine.get_image(th)
+
+        # Top half should be color, bottom not
+        self.assertEqual(mean_pixel(0, 0), 255)
+        self.assertEqual(mean_pixel(50, 0), 255)
+        self.assertEqual(mean_pixel(50, 45), 255)
+        self.assertEqual(mean_pixel(50, 55), 0)
+        self.assertEqual(mean_pixel(50, 99), 0)
+
+        # Top Crop
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,0,100,100")
+        engine = ConvertEngine()
+        im = engine.get_image(th)
+        for x in range(0, 99, 10):
+            for y in range(0, 99, 10):
+                self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
+
+        # Bottom Crop
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,100,100,200")
+        engine = ConvertEngine()
+        im = engine.get_image(th)
+        for x in range(0, 99, 10):
+            for y in range(0, 99, 10):
+                self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
+
+    @unittest.skipIf(
+        'convert_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def test_landscape_crop(self):
+
+        def mean_pixel(x, y):
+            values = im.getpixel((x, y))
+            if not isinstance(values, (tuple, list)):
+                values = [values]
+            return sum(values) / len(values)
+
+        # Center
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="50,0,150,100")
+        engine = ConvertEngine()
+        im = engine.get_image(th)
+
+        self.assertEqual(mean_pixel(0, 50), 255)
+        self.assertEqual(mean_pixel(45, 50), 255)
+        self.assertEqual(250 < mean_pixel(49, 50) <= 255, True)
+        self.assertEqual(mean_pixel(55, 50), 0)
+        self.assertEqual(mean_pixel(99, 50), 0)
+
+        # Left
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="0,0,100,100")
+        engine = ConvertEngine()
+        im = engine.get_image(th)
+        for x in range(0, 99, 10):
+            for y in range(0, 99, 10):
+                self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
+
+        # Right
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="100,0,200,100")
+        engine = ConvertEngine()
         im = engine.get_image(th)
         coords = ((x, y) for y in range(0, 99, 10) for x in range(0, 99, 10))
 
