@@ -175,8 +175,8 @@ class Engine(EngineBase):
         """
         Crops the image to a set of x,y coordinates (x,y) is top left, (x2,y2) is bottom left
         """
-        image['options']['crop'] = '%sx%s+%s+%s' % (x2-x, y2-y, x, y)
-        image['size'] = (x2-x, y2-y)  # update image size
+        image['options']['crop'] = '%sx%s+%s+%s' % (x2 - x, y2 - y, x, y)
+        image['size'] = (x2 - x, y2 - y)  # update image size
 
     def _scale(self, image, width, height):
         """
