@@ -177,6 +177,7 @@ class Engine(EngineBase):
         """
         image['options']['crop'] = '%sx%s+%s+%s' % (x2 - x, y2 - y, x, y)
         image['size'] = (x2 - x, y2 - y)  # update image size
+        return image
 
     def _scale(self, image, width, height):
         """
