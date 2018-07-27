@@ -473,7 +473,7 @@ class CropBoxTestCase(BaseTestCase):
                 self.assertEqual(250 < mean_pixel(x, y) <= 255, True)
 
         # Right
-        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="100,0,100,200")
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', cropbox="100,0,200,100")
         engine = PILEngine()
         im = engine.get_image(th)
         coords = ((x, y) for y in range(0, 99, 10) for x in range(0, 99, 10))
