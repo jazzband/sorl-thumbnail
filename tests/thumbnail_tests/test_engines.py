@@ -17,6 +17,7 @@ from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.parsers import parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
+from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
 from sorl.thumbnail.engines.convert_engine import Engine as ConvertEngine
 from .models import Item
 from .compat import is_osx
@@ -383,9 +384,9 @@ class CropTestCase(BaseTestCase):
 
 # Only PIL has support for checking pixel color. convert and wand engines are both missing it,
 # so we cannot test for pixel color
-class PILCropBoxTestCase(BaseTestCase):
+class CropBoxTestCase(BaseTestCase):
     def setUp(self):
-        super(PILCropBoxTestCase, self).setUp()
+        super(CropBoxTestCase, self).setUp()
 
         # portrait
         name = 'portrait.jpg'
@@ -409,7 +410,7 @@ class PILCropBoxTestCase(BaseTestCase):
         'pil_engine' not in settings.THUMBNAIL_ENGINE,
         'the other engines fail this test',
     )
-    def test_portrait_crop(self):
+    def PIL_test_portrait_crop(self):
         def mean_pixel(x, y):
             values = im.getpixel((x, y))
             if not isinstance(values, (tuple, list)):
@@ -445,10 +446,25 @@ class PILCropBoxTestCase(BaseTestCase):
                 self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
 
     @unittest.skipIf(
+        'wand_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def wand_test_cropbox(self):
+
+        # Center Crop
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,50,100,150")
+        engine = WandEngine()
+        im = engine.get_image(th)
+
+        # If the crop went well, then it should scale to 100x100 perfectly
+        self.assertEqual(im.width(100), 100)
+        self.assertEqual(im.height(100), 100)
+
+    @unittest.skipIf(
         'pil_engine' not in settings.THUMBNAIL_ENGINE,
         'the other engines fail this test',
     )
-    def test_landscape_crop(self):
+    def PIL_test_landscape_crop(self):
 
         def mean_pixel(x, y):
             values = im.getpixel((x, y))
