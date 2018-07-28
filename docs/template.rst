@@ -190,9 +190,6 @@ Images are not padded by default, but this can be changed by setting
 This is the color to use for padding the image. It defaults to ``#ffffff`` and
 can be globally set with the setting ``THUMBNAIL_PADDING_COLOR``.
 
-``rounded``
-^^^^^^^^^^^^
-Takes an integer for radius to round the corners of the image. Defaults to ``None``.
 
 ``options``
 ^^^^^^^^^^^
