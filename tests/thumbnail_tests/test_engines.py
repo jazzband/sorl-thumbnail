@@ -425,8 +425,8 @@ class FreeTransformTestCase(BaseTestCase):
         th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
         engine = WandEngine()
         im = engine.get_image(th)
-        self.assertEqual(im.width(100), 100)
-        self.assertEqual(im.height(100), 100)
+        self.assertEqual(im.width, 100)
+        self.assertEqual(im.height, 100)
 
     @unittest.skipIf(
         'pgmagick_engine' not in settings.THUMBNAIL_ENGINE,
