@@ -380,6 +380,67 @@ class CropTestCase(BaseTestCase):
         )
 
 
+class FreeTransformTestCase(BaseTestCase):
+    def setUp(self):
+        super(FreeTransformTestCase, self).setUp()
+
+        # portrait
+        name = 'portrait.jpg'
+        fn = os.path.join(settings.MEDIA_ROOT, name)
+        im = Image.new('L', (100, 200))
+        im.paste(255, (0, 0, 100, 100))
+        im.save(fn)
+        self.portrait = ImageFile(Item.objects.get_or_create(image=name)[0].image)
+        self.KVSTORE.delete(self.portrait)
+
+    @unittest.skipIf(
+        'pil_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def test_PIL_freetransform(self):
+
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', transform=True)
+        engine = PILEngine()
+        im = engine.get_image(th)
+        self.assertEqual(im.width, 100)
+        self.assertEqual(im.height, 100)
+
+    @unittest.skipIf(
+        'convert_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def test_convert_engine_freetransform(self):
+        from sorl.thumbnail.engines import convert_engine as ConvertEngine
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', transform=True)
+        engine = ConvertEngine()
+        im = engine.get_image(th)
+        self.assertEqual(im["size"], (100, 100))
+
+    @unittest.skipIf(
+        'wand_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def test_wand_engine_freetransform(self):
+        from sorl.thumbnail.engines import wand_engine as WandEngine
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', transform=True)
+        engine = WandEngine()
+        im = engine.get_image(th)
+        self.assertEqual(im.width(100), 100)
+        self.assertEqual(im.height(100), 100)
+
+    @unittest.skipIf(
+        'pgmagick_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def test_pgmagick_engine_freetransform(self):
+        from sorl.thumbnail.engines import pgmagick_engine as PgmagickEngine
+        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', transform=True)
+        engine = PgmagickEngine()
+        im = engine.get_image(th)
+        self.assertEqual(im.width(100), 100)
+        self.assertEqual(im.height(100), 100)
+
+
 class DummyTestCase(unittest.TestCase):
     def setUp(self):
         self.BACKEND = get_module_class(settings.THUMBNAIL_BACKEND)()

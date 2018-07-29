@@ -136,6 +136,12 @@ cropping options if you don't want to generate unnecessary thumbnails. In case
 you are wondering, sorl-thumbnail sorts the options so the order does not
 matter, same options but in different order will generate only one thumbnail.
 
+``transform``
+^^^^^^^^^^^
+Transform is a boolean and controls if the image will be free transformed to the 
+dimensions provided. If set to true, the image will be forcibly resized to the 
+supplied dimensions and stretch as needed. Defaults to ``False``.
+
 ``upscale``
 ^^^^^^^^^^^
 Upscale is a boolean and controls if the image can be upscaled or not. For
