@@ -30,23 +30,23 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
         get_thumbnail(self.image, '50x50')
 
         actions = [
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d.jpg',
+            'exists: test/cache/b4/54/b45476c738bef768e3c0f8497a889248.jpg',
 
             # save regular resolution, same as in StorageTestCase
             'open: retina.jpg',
-            'save: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d.jpg',
-            'get_available_name: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d.jpg',
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d.jpg',
+            'save: test/cache/b4/54/b45476c738bef768e3c0f8497a889248.jpg',
+            'get_available_name: test/cache/b4/54/b45476c738bef768e3c0f8497a889248.jpg',
+            'exists: test/cache/b4/54/b45476c738bef768e3c0f8497a889248.jpg',
 
             # save the 1.5x resolution version
-            'save: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg',
-            'get_available_name: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg',
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg',
+            'save: test/cache/b4/54/b45476c738bef768e3c0f8497a889248@1.5x.jpg',
+            'get_available_name: test/cache/b4/54/b45476c738bef768e3c0f8497a889248@1.5x.jpg',
+            'exists: test/cache/b4/54/b45476c738bef768e3c0f8497a889248@1.5x.jpg',
 
             # save the 2x resolution version
-            'save: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg',
-            'get_available_name: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg',
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg'
+            'save: test/cache/b4/54/b45476c738bef768e3c0f8497a889248@2x.jpg',
+            'get_available_name: test/cache/b4/54/b45476c738bef768e3c0f8497a889248@2x.jpg',
+            'exists: test/cache/b4/54/b45476c738bef768e3c0f8497a889248@2x.jpg'
         ]
         self.assertEqual(self.log, actions)
 

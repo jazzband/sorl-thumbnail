@@ -29,8 +29,8 @@ class TemplateTestCaseA(BaseTestCase):
         item = Item.objects.get(image='500x500.jpg')
         val = render_to_string('thumbnail6.html', {'item': item, }).strip()
         self.assertEqual(val, (
-            '<a href="/media/test/cache/fc/f6/fcf65c09cc4bb8671147de41997422bf.jpg">'
-            '<img src="/media/test/cache/67/6b/676b2331a071478b0cb280d0edba7818.jpg" '
+            '<a href="/media/test/cache/4a/a8/4aa8c804c16504c1a58197977a1ef283.jpg">'
+            '<img src="/media/test/cache/62/f2/62f24abb6dd5efddbae64e970da84bcf.jpg" '
             'width="400" height="400"></a>'
         ))
 
@@ -125,7 +125,7 @@ class TemplateTestCaseB(BaseTestCase):
             'dims': 'x66',
         }).strip()
         self.assertEqual(val,
-                         '<img src="/media/test/cache/7b/cd/7bcd20922c6750649f431df7c3cdbc5e.jpg" '
+                         '<img src="/media/test/cache/4b/fe/4bfe0847e3e83a2a48c3bf650a798963.jpg" '
                          'width="79" height="66" class="landscape">')
 
     def test_empty(self):
@@ -176,10 +176,10 @@ class TemplateTestCaseTemplateTagAlias(BaseTestCase):
         self.assertEqual(
             val,
             (
-                '<a href="/media/test/cache/fc/f6/'
-                'fcf65c09cc4bb8671147de41997422bf.jpg">'
-                '<img src="/media/test/cache/67/6b/'
-                '676b2331a071478b0cb280d0edba7818.jpg" '
+                '<a href="/media/test/cache/4a/a8/'
+                '4aa8c804c16504c1a58197977a1ef283.jpg">'
+                '<img src="/media/test/cache/62/f2/'
+                '62f24abb6dd5efddbae64e970da84bcf.jpg" '
                 'width="400" height="400"></a>'
             )
         )
