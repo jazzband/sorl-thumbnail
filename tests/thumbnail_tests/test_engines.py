@@ -498,6 +498,20 @@ class CropBoxTestCase(BaseTestCase):
         self.assertEqual(im.height(100), 100)
 
     @unittest.skipIf(
+        'pgmagick_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def pgmagick_test_cropbox(self):
+        from sorl.thumbnail.engines.pgmagick_engine import Engine as PgMagickEngine
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,50,100,150")
+        engine = PgMagickEngine()
+        im = engine.get_image(th)
+
+        # If the crop went well, then it should scale to 100x100 perfectly
+        self.assertEqual(im.width(100), 100)
+        self.assertEqual(im.height(100), 100)
+
+    @unittest.skipIf(
         'convert_engine' not in settings.THUMBNAIL_ENGINE,
         'the other engines fail this test',
     )
