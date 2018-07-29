@@ -414,7 +414,7 @@ class FreeTransformTestCase(BaseTestCase):
         th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
         engine = ConvertEngine()
         im = engine.get_image(th)
-        self.assertEqual(im, (100, 100))
+        self.assertEqual(im["size"], (100, 100))
 
     @unittest.skipIf(
         'wand_engine' not in settings.THUMBNAIL_ENGINE,
