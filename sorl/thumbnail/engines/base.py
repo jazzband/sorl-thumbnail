@@ -81,15 +81,16 @@ class EngineBase(object):
         transform = options['transform']
         x_image, y_image = map(float, self.get_image_size(image))
 
-        if not transform:
-            factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
-
-            if factor < 1 or upscale:
-                width = toint(x_image * factor)
-                height = toint(y_image * factor)
-                image = self._scale(image, width, height)
+        if transform:
+            image = self._scale(image, geometry[0], geometry[1])
             return image
-        image = self._scale(image, geometry[0], geometry[1])
+
+        factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
+
+        if factor < 1 or upscale:
+            width = toint(x_image * factor)
+            height = toint(y_image * factor)
+            image = self._scale(image, width, height)
         return image
 
     def crop(self, image, geometry, options):
