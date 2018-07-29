@@ -78,4 +78,6 @@ class Engine(EngineBase):
         image.compression_quality = quality
         if format_ == 'JPEG' and progressive:
             image.format = 'pjpeg'
+        else:
+            image.format = format_
         return image.make_blob()

@@ -93,7 +93,8 @@ class ImageFile(BaseImageFile):
 
         # Remove query args from names. Fixes cache and signature arguments
         # from third party services, like Amazon S3 and signature args.
-        self.name = self.name.split('?')[0]
+        if settings.THUMBNAIL_REMOVE_URL_ARGS:
+            self.name = self.name.split('?')[0]
 
         # Support for relative protocol urls
         if self.name.startswith('//'):
