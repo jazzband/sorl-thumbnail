@@ -75,7 +75,7 @@ class Engine(EngineBase):
 
     def _scale(self, image, width, height):
         geometry = Geometry(width, height)
-        image.scale(geometry)
+        image.resize(geometry)
         return image
 
     def _crop(self, image, width, height, x_offset, y_offset):
