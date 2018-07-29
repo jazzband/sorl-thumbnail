@@ -399,7 +399,7 @@ class FreeTransformTestCase(BaseTestCase):
     )
     def test_PIL_freetransform(self):
 
-        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', transform=True)
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
         engine = PILEngine()
         im = engine.get_image(th)
         self.assertEqual(im.width, 100)
@@ -410,8 +410,8 @@ class FreeTransformTestCase(BaseTestCase):
         'the other engines fail this test',
     )
     def test_convert_engine_freetransform(self):
-        from sorl.thumbnail.engines import convert_engine as ConvertEngine
-        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', transform=True)
+        from sorl.thumbnail.engines.convert_engine import Engine as ConvertEngine
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
         engine = ConvertEngine()
         im = engine.get_image(th)
         self.assertEqual(im["size"], (100, 100))
@@ -421,8 +421,8 @@ class FreeTransformTestCase(BaseTestCase):
         'the other engines fail this test',
     )
     def test_wand_engine_freetransform(self):
-        from sorl.thumbnail.engines import wand_engine as WandEngine
-        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', transform=True)
+        from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
         engine = WandEngine()
         im = engine.get_image(th)
         self.assertEqual(im.width(100), 100)
@@ -433,8 +433,8 @@ class FreeTransformTestCase(BaseTestCase):
         'the other engines fail this test',
     )
     def test_pgmagick_engine_freetransform(self):
-        from sorl.thumbnail.engines import pgmagick_engine as PgmagickEngine
-        th = self.BACKEND.get_thumbnail(self.landscape, '100x100', transform=True)
+        from sorl.thumbnail.engines.pgmagick_engine import Engine as PgmagickEngine
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
         engine = PgmagickEngine()
         im = engine.get_image(th)
         self.assertEqual(im.width(100), 100)
