@@ -413,8 +413,9 @@ class FreeTransformTestCase(BaseTestCase):
         from sorl.thumbnail.engines.convert_engine import Engine as ConvertEngine
         th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
         engine = ConvertEngine()
-        im = engine.get_image_size(th)
-        self.assertEqual(im, (100, 100))
+        im = engine.get_image(th)
+        size = engine.get_image_size(im)
+        self.assertEqual(size, (100, 100))
 
     @unittest.skipIf(
         'wand_engine' not in settings.THUMBNAIL_ENGINE,
