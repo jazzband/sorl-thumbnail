@@ -175,7 +175,7 @@ class Engine(EngineBase):
         """
         Does the resizing of the image
         """
-        image['options']['scale'] = '%sx%s!' % (width, height)
+        image['options']['resize'] = '%sx%s!' % (width, height)
         image['size'] = (width, height)  # update image size
         return image
 
