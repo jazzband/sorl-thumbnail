@@ -22,8 +22,8 @@ class AdminImageWidget(forms.ClearableFileInput):
     )
     template_with_clear = '<label>%(clear_checkbox_label)s: %(clear)s</label>'
 
-    def render(self, name, value, attrs=None):
-        output = super(AdminImageWidget, self).render(name, value, attrs)
+    def render(self, name, value, attrs=None, **kwargs):
+        output = super(AdminImageWidget, self).render(name, value, attrs, **kwargs)
         if value and hasattr(value, 'url'):
             ext = 'JPEG'
             try:
