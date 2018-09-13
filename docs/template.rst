@@ -129,7 +129,7 @@ matter, same options but in different order will generate only one thumbnail.
 ^^^^^^^^^^^
 Transform is a boolean and controls if the image will be free transformed to the 
 dimensions provided. If set to true, the image will be forcibly resized to the 
-supplied dimensions and stretch as needed. Defaults to ``False``.
+supplied dimensions and stretch as needed. Default value is ``False``.
 
 ``upscale``
 ^^^^^^^^^^^

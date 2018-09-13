@@ -89,6 +89,9 @@ THUMBNAIL_PROGRESSIVE = True
 # Orientate the thumbnail with respect to source EXIF orientation tag
 THUMBNAIL_ORIENTATION = True
 
+# Whether to apply free-transform to the image by default (breaking the aspect ratio lock)
+THUMBNAIL_TRANSFORM = False
+
 # This means sorl.thumbnail will generate and serve a generated dummy image
 # regardless of the thumbnail source content
 THUMBNAIL_DUMMY = False

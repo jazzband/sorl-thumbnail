@@ -38,14 +38,14 @@ class ThumbnailBackend(object):
         'cropbox': None,
         'rounded': None,
         'padding': settings.THUMBNAIL_PADDING,
-        'padding_color': settings.THUMBNAIL_PADDING_COLOR,
-        'transform': False,
+        'padding_color': settings.THUMBNAIL_PADDING_COLOR
     }
 
     extra_options = (
         ('progressive', 'THUMBNAIL_PROGRESSIVE'),
         ('orientation', 'THUMBNAIL_ORIENTATION'),
         ('blur', 'THUMBNAIL_BLUR'),
+        ('transform', "THUMBNAIL_TRANSFORM")
     )
 
     def file_extension(self, source):

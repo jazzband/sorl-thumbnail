@@ -78,7 +78,7 @@ class EngineBase(object):
         Wrapper for ``_scale``
         """
         upscale = options['upscale']
-        transform = options['transform']
+        transform = options.get('transform', settings.THUMBNAIL_TRANSFORM)
         x_image, y_image = map(float, self.get_image_size(image))
 
         if transform:
