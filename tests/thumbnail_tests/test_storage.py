@@ -17,15 +17,15 @@ class StorageTestCase(BaseStorageTestCase):
     def test_new(self):
         get_thumbnail(self.image, '50x50')
         actions = [
-            'exists: test/cache/84/6b/846b022033e7872087ba5ee2e039bc4e.jpg',
+            'exists: test/cache/45/bb/45bbbdab11e235a80e603aa119e8786b.jpg',
             # open the original for thumbnailing
             'open: org.jpg',
             # save the file
-            'save: test/cache/84/6b/846b022033e7872087ba5ee2e039bc4e.jpg',
+            'save: test/cache/45/bb/45bbbdab11e235a80e603aa119e8786b.jpg',
             # check for filename
-            'get_available_name: test/cache/84/6b/846b022033e7872087ba5ee2e039bc4e.jpg',
+            'get_available_name: test/cache/45/bb/45bbbdab11e235a80e603aa119e8786b.jpg',
             # called by get_available_name
-            'exists: test/cache/84/6b/846b022033e7872087ba5ee2e039bc4e.jpg',
+            'exists: test/cache/45/bb/45bbbdab11e235a80e603aa119e8786b.jpg',
         ]
         self.assertEqual(self.log, actions)
 
