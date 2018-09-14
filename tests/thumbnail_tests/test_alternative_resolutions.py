@@ -56,4 +56,3 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
         with open(path) as fp:
             engine = PILEngine()
             self.assertEqual(engine.get_image_size(engine.get_image(ImageFile(file_=fp))), (75, 75))
-
