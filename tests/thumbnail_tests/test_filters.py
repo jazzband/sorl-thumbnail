@@ -15,7 +15,7 @@ class FilterTestCase(BaseTestCase):
 
         self.assertEqual(
             '<img alt="A image!" '
-            'src="/media/test/cache/0a/7b/0a7b030a1b690d12157b081444f6dd4d.jpg" />',
+            'src="/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg" />',
             val
         )
 
@@ -25,7 +25,7 @@ class FilterTestCase(BaseTestCase):
 
         self.assertEqual(
             '<img alt="A image!" '
-            'src="/media/test/cache/6c/e5/6ce5cdfef5c75d469f7018d9eeda3acd.jpg" />',
+            'src="/media/test/cache/c7/f2/c7f2880b48e9f07d46a05472c22f0fde.jpg" />',
             val
         )
 
@@ -34,7 +34,7 @@ class FilterTestCase(BaseTestCase):
         val = render_to_string('markdownfilter.html', {'text': text, }).strip()
 
         self.assertEqual(
-            '![A image!](/media/test/cache/0a/7b/0a7b030a1b690d12157b081444f6dd4d.jpg)',
+            '![A image!](/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg)',
             val
         )
 
@@ -43,6 +43,6 @@ class FilterTestCase(BaseTestCase):
         val = render_to_string('markdownfilter.html', {'text': text, }).strip()
 
         self.assertEqual(
-            '![A image!](/media/test/cache/6c/e5/6ce5cdfef5c75d469f7018d9eeda3acd.jpg)',
+            '![A image!](/media/test/cache/c7/f2/c7f2880b48e9f07d46a05472c22f0fde.jpg)',
             val
         )
