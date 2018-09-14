@@ -7,7 +7,7 @@ import re
 
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage  # , default_storage
-from django.utils.encoding import force_text
+from django.utils.encoding import force_text, python_2_unicode_compatible
 from django.utils.functional import LazyObject, empty
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
@@ -76,6 +76,7 @@ class BaseImageFile(object):
     src = url
 
 
+@python_2_unicode_compatible
 class ImageFile(BaseImageFile):
     _size = None
 
@@ -117,7 +118,7 @@ class ImageFile(BaseImageFile):
             if self.name.startswith(location):
                 self.name = self.name[len(location):]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def exists(self):
