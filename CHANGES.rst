@@ -5,7 +5,6 @@ Changelog
 12.5.0
 ======
 
-* Fix flake8 task not being run properly
 * Make the template tag accept a falsey image
 * Update identify (of convert_engine) for faster multi-page PDF thumbnailing
 * Fix Redis KVStore timeout
