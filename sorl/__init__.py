@@ -5,7 +5,7 @@ import logging
 
 __author__ = "Mikko Hellsing"
 __license__ = "BSD"
-__version__ = '12.4.1'
+__version__ = '12.5.0'
 __maintainer__ = "Jazzband"
 __email__ = "mariocesar@humanzilla.com"
 
