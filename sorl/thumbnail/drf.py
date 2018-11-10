@@ -16,5 +16,5 @@ class ImageField(serializers.ImageField):
 
     def to_representation(self, value):
         if self.resize and value:
-            return get_thumbnail(value, self.resize, **self.thumbnail_options).url
-        return super().to_representation(value)
+            return backend.get_thumbnail(value, self.resize, **self.thumbnail_options).url
+        return super(ImageField, self).to_representation(value)
