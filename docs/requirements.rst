@@ -47,7 +47,7 @@ command line tools. `pgmagick`_ are python bindings for `GraphicsMagick`_
 The `ImageMagick`_ based engine ``sorl.thumbnail.engines.convert_engine.Engine``
 by default calls ``convert`` and ``identify`` shell commands. You can change the
 paths to these tools by setting ``THUMBNAIL_CONVERT`` and ``THUMBNAIL_IDENTIFY``
-respectively.  Note that youneed to change these to use `GraphicsMagick`_ to
+respectively.  Note that you need to change these to use `GraphicsMagick`_ to
 ``/path/to/gm convert`` and ``/path/to/gm identify``.
 
 Python Imaging Library installation
