@@ -266,8 +266,8 @@ def text_filter(regex_base, value):
     Helper method to regex replace images with captions in different markups
     """
     regex = regex_base % {
-        're_cap': '[a-zA-Z0-9\.\,:;/_ \(\)\-\!\?\"]+',
-        're_img': '[a-zA-Z0-9\.:/_\-\% ]+'
+        're_cap': r'[a-zA-Z0-9\.\,:;/_ \(\)\-\!\?"]+',
+        're_img': r'[a-zA-Z0-9\.:/_\-\% ]+'
     }
     images = re.findall(regex, value)
 
@@ -285,10 +285,10 @@ def text_filter(regex_base, value):
 @safe_filter(error_output='auto')
 @register.filter
 def markdown_thumbnails(value):
-    return text_filter('!\[(%(re_cap)s)?\][ ]?\((%(re_img)s)\)', value)
+    return text_filter(r'!\[(%(re_cap)s)?\][ ]?\((%(re_img)s)\)', value)
 
 
 @safe_filter(error_output='auto')
 @register.filter
 def html_thumbnails(value):
-    return text_filter('<img(?: alt="(%(re_cap)s)?")? src="(%(re_img)s)"', value)
+    return text_filter(r'<img(?: alt="(%(re_cap)s)?")? src="(%(re_img)s)"', value)
