@@ -67,7 +67,7 @@ matrix:
       dist: xenial
       sudo: required
 
-sudo: false
+sudo: required
 dist: trusty
 
 addons:
