@@ -37,7 +37,7 @@ TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'APP_DIRS': True,
 }]
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -45,3 +45,4 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+THUMBNAIL_REDIS_SSL = False

@@ -51,7 +51,7 @@ class Command(LabelCommand):
 
         if label == 'clear_delete_referenced':
             if verbosity >= 1:
-                print("Delete all thumbnail files referenced in " +
+                print("Delete all thumbnail files referenced in "
                       "Key Value Store", end=' ... ', file=stdout)
 
             default.kvstore.delete_all_thumbnail_files()

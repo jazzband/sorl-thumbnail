@@ -77,11 +77,7 @@ class ThumbnailBackend(object):
         if file_:
             source = ImageFile(file_)
         else:
-            if settings.THUMBNAIL_DUMMY:
-                return DummyImageFile(geometry_string)
-            else:
-                logger.error('missing file_ argument in get_thumbnail()')
-                return
+            raise ValueError('falsey file_ argument in get_thumbnail()')
 
         # preserve image filetype
         if settings.THUMBNAIL_PRESERVE_FORMAT:
@@ -186,7 +182,7 @@ class ThumbnailBackend(object):
             if 'crop' in options and isinstance(options['crop'], string_types):
                 crop = options['crop'].split(" ")
                 for i in range(len(crop)):
-                    s = re.match("(\d+)px", crop[i])
+                    s = re.match(r"(\d+)px", crop[i])
                     if s:
                         crop[i] = "%spx" % int(int(s.group(1)) * resolution)
                 resolution_options['crop'] = " ".join(crop)
