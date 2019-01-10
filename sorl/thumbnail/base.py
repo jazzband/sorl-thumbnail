@@ -182,7 +182,7 @@ class ThumbnailBackend(object):
             if 'crop' in options and isinstance(options['crop'], string_types):
                 crop = options['crop'].split(" ")
                 for i in range(len(crop)):
-                    s = re.match("(\d+)px", crop[i])
+                    s = re.match(r"(\d+)px", crop[i])
                     if s:
                         crop[i] = "%spx" % int(int(s.group(1)) * resolution)
                 resolution_options['crop'] = " ".join(crop)
