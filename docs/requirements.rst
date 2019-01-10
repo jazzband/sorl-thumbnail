@@ -1,7 +1,7 @@
 ************
 Requirements
 ************
-
+ 
 Base requirements
 =================
 - `Python`_ 2.7+
