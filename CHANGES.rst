@@ -2,6 +2,24 @@
 Changelog
 =========
 
+12.5.0
+======
+
+* Make the template tag accept a falsey image
+* Update identify (of convert_engine) for faster multi-page PDF thumbnailing
+* Fix Redis KVStore timeout
+* Fix format conversion in Wand engine
+* Added setting THUMBNAIL_REMOVE_URL_ARGS
+* Add testing for Django 2.1
+* Drop support for Django < 1.11
+* Added ssl parameter to Redis object instantiation
+* Fix 2 ResourceWarning: unclosed file, in tests
+* Fix AdminImageWidget with Django 2.1
+* Test in release version of Python 3.7
+* Remove unused unittest imports in thumbnail_tests.compat
+* Add a __str__ method to ImageFile
+
+
 12.4.1
 ======
 
