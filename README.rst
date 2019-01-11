@@ -1,4 +1,4 @@
-|travis| |pypi| |coveralls|
+|travis| |docs| |pypi| |jazzband-badge| |coveralls|
 
 Thumbnails for Django.
 
@@ -162,11 +162,17 @@ So it will avoid to overly query the S3 API.
 
 .. |travis| image:: https://travis-ci.org/jazzband/sorl-thumbnail.svg?branch=master
     :target: https://travis-ci.org/jazzband/sorl-thumbnail
+.. |docs| image:: https://readthedocs.org/projects/pip/badge/?version=latest
+    :alt: Documentation for latest version
+    :target: http://sorl-thumbnail.rtfd.org/en/latest/
 .. |pypi| image:: https://img.shields.io/pypi/v/sorl-thumbnail.svg
     :target: https://pypi.python.org/pypi/sorl-thumbnail
     :alt: sorl-thumbnail on PyPI
 .. |coveralls| image:: https://coveralls.io/repos/jazzband//sorl-thumbnail/badge.png?branch=master
     :target: https://coveralls.io/r/jazzband//sorl-thumbnail?branch=master
+.. |jazzband-badge| image:: https://jazzband.co/static/img/badge.svg
+   :target: https://jazzband.co/
+   :alt: Jazzband
 .. |jazzband| image:: https://jazzband.co/static/img/jazzband.svg
    :target: https://jazzband.co/
    :alt: Jazzband
