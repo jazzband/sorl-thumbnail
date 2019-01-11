@@ -71,7 +71,11 @@ class Engine(EngineBase):
         return image
 
     def _crop(self, image, width, height, x_offset, y_offset):
-        image.crop(x_offset, y_offset, width=width, height=height)
+        image.crop(left=x_offset, top=y_offset, width=width, height=height)
+        return image
+
+    def _cropbox(self, image, x, y, x2, y2):
+        image.crop(left=x, top=y, width=x2 - x, height=y2 - y)
         return image
 
     def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
