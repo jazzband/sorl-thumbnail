@@ -113,7 +113,7 @@ project with only small code changes::
     from util import models
 
     class MyModel(models.Model):
-        logo = models.ImageField(upload_to='/dev/null')
+        logo = ImageField(upload_to='/dev/null')
 
 
 Admin examples
