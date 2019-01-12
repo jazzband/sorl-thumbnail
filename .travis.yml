@@ -1,4 +1,5 @@
 language: python
+dist: xenial
 
 matrix:
   include:
@@ -30,7 +31,6 @@ matrix:
     - python: 3.6
       env: TOXENV=flake8
 
-
     - python: "3.6"
       env: TOXENV=py36-django20-pil
     - python: "3.6"
@@ -59,16 +59,8 @@ matrix:
 
     - python: "3.7"
       env: TOXENV=py37-django20-pil
-      dist: xenial
-      sudo: required
-
     - python: "3.7"
       env: TOXENV=py37-django21-pil
-      dist: xenial
-      sudo: required
-
-sudo: false
-dist: trusty
 
 addons:
   apt:
