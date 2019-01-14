@@ -130,7 +130,7 @@ You can use the 'get_thumbnail'::
 
 See more examples in the section `Low level API examples`_ in the Documentation
 
-Using in combination with other thumbnalers
+Using in combination with other thumbnailers
 -------------------------------------------
 
 Alternatively, you load the templatetags by {% load sorl_thumbnail %}

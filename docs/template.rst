@@ -103,6 +103,17 @@ engine means that you can easily subclass an engine and create new features
 like rounded corners or what ever processing you like. The options described
 below are how they are used and interpreted in the shipped engines.
 
+``cropbox``
+^^^^^^^^^^^
+This option is used to crop to a specific set of coordinates. ``cropbox`` takes
+``x, y, x2, y2`` as arguments to crop the image down via those set of coordinates.
+Note that ``cropbox`` is applied before ``crop``.
+
+.. code-block:: python
+    
+    img = get_thumbnail(sorl_img, cropbox="{0},{1},{2},{3}".format(
+                        x, y, x2, y2))
+
 ``crop``
 ^^^^^^^^
 This option is only used if both width and height is given. Crop behaves much
