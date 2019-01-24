@@ -62,6 +62,19 @@ matrix:
     - python: "3.7"
       env: TOXENV=py37-django21-pil
 
+    - python: "3.7"
+      env: TOXENV=py37-django22-pil
+    - python: "3.7"
+      env: TOXENV=py37-django22-imagemagick
+    - python: "3.7"
+      env: TOXENV=py37-django22-graphicsmagick
+    - python: "3.7"
+      env: TOXENV=py37-django22-redis
+    - python: "3.7"
+      env: TOXENV=py37-django22-wand
+    - python: "3.7"
+      env: TOXENV=py37-django22-dbm
+
 addons:
   apt:
     packages:
