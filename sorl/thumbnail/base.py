@@ -4,7 +4,7 @@ import logging
 import os
 import re
 
-from django.utils.six import string_types
+from six import string_types
 
 from sorl.thumbnail.conf import settings, defaults as default_settings
 from sorl.thumbnail.helpers import tokey, serialize

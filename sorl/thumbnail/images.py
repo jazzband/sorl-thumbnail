@@ -7,8 +7,9 @@ import re
 
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage  # , default_storage
-from django.utils.encoding import force_text, python_2_unicode_compatible
+from django.utils.encoding import force_text
 from django.utils.functional import LazyObject, empty
+from six import python_2_unicode_compatible
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.compat import (urlopen, urlparse, urlsplit,

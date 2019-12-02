@@ -10,8 +10,9 @@ from functools import wraps
 
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
-from django.utils.six import text_type
 from django.conf import settings
+
+from six import text_type
 
 from sorl.thumbnail.conf import settings as sorl_settings
 from sorl.thumbnail import default
