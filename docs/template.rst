@@ -42,7 +42,7 @@ Source can be an ImageField, FileField, a file name (assuming default_storage),
 a url. What we need to know is name and storage, see how ImageFile figures
 these things out::
 
-    from django.utils.encoding import force_text
+    from django.utils.encoding import force_str
 
     class ImageFile(BaseImageFile):
         _size = None
@@ -54,7 +54,7 @@ these things out::
             if hasattr(file_, 'name'):
                 self.name = file_.name
             else:
-                self.name = force_text(file_)
+                self.name = force_str(file_)
             # figure out storage
             if storage is not None:
                 self.storage = storage

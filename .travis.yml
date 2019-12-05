@@ -3,19 +3,6 @@ dist: xenial
 
 matrix:
   include:
-    - python: "2.7"
-      env: TOXENV=py27-django111-pil
-    - python: "2.7"
-      env: TOXENV=py27-django111-imagemagick
-    - python: "2.7"
-      env: TOXENV=py27-django111-graphicsmagick
-    - python: "2.7"
-      env: TOXENV=py27-django111-redis
-    - python: "2.7"
-      env: TOXENV=py27-django111-wand
-    - python: "2.7"
-      env: TOXENV=py27-django111-dbm
-
     - python: "3.6"
       env: TOXENV=py36-django111-pil
     - python: "3.6"
@@ -57,6 +44,9 @@ matrix:
     - python: "3.6"
       env: TOXENV=py36-django21-dbm
 
+    - python: "3.6"
+      env: TOXENV=py36-django30-pil
+
     - python: "3.7"
       env: TOXENV=py37-django20-pil
     - python: "3.7"
@@ -74,6 +64,32 @@ matrix:
       env: TOXENV=py37-django22-wand
     - python: "3.7"
       env: TOXENV=py37-django22-dbm
+
+    - python: "3.7"
+      env: TOXENV=py37-django30-pil
+    - python: "3.7"
+      env: TOXENV=py37-django30-imagemagick
+    - python: "3.7"
+      env: TOXENV=py37-django30-graphicsmagick
+    - python: "3.7"
+      env: TOXENV=py37-django30-redis
+    - python: "3.7"
+      env: TOXENV=py37-django30-wand
+    - python: "3.7"
+      env: TOXENV=py37-django30-dbm
+
+    - python: "3.8"
+      env: TOXENV=py38-django30-pil
+    - python: "3.8"
+      env: TOXENV=py38-django30-imagemagick
+    - python: "3.8"
+      env: TOXENV=py38-django30-graphicsmagick
+    - python: "3.8"
+      env: TOXENV=py38-django30-redis
+    - python: "3.8"
+      env: TOXENV=py38-django30-wand
+    - python: "3.8"
+      env: TOXENV=py38-django30-dbm
 
 addons:
   apt:

@@ -1,5 +1,4 @@
 from django.test import SimpleTestCase
-from django.test.utils import override_settings
 
 from sorl.thumbnail.admin.current import AdminImageWidget
 
