@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from io import StringIO
 import os
 import sys
 import shutil
@@ -6,7 +7,6 @@ import unittest
 from PIL import Image
 
 import pytest
-from django.utils.six import StringIO
 from django.test import TestCase
 from django.test.utils import override_settings
 

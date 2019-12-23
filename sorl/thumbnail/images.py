@@ -7,7 +7,7 @@ import re
 
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage  # , default_storage
-from django.utils.encoding import force_text, python_2_unicode_compatible
+from django.utils.encoding import force_str
 from django.utils.functional import LazyObject, empty
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
@@ -76,7 +76,6 @@ class BaseImageFile(object):
     src = url
 
 
-@python_2_unicode_compatible
 class ImageFile(BaseImageFile):
     _size = None
 
@@ -88,7 +87,7 @@ class ImageFile(BaseImageFile):
         if hasattr(file_, 'name'):
             self.name = file_.name
         else:
-            self.name = force_text(file_)
+            self.name = force_str(file_)
 
         # TODO: Add a customizable naming method as a signal
 
