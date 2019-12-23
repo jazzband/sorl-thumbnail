@@ -10,7 +10,6 @@ from functools import wraps
 
 from django.template import Library, Node, NodeList, TemplateSyntaxError
 from django.utils.encoding import smart_str
-from django.utils.six import text_type
 from django.conf import settings
 
 from sorl.thumbnail.conf import settings as sorl_settings
@@ -129,7 +128,7 @@ class ThumbnailNode(ThumbnailNodeBase):
         options = {}
         for key, expr in self.options:
             noresolve = {'True': True, 'False': False, 'None': None}
-            value = noresolve.get(text_type(expr), expr.resolve(context))
+            value = noresolve.get(str(expr), expr.resolve(context))
             if key == 'options':
                 options.update(value)
             else:

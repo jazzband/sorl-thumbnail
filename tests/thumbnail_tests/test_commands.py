@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+from io import StringIO
 import os
 
 import pytest
-from django.utils.six import StringIO
 from django.core import management
 
 from sorl.thumbnail.conf import settings
