@@ -2,6 +2,14 @@
 Changelog
 =========
 
+12.6.0
+======
+
+* Add Cropbox feature in Wand/Convert Engine
+* Add testing for Django 2.2
+* Remove "django.utils.six" to support Django 3.0+
+
+
 12.5.0
 ======
 
