@@ -241,7 +241,6 @@ class SimpleTestCase(BaseTestCase):
         self.assertEqual(t.x, 100)
         self.assertEqual(t.y, 100)
 
-
     def test_falsey_file_argument(self):
         with self.assertRaises(ValueError):
             self.BACKEND.get_thumbnail('', '100x100')

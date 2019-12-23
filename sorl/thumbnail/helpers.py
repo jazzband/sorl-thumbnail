@@ -6,7 +6,7 @@ import math
 from importlib import import_module
 
 from django.core.exceptions import ImproperlyConfigured
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from sorl.thumbnail.compat import encode
 
 
@@ -43,7 +43,7 @@ def tokey(*args):
     """
     Computes a unique key from arguments given.
     """
-    salt = '||'.join([force_text(arg) for arg in args])
+    salt = '||'.join([force_str(arg) for arg in args])
     hash_ = hashlib.md5(encode(salt))
     return hash_.hexdigest()
 
