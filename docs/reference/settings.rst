@@ -159,6 +159,14 @@ Only applicable for the convert Engine.
 The storage class to use for the generated thumbnails.
 
 
+``THUMBNAIL_REDIS_URL``
+======================
+
+The Redis database URL to connect as used by `redis-py <https://redis-py.readthedocs.io/en/latest/#redis.Redis.from_url>`_
+
+When specified, other ``THUMBNAIL_REDIS_*`` connection settings will be ignored.
+
+
 ``THUMBNAIL_REDIS_DB``
 ======================
 
@@ -373,3 +381,10 @@ that regex replaces references to images with thumbnails.
 
 This value sets the timeout value in seconds when retrieving a source image from a URL. 
 If no timeout value is specified, it will wait indefinitely for a response.
+
+``THUMBNAIL_REMOVE_URL_ARGS``
+=============================
+
+- Default: ``True``
+
+This value sets if URL arguments will be removed from the source URL of the image we want to generate a thumbnail of. E.g. if our source image is at ``<domain>/picture?height=600&width=600`` a ``True`` value would instead attempt to generate a thumbnail from ``<domain>/picture``.
