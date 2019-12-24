@@ -1,17 +1,40 @@
 from __future__ import unicode_literals, division
 
-import math
 from sorl.thumbnail.engines.base import EngineBase
 from sorl.thumbnail.compat import BufferIO
 
 try:
-    from PIL import Image, ImageFile, ImageDraw, ImageFilter
+    from PIL import Image, ImageFile, ImageDraw, ImageFilter, ImageMode
 except ImportError:
     import Image
     import ImageFile
     import ImageDraw
+    import ImageMode
 
 EXIF_ORIENTATION = 0x0112
+
+
+def color_count(image):
+    """ Return the number of color values in the input image --
+        this is the number of pixels times the band count
+        of the image.
+    """
+    mode_descriptor = ImageMode.getmode(image.mode)
+    width, height = image.size
+    return width * height * len(mode_descriptor.bands)
+
+
+def histogram_entropy_py(image):
+    """ Calculate the entropy of an images' histogram. """
+    from math import log2, fsum
+    histosum = float(color_count(image))
+    histonorm = (histocol / histosum for histocol in image.histogram())
+    return -fsum(p * log2(p) for p in histonorm if p != 0.0)
+
+
+# Select the Pillow native histogram entropy function - if
+# available - and fall back to the Python implementation:
+histogram_entropy = getattr(Image.Image, 'entropy', histogram_entropy_py)
 
 
 def round_corner(radius, fill):
@@ -204,6 +227,9 @@ class Engine(EngineBase):
 
         return image
 
+    # Add the histogram_entropy fumnction as a static method:
+    _get_image_entropy = staticmethod(histogram_entropy)
+
     def _scale(self, image, width, height):
         return image.resize((width, height), resample=Image.ANTIALIAS)
 
@@ -261,10 +287,3 @@ class Engine(EngineBase):
             bf.close()
 
         return raw_data
-
-    def _get_image_entropy(self, image):
-        """calculate the entropy of an image"""
-        hist = image.histogram()
-        hist_size = sum(hist)
-        hist = [float(h) / hist_size for h in hist]
-        return -sum([p * math.log(p, 2) for p in hist if p != 0])
