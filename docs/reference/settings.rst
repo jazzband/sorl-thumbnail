@@ -159,6 +159,14 @@ Only applicable for the convert Engine.
 The storage class to use for the generated thumbnails.
 
 
+``THUMBNAIL_REDIS_URL``
+======================
+
+The Redis database URL to connect as used by `redis-py <https://redis-py.readthedocs.io/en/latest/#redis.Redis.from_url>`_
+
+When specified, other ``THUMBNAIL_REDIS_*`` connection settings will be ignored.
+
+
 ``THUMBNAIL_REDIS_DB``
 ======================
 
