@@ -340,9 +340,19 @@ class CropTestCase(BaseTestCase):
             for x, y in coords:
                 self.assertEqual(0 <= mean_pixel(x, y) < 5, True)
 
+    @unittest.skipIf(
+        'pil_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
     def test_smart_crop(self):
-        # TODO: Complete test for smart crop
-        self.BACKEND.get_thumbnail('32x32', 'data/white_border.jpg', crop='smart')
+        th = self.BACKEND.get_thumbnail('data/white_border.jpg', '32x32', crop='smart')
+        self.assertEqual(th.x, 32)
+        self.assertEqual(th.y, 32)
+        
+        engine = PILEngine()
+        im = engine.get_image(th)
+        self.assertEqual(im.size[0], 32)
+        self.assertEqual(im.size[1], 32)
 
     @unittest.skipIf(
         'pil_engine' not in settings.THUMBNAIL_ENGINE,
