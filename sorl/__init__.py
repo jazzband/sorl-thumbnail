@@ -1,20 +1,6 @@
-# encoding=utf-8
-from __future__ import unicode_literals
+from pkg_resources import get_distribution, DistributionNotFound
 
-import logging
-
-__author__ = "Mikko Hellsing"
-__license__ = "BSD"
-__version__ = '12.6.0'
-__maintainer__ = "Jazzband"
-__email__ = "mariocesar@humanzilla.com"
-
-
-class NullHandler(logging.Handler):
-    def emit(self, record):
-        pass
-
-
-# Add a logging handler that does nothing to silence messages with no logger
-# configured
-logging.getLogger('sorl').addHandler(NullHandler())
+try:
+    __version__ = get_distribution("sorl-thumbnail").version
+except DistributionNotFound:
+    pass

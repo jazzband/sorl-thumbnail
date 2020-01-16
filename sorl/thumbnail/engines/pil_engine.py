@@ -277,7 +277,7 @@ class Engine(EngineBase):
             # Do not save unnecessary exif data for smaller thumbnail size
             params.pop('exif', {})
             image.save(bf, **params)
-        except (IOError, OSError):
+        except OSError:
             # Try without optimization.
             params.pop('optimize')
             image.save(bf, **params)
