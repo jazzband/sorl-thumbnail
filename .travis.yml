@@ -1,138 +1,68 @@
 language: python
 dist: xenial
+python:
+  - 3.6
+  - 3.7
+  - 3.8
+env:
+  - DJANGO=1.11 PACKAGE=pil
+  - DJANGO=1.11 PACKAGE=imagemagick
+  - DJANGO=1.11 PACKAGE=graphicsmagick
+  - DJANGO=1.11 PACKAGE=redis
+  - DJANGO=1.11 PACKAGE=wand
+  - DJANGO=1.11 PACKAGE=dbm
 
-matrix:
+  - DJANGO=2.2  PACKAGE=pil
+  - DJANGO=2.2  PACKAGE=imagemagick
+  - DJANGO=2.2  PACKAGE=graphicsmagick
+  - DJANGO=2.2  PACKAGE=redis
+  - DJANGO=2.2  PACKAGE=wand
+  - DJANGO=2.2  PACKAGE=dbm
+
+  - DJANGO=3.0  PACKAGE=pil
+  - DJANGO=3.0  PACKAGE=imagemagick
+  - DJANGO=3.0  PACKAGE=graphicsmagick
+  - DJANGO=3.0  PACKAGE=redis
+  - DJANGO=3.0  PACKAGE=wand
+  - DJANGO=3.0  PACKAGE=dbm
+jobs:
   include:
-    - python: "3.6"
-      env: TOXENV=py36-django111-pil
-    - python: "3.6"
-      env: TOXENV=py36-django111-imagemagick
-    - python: "3.6"
-      env: TOXENV=py36-django111-graphicsmagick
-    - python: "3.6"
-      env: TOXENV=py36-django111-redis
-    - python: "3.6"
-      env: TOXENV=py36-django111-wand
-    - python: "3.6"
-      env: TOXENV=py36-django111-dbm
-    - python: 3.6
-      env: TOXENV=flake8
-
-    - python: "3.6"
-      env: TOXENV=py36-django20-pil
-    - python: "3.6"
-      env: TOXENV=py36-django20-imagemagick
-    - python: "3.6"
-      env: TOXENV=py36-django20-graphicsmagick
-    - python: "3.6"
-      env: TOXENV=py36-django20-redis
-    - python: "3.6"
-      env: TOXENV=py36-django20-wand
-    - python: "3.6"
-      env: TOXENV=py36-django20-dbm
-
-    - python: "3.6"
-      env: TOXENV=py36-django21-pil
-    - python: "3.6"
-      env: TOXENV=py36-django21-imagemagick
-    - python: "3.6"
-      env: TOXENV=py36-django21-graphicsmagick
-    - python: "3.6"
-      env: TOXENV=py36-django21-redis
-    - python: "3.6"
-      env: TOXENV=py36-django21-wand
-    - python: "3.6"
-      env: TOXENV=py36-django21-dbm
-
-    - python: "3.6"
-      env: TOXENV=py36-django30-pil
-
-    - python: "3.7"
-      env: TOXENV=py37-django20-pil
-    - python: "3.7"
-      env: TOXENV=py37-django21-pil
-
-    - python: "3.7"
-      env: TOXENV=py37-django22-pil
-    - python: "3.7"
-      env: TOXENV=py37-django22-imagemagick
-    - python: "3.7"
-      env: TOXENV=py37-django22-graphicsmagick
-    - python: "3.7"
-      env: TOXENV=py37-django22-redis
-    - python: "3.7"
-      env: TOXENV=py37-django22-wand
-    - python: "3.7"
-      env: TOXENV=py37-django22-dbm
-
-    - python: "3.7"
-      env: TOXENV=py37-django30-pil
-    - python: "3.7"
-      env: TOXENV=py37-django30-imagemagick
-    - python: "3.7"
-      env: TOXENV=py37-django30-graphicsmagick
-    - python: "3.7"
-      env: TOXENV=py37-django30-redis
-    - python: "3.7"
-      env: TOXENV=py37-django30-wand
-    - python: "3.7"
-      env: TOXENV=py37-django30-dbm
-
-    - python: "3.8"
-      env: TOXENV=py38-django30-pil
-    - python: "3.8"
-      env: TOXENV=py38-django30-imagemagick
-    - python: "3.8"
-      env: TOXENV=py38-django30-graphicsmagick
-    - python: "3.8"
-      env: TOXENV=py38-django30-redis
-    - python: "3.8"
-      env: TOXENV=py38-django30-wand
-    - python: "3.8"
-      env: TOXENV=py38-django30-dbm
-
+    - stage: deploy
+      env:
+      python: 3.6
+      script: skip
+      deploy:
+        provider: pypi
+        user: jazzband
+        server: https://jazzband.co/projects/sorl-thumbnail/upload
+        distributions: sdist bdist_wheel
+        password:
+          secure: BZlzJyqEbo1nofxEqeE12EyIcM6ldJL40yDRo62qk1dBirUV+eJQN3kTJtKTqVgTMRalQJKqMZgbhWtvxo2wsuBx+JW3LlfjYuY/fNzj/+5x7Tq/NEy4HyBj4RdWdincmdvQ0n4ixar6cDr79KjHUzC9Db3psbTRE6+Vw0EJTM4=
+        skip_existing: true
+        on:
+          tags: true
+          repo: jazzband/sorl-thumbnail
+          python: 3.6
 addons:
   apt:
     packages:
       - libgraphicsmagick1-dev
-      # - libgraphicsmagick++1-dev
-      # - libboost-python-dev
       - graphicsmagick
       - libjpeg62
       - zlib1g-dev
-
 cache:
-  apt: true
-  directories:
-    - .tox
-    - $HOME/.cache/pip
-
+  pip: true
 after_failure:
   - cat /home/travis/.pip/pip.log
-
-after_success: coveralls
-
+after_success:
+  - coveralls
 install:
-  - pip install --upgrade pip
-  - pip install -q tox coveralls
-
+  - pip install tox-travis coveralls
 script:
   - env | sort
   - tox
-
 services:
   - redis-server
-
 notifications:
   email: false
 
-deploy:
-  provider: pypi
-  user: jazzband
-  server: https://jazzband.co/projects/sorl-thumbnail/upload
-  distributions: sdist bdist_wheel
-  password:
-    secure: BZlzJyqEbo1nofxEqeE12EyIcM6ldJL40yDRo62qk1dBirUV+eJQN3kTJtKTqVgTMRalQJKqMZgbhWtvxo2wsuBx+JW3LlfjYuY/fNzj/+5x7Tq/NEy4HyBj4RdWdincmdvQ0n4ixar6cDr79KjHUzC9Db3psbTRE6+Vw0EJTM4=
-  on:
-    tags: true
-    repo: jazzband/sorl-thumbnail
