@@ -22,7 +22,7 @@ setup(
     url='https://github.com/jazzband/sorl-thumbnail',
     packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
-    python_requires='>=3.6',
+    python_requires='>=3.4',
     zip_safe=False,
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -31,6 +31,8 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
