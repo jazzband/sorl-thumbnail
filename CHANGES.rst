@@ -2,6 +2,14 @@
 Changelog
 =========
 
+12.6.1
+======
+
+* Deprecate explicit support for Python 3.4 and 3.5 in order to simplify the test matrix #610
+* Add requirement for ``setuptools_scm`` to automatically resolve version from git tags #610
+* Removed property ``thumbnail.__version__`` #610
+
+
 12.6.0
 ======
 
