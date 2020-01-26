@@ -5,7 +5,7 @@ Thumbnails for Django.
 Features at a glance
 ====================
 
-- Support for Django 1.11, 2.0, 2.1, 2.2 and 3.0 following the `Django supported versions policy`_
+- Support for Django 1.11, 2.2 and 3.0 following the `Django supported versions policy`_
 - Python 3 support
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and `vipsthumbnail`_
@@ -73,7 +73,7 @@ Install in your project
 Then register 'sorl.thumbnail', in the 'INSTALLED_APPS' section of
 your project's settings. ::
 
-    INSTALLED_APPS = (
+    INSTALLED_APPS = [
         'django.contrib.auth',
         'django.contrib.admin',
         'django.contrib.sites',
@@ -83,7 +83,7 @@ your project's settings. ::
         'django.contrib.contenttypes',
 
         'sorl.thumbnail',
-    )
+    ]
 
 
 Templates Usage
@@ -131,7 +131,7 @@ You can use the 'get_thumbnail'::
 See more examples in the section `Low level API examples`_ in the Documentation
 
 Using in combination with other thumbnailers
--------------------------------------------
+--------------------------------------------
 
 Alternatively, you load the templatetags by {% load sorl_thumbnail %}
 instead of traditional {% load thumbnail %}. It's especially useful in
@@ -146,8 +146,8 @@ same name (``thumbnail``) for the templatetag module::
 Frequently asked questions
 ==========================
 
-Is so slow in Amazon S3 !
--------------------------
+Is so slow in Amazon S3!
+------------------------
 
 Possible related to the implementation of your Amazon S3 Backend, see the `issue #351`_
 due the storage backend reviews if there is an existing thumbnail when tries to

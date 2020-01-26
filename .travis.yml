@@ -5,6 +5,8 @@ python:
   - 3.7
   - 3.8
 env:
+  - TOXENV=qa
+
   - DJANGO=1.11 PACKAGE=pil
   - DJANGO=1.11 PACKAGE=imagemagick
   - DJANGO=1.11 PACKAGE=graphicsmagick
