@@ -2,6 +2,14 @@
 Changelog
 =========
 
+
+12.6.2
+======
+
+* Fix rST syntax errors from 12.6.0 and 12.6.1 that blocked release. #613
+* Improve QA setup and add rST validation to Travis and tox test matrix. #613
+
+
 12.6.1
 ======
 
