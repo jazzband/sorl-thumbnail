@@ -59,7 +59,7 @@ after_failure:
 after_success:
   - coveralls
 install:
-  - pip install tox-travis coveralls
+  - pip install tox-travis codecov
 script:
   - env | sort
   - tox
