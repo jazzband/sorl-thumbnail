@@ -57,9 +57,9 @@ cache:
 after_failure:
   - cat /home/travis/.pip/pip.log
 after_success:
-  - coveralls
+  - codecov
 install:
-  - pip install tox-travis coveralls
+  - pip install tox-travis codecov
 script:
   - env | sort
   - tox
