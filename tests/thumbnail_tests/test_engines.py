@@ -355,7 +355,7 @@ class CropTestCase(BaseTestCase):
         self.assertEqual(im.size[1], 32)
 
     @unittest.skipIf(
-        'pil_engine' not in settings.THUMBNAIL_ENGINE,
+        'pil_engine' not in settings.THUMBNAIL_ENGINE and 'convert_engine' not in settings.THUMBNAIL_ENGINE,
         'the other engines fail this test',
     )
     def test_image_with_orientation(self):

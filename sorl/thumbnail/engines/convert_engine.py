@@ -106,34 +106,47 @@ class Engine(EngineBase):
             retcode = p.wait()
         return retcode == 0
 
+    def get_image_ratio(self, image, options):
+        ratio = super(Engine, self).get_image_ratio(image, options)
+        orientation = self.get_exif_orientation(image)
+        if orientation in [5, 6, 7, 8]:
+            ratio = 1.0 / ratio
+        return ratio
+    
+    def get_exif_orientation(self, image):
+        args = settings.THUMBNAIL_IDENTIFY.split()
+        args.extend(['-format', '%[exif:orientation]', image['source']])
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p.wait()
+        result = p.stdout.read().strip()
+        if result and result != 'unknown':
+            return int(result)
+        else: 
+            return None
+
     def _orientation(self, image):
         # return image
         # XXX need to get the dimensions right after a transpose.
 
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
-            args = settings.THUMBNAIL_IDENTIFY.split()
-            args.extend(['-format', '%[exif:orientation]', image['source'] + '[0]'])
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
-            result = p.stdout.read().strip()
-            if result and result != b('unknown'):
-                result = int(result)
+            orientation = self.get_exif_orientation(image)
+            if orientation:
                 options = image['options']
-                if result == 2:
+                if orientation == 2:
                     options['flop'] = None
-                elif result == 3:
+                elif orientation == 3:
                     options['rotate'] = '180'
-                elif result == 4:
+                elif orientation == 4:
                     options['flip'] = None
-                elif result == 5:
+                elif orientation == 5:
                     options['rotate'] = '90'
                     options['flop'] = None
-                elif result == 6:
+                elif orientation == 6:
                     options['rotate'] = '90'
-                elif result == 7:
+                elif orientation == 7:
                     options['rotate'] = '-90'
                     options['flop'] = None
-                elif result == 8:
+                elif orientation == 8:
                     options['rotate'] = '-90'
         else:
             # ImageMagick also corrects the orientation exif data for
@@ -143,12 +156,8 @@ class Engine(EngineBase):
 
     def _flip_dimensions(self, image):
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
-            args = settings.THUMBNAIL_IDENTIFY.split()
-            args.extend(['-format', '%[exif:orientation]', image['source'] + '[0]'])
-            p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
-            result = p.stdout.read().strip()
-            return result and result != 'unknown' and int(result) in [5, 6, 7, 8]
+            orientation = self.get_exif_orientation(image)
+            return orientation and orientation in [5, 6, 7, 8]
         else:
             return False
 

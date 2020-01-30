@@ -79,6 +79,8 @@ class EngineBase(object):
         """
         upscale = options['upscale']
         x_image, y_image = map(float, self.get_image_size(image))
+        if self.get_exif_orientation(image) in [5, 6, 7, 8]:
+            x_image, y_image = y_image, x_image
         factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
 
         if factor < 1 or upscale:
@@ -193,6 +195,12 @@ class EngineBase(object):
         Checks if the supplied raw data is valid image data
         """
         raise NotImplementedError()
+
+    def get_exif_orientation(self, image):
+        """
+        Returns the image exif orientation
+        """
+        return None
 
     def _orientation(self, image):
         """
