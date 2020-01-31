@@ -57,6 +57,7 @@ cache:
 after_failure:
   - cat /home/travis/.pip/pip.log
 after_success:
+  - cp tests/.coverage .
   - codecov
 install:
   - pip install tox-travis codecov
