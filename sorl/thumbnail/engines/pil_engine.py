@@ -97,7 +97,7 @@ class Engine(EngineBase):
 
         return self._colorspace(image, colorspace, format)
 
-    def get_exif_orientation(self, image):
+    def _get_exif_orientation(self, image):
         try:
             exif = image._getexif()
         except Exception:
@@ -112,7 +112,7 @@ class Engine(EngineBase):
         return image.crop((x, y, x2, y2))
 
     def _orientation(self, image):
-        orientation = self.get_exif_orientation(image)
+        orientation = self._get_exif_orientation(image)
 
         if orientation:
 
@@ -134,12 +134,8 @@ class Engine(EngineBase):
         return image
 
     def _flip_dimensions(self, image):
-        orientation = self.get_exif_orientation(image)
-
-        if orientation:
-            return orientation in [5, 6, 7, 8]
-
-        return False
+        orientation = self._get_exif_orientation(image)
+        return orientation and orientation in [5, 6, 7, 8]
 
     def _colorspace(self, image, colorspace, format):
         if colorspace == 'RGB':

@@ -105,7 +105,7 @@ class Engine(EngineBase):
             retcode = p.wait()
         return retcode == 0
 
-    def get_exif_orientation(self, image):
+    def _get_exif_orientation(self, image):
         args = settings.THUMBNAIL_IDENTIFY.split()
         args.extend(['-format', '%[exif:orientation]', image['source']])
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -121,7 +121,7 @@ class Engine(EngineBase):
         # XXX need to get the dimensions right after a transpose.
 
         if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
-            orientation = self.get_exif_orientation(image)
+            orientation = self._get_exif_orientation(image)
             if orientation:
                 options = image['options']
                 if orientation == 2:
@@ -147,11 +147,8 @@ class Engine(EngineBase):
         return image
 
     def _flip_dimensions(self, image):
-        if settings.THUMBNAIL_CONVERT.endswith('gm convert'):
-            orientation = self.get_exif_orientation(image)
-            return orientation and orientation in [5, 6, 7, 8]
-        else:
-            return False
+        orientation = self._get_exif_orientation(image)
+        return orientation and orientation in [5, 6, 7, 8]
 
     def _colorspace(self, image, colorspace):
         """
