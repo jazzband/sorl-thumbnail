@@ -56,7 +56,7 @@ class Engine(EngineBase):
 
         return image
 
-    def flip_dimensions(self, image):
+    def _flip_dimensions(self, image):
         return image.orientation() in [
             OrientationType.LeftTopOrientation,
             OrientationType.RightTopOrientation,
