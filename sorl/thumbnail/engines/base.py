@@ -10,6 +10,7 @@ from sorl.thumbnail.parsers import parse_cropbox
 
 logger = logging.getLogger(__name__)
 
+
 class EngineBase(object):
     """
     ABC for Thumbnail engines, methods are static
@@ -170,9 +171,9 @@ class EngineBase(object):
             y = y2 - y
         else:
             x, y = self.get_image_size(image)
-        
+
         ratio = float(x) / y
-        
+
         if settings.THUMBNAIL_ORIENTATION:
             orientation = self.get_exif_orientation(image)
             if orientation in [5, 6, 7, 8]:
