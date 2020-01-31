@@ -115,7 +115,6 @@ class Engine(EngineBase):
         orientation = self._get_exif_orientation(image)
 
         if orientation:
-
             if orientation == 2:
                 image = image.transpose(Image.FLIP_LEFT_RIGHT)
             elif orientation == 3:

@@ -83,7 +83,7 @@ class EngineBase(object):
         """
         upscale = options['upscale']
         x_image, y_image = map(float, self.get_image_size(image))
-        if settings.THUMBNAIL_ORIENTATION and self.flip_dimensions(image):
+        if self.flip_dimensions(image):
             x_image, y_image = y_image, x_image
         factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
 
@@ -174,7 +174,7 @@ class EngineBase(object):
 
         ratio = float(x) / y
 
-        if settings.THUMBNAIL_ORIENTATION and self.flip_dimensions(image):
+        if self.flip_dimensions(image):
             ratio = 1.0 / ratio
 
         return ratio
