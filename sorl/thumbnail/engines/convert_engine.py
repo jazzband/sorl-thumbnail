@@ -105,13 +105,6 @@ class Engine(EngineBase):
             retcode = p.wait()
         return retcode == 0
 
-    def get_image_ratio(self, image, options):
-        ratio = super(Engine, self).get_image_ratio(image, options)
-        orientation = self.get_exif_orientation(image)
-        if orientation in [5, 6, 7, 8]:
-            ratio = 1.0 / ratio
-        return ratio
-
     def get_exif_orientation(self, image):
         args = settings.THUMBNAIL_IDENTIFY.split()
         args.extend(['-format', '%[exif:orientation]', image['source']])

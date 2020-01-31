@@ -1,11 +1,14 @@
 # coding=utf-8
 from __future__ import division
 
+import logging
+
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop
 from sorl.thumbnail.parsers import parse_cropbox
 
+logger = logging.getLogger(__name__)
 
 class EngineBase(object):
     """
@@ -79,7 +82,7 @@ class EngineBase(object):
         """
         upscale = options['upscale']
         x_image, y_image = map(float, self.get_image_size(image))
-        if self.get_exif_orientation(image) in [5, 6, 7, 8]:
+        if settings.THUMBNAIL_ORIENTATION and self.get_exif_orientation(image) in [5, 6, 7, 8]:
             x_image, y_image = y_image, x_image
         factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
 
@@ -167,8 +170,15 @@ class EngineBase(object):
             y = y2 - y
         else:
             x, y = self.get_image_size(image)
+        
+        ratio = float(x) / y
+        
+        if settings.THUMBNAIL_ORIENTATION:
+            orientation = self.get_exif_orientation(image)
+            if orientation in [5, 6, 7, 8]:
+                ratio = 1.0 / ratio
 
-        return float(x) / y
+        return ratio
 
     def get_image_info(self, image):
         """
@@ -200,6 +210,9 @@ class EngineBase(object):
         """
         Returns the image exif orientation
         """
+        logger.warning("'{}' engine doesn't implement get_exif_orientation'".format(
+            settings.THUMBNAIL_ENGINE
+        ))
         return None
 
     def _orientation(self, image):
