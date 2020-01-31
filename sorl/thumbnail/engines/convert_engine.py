@@ -9,7 +9,6 @@ from django.utils.encoding import smart_str
 from django.core.files.temp import NamedTemporaryFile
 
 from sorl.thumbnail.base import EXTENSIONS
-from sorl.thumbnail.compat import b
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.base import EngineBase
 
@@ -112,7 +111,7 @@ class Engine(EngineBase):
         if orientation in [5, 6, 7, 8]:
             ratio = 1.0 / ratio
         return ratio
-    
+
     def get_exif_orientation(self, image):
         args = settings.THUMBNAIL_IDENTIFY.split()
         args.extend(['-format', '%[exif:orientation]', image['source']])
@@ -121,7 +120,7 @@ class Engine(EngineBase):
         result = p.stdout.read().strip()
         if result and result != 'unknown':
             return int(result)
-        else: 
+        else:
             return None
 
     def _orientation(self, image):
