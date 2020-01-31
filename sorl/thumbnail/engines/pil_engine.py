@@ -97,6 +97,9 @@ class Engine(EngineBase):
 
         return self._colorspace(image, colorspace, format)
 
+    def _cropbox(self, image, x, y, x2, y2):
+        return image.crop((x, y, x2, y2))
+
     def _get_exif_orientation(self, image):
         try:
             exif = image._getexif()
@@ -107,9 +110,6 @@ class Engine(EngineBase):
             return exif.get(EXIF_ORIENTATION)
         else:
             return None
-
-    def _cropbox(self, image, x, y, x2, y2):
-        return image.crop((x, y, x2, y2))
 
     def _orientation(self, image):
         orientation = self._get_exif_orientation(image)
