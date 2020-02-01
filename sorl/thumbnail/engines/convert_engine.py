@@ -1,4 +1,3 @@
-from __future__ import unicode_literals, with_statement
 import re
 import os
 import subprocess

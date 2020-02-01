@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from boto.dynamodb2.table import Table
 import boto
 from sorl.thumbnail.kvstores.base import KVStoreBase

@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import os
+import platform
 import unittest
 from subprocess import Popen, PIPE
 
@@ -18,7 +17,6 @@ from sorl.thumbnail.parsers import parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from .models import Item
-from .compat import is_osx
 from .utils import BaseTestCase
 
 
@@ -168,7 +166,7 @@ class SimpleTestCase(BaseTestCase):
             'tests.thumbnail_tests.storage.TestStorage',
         )
 
-    @unittest.skipIf(is_osx(), 'quality is saved a different way on os x')
+    @unittest.skipIf(platform.system() == "Darwin", 'quality is saved a different way on os x')
     def test_quality(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         th = self.BACKEND.get_thumbnail(im, '100x100', quality=50)
@@ -348,7 +346,7 @@ class CropTestCase(BaseTestCase):
         th = self.BACKEND.get_thumbnail('data/white_border.jpg', '32x32', crop='smart')
         self.assertEqual(th.x, 32)
         self.assertEqual(th.y, 32)
-        
+
         engine = PILEngine()
         im = engine.get_image(th)
         self.assertEqual(im.size[0], 32)

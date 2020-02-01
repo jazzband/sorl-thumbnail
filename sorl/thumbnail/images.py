@@ -1,9 +1,10 @@
-# encoding=utf-8
-
-from __future__ import unicode_literals, division
 import json
 import os
+import platform
 import re
+from urllib.error import URLError
+from urllib.parse import quote, quote_plus, urlsplit, urlunsplit
+from urllib.request import urlopen, Request
 
 from django.core.files.base import File, ContentFile
 from django.core.files.storage import Storage  # , default_storage
@@ -11,8 +12,6 @@ from django.utils.encoding import force_str
 from django.utils.functional import LazyObject, empty
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.compat import (urlopen, urlparse, urlsplit,
-                                   quote, quote_plus, URLError, encode)
 from sorl.thumbnail.default import storage as default_storage
 from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class, deserialize
 from sorl.thumbnail.parsers import parse_geometry
@@ -215,17 +214,23 @@ class DummyImageFile(BaseImageFile):
 
 
 class UrlStorage(Storage):
-    def normalize_url(self, url, charset='utf-8'):
-        url = encode(url, charset, 'ignore')
+    def normalize_url(self, url, charset="utf-8"):
+        # Convert URL to ASCII before processing
+        url = url.encode(charset, errors="ignore")
+        url = url.decode("ascii", errors="ignore")
         scheme, netloc, path, qs, anchor = urlsplit(url)
 
-        path = quote(path, b'/%')
-        qs = quote_plus(qs, b':&%=')
+        path = quote(path, b"/%")
+        qs = quote_plus(qs, b":&%=")
 
-        return urlparse.urlunsplit((scheme, netloc, path, qs, anchor))
+        return urlunsplit((scheme, netloc, path, qs, anchor))
 
     def open(self, name, mode='rb'):
-        return urlopen(self.normalize_url(name))
+        url = self.normalize_url(name)
+        python_version = platform.python_version_tuple()[0]
+        user_agent = "python-urllib{python_version}/0.6".format(python_version=python_version)
+        req = Request(url, headers={"User-Agent": user_agent})
+        return urlopen(req, timeout=settings.THUMBNAIL_URL_TIMEOUT)
 
     def exists(self, name):
         try:

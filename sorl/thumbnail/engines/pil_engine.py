@@ -1,7 +1,6 @@
-from __future__ import unicode_literals, division
+from io import BytesIO
 
 from sorl.thumbnail.engines.base import EngineBase
-from sorl.thumbnail.compat import BufferIO
 
 try:
     from PIL import Image, ImageFile, ImageDraw, ImageFilter, ImageMode
@@ -70,7 +69,7 @@ class GaussianBlur(ImageFilter.Filter):
 
 class Engine(EngineBase):
     def get_image(self, source):
-        buffer = BufferIO(source.read())
+        buffer = BytesIO(source.read())
         return Image.open(buffer)
 
     def get_image_size(self, image):
@@ -80,7 +79,7 @@ class Engine(EngineBase):
         return image.info or {}
 
     def is_valid_image(self, raw_data):
-        buffer = BufferIO(raw_data)
+        buffer = BytesIO(raw_data)
         try:
             trial_image = Image.open(buffer)
             trial_image.verify()
@@ -255,7 +254,7 @@ class Engine(EngineBase):
     def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
         # Increase (but never decrease) PIL buffer size
         ImageFile.MAXBLOCK = max(ImageFile.MAXBLOCK, image.size[0] * image.size[1])
-        bf = BufferIO()
+        bf = BytesIO()
 
         params = {
             'format': format_,

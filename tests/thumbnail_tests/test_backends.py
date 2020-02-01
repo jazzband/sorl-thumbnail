@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 from io import StringIO
 import os
+import platform
 import sys
 import shutil
 import unittest
@@ -15,7 +15,6 @@ from sorl.thumbnail.base import ThumbnailBackend
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
-from .compat import is_windows
 from .utils import BaseTestCase, FakeFile, same_open_fd_count
 from .models import Item
 
@@ -78,7 +77,7 @@ class PreserveFormatTest(TestCase):
         self.assertEqual(self.backend._get_format(FakeFile('http://example.com/1.png')), 'PNG')
 
 
-@unittest.skipIf(is_windows(), "Can't easily count descriptors on windows")
+@unittest.skipIf(platform.system() == "Windows", "Can't easily count descriptors on windows")
 class TestDescriptors(unittest.TestCase):
     """Make sure we're not leaving open descriptors on file exceptions"""
     ENGINE = None
