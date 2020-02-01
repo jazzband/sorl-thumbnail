@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # sorl-thumbnail documentation build configuration file, created by
 # sphinx-quickstart on Fri Nov 12 00:51:21 2010.
 #

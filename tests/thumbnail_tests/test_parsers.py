@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import unittest
 
 from sorl.thumbnail.helpers import ThumbnailError

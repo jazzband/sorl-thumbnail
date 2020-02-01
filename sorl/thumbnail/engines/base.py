@@ -1,6 +1,3 @@
-# coding=utf-8
-from __future__ import division
-
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import toint
 from sorl.thumbnail.parsers import parse_crop

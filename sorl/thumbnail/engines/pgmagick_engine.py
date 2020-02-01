@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from pgmagick import Blob, Geometry, Image, ImageType
 from pgmagick import InterlaceType, OrientationType
 from sorl.thumbnail.engines.base import EngineBase
