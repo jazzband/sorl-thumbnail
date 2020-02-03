@@ -14,7 +14,7 @@ Features at a glance
 - Admin integration with possibility to delete
 - Dummy generation (placeholders)
 - Flexible, simple syntax, generates no html
-- ImageField for model that deletes thumbnails
+- ImageField for model that deletes thumbnails (only compatible with django 1.2.5 or less)
 - CSS style cropping options
 - Back smart cropping, and remove borders from the images when cropping
 - Margin calculation for vertical positioning
@@ -107,7 +107,8 @@ Model Usage
 -----------
 
 Using the ImageField that automatically deletes references to itself in the key
-value store and its thumbnail references and the thumbnail files when deleted.::
+value store and its thumbnail references and the thumbnail files when deleted.
+Please note that this is only compatible with django 1.2.5 or less.::
 
     from django.db import models
     from sorl.thumbnail import ImageField
