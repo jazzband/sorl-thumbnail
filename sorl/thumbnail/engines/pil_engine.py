@@ -100,15 +100,21 @@ class Engine(EngineBase):
     def _cropbox(self, image, x, y, x2, y2):
         return image.crop((x, y, x2, y2))
 
-    def _orientation(self, image):
+    def _get_exif_orientation(self, image):
         try:
             exif = image._getexif()
         except Exception:
             exif = None
 
         if exif:
-            orientation = exif.get(EXIF_ORIENTATION)
+            return exif.get(EXIF_ORIENTATION)
+        else:
+            return None
 
+    def _orientation(self, image):
+        orientation = self._get_exif_orientation(image)
+
+        if orientation:
             if orientation == 2:
                 image = image.transpose(Image.FLIP_LEFT_RIGHT)
             elif orientation == 3:
@@ -127,16 +133,8 @@ class Engine(EngineBase):
         return image
 
     def _flip_dimensions(self, image):
-        try:
-            exif = image._getexif()
-        except (AttributeError, IOError, KeyError, IndexError):
-            exif = None
-
-        if exif:
-            orientation = exif.get(0x0112)
-            return orientation in [5, 6, 7, 8]
-
-        return False
+        orientation = self._get_exif_orientation(image)
+        return orientation and orientation in [5, 6, 7, 8]
 
     def _colorspace(self, image, colorspace, format):
         if colorspace == 'RGB':
