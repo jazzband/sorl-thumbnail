@@ -1,6 +1,15 @@
-=========
-Changelog
-=========
+=======
+Changes
+=======
+
+
+12.6.3
+======
+
+* Deprecate Python 2 compatibility shims in favor of Python 3 only codebase. #623
+* Fix README on notes about ImageField cleaning up references on delete. #624
+* Fix image ratios with EXIF orientation. #619
+* Fix test coverage tracking. #622 and #617
 
 
 12.6.2
@@ -69,17 +78,3 @@ contributors. These are some of the highlights:
 * Better error detection and handling in some cases (#492)
 * Improve automated testing
 * Improve documentation
-
-
-12.4
-====
-
-Although you can find references to this version number in the Git history of
-this project, this version was never released to PyPI.
-
-
-12.4a1
-======
-
-This is the most recent release of this project to PyPI before the migration to
-Jazzband.
