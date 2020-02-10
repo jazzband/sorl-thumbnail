@@ -110,7 +110,7 @@ class Engine(EngineBase):
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         result = p.stdout.read().strip()
-        if result and result != 'unknown':
+        if result and result != b'unknown':
             return int(result)
         else:
             return None
