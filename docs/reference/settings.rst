@@ -32,7 +32,7 @@ your own implementation.
 - Default: ``'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'``
 
 sorl-thumbnail needs a Key Value Store to :doc:`/operation`.
-sorl-thumbnail ships with support for two Key Value Stores:
+sorl-thumbnail ships with support for three Key Value Stores:
 
 Cached DB
 ---------
@@ -89,7 +89,7 @@ something else using this setting.
 
 This is the processing class for sorl-thumbnail. It does all the resizing,
 cropping or whatever processing you want to perform. sorl-thumbnail ships with
-three engines:
+four engines:
 
 PIL
 ---
