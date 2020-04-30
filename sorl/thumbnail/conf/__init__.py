@@ -1,19 +1,19 @@
 from django.conf import settings as user_settings
-from django.utils.functional import LazyObject
 from sorl.thumbnail.conf import defaults
 
 
-class Settings(object):
-    pass
+class Settings:
+    """
+    Settings proxy that will lookup first in the django settings, and then in the conf
+    defaults.
+    """
+    def __getattr__(self, name):
+        if name != name.upper():
+            raise AttributeError(name)
+        try:
+            return getattr(user_settings, name)
+        except AttributeError:
+            return getattr(defaults, name)
 
 
-class LazySettings(LazyObject):
-    def _setup(self):
-        self._wrapped = Settings()
-        for obj in (defaults, user_settings):
-            for attr in dir(obj):
-                if attr == attr.upper():
-                    setattr(self, attr, getattr(obj, attr))
-
-
-settings = LazySettings()
+settings = Settings()
