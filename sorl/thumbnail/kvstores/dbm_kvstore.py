@@ -33,7 +33,7 @@ else:
         fcntl.lockf(f.fileno(), fcntl.LOCK_UN)
 
 
-class DBMContext(object):
+class DBMContext:
     """
     A context manager to access the key-value store in a concurrent-safe manner.
     """

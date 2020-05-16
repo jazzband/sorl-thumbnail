@@ -20,7 +20,7 @@ class MockLoggingHandler(logging.Handler):
 slog = logging.getLogger('slog')
 
 
-class TestStorageMixin(object):
+class TestStorageMixin:
     def open(self, name, *args, **kwargs):
         slog.debug('open: %s' % name)
         return super(TestStorageMixin, self).open(name, *args, **kwargs)

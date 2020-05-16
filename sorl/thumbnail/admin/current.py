@@ -50,7 +50,7 @@ class AdminImageWidget(forms.ClearableFileInput):
         return mark_safe(output)
 
 
-class AdminImageMixin(object):
+class AdminImageMixin:
     """
     This is a mix-in for InlineModelAdmin subclasses to make ``ImageField``
     show nicer form widget

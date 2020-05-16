@@ -4,7 +4,7 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.models import KVStore as KVStoreModel
 
 
-class EMPTY_VALUE(object):
+class EMPTY_VALUE:
     pass
 
 

@@ -17,7 +17,7 @@ def del_prefix(key):
     return key.split('||')[-1]
 
 
-class KVStoreBase(object):
+class KVStoreBase:
     def get(self, image_file):
         """
         Gets the ``image_file`` from store. Returns ``None`` if not found.

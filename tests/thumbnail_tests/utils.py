@@ -46,7 +46,7 @@ def get_open_fds_count():
     return nprocs
 
 
-class FakeFile(object):
+class FakeFile:
     """
     Used to test the _get_format method.
     """
