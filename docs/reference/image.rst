@@ -21,7 +21,7 @@ ImageFile attributes
 
 ``name``
 --------
-Name of the image as returned from the underlaying storage.
+Name of the image as returned from the underlying storage.
 
 ``storage``
 -----------
@@ -49,7 +49,7 @@ Returns the image ratio (y/x) as a float
 
 ``url``
 -------
-URL of the image url as returned by the underlaying storage.
+URL of the image url as returned by the underlying storage.
 
 ``src``
 -------
@@ -69,7 +69,7 @@ ImageFile methods
 
 ``exists``
 ----------
-Returns whether the file exists as returned by the underlaying storage.
+Returns whether the file exists as returned by the underlying storage.
 
 ``is_portrait``
 ---------------
@@ -81,7 +81,7 @@ Sets the size of the image, takes an optional size tuple (x, y) as argument.
 
 ``read``
 --------
-Reads the file as done from the underlaying storage.
+Reads the file as done from the underlying storage.
 
 ``write``
 ---------
@@ -90,7 +90,7 @@ data or an instance of ``django.core.files.base.ContentFile``.
 
 ``delete``
 ----------
-Deletes the file from underlaying storage.
+Deletes the file from underlying storage.
 
 ``serialize``
 -------------
