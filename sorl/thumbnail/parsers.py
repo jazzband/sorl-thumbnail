@@ -1,7 +1,4 @@
-# coding=utf-8
 import re
-
-from django.utils import six
 
 from sorl.thumbnail.helpers import ThumbnailError, toint
 
@@ -100,7 +97,7 @@ def parse_cropbox(cropbox):
     """
     Returns x, y, x2, y2 tuple for cropping.
     """
-    if isinstance(cropbox, six.text_type):
+    if isinstance(cropbox, str):
         return tuple([int(x.strip()) for x in cropbox.split(',')])
     else:
         return tuple(cropbox)

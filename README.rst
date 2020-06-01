@@ -1,11 +1,11 @@
-|travis| |docs| |pypi| |jazzband-badge| |coveralls|
+|jazzband-badge| |pypi| |docs| |travis| |codecov|
 
 Thumbnails for Django.
 
 Features at a glance
 ====================
 
-- Support for Django 1.11, 2.0, and 2.1 following the `Django supported versions policy`_
+- Support for Django 1.11, 2.2 and 3.0 following the `Django supported versions policy`_
 - Python 3 support
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and `vipsthumbnail`_
@@ -14,7 +14,7 @@ Features at a glance
 - Admin integration with possibility to delete
 - Dummy generation (placeholders)
 - Flexible, simple syntax, generates no html
-- ImageField for model that deletes thumbnails
+- ImageField for model that deletes thumbnails (only compatible with django 1.2.5 or less)
 - CSS style cropping options
 - Back smart cropping, and remove borders from the images when cropping
 - Margin calculation for vertical positioning
@@ -73,7 +73,7 @@ Install in your project
 Then register 'sorl.thumbnail', in the 'INSTALLED_APPS' section of
 your project's settings. ::
 
-    INSTALLED_APPS = (
+    INSTALLED_APPS = [
         'django.contrib.auth',
         'django.contrib.admin',
         'django.contrib.sites',
@@ -83,7 +83,7 @@ your project's settings. ::
         'django.contrib.contenttypes',
 
         'sorl.thumbnail',
-    )
+    ]
 
 
 Templates Usage
@@ -107,7 +107,8 @@ Model Usage
 -----------
 
 Using the ImageField that automatically deletes references to itself in the key
-value store and its thumbnail references and the thumbnail files when deleted.::
+value store and its thumbnail references and the thumbnail files when deleted.
+Please note that this is only compatible with django 1.2.5 or less.::
 
     from django.db import models
     from sorl.thumbnail import ImageField
@@ -131,7 +132,7 @@ You can use the 'get_thumbnail'::
 See more examples in the section `Low level API examples`_ in the Documentation
 
 Using in combination with other thumbnailers
--------------------------------------------
+=======
 
 Alternatively, you load the templatetags by {% load sorl_thumbnail %}
 instead of traditional {% load thumbnail %}. It's especially useful in
@@ -146,8 +147,8 @@ same name (``thumbnail``) for the templatetag module::
 Frequently asked questions
 ==========================
 
-Is so slow in Amazon S3 !
--------------------------
+Is so slow in Amazon S3!
+------------------------
 
 Possible related to the implementation of your Amazon S3 Backend, see the `issue #351`_
 due the storage backend reviews if there is an existing thumbnail when tries to
@@ -168,8 +169,9 @@ So it will avoid to overly query the S3 API.
 .. |pypi| image:: https://img.shields.io/pypi/v/sorl-thumbnail.svg
     :target: https://pypi.python.org/pypi/sorl-thumbnail
     :alt: sorl-thumbnail on PyPI
-.. |coveralls| image:: https://coveralls.io/repos/jazzband//sorl-thumbnail/badge.png?branch=master
-    :target: https://coveralls.io/r/jazzband//sorl-thumbnail?branch=master
+.. |codecov| image:: https://codecov.io/gh/jazzband/sorl-thumbnail/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/jazzband/sorl-thumbnail
+   :alt: Coverage
 .. |jazzband-badge| image:: https://jazzband.co/static/img/badge.svg
    :target: https://jazzband.co/
    :alt: Jazzband

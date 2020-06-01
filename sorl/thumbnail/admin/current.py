@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import logging
 
 from django import forms
@@ -57,8 +56,8 @@ class AdminImageMixin(object):
     show nicer form widget
     """
 
-    def formfield_for_dbfield(self, db_field, **kwargs):
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
         if isinstance(db_field, ImageField):
             return db_field.formfield(widget=AdminImageWidget)
         sup = super(AdminImageMixin, self)
-        return sup.formfield_for_dbfield(db_field, **kwargs)
+        return sup.formfield_for_dbfield(db_field, request, **kwargs)

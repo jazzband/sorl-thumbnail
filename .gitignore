@@ -16,6 +16,7 @@ sdist/
 var/
 *.egg-info/
 *.egg
+.eggs
 .installed.cfg
 
 # Installer logs

@@ -1,7 +1,3 @@
-# encoding=utf-8
-
-from __future__ import unicode_literals, print_function
-
 import sys
 
 from django.core.management.base import LabelCommand, CommandError

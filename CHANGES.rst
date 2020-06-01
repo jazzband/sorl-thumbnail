@@ -1,6 +1,40 @@
-=========
-Changelog
-=========
+=======
+Changes
+=======
+
+
+12.6.3
+======
+
+* Deprecate Python 2 compatibility shims in favor of Python 3 only codebase. #623
+* Fix README on notes about ImageField cleaning up references on delete. #624
+* Fix image ratios with EXIF orientation. #619
+* Fix test coverage tracking. #622 and #617
+
+
+12.6.2
+======
+
+* Fix rST syntax errors from 12.6.0 and 12.6.1 that blocked release. #613
+* Improve QA setup and add rST validation to Travis and tox test matrix. #613
+
+
+12.6.1
+======
+
+* Deprecate explicit support for Python 3.4 and 3.5 in order to simplify the test matrix #610
+* Add requirement for ``setuptools_scm`` to automatically resolve version from git tags #610
+* Removed property ``thumbnail.__version__`` #610
+
+
+12.6.0
+======
+
+* Add Cropbox feature in Wand/Convert Engine
+* Add testing for Django 2.2
+* Remove "django.utils.six" to support Django 3.0+
+* Remove Python 2 support
+
 
 12.5.0
 ======
@@ -44,17 +78,3 @@ contributors. These are some of the highlights:
 * Better error detection and handling in some cases (#492)
 * Improve automated testing
 * Improve documentation
-
-
-12.4
-====
-
-Although you can find references to this version number in the Git history of
-this project, this version was never released to PyPI.
-
-
-12.4a1
-======
-
-This is the most recent release of this project to PyPI before the migration to
-Jazzband.

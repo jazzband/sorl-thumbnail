@@ -1,5 +1,3 @@
-from __future__ import with_statement, unicode_literals
-
 from django.db import models
 from django.db.models import Q
 from django import forms
