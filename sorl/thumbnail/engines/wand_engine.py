@@ -3,6 +3,7 @@ Wand (>=v0.3.0) engine for Sorl-thumbnail
 '''
 
 from wand.image import Image
+from wand.version import MAGICK_VERSION_NUMBER
 from wand import exceptions
 from sorl.thumbnail.engines.base import EngineBase
 
@@ -53,12 +54,18 @@ class Engine(EngineBase):
     def _colorspace(self, image, colorspace):
         if colorspace == 'RGB':
             if image.alpha_channel:
-                image.type = 'truecolormatte'
+                if MAGICK_VERSION_NUMBER < 0x700:
+                    image.type = 'truecolormatte'
+                else:
+                    image.type = 'truecoloralpha'
             else:
                 image.type = 'truecolor'
         elif colorspace == 'GRAY':
             if image.alpha_channel:
-                image.type = 'grayscalematte'
+                if MAGICK_VERSION_NUMBER < 0x700:
+                    image.type = 'grayscalematte'
+                else:
+                    image.type = 'grayscalealpha'
             else:
                 image.type = 'grayscale'
         else:
