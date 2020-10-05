@@ -18,7 +18,7 @@ class SortedJSONEncoder(json.JSONEncoder):
 
     def __init__(self, **kwargs):
         kwargs['sort_keys'] = True
-        super(SortedJSONEncoder, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 def toint(number):

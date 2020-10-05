@@ -62,7 +62,7 @@ class KVStore(KVStoreBase):
     # environments.
 
     def __init__(self):
-        super(KVStore, self).__init__()
+        super().__init__()
         self.filename = settings.THUMBNAIL_DBM_FILE
         self.mode = settings.THUMBNAIL_DBM_MODE
 

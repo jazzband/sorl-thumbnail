@@ -10,7 +10,7 @@ class EMPTY_VALUE:
 
 class KVStore(KVStoreBase):
     def __init__(self):
-        super(KVStore, self).__init__()
+        super().__init__()
 
     @property
     def cache(self):

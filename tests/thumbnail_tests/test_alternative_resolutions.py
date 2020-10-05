@@ -18,11 +18,11 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
 
     def setUp(self):
         settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS = [1.5, 2]
-        super(AlternativeResolutionsTest, self).setUp()
+        super().setUp()
         self.maxDiff = None
 
     def tearDown(self):
-        super(AlternativeResolutionsTest, self).tearDown()
+        super().tearDown()
         settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS = []
 
     def test_retina(self):

@@ -22,7 +22,7 @@ class AdminImageWidget(forms.ClearableFileInput):
     template_with_clear = '<label>%(clear_checkbox_label)s: %(clear)s</label>'
 
     def render(self, name, value, attrs=None, **kwargs):
-        output = super(AdminImageWidget, self).render(name, value, attrs, **kwargs)
+        output = super().render(name, value, attrs, **kwargs)
         if value and hasattr(value, 'url'):
             ext = 'JPEG'
             try:
@@ -59,5 +59,4 @@ class AdminImageMixin:
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if isinstance(db_field, ImageField):
             return db_field.formfield(widget=AdminImageWidget)
-        sup = super(AdminImageMixin, self)
-        return sup.formfield_for_dbfield(db_field, request, **kwargs)
+        return super().formfield_for_dbfield(db_field, request, **kwargs)

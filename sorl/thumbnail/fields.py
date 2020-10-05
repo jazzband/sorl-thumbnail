@@ -31,7 +31,7 @@ class ImageField(models.ImageField):
     def formfield(self, **kwargs):
         defaults = {'form_class': ImageFormField}
         defaults.update(kwargs)
-        return super(ImageField, self).formfield(**defaults)
+        return super().formfield(**defaults)
 
     def save_form_data(self, instance, data):
         if data is not None:
@@ -49,7 +49,7 @@ class ImageFormField(forms.FileField):
         Checks that the file-upload field data contains a valid image (GIF,
         JPG, PNG, possibly others -- whatever the engine supports).
         """
-        f = super(ImageFormField, self).to_python(data)
+        f = super().to_python(data)
         if f is None:
             return None
 
