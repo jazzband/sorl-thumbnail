@@ -7,13 +7,6 @@ python:
 env:
   - TOXENV=qa
 
-  - DJANGO=1.11 PACKAGE=pil
-  - DJANGO=1.11 PACKAGE=imagemagick
-  - DJANGO=1.11 PACKAGE=graphicsmagick
-  - DJANGO=1.11 PACKAGE=redis
-  - DJANGO=1.11 PACKAGE=wand
-  - DJANGO=1.11 PACKAGE=dbm
-
   - DJANGO=2.2  PACKAGE=pil
   - DJANGO=2.2  PACKAGE=imagemagick
   - DJANGO=2.2  PACKAGE=graphicsmagick

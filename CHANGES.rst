@@ -2,6 +2,10 @@
 Changes
 =======
 
+Next Release
+============
+* Drop support for Django 1.11
+
 
 12.6.3
 ======
