@@ -5,12 +5,13 @@ from PIL import Image
 
 from django.template.loader import render_to_string
 from django.test import Client, TestCase
+from django.test.utils import override_settings
 import pytest
 
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from .models import Item
-from .utils import BaseTestCase, override_custom_settings, DATA_DIR
+from .utils import BaseTestCase, DATA_DIR
 
 
 pytestmark = pytest.mark.django_db
@@ -136,7 +137,7 @@ class TemplateTestCaseB(BaseTestCase):
 
 class TemplateTestCaseClient(TestCase):
     def test_empty_error(self):
-        with override_custom_settings(settings, THUMBNAIL_DEBUG=False):
+        with override_settings(THUMBNAIL_DEBUG=False):
             from django.core.mail import outbox
 
             client = Client()
