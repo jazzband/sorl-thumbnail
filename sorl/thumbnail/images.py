@@ -43,7 +43,7 @@ def deserialize_image_file(s):
     return image_file
 
 
-class BaseImageFile(object):
+class BaseImageFile:
     size = []
 
     def exists(self):

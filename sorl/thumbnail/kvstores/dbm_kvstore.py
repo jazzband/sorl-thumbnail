@@ -33,7 +33,7 @@ else:
         fcntl.lockf(f.fileno(), fcntl.LOCK_UN)
 
 
-class DBMContext(object):
+class DBMContext:
     """
     A context manager to access the key-value store in a concurrent-safe manner.
     """
@@ -62,7 +62,7 @@ class KVStore(KVStoreBase):
     # environments.
 
     def __init__(self):
-        super(KVStore, self).__init__()
+        super().__init__()
         self.filename = settings.THUMBNAIL_DBM_FILE
         self.mode = settings.THUMBNAIL_DBM_MODE
 

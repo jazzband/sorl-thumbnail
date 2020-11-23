@@ -5,7 +5,7 @@ from sorl.thumbnail.conf import settings
 
 class KVStore(KVStoreBase):
     def __init__(self):
-        super(KVStore, self).__init__()
+        super().__init__()
 
         if hasattr(settings, 'THUMBNAIL_REDIS_URL'):
             self.connection = redis.from_url(settings.THUMBNAIL_REDIS_URL)

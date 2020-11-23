@@ -4,7 +4,7 @@ from sorl.thumbnail.parsers import parse_crop
 from sorl.thumbnail.parsers import parse_cropbox
 
 
-class EngineBase(object):
+class EngineBase:
     """
     ABC for Thumbnail engines, methods are static
     """

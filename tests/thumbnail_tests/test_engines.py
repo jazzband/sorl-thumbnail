@@ -254,7 +254,7 @@ class SimpleTestCase(BaseTestCase):
 
 class CropTestCase(BaseTestCase):
     def setUp(self):
-        super(CropTestCase, self).setUp()
+        super().setUp()
 
         # portrait
         name = 'portrait.jpg'
@@ -393,7 +393,7 @@ class CropTestCase(BaseTestCase):
 # so we cannot test for pixel color
 class CropBoxTestCase(BaseTestCase):
     def setUp(self):
-        super(CropBoxTestCase, self).setUp()
+        super().setUp()
 
         # portrait
         name = 'portrait.jpg'
@@ -539,7 +539,7 @@ class DummyTestCase(unittest.TestCase):
         self.BACKEND = get_module_class(settings.THUMBNAIL_BACKEND)()
 
     def tearDown(self):
-        super(DummyTestCase, self).tearDown()
+        super().tearDown()
         settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS = []
 
     def test_dummy_tags(self):

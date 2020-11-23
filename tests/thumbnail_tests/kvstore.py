@@ -1,7 +1,7 @@
 from sorl.thumbnail.kvstores.cached_db_kvstore import KVStore
 
 
-class KVlogHandler(object):
+class KVlogHandler:
     _log = []
     _active = False
 
@@ -22,18 +22,18 @@ class KVlogHandler(object):
 kvlog = KVlogHandler()
 
 
-class TestKvStoreMixin(object):
+class TestKvStoreMixin:
     def get(self, *args, **kwargs):
         kvlog.log('get')
-        return super(TestKvStoreMixin, self).get(*args, **kwargs)
+        return super().get(*args, **kwargs)
 
     def set(self, *args, **kwargs):
         kvlog.log('set')
-        return super(TestKvStoreMixin, self).set(*args, **kwargs)
+        return super().set(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         kvlog.log('delete')
-        return super(TestKvStoreMixin, self).delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)
 
 
 class TestKVStore(TestKvStoreMixin, KVStore):

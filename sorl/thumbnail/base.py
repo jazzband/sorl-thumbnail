@@ -19,7 +19,7 @@ EXTENSIONS = {
 }
 
 
-class ThumbnailBackend(object):
+class ThumbnailBackend:
     """
     The main class for sorl-thumbnail, you can subclass this if you for example
     want to change the way destination filename is generated.
