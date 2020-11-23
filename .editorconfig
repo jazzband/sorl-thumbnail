@@ -20,6 +20,6 @@ trim_trailing_whitespace = false
 [Makefile]
 indent_style = tab
 
-[.travis.yml]
+[*.yml]
 indent_style = space
 indent_size = 2

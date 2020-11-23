@@ -110,9 +110,9 @@ class Engine(EngineBase):
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         result = p.stdout.read().strip()
-        if result and result != b'unknown':
+        try:
             return int(result)
-        else:
+        except ValueError:
             return None
 
     def _orientation(self, image):
