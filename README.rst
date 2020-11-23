@@ -1,4 +1,4 @@
-|jazzband-badge| |pypi| |docs| |travis| |codecov|
+|jazzband-badge| |pypi| |docs| |gh-actions| |codecov|
 
 Thumbnails for Django.
 
@@ -161,8 +161,8 @@ A fast workaround if you are not willing to tweak your storage backend is to set
 So it will avoid to overly query the S3 API.
 
 
-.. |travis| image:: https://travis-ci.org/jazzband/sorl-thumbnail.svg?branch=master
-    :target: https://travis-ci.org/jazzband/sorl-thumbnail
+.. |gh-actions| image:: https://github.com/jazzband/sorl-thumbnail/workflows/Test/badge.svg
+    :target: https://github.com/jazzband/sorl-thumbnail/actions
 .. |docs| image:: https://readthedocs.org/projects/pip/badge/?version=latest
     :alt: Documentation for latest version
     :target: http://sorl-thumbnail.rtfd.org/en/latest/
