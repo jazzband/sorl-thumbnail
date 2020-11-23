@@ -11,7 +11,7 @@ with other developers, join us in the channel #sorl-thumnbnail at freenode.net
 Running testsuit
 ================
 
-For occasional developers we recommend using `Travis CI`_ to run testsuit,
+For occasional developers we recommend using `GitHub Actions`_ to run testsuite,
 for those who want to run tests locally, read on.
 
 Since sorl-thumbnail supports a variety of image backends, python and
@@ -39,7 +39,7 @@ For full list of tox environments, see ``tox.ini``
 You can get away without using Vagrant if you install all packages locally yourself,
 however, this is not recommended.
 
-.. _Travis CI: https://travis-ci.org/jazzband/sorl-thumbnail
+.. _GitHub Actions: https://github.com/jazzband/sorl-thumbnail/actions
 .. _Vagrant: http://www.vagrantup.com/
 .. _tox: https://testrun.org/tox/latest/
 .. _Install Vagrant: http://docs.vagrantup.com/v2/installation/index.html
