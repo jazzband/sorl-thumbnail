@@ -2,11 +2,16 @@
 Changes
 =======
 
-Next Release
-============
+12.7.0
+======
 * Drop support for Django 1.11
 * Added support for Django 3.1
 * Moved to GitHub Action for continuous integration.
+* Correction in convert_engine with unknown exif orientation
+* Using more resilient _get_exif_orientation logic in convert engine
+* Update wand_engine.py for ImageMagick 7
+* Fix cannot write mode RGBA as JPEG when thumbnailing a GIF
+
 
 12.6.3
 ======
