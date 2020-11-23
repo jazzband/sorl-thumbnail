@@ -10,9 +10,6 @@ jobs:
       max-parallel: 5
       matrix:
         python-version: [3.6, 3.7, 3.8]
-        package: [pil, imagemagick, graphicsmagick, redis, wand, dbm]
-        env:
-        - TOXENV: qa
 
     steps:
     - uses: actions/checkout@v2
@@ -48,11 +45,7 @@ jobs:
         python -m pip install --upgrade tox tox-gh-actions
 
     - name: Tox tests
-      shell: bash
-      run: |
-        tox
-      env:
-        PACKAGE: ${{ matrix.package }}
+      run: tox -v
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
