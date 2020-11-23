@@ -6,6 +6,7 @@ Next Release
 ============
 * Drop support for Django 1.11
 * Added support for Django 3.1
+* Moved to GitHub Action for continuous integration.
 
 12.6.3
 ======
