@@ -11,6 +11,8 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8]
         package: [pil, imagemagick, graphicsmagick, redis, wand, dbm]
+        env:
+        - TOXENV: qa
 
     steps:
     - uses: actions/checkout@v2
