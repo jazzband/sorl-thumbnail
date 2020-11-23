@@ -183,6 +183,12 @@ class SimpleTestCase(BaseTestCase):
         img = Image.open(th.storage.path(th.name))
         self.assertTrue(self.is_transparent(img))
 
+    def test_transparency_gif_to_jpeg(self):
+        path = 'data/animation_w_transparency.gif'
+        th = self.BACKEND.get_thumbnail(path, '11x11', format='JPEG')
+        img = Image.open(th.storage.path(th.name))
+        self.assertFalse(self.is_transparent(img))
+
     def test_image_file_deserialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         default.kvstore.set(im)

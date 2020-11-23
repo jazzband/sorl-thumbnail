@@ -140,7 +140,9 @@ class Engine(EngineBase):
             # Pillow JPEG doesn't allow RGBA anymore. It was converted to RGB before.
             if image.mode == 'RGBA' and format != 'JPEG':
                 return image  # RGBA is just RGB + Alpha
-            if image.mode == 'LA' or (image.mode == 'P' and 'transparency' in image.info):
+            if image.mode == 'LA' or (
+                image.mode == 'P' and 'transparency' in image.info and format != 'JPEG'
+            ):
                 newimage = image.convert('RGBA')
                 transparency = image.info.get('transparency')
                 if transparency is not None:
