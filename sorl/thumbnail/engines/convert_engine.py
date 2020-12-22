@@ -13,7 +13,7 @@ from sorl.thumbnail.engines.base import EngineBase
 
 logger = logging.getLogger(__name__)
 
-size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
+size_re = re.compile(r'^(?:.+) (?:[A-Z0-9]+) (?P<x>\d+)x(?P<y>\d+)')
 
 
 class Engine(EngineBase):
@@ -73,7 +73,9 @@ class Engine(EngineBase):
         """
         Returns the backend image objects from a ImageFile instance
         """
-        with NamedTemporaryFile(mode='wb', delete=False) as fp:
+        _, suffix = os.path.splitext(source.name)
+
+        with NamedTemporaryFile(mode='wb', delete=False, suffix=suffix) as fp:
             fp.write(source.read())
         return {'source': fp.name, 'options': OrderedDict(), 'size': None}
 
