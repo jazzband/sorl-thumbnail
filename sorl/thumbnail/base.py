@@ -167,7 +167,10 @@ class ThumbnailBackend:
         """
         file_name, dot_file_ext = os.path.splitext(source_thumb.name)
         for resolution in settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS:
-            resolution_geometry = (source_thumb.width * resolution, source_thumb.height * resolution)
+            resolution_geometry = (
+                source_thumb.width * resolution,
+                source_thumb.height * resolution
+            )
             resolution_options = options.copy()
             if 'crop' in options and isinstance(options['crop'], str):
                 crop = options['crop'].split(" ")
