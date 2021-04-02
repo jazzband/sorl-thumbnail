@@ -125,8 +125,7 @@ class ThumbnailBackend:
             try:
                 self._create_thumbnail(source_image, geometry_string, options,
                                        thumbnail)
-                self._create_alternative_resolutions(source_image, geometry_string,
-                                                     options, thumbnail.name)
+                self._create_alternative_resolutions(source_image, thumbnail, options)
             finally:
                 default.engine.cleanup(source_image)
 
@@ -147,8 +146,7 @@ class ThumbnailBackend:
             image_file.delete()
         default.kvstore.delete(image_file)
 
-    def _create_thumbnail(self, source_image, geometry_string, options,
-                          thumbnail):
+    def _create_thumbnail(self, source_image, geometry_string, options, thumbnail):
         """
         Creates the thumbnail by using default.engine
         """
@@ -162,18 +160,14 @@ class ThumbnailBackend:
         size = default.engine.get_image_size(image)
         thumbnail.set_size(size)
 
-    def _create_alternative_resolutions(self, source_image, geometry_string,
-                                        options, name):
+    def _create_alternative_resolutions(self, source_image, source_thumb, options):
         """
         Creates the thumbnail by using default.engine with multiple output
         sizes.  Appends @<ratio>x to the file name.
         """
-        ratio = default.engine.get_image_ratio(source_image, options)
-        geometry = parse_geometry(geometry_string, ratio)
-        file_name, dot_file_ext = os.path.splitext(name)
-
+        file_name, dot_file_ext = os.path.splitext(source_thumb.name)
         for resolution in settings.THUMBNAIL_ALTERNATIVE_RESOLUTIONS:
-            resolution_geometry = (int(geometry[0] * resolution), int(geometry[1] * resolution))
+            resolution_geometry = (source_thumb.width * resolution, source_thumb.height * resolution)
             resolution_options = options.copy()
             if 'crop' in options and isinstance(options['crop'], str):
                 crop = options['crop'].split(" ")
