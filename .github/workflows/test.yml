@@ -8,8 +8,11 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8]
-        target: [pil, imagemagick, graphicsmagick, redis, wand, dbm, qa]
+        target: [pil, imagemagick, graphicsmagick, redis, wand, dbm]
 
+        include:
+          - python-version: '3.8'
+            target: 'qa'
     steps:
     - uses: actions/checkout@v2
 
