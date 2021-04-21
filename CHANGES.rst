@@ -3,6 +3,7 @@ Changes
 =======
 
 * Drop support for Django 3.0
+* Added support for Django 3.2
 
 
 12.7.0
