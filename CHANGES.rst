@@ -2,6 +2,9 @@
 Changes
 =======
 
+* Drop support for Django 3.0
+
+
 12.7.0
 ======
 * Drop support for Django 1.11
