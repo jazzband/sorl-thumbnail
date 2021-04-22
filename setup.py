@@ -1,13 +1,4 @@
 from setuptools import setup, find_packages
-from setuptools.command.test import test
-
-
-class TestCommand(test):
-    def run(self):
-        from tests.runtests import runtests
-
-        runtests()
-
 
 setup(
     name='sorl-thumbnail',
@@ -41,6 +32,5 @@ setup(
         'Framework :: Django :: 3.1',
         'Framework :: Django :: 3.2',
     ],
-    cmdclass={"test": TestCommand},
     setup_requires=['setuptools_scm'],
 )
