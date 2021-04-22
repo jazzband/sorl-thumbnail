@@ -47,13 +47,10 @@ jobs:
         python -m pip install --upgrade tox tox-gh-actions
 
     - name: Tox tests
-      shell: bash
       run: |
-        tox
-      env:
-        TARGET: ${{ matrix.target }}
+        tox -v
 
-    - name: Upload coverage to Codecov
+    - name: Upload coverage
       uses: codecov/codecov-action@v1
       with:
         name: Python ${{ matrix.python-version }}
