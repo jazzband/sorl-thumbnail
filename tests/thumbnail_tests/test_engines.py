@@ -322,7 +322,7 @@ class CropTestCase(BaseTestCase):
             im = engine.get_image(th)
 
             self.assertEqual(mean_pixel(0, 50), 255)
-            self.assertEqual(mean_pixel(45, 50), 255)
+            self.assertEqual(254 <= mean_pixel(45, 50) <= 255, True)
             self.assertEqual(250 < mean_pixel(49, 50) <= 255, True)
             self.assertEqual(mean_pixel(55, 50), 0)
             self.assertEqual(mean_pixel(99, 50), 0)
