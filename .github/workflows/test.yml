@@ -49,6 +49,8 @@ jobs:
     - name: Tox tests
       run: |
         tox -v
+      env:
+        TARGET: ${{ matrix.target }}
 
     - name: Upload coverage
       uses: codecov/codecov-action@v1
