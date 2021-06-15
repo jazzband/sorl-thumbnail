@@ -62,7 +62,7 @@ class ThumbnailBackend:
 
             return getattr(settings, 'THUMBNAIL_FORMAT', default_settings.THUMBNAIL_FORMAT)
 
-    def get_thumbnail(self, file_, geometry_string, **options):
+    def get_thumbnail(self, file_, geometry_string, storage_class=None, **options):
         """
         Returns thumbnail as an ImageFile instance for file with geometry and
         options given. First it will try to get it from the key value store,
@@ -90,8 +90,11 @@ class ThumbnailBackend:
             if value != getattr(default_settings, attr):
                 options.setdefault(key, value)
 
+        if storage_class is None:
+            storage_class = default.storage
+
         name = self._get_thumbnail_filename(source, geometry_string, options)
-        thumbnail = ImageFile(name, default.storage)
+        thumbnail = ImageFile(name, storage_class)
         cached = default.kvstore.get(thumbnail)
 
         if cached:
@@ -126,7 +129,7 @@ class ThumbnailBackend:
                 self._create_thumbnail(source_image, geometry_string, options,
                                        thumbnail)
                 self._create_alternative_resolutions(source_image, geometry_string,
-                                                     options, thumbnail.name)
+                                                     options, thumbnail.name, storage_class)
             finally:
                 default.engine.cleanup(source_image)
 
@@ -163,7 +166,7 @@ class ThumbnailBackend:
         thumbnail.set_size(size)
 
     def _create_alternative_resolutions(self, source_image, geometry_string,
-                                        options, name):
+                                        options, name, storage_class):
         """
         Creates the thumbnail by using default.engine with multiple output
         sizes.  Appends @<ratio>x to the file name.
@@ -189,7 +192,7 @@ class ThumbnailBackend:
                 'suffix': '@%sx' % resolution,
                 'file_ext': dot_file_ext
             }
-            thumbnail = ImageFile(thumbnail_name, default.storage)
+            thumbnail = ImageFile(thumbnail_name, storage_class)
             default.engine.write(image, resolution_options, thumbnail)
             size = default.engine.get_image_size(image)
             thumbnail.set_size(size)
