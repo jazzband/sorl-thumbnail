@@ -13,7 +13,7 @@ from sorl.thumbnail.engines.base import EngineBase
 
 logger = logging.getLogger(__name__)
 
-size_re = re.compile(r'^(?:.+) (?:[A-Z]+) (?P<x>\d+)x(?P<y>\d+)')
+size_re = re.compile(r'^(?:.+) (?:[A-Z0-9]+) (?P<x>\d+)x(?P<y>\d+)')
 
 
 class Engine(EngineBase):
@@ -51,15 +51,16 @@ class Engine(EngineBase):
 
         with NamedTemporaryFile(suffix=suffix, mode='rb') as fp:
             args.append(fp.name)
-            args = map(smart_str, args)
+            args = list(map(smart_str, args))
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             returncode = p.wait()
             out, err = p.communicate()
 
             if returncode:
                 raise EngineError(
-                    "The command %r exited with a non-zero exit code and printed this to stderr: %s"
-                    % (args, err)
+                    "The command '%s' exited with a non-zero exit code "
+                    "and printed this to stderr:\n%s"
+                    % (" ".join(args), err)
                 )
             elif err:
                 logger.error("Captured stderr: %s", err)
@@ -73,7 +74,10 @@ class Engine(EngineBase):
         """
         Returns the backend image objects from a ImageFile instance
         """
-        with NamedTemporaryFile(mode='wb', delete=False) as fp:
+
+        _, suffix = os.path.splitext(source.name)
+
+        with NamedTemporaryFile(mode='wb', delete=False, suffix=suffix) as fp:
             fp.write(source.read())
         return {'source': fp.name, 'options': OrderedDict(), 'size': None}
 
