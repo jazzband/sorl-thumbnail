@@ -1,16 +1,30 @@
 import sys
 
+from argparse import RawTextHelpFormatter
 from django.core.management.base import LabelCommand, CommandError
 
 from sorl.thumbnail import default
 from sorl.thumbnail.images import delete_all_thumbnails
 
 
+VALID_LABELS = ['cleanup', 'clear', 'clear_delete_referenced', 'clear_delete_all']
+
+
 class Command(LabelCommand):
     help = (
-        'Handles thumbnails and key value store'
+        "Handles thumbnails and key-value store. Usage:\n"
+        "\n"
+        "    manage.py thumbnail <label>\n"
+        "\n"
+        "Valid <label>s are:\n"
+        "\n"
+        "    {}\n"
+        "\n"
+        "Documentation: https://sorl-thumbnail.readthedocs.io/en/latest/management.html"
+    ).format(", ".join(VALID_LABELS))
+    missing_args_message = "Enter a valid label: {}".format(
+        ", ".join(VALID_LABELS)
     )
-    missing_args_message = 'Enter one of [cleanup, clear clear_delete_referenced clear_delete_all]'
 
     def handle(self, *labels, **options):
         verbosity = int(options.get('verbosity'))
@@ -31,7 +45,7 @@ class Command(LabelCommand):
 
         label = labels[0]
 
-        if label not in ['cleanup', 'clear', 'clear_delete_referenced', 'clear_delete_all']:
+        if label not in VALID_LABELS:
             raise CommandError('`%s` unknown action' % label)
 
         if label == 'cleanup':
@@ -71,3 +85,12 @@ class Command(LabelCommand):
 
             if verbosity >= 1:
                 print('[Done]', file=stdout)
+
+    def create_parser(self, *args, **kwargs):
+        """
+        Necessary for multi-line help-text.
+        Source: https://stackoverflow.com/a/35470682/405682
+        """
+        parser = super(Command, self).create_parser(*args, **kwargs)
+        parser.formatter_class = RawTextHelpFormatter
+        return parser
