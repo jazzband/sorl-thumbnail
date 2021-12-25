@@ -91,7 +91,7 @@ class ThumbnailBackend:
                 options.setdefault(key, value)
 
         name = self._get_thumbnail_filename(source, geometry_string, options)
-        thumbnail = ImageFile(name, file_.storage)
+        thumbnail = ImageFile(name, default.storage)
         cached = default.kvstore.get(thumbnail)
 
         if cached:
