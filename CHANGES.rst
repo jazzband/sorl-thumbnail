@@ -2,8 +2,14 @@
 Changes
 =======
 
-* Drop support for Django 3.0
-* Added support for Django 3.2
+12.8.0
+======
+* Drop support for Django 3.0.
+* Added support for Django 3.2 and 4.0.
+* Confirmed Python 3.9 and 3.10 support.
+* Adapted size regex getting size from the identify output. #532
+* Display possible ``thumbnail`` command labels in command help.
+* Added Jazzband code of conduct.
 
 
 12.7.0
