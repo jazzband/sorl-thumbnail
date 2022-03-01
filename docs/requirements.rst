@@ -18,10 +18,13 @@ a **cached database** which requires no special installation to your normal
 Django setup besides installing a proper cache like memcached **or** you can
 setup **redis** which requires a little bit more work.
 
+Since Django 4.0, the Redis cache can be configured at Django level, so any
+alternative Key Value Store in sorl-thumbnail is now deprecated.
+
 Cached DB
 ---------
 All you need to use the cached database key value store is a database and `cache
-<https://docs.djangoproject.com/en/dev/topics/cache/>`_ setup properly using
+<https://docs.djangoproject.com/en/stable/topics/cache/>`_ setup properly using
 memcached. This cache needs to be really fast so **using anything else than
 memcached is not recommended**.
 
