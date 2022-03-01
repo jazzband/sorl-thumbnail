@@ -31,13 +31,20 @@ your own implementation.
 
 - Default: ``'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'``
 
+.. deprecated:: 12.11.0
+
+    Using any other KVStore than the Cached Db KVStore is deprecated.
+    Please configure the cache that suits your use case at Django level and set
+    this cache alias in ``THUMBNAIL_CACHE``.
+
 sorl-thumbnail needs a Key Value Store to :doc:`/operation`.
 sorl-thumbnail ships with support for three Key Value Stores:
 
 Cached DB
 ---------
 ``sorl.thumbnail.kvstores.cached_db_kvstore.KVStore``. This is the default and
-preferred Key Value Store.
+preferred Key Value Store. It uses the cache configured at the Django project
+level.
 
 Features
 ^^^^^^^^
@@ -50,6 +57,11 @@ Features
 
 Redis
 -----
+From Django 4.0, you can configure a Redis cache at Django level and then use
+the Cached DB store while using the configured cache alias in the
+``THUMBNAIL_CACHE`` setting. Therefore the Redis store in sorl-thumbnail and its
+associated ``THUMBNAIL_REDIS*`` settings maybe removed in the future.
+
 ``sorl.thumbnail.kvstores.redis_kvstore.KVStore``. It requires you to install a
 Redis server as well as a `redis python client
 <https://github.com/andymccurdy/redis-py/>`_.
@@ -241,8 +253,11 @@ Only applicable for the Cached DB Key Value Store.
 
 - Default: ``'default'``
 
-Cache configuration for Cached DB Key Value Store. Defaults to the ``'default'`` cache
-but some applications might have multiple cache clusters.
+Django configured cache alias to use for Cached DB Key Value Store. Defaults to
+the ``'default'`` cache but you can use any other cache configured in the Django
+project.
+
+- ``https://docs.djangoproject.com/en/stable/topics/cache/``
 
 
 ``THUMBNAIL_KEY_PREFIX``
