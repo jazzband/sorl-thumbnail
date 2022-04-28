@@ -10,6 +10,7 @@ except ImportError:
     import ImageDraw
     import ImageMode
 
+ANTIALIAS = Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.ANTIALIAS
 EXIF_ORIENTATION = 0x0112
 
 
@@ -230,7 +231,7 @@ class Engine(EngineBase):
     _get_image_entropy = staticmethod(histogram_entropy)
 
     def _scale(self, image, width, height):
-        return image.resize((width, height), resample=Image.ANTIALIAS)
+        return image.resize((width, height), resample=ANTIALIAS)
 
     def _crop(self, image, width, height, x_offset, y_offset):
         return image.crop((x_offset, y_offset,
