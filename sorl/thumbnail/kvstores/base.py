@@ -1,3 +1,5 @@
+import warnings
+
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import serialize, deserialize, ThumbnailError
 from sorl.thumbnail.images import serialize_image_file, deserialize_image_file
@@ -18,6 +20,15 @@ def del_prefix(key):
 
 
 class KVStoreBase:
+    def __init__(self):
+        if not getattr(self, '_cached_db_kvstore', False):
+            warnings.warn(
+                "Using any other KVStore than Cached Db KVStore is deprecated. "
+                "Please configure the cache that suits your use case at Django "
+                "level and set this cache alias in THUMBNAIL_CACHE.",
+                DeprecationWarning
+            )
+
     def get(self, image_file):
         """
         Gets the ``image_file`` from store. Returns ``None`` if not found.

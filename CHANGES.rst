@@ -2,6 +2,11 @@
 Changes
 =======
 
+Unreleased
+==========
+* Deprecated ``THUMBNAIL_KVSTORE``. Only the Django cache-based store will be
+  used in a future version.
+
 12.8.0
 ======
 * Drop support for Django 3.0.
