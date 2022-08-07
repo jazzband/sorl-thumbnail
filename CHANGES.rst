@@ -7,7 +7,7 @@ Changes
 * Drop support for Django 2.2 and 3.1.
 * Added support for Django 4.1.
 * Drop support for Python 3.6.
-* Fixed Pillow ANTIALIAS deprecation warning.
+* Fixed various Pillow deprecation warnings.
 
 12.8.0
 ======
