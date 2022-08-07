@@ -23,6 +23,7 @@ DATABASES = {
         'NAME': ':memory:',
     }
 }
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 MEDIA_ROOT = pjoin(PROJ_ROOT, 'media')
 MEDIA_URL = '/media/'
 ROOT_URLCONF = 'tests.thumbnail_tests.urls'

@@ -2,6 +2,13 @@
 Changes
 =======
 
+12.9.0
+======
+* Drop support for Django 2.2 and 3.1.
+* Added support for Django 4.1.
+* Drop support for Python 3.6.
+* Fixed Pillow ANTIALIAS deprecation warning.
+
 12.8.0
 ======
 * Drop support for Django 3.0.
