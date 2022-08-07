@@ -11,6 +11,13 @@ except ImportError:
     import ImageMode
 
 ANTIALIAS = Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.ANTIALIAS
+# Image.Transpose added in 9.1.0
+FLIP_LEFT_RIGHT = (
+    Image.Transpose.FLIP_LEFT_RIGHT if hasattr(Image, 'Transpose') else Image.FLIP_LEFT_RIGHT
+)
+FLIP_TOP_BOTTOM = (
+    Image.Transpose.FLIP_TOP_BOTTOM if hasattr(Image, 'Transpose') else Image.FLIP_TOP_BOTTOM
+)
 EXIF_ORIENTATION = 0x0112
 
 
@@ -116,17 +123,17 @@ class Engine(EngineBase):
 
         if orientation:
             if orientation == 2:
-                image = image.transpose(Image.FLIP_LEFT_RIGHT)
+                image = image.transpose(FLIP_LEFT_RIGHT)
             elif orientation == 3:
                 image = image.rotate(180)
             elif orientation == 4:
-                image = image.transpose(Image.FLIP_TOP_BOTTOM)
+                image = image.transpose(FLIP_TOP_BOTTOM)
             elif orientation == 5:
-                image = image.rotate(-90, expand=1).transpose(Image.FLIP_LEFT_RIGHT)
+                image = image.rotate(-90, expand=1).transpose(FLIP_LEFT_RIGHT)
             elif orientation == 6:
                 image = image.rotate(-90, expand=1)
             elif orientation == 7:
-                image = image.rotate(90, expand=1).transpose(Image.FLIP_LEFT_RIGHT)
+                image = image.rotate(90, expand=1).transpose(FLIP_LEFT_RIGHT)
             elif orientation == 8:
                 image = image.rotate(90, expand=1)
 
