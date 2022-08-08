@@ -10,14 +10,17 @@ except ImportError:
     import ImageDraw
     import ImageMode
 
-ANTIALIAS = Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.ANTIALIAS
+if hasattr(Image, 'Resampling'):
+    ANTIALIAS = Image.Resampling.LANCZOS
+else:
+    ANTIALIAS = Image.ANTIALIAS
 # Image.Transpose added in 9.1.0
-FLIP_LEFT_RIGHT = (
-    Image.Transpose.FLIP_LEFT_RIGHT if hasattr(Image, 'Transpose') else Image.FLIP_LEFT_RIGHT
-)
-FLIP_TOP_BOTTOM = (
-    Image.Transpose.FLIP_TOP_BOTTOM if hasattr(Image, 'Transpose') else Image.FLIP_TOP_BOTTOM
-)
+if hasattr(Image, 'Transpose'):
+    FLIP_LEFT_RIGHT = Image.Transpose.FLIP_LEFT_RIGHT
+    FLIP_TOP_BOTTOM = Image.Transpose.FLIP_TOP_BOTTOM
+else:
+    FLIP_LEFT_RIGHT = Image.FLIP_LEFT_RIGHT
+    FLIP_TOP_BOTTOM = Image.FLIP_TOP_BOTTOM
 EXIF_ORIENTATION = 0x0112
 
 
