@@ -40,10 +40,10 @@ You can get away without using Vagrant if you install all packages locally yours
 however, this is not recommended.
 
 .. _GitHub Actions: https://github.com/jazzband/sorl-thumbnail/actions
-.. _Vagrant: http://www.vagrantup.com/
-.. _tox: https://testrun.org/tox/latest/
-.. _Install Vagrant: http://docs.vagrantup.com/v2/installation/index.html
-.. _Vagrant file: https://docs.vagrantup.com/v2/virtualbox/configuration.html
+.. _Vagrant: https://www.vagrantup.com/
+.. _tox: https://tox.wiki/
+.. _Install Vagrant: https://www.vagrantup.com/docs/installation
+.. _Vagrant file: https://www.vagrantup.com/docs/providers/virtualbox/configuration
 .. _vagrant-faster: https://github.com/rdsubhas/vagrant-faster
 
 Sending pull requests

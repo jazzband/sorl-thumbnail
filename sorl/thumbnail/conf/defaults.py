@@ -96,7 +96,7 @@ THUMBNAIL_DUMMY = False
 # http://placekitten.com/%(width)s/%(height)s
 # http://placekitten.com/g/%(width)s/%(height)s
 # http://placehold.it/%(width)sx%(height)s
-THUMBNAIL_DUMMY_SOURCE = 'http://dummyimage.com/%(width)sx%(height)s'
+THUMBNAIL_DUMMY_SOURCE = 'https://dummyimage.com/%(width)sx%(height)s'
 
 # Sets the source image ratio for dummy generation of images with only width
 # or height given
