@@ -9,12 +9,12 @@ pytestmark = pytest.mark.django_db
 
 class FilterTestCase(BaseTestCase):
     def test_html_filter(self):
-        text = '<img alt="A image!" src="http://dummyimage.com/800x800" />'
+        text = '<img alt="A image!" src="https://dummyimage.com/800x800" />'
         val = render_to_string('htmlfilter.html', {'text': text, }).strip()
 
         self.assertEqual(
             '<img alt="A image!" '
-            'src="/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg" />',
+            'src="/media/test/cache/91/87/9187bfc1d52b271db9730ee0377547b9.jpg" />',
             val
         )
 
@@ -29,11 +29,11 @@ class FilterTestCase(BaseTestCase):
         )
 
     def test_markdown_filter(self):
-        text = '![A image!](http://dummyimage.com/800x800)'
+        text = '![A image!](https://dummyimage.com/800x800)'
         val = render_to_string('markdownfilter.html', {'text': text, }).strip()
 
         self.assertEqual(
-            '![A image!](/media/test/cache/2e/35/2e3517d8aa949728b1ee8b26c5a7bbc4.jpg)',
+            '![A image!](/media/test/cache/91/87/9187bfc1d52b271db9730ee0377547b9.jpg)',
             val
         )
 

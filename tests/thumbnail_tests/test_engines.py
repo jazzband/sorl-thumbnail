@@ -196,7 +196,7 @@ class SimpleTestCase(BaseTestCase):
             default.kvstore.get(im).serialize_storage(),
             'tests.thumbnail_tests.storage.TestStorage',
         )
-        im = ImageFile('http://dummyimage.com/300x300/')
+        im = ImageFile('https://dummyimage.com/300x300/')
         default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
@@ -550,10 +550,10 @@ class DummyTestCase(unittest.TestCase):
         val = render_to_string('thumbnaild2.html', {'anything': None, }).strip()
         self.assertEqual(
             val,
-            '<img src="http://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>'
+            '<img src="https://dummyimage.com/300x200" width="300" height="200"><p>NOT</p>'
         )
         val = render_to_string('thumbnaild3.html', {}).strip()
-        self.assertEqual(val, '<img src="http://dummyimage.com/600x400" width="600" height="400">')
+        self.assertEqual(val, '<img src="https://dummyimage.com/600x400" width="600" height="400">')
 
         settings.THUMBNAIL_DUMMY = False
 
@@ -563,9 +563,9 @@ class DummyTestCase(unittest.TestCase):
         val = render_to_string('thumbnaild4.html', {}).strip()
         self.assertEqual(
             val,
-            '<img src="http://dummyimage.com/600x400" width="600" '
-            'height="400" srcset="http://dummyimage.com/1200x800 2x; '
-            'http://dummyimage.com/900x600 1.5x">'
+            '<img src="https://dummyimage.com/600x400" width="600" '
+            'height="400" srcset="https://dummyimage.com/1200x800 2x; '
+            'https://dummyimage.com/900x600 1.5x">'
         )
 
 

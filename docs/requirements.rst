@@ -21,16 +21,16 @@ setup **redis** which requires a little bit more work.
 Cached DB
 ---------
 All you need to use the cached database key value store is a database and `cache
-<http://docs.djangoproject.com/en/dev/topics/cache/>`_ setup properly using
+<https://docs.djangoproject.com/en/dev/topics/cache/>`_ setup properly using
 memcached. This cache needs to be really fast so **using anything else than
-memcached is not recomended**.
+memcached is not recommended**.
 
 Redis
 -----
 Redis is a fast key value store also suited for the job. To use the `redis`_ key
 value store you first need to install the `redis server
-<http://code.google.com/p/redis/>`_.  After that install the `redis client
-<https://github.com/andymccurdy/redis-py/>`_::
+<https://redis.io/>`_.  After that install the `redis client
+<https://github.com/redis/redis-py/>`_::
 
     pip install redis
 
@@ -111,12 +111,12 @@ Ubuntu installation::
     pip install Wand
 
 
-.. _Python Imaging Library: http://www.pythonware.com/products/pil/
-.. _ImageMagick: http://imagemagick.com/
+.. _Python Imaging Library: https://python-pillow.org/
+.. _ImageMagick: https://imagemagick.org/
 .. _GraphicsMagick: http://www.graphicsmagick.org/
-.. _redis: http://code.google.com/p/redis/
-.. _redis-py: https://github.com/andymccurdy/redis-py/
-.. _Django: http://www.djangoproject.com/
-.. _Python: http://www.python.org/
-.. _pgmagick: http://bitbucket.org/hhatto/pgmagick/src
-.. _wand: http://wand-py.org
+.. _redis: https://redis.io/
+.. _redis-py: https://github.com/redis/redis-py
+.. _Django: https://www.djangoproject.com/
+.. _Python: https://www.python.org/
+.. _pgmagick: https://pgmagick.readthedocs.io/
+.. _wand: https://docs.wand-py.org

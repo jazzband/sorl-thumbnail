@@ -125,7 +125,7 @@ ImageMagick ``convert`` or  GraphicsMagic ``gm convert`` command. Features:
 Wand
 ----------------------------
 ``'sorl.thumbnail.engines.wand_engine.Engine'``. This engine uses `Wand
-<http://wand-py.org>`_, a ctypes-based simple ImageMagick binding for Python. 
+<https://docs.wand-py.org/>`_, a ctypes-based simple ImageMagick binding for Python. 
 Features:
 
 * Easy to install
@@ -338,12 +338,12 @@ missing input source.
 ``THUMBNAIL_DUMMY_SOURCE``
 ==========================
 
-- Default ``http://dummyimage.com/%(width)sx%(height)s``
+- Default ``https://dummyimage.com/%(width)sx%(height)s``
 
 This is the generated thumbnail whensource of the presented thumbnail. Width and
 Height is passed to the string for formatting.  Other options are for example:
 
-- ``http://placehold.it/%(width)sx%(height)s``
+- ``https://via.placeholder.com/%(width)sx%(height)s
 - ``http://placekitten.com/%(width)s/%(height)s`` 
 
 

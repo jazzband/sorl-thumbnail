@@ -20,7 +20,7 @@ Features at a glance
 - Margin calculation for vertical positioning
 - Alternative resolutions versions of a thumbnail
 
-Read more in `the documentation (latest version) <http://sorl-thumbnail.rtfd.org/>`_
+Read more in `the documentation (latest version) <https://sorl-thumbnail.readthedocs.io/>`_
 
 Developers
 ==========
@@ -53,7 +53,7 @@ Vagrantfile in the repo.
 User Support
 ============
 
-If you need help using sorl-thumbnail browse http://stackoverflow.com/questions/tagged/sorl-thumbnail
+If you need help using sorl-thumbnail browse https://stackoverflow.com/questions/tagged/sorl-thumbnail
 and posts your questions with the `sorl-thumbnail` tag.
 
 
@@ -165,7 +165,7 @@ So it will avoid to overly query the S3 API.
     :target: https://github.com/jazzband/sorl-thumbnail/actions
 .. |docs| image:: https://readthedocs.org/projects/pip/badge/?version=latest
     :alt: Documentation for latest version
-    :target: http://sorl-thumbnail.rtfd.org/en/latest/
+    :target: https://sorl-thumbnail.readthedocs.io/en/latest/
 .. |pypi| image:: https://img.shields.io/pypi/v/sorl-thumbnail.svg
     :target: https://pypi.python.org/pypi/sorl-thumbnail
     :alt: sorl-thumbnail on PyPI
@@ -185,15 +185,15 @@ So it will avoid to overly query the S3 API.
    :target: https://jazzband.co/
    :alt: Jazzband
 
-.. _`Pillow`: http://pillow.readthedocs.org/en/latest/
-.. _`ImageMagick`: http://www.imagemagick.org/script/index.php
-.. _`PIL`: http://www.pythonware.com/products/pil/
-.. _`Wand`: http://docs.wand-py.org/
-.. _`pgmagick`: http://pgmagick.readthedocs.org/en/latest/
-.. _`vipsthumbnail`: http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS
+.. _`Pillow`: https://pillow.readthedocs.io/
+.. _`ImageMagick`: https://imagemagick.org/
+.. _`PIL`: https://python-pillow.org/
+.. _`Wand`: https://docs.wand-py.org/
+.. _`pgmagick`: https://pgmagick.readthedocs.io/
+.. _`vipsthumbnail`: https://www.libvips.org/API/current/Using-vipsthumbnail.html
 
-.. _`Template examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#template-examples
-.. _`Model examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#model-examples
-.. _`Low level API examples`: http://sorl-thumbnail.readthedocs.org/en/latest/examples.html#low-level-api-examples
+.. _`Template examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#template-examples
+.. _`Model examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#model-examples
+.. _`Low level API examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#low-level-api-examples
 .. _`issue #351`: https://github.com/jazzband/sorl-thumbnail/issues/351
 .. _`Django supported versions policy`: https://www.djangoproject.com/download/#supported-versions

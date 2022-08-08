@@ -125,11 +125,11 @@ class TemplateTestCaseB(BaseTestCase):
 
     def test_portrait(self):
         val = render_to_string('thumbnail4.html', {
-            'source': 'http://dummyimage.com/120x100/',
+            'source': 'https://dummyimage.com/120x100/',
             'dims': 'x66',
         }).strip()
         self.assertEqual(val,
-                         '<img src="/media/test/cache/7b/cd/7bcd20922c6750649f431df7c3cdbc5e.jpg" '
+                         '<img src="/media/test/cache/82/62/8262858c5f95f2bd7715d7aaa3e52b11.jpg" '
                          'width="79" height="66" class="landscape">')
 
     def test_empty(self):
