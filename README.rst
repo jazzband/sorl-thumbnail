@@ -33,7 +33,7 @@ and follow the `guidelines <https://jazzband.co/about/guidelines>`_.
 
 Feel free to create a new Pull request if you want to propose a new feature.
 If you need development support or want to discuss with other developers
-join us in the channel #sorl-thumnbnail at freenode.net or Gitter.
+join us in the channel #sorl-thumbnail at freenode.net or Gitter.
 
 For releases updates and more in deep development discussion use our mailing list
 in Google Groups.

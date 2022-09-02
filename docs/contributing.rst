@@ -4,7 +4,7 @@ Contributing
 
 Feel free to create a new Pull request if you want to propose a new feature
 or fix a bug.  If you need development support or want to discuss
-with other developers, join us in the channel #sorl-thumnbnail at freenode.net
+with other developers, join us in the channel #sorl-thumbnail at freenode.net
 
    irc://irc.freenode.net/#sorl-thumbnail
 
