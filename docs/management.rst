@@ -35,7 +35,7 @@ thumbnail clear_delete_referenced
 =================================
 ``python manage.py thumbnail clear_delete_referenced``
 
-Equivalent to to ``clear`` but first it will delete all thumbnail files
+Equivalent to ``clear`` but first it will delete all thumbnail files
 referenced by the Key Value Store. It is generally safe to run this if you do
 not reference the generated thumbnails by name somewhere else in your code. As
 long as all the original images still exist this will trigger a regeneration of
