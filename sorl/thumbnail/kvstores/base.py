@@ -1,3 +1,5 @@
+from django.core.files.storage import FileSystemStorage
+
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import serialize, deserialize, ThumbnailError
 from sorl.thumbnail.images import serialize_image_file, deserialize_image_file
@@ -93,8 +95,22 @@ class KVStoreBase:
         Cleans up the key value store. In detail:
         1. Deletes all key store references for image_files that do not exist
            and all key references for its thumbnails *and* their image_files.
-        2. Deletes or updates all invalid thumbnail keys
+        2. Deletes or updates all invalid thumbnail keys.
         """
+        self._cleanup()
+
+    def cleanup_and_delete_if_created_time_before_dt(self, dt):
+        """
+        Cleans up the key value store. In detail:
+        1. Deletes all key store references for image_files that:
+           - do not exist, or
+           - created time before ``dt``
+           and all key references for its thumbnails *and* their image_files.
+        2. Deletes or updates all invalid thumbnail keys.
+        """
+        self._cleanup(delete_if_created_time_before_dt=dt)
+
+    def _cleanup(self, delete_if_created_time_before_dt=None):
         for key in self._find_keys(identity='image'):
             image_file = self._get(key)
 
@@ -113,8 +129,20 @@ class KVStoreBase:
                 thumbnail_keys_set = set(thumbnail_keys)
 
                 for thumbnail_key in thumbnail_keys:
-                    if not self._get(thumbnail_key):
+                    thumbnail = self._get(thumbnail_key)
+                    if not thumbnail:
                         thumbnail_keys_set.remove(thumbnail_key)
+                    else:
+                        if delete_if_created_time_before_dt is not None:
+                            try:
+                                created_time = thumbnail.storage.get_created_time(thumbnail.name)
+                            except NotImplementedError:
+                                pass
+                            else:
+                                if created_time < delete_if_created_time_before_dt:
+                                    thumbnail_keys_set.remove(thumbnail_key)
+                                    self.delete(thumbnail, False)
+                                    thumbnail.delete()  # delete the actual file
 
                 thumbnail_keys = list(thumbnail_keys_set)
 
