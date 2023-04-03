@@ -5,42 +5,42 @@ from django.core.exceptions import ImproperlyConfigured
 THUMBNAIL_DEBUG = False
 
 # Backend
-THUMBNAIL_BACKEND = "sorl.thumbnail.base.ThumbnailBackend"
+THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 
 # Key-value store, ships with:
 # sorl.thumbnail.kvstores.cached_db_kvstore.KVStore
 # sorl.thumbnail.kvstores.redis_kvstore.KVStore
 # Redis requires some more work, see docs
-THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.cached_db_kvstore.KVStore"
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
 
 # Change this to something else for MSSQL
-THUMBNAIL_KEY_DBCOLUMN = "key"
+THUMBNAIL_KEY_DBCOLUMN = 'key'
 
 # Engine, ships with:
 # sorl.thumbnail.engines.convert_engine.Engine
 # sorl.thumbnail.engines.pil_engine.Engine
 # sorl.thumbnail.engines.pgmagick_engine.Engine
 # convert is preferred but requires imagemagick or graphicsmagick, se docs
-THUMBNAIL_ENGINE = "sorl.thumbnail.engines.pil_engine.Engine"
+THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.pil_engine.Engine'
 
 # Path to Imagemagick or Graphicsmagick ``convert`` and ``identify``.
-THUMBNAIL_CONVERT = "convert"
-THUMBNAIL_IDENTIFY = "identify"
+THUMBNAIL_CONVERT = 'convert'
+THUMBNAIL_IDENTIFY = 'identify'
 
 # Path to ``vipsthumbnail`` and ``vipsheader``
-THUMBNAIL_VIPSTHUMBNAIL = "vipsthumbnail"
-THUMBNAIL_VIPSHEADER = "vipsheader"
+THUMBNAIL_VIPSTHUMBNAIL = 'vipsthumbnail'
+THUMBNAIL_VIPSHEADER = 'vipsheader'
 
 # Storage for the generated thumbnails
 try:
-    THUMBNAIL_STORAGE = settings.STORAGES["default"]["BACKEND"]
+    THUMBNAIL_STORAGE = settings.STORAGES['default']['BACKEND']
 except (AttributeError, KeyError, ImproperlyConfigured):
     THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
 # Redis settings
 THUMBNAIL_REDIS_DB = 0
-THUMBNAIL_REDIS_PASSWORD = ""
-THUMBNAIL_REDIS_HOST = "localhost"
+THUMBNAIL_REDIS_PASSWORD = ''
+THUMBNAIL_REDIS_HOST = 'localhost'
 THUMBNAIL_REDIS_PORT = 6379
 THUMBNAIL_REDIS_UNIX_SOCKET_PATH = None
 THUMBNAIL_REDIS_SSL = False
@@ -55,23 +55,23 @@ THUMBNAIL_DBM_MODE = 0o644
 THUMBNAIL_CACHE_TIMEOUT = 3600 * 24 * 365 * 10  # 10 years
 
 # The cache configuration to use for storing thumbnail data
-THUMBNAIL_CACHE = "default"
+THUMBNAIL_CACHE = 'default'
 
 # Key prefix used by the key value store
-THUMBNAIL_KEY_PREFIX = "sorl-thumbnail"
+THUMBNAIL_KEY_PREFIX = 'sorl-thumbnail'
 
 # Thumbnail filename prefix
-THUMBNAIL_PREFIX = "cache/"
+THUMBNAIL_PREFIX = 'cache/'
 
 # Image format, common formats are: JPEG, PNG, GIF
 # Make sure the backend can handle the format you specify
-THUMBNAIL_FORMAT = "JPEG"
+THUMBNAIL_FORMAT = 'JPEG'
 
 THUMBNAIL_PRESERVE_FORMAT = False
 
 # Colorspace, backends are required to implement: RGB, GRAY
 # Setting this to None will keep the original colorspace.
-THUMBNAIL_COLORSPACE = "RGB"
+THUMBNAIL_COLORSPACE = 'RGB'
 
 # Should we upscale images by default
 THUMBNAIL_UPSCALE = True
@@ -84,7 +84,7 @@ THUMBNAIL_BLUR = 0
 
 # Adds padding around the image to match the requested size without cropping
 THUMBNAIL_PADDING = False
-THUMBNAIL_PADDING_COLOR = "#ffffff"
+THUMBNAIL_PADDING_COLOR = '#ffffff'
 
 # Save as progressive when saving as jpeg
 THUMBNAIL_PROGRESSIVE = True
@@ -100,7 +100,7 @@ THUMBNAIL_DUMMY = False
 # http://placekitten.com/%(width)s/%(height)s
 # http://placekitten.com/g/%(width)s/%(height)s
 # http://placehold.it/%(width)sx%(height)s
-THUMBNAIL_DUMMY_SOURCE = "https://dummyimage.com/%(width)sx%(height)s"
+THUMBNAIL_DUMMY_SOURCE = 'https://dummyimage.com/%(width)sx%(height)s'
 
 # Sets the source image ratio for dummy generation of images with only width
 # or height given
