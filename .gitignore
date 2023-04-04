@@ -62,3 +62,4 @@ tests/thumbnail_kvstore.lock
 .coverage
 .tox
 htmlcov/
+coverage.xml

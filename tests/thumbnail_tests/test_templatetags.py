@@ -132,6 +132,24 @@ class TemplateTestCaseB(BaseTestCase):
                          '<img src="/media/test/cache/82/62/8262858c5f95f2bd7715d7aaa3e52b11.jpg" '
                          'width="79" height="66" class="landscape">')
 
+        val = render_to_string('thumbnail4.html', {
+            'source': 'https://dummyimage.com/100x120/',
+            'dims': 'x66',
+        }).strip()
+        self.assertEqual(val, '<img width="1" height="1" class="portrait">')
+
+        with override_settings(THUMBNAIL_DEBUG=True):
+            with self.assertRaises(FileNotFoundError):
+                render_to_string('thumbnail4a.html', {
+                    'source': 'broken.jpeg',
+                }).strip()
+
+        with override_settings(THUMBNAIL_DEBUG=False):
+            val = render_to_string('thumbnail4a.html', {
+                'source': 'broken.jpeg',
+            }).strip()
+            self.assertEqual(val, 'no')
+
     def test_empty(self):
         val = render_to_string('thumbnail5.html', {}).strip()
         self.assertEqual(val, '<p>empty</p>')
