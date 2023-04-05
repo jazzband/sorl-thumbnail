@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 
 # When True ThumbnailNode.render can raise errors
 THUMBNAIL_DEBUG = False
@@ -31,7 +32,10 @@ THUMBNAIL_VIPSTHUMBNAIL = 'vipsthumbnail'
 THUMBNAIL_VIPSHEADER = 'vipsheader'
 
 # Storage for the generated thumbnails
-THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
+try:
+    THUMBNAIL_STORAGE = settings.STORAGES['default']['BACKEND']
+except (AttributeError, KeyError, ImproperlyConfigured):
+    THUMBNAIL_STORAGE = settings.DEFAULT_FILE_STORAGE
 
 # Redis settings
 THUMBNAIL_REDIS_DB = 0
