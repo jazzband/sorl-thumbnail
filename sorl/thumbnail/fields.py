@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from django.forms.widgets import FileInput
 
 from sorl.thumbnail import default
 
@@ -68,3 +69,9 @@ class ImageFormField(forms.FileField):
             f.seek(0)
 
         return f
+
+    def widget_attrs(self, widget):
+        attrs = super().widget_attrs(widget)
+        if isinstance(widget, FileInput) and 'accept' not in widget.attrs:
+            attrs.setdefault('accept', 'image/*')
+        return attrs
