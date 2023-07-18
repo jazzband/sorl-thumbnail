@@ -29,6 +29,17 @@ useful if your Key Value Store has garbage data not dealt with by cleanup or
 you're switching Key Value Store backend.
 
 
+.. _thumbnail-cleanup-delete-timeout:
+
+thumbnail cleanup_delete_timeout
+=================================
+``python manage.py thumbnail cleanup_delete_timeout``
+
+Deletes thumbnails in the cache, kvstore (database) and storage (filesystem),
+if the file's created time is before THUMBNAIL_CLEANUP_DELETE_TIMEOUT seconds ago. 
+No action will be taken if THUMBNAIL_CLEANUP_DELETE_TIMEOUT is as ``None``
+
+
 .. _thumbnail-clear-delete-referenced:
 
 thumbnail clear_delete_referenced

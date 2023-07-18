@@ -53,6 +53,7 @@ THUMBNAIL_DBM_MODE = 0o644
 # Cache timeout for ``cached_db`` store. You should probably keep this at
 # maximum or ``0`` if your caching backend can handle that as infinite.
 THUMBNAIL_CACHE_TIMEOUT = 3600 * 24 * 365 * 10  # 10 years
+THUMBNAIL_CLEANUP_DELETE_TIMEOUT = 3600 * 24 * 365 * 10  # 10 years
 
 # The cache configuration to use for storing thumbnail data
 THUMBNAIL_CACHE = 'default'
