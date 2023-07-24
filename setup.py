@@ -34,4 +34,5 @@ setup(
         'Framework :: Django :: 4.1',
     ],
     setup_requires=['setuptools_scm'],
+    install_requires=['importlib-metadata >= 1.0; python_version < "3.8"',],
 )
