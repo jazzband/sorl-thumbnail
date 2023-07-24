@@ -13,7 +13,7 @@ setup(
     url='https://github.com/jazzband/sorl-thumbnail',
     packages=find_packages(exclude=['tests', 'tests.*']),
     platforms='any',
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -34,5 +34,4 @@ setup(
         'Framework :: Django :: 4.1',
     ],
     setup_requires=['setuptools_scm'],
-    install_requires=['importlib-metadata >= 1.0; python_version < "3.8"',],
 )
