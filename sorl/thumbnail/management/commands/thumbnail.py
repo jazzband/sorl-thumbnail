@@ -26,6 +26,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('args', choices=VALID_LABELS, nargs=1)
 
+    # flake8: noqa: C901
     def handle(self, *labels, **options):
         verbosity = int(options.get('verbosity'))
         label = labels[0]
@@ -41,20 +42,26 @@ class Command(BaseCommand):
 
             return
 
-        if label == 'cleanup_delete_timeout':
-            if not settings.THUMBNAIL_CLEANUP_DELETE_TIMEOUT:
-                self.stdout.write(
-                    "THUMBNAIL_CLEANUP_DELETE_TIMEOUT is empty. No action taken",
-                    ending=' ... '
-                )
-                return
+        elif label == 'cleanup_delete_timeout' and not settings.THUMBNAIL_CLEANUP_DELETE_TIMEOUT:
+            self.stdout.write(
+                "THUMBNAIL_CLEANUP_DELETE_TIMEOUT is empty. No action taken",
+                ending=' ... '
+            )
+            return
+
+        elif label == 'cleanup_delete_timeout':
             if verbosity >= 1:
                 self.stdout.write(
-                    "Cleanup thumbnails and delete if created time before THUMBNAIL_CLEANUP_DELETE_TIMEOUT seconds ago",
+                    """
+                        Cleanup thumbnails and delete if created time before
+                        THUMBNAIL_CLEANUP_DELETE_TIMEOUT seconds ago
+                    """,
                     ending=' ... '
                 )
 
-            thumbnail_cache_timeout_dt = timezone.now() - timedelta(seconds=settings.THUMBNAIL_CLEANUP_DELETE_TIMEOUT)
+            thumbnail_cache_timeout_dt = timezone.now() - timedelta(
+                seconds=settings.THUMBNAIL_CLEANUP_DELETE_TIMEOUT
+            )
             default.kvstore.cleanup_and_delete_if_created_time_before_dt(thumbnail_cache_timeout_dt)
 
             if verbosity >= 1:
@@ -62,7 +69,7 @@ class Command(BaseCommand):
 
             return
 
-        if label == 'clear_delete_referenced':
+        elif label == 'clear_delete_referenced':
             if verbosity >= 1:
                 self.stdout.write(
                     "Delete all thumbnail files referenced in Key Value Store",
