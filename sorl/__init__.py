@@ -1,2 +1,8 @@
-import importlib.metadata as importlib_metadata
-__version__ = importlib_metadata.version("sorl-thumbnail")
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version("sorl-thumbnail")
+except PackageNotFoundError:
+    # package is not installed
+    pass
+
