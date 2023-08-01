@@ -42,30 +42,30 @@ class Command(BaseCommand):
 
             return
 
-        elif label == 'cleanup_delete_timeout' and not settings.THUMBNAIL_CLEANUP_DELETE_TIMEOUT:
-            self.stdout.write(
-                "THUMBNAIL_CLEANUP_DELETE_TIMEOUT is empty. No action taken",
-                ending=' ... '
-            )
-            return
-
         elif label == 'cleanup_delete_timeout':
-            if verbosity >= 1:
+            if settings.THUMBNAIL_CLEANUP_DELETE_TIMEOUT:
+                if verbosity >= 1:
+                    self.stdout.write(
+                        """
+                            Cleanup thumbnails and delete if created time before
+                            THUMBNAIL_CLEANUP_DELETE_TIMEOUT seconds ago
+                        """,
+                        ending=' ... '
+                    )
+
+                thumbnail_cache_timeout_dt = timezone.now() - timedelta(
+                    seconds=settings.THUMBNAIL_CLEANUP_DELETE_TIMEOUT
+                )
+                default.kvstore.cleanup_and_delete_if_created_time_before_dt(thumbnail_cache_timeout_dt)
+
+                if verbosity >= 1:
+                    self.stdout.write('[Done]')
+
+            else:
                 self.stdout.write(
-                    """
-                        Cleanup thumbnails and delete if created time before
-                        THUMBNAIL_CLEANUP_DELETE_TIMEOUT seconds ago
-                    """,
+                    "THUMBNAIL_CLEANUP_DELETE_TIMEOUT is empty. No action taken",
                     ending=' ... '
                 )
-
-            thumbnail_cache_timeout_dt = timezone.now() - timedelta(
-                seconds=settings.THUMBNAIL_CLEANUP_DELETE_TIMEOUT
-            )
-            default.kvstore.cleanup_and_delete_if_created_time_before_dt(thumbnail_cache_timeout_dt)
-
-            if verbosity >= 1:
-                self.stdout.write('[Done]')
 
             return
 
