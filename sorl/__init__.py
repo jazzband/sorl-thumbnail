@@ -1,6 +1,7 @@
-from pkg_resources import get_distribution, DistributionNotFound
+from importlib.metadata import version, PackageNotFoundError
 
 try:
-    __version__ = get_distribution("sorl-thumbnail").version
-except DistributionNotFound:
+    __version__ = version("sorl-thumbnail")
+except PackageNotFoundError:
+    # package is not installed
     pass
