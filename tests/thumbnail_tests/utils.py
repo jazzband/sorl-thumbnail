@@ -7,6 +7,8 @@ from subprocess import check_output
 
 from PIL import Image, ImageDraw
 
+from django.test import TestCase
+
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
@@ -55,7 +57,7 @@ class FakeFile:
         self.name = name
 
 
-class BaseTestCase(unittest.TestCase):
+class BaseTestCase(TestCase):
     IMAGE_DIMENSIONS = [(500, 500), (100, 100), (200, 100), ]
     BACKEND = None
     ENGINE = None
