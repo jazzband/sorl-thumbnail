@@ -79,13 +79,17 @@ class KVStoreBase:
             # Delete the thumbnails key from store
             self._delete(image_file.key, identity='thumbnails')
 
-    def delete_all_thumbnail_files(self):
+    def delete_all_thumbnail_files(self, older_than=None):
         for key in self._find_keys(identity='thumbnails'):
             thumbnail_keys = self._get(key, identity='thumbnails')
             if thumbnail_keys:
                 for key in thumbnail_keys:
                     thumbnail = self._get(key)
                     if thumbnail:
+                        if older_than is not None:
+                            created_time = thumbnail.storage.get_created_time(thumbnail.name)
+                            if created_time > older_than:
+                                continue
                         thumbnail.delete()
 
     def cleanup(self):
