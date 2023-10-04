@@ -2,6 +2,14 @@
 Changes
 =======
 
+12.10.0
+=======
+* Fixed safe_filter application on various thumbnail template tags.
+* Fixed slow performance with external storages like S3.
+* Added support for Django 4.2.
+* Drop support for Python 3.7.
+* Confirmed Python 3.11 support.
+
 12.9.0
 ======
 * Drop support for Django 2.2 and 3.1.
