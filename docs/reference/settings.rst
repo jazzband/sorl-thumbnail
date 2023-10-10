@@ -236,6 +236,15 @@ at maximum or ``None`` if your caching backend can handle that as infinite.
 Only applicable for the Cached DB Key Value Store.
 
 
+``THUMBNAIL_CLEANUP_DELETE_TIMEOUT``
+===========================
+
+- Default: ``3600 * 24 * 365 * 10``
+
+Timeout to deletes thumbnails in the cache, kvstore (database) and storage (filesystem),
+based on file's created time. If set as ``None`` then no action will be taken.
+
+
 ``THUMBNAIL_CACHE``
 ===================
 
