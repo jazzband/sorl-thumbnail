@@ -75,7 +75,13 @@ class EngineBase:
         Wrapper for ``_scale``
         """
         upscale = options['upscale']
+        transform = options.get('transform', settings.THUMBNAIL_TRANSFORM)
         x_image, y_image = map(float, self.get_image_size(image))
+
+        if transform:
+            image = self._scale(image, geometry[0], geometry[1])
+            return image
+
         if self.flip_dimensions(image):
             x_image, y_image = y_image, x_image
         factor = self._calculate_scaling_factor(x_image, y_image, geometry, options)
@@ -84,7 +90,6 @@ class EngineBase:
             width = toint(x_image * factor)
             height = toint(y_image * factor)
             image = self._scale(image, width, height)
-
         return image
 
     def crop(self, image, geometry, options):
