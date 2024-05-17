@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
         target: [pil, imagemagick, graphicsmagick, redis, wand, dbm]
 
         include:
@@ -58,4 +58,3 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         name: Python ${{ matrix.python-version }}
-
