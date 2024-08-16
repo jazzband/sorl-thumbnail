@@ -2,6 +2,9 @@
 Changes
 =======
 
+* Add support for Django 5.0 and 5.1
+* Drop support for Django 3.2, 4.0 and 4.1
+
 12.10.0
 =======
 * Fixed safe_filter application on various thumbnail template tags.
