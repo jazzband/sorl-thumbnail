@@ -2,7 +2,6 @@ import os
 import re
 from subprocess import PIPE, Popen
 
-import pytest
 from django.template.loader import render_to_string
 from django.test import Client, TestCase
 from django.test.utils import override_settings
@@ -13,8 +12,6 @@ from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 
 from .models import Item
 from .utils import DATA_DIR, BaseTestCase
-
-pytestmark = pytest.mark.django_db
 
 
 class TemplateTestCaseA(BaseTestCase):

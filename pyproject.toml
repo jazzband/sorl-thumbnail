@@ -13,12 +13,6 @@ exclude_lines = [
     "if __name__ == .__main__.:",
 ]
 
-[tool.pytest.ini_options]
-python_files = ["test_*.py", "*tests.py"]
-norecursedirs =[".*", "tmp*", "__pycache__"]
-testpaths = ["tests"]
-django_find_project = false
-
 [tool.ruff]
 exclude = [
     ".tox",
