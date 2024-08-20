@@ -10,8 +10,8 @@ from PIL import Image, ImageDraw
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
-from sorl.thumbnail.log import ThumbnailLogHandler
 from sorl.thumbnail.kvstores.cached_db_kvstore import KVStore
+from sorl.thumbnail.log import ThumbnailLogHandler
 
 from .models import Item
 from .storage import MockLoggingHandler

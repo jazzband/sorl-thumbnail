@@ -4,6 +4,7 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.kvstores.cached_db_kvstore import KVStore
 
+
 class Backend(LazyObject):
     def _setup(self):
         self._wrapped = get_module_class(settings.THUMBNAIL_BACKEND)()
