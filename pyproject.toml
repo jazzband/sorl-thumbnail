@@ -1,23 +1,69 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sorl-thumbnail"
+dynamic = ["version"]
+description = "Thumbnails for Django"
+readme = "README.rst"
+license = {file = "LICENSE"}
+keywords = ["django", "thumbnail", "sorl"]
+authors = [
+  {name = "Mikko Hellsing", email = "mikko@aino.se"},
+]
+maintainers = [
+  {name = "Jazzband", email = "roadies@jazzband.co"}
+]
+requires-python = ">= 3.8"
+classifiers=[
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Web Environment',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    'Topic :: Multimedia :: Graphics',
+    'Framework :: Django',
+    'Framework :: Django :: 4.2',
+    'Framework :: Django :: 5.0',
+    'Framework :: Django :: 5.1',
+]
+
+[project.urls]
+Homepage = "https://sorl-thumbnail.readthedocs.io/en/latest/"
+Repository = "https://github.com/jazzband/sorl-thumbnail"
+
+
 [tool.coverage.run]
-source = ["sorl"]
-omit = [
-    "*/sorl-thumbnail/sorl/__init__.py",
-    "*/sorl/thumbnail/__init__.py",
-    "*/sorl/thumbnail/conf/__init__.py",
-    "*/sorl/thumbnail/admin/__init__.py",
-]
+ source = ["sorl"]
+ omit = [
+     "*/sorl-thumbnail/sorl/__init__.py",
+     "*/sorl/thumbnail/__init__.py",
+     "*/sorl/thumbnail/conf/__init__.py",
+     "*/sorl/thumbnail/admin/__init__.py",
+ ]
 
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "if __name__ == .__main__.:",
-]
+ [tool.coverage.report]
+ exclude_lines = [
+     "pragma: no cover",
+     "if __name__ == .__main__.:",
+ ]
 
-[tool.pytest.ini_options]
-python_files = ["test_*.py", "*tests.py"]
-norecursedirs =[".*", "tmp*", "__pycache__"]
-testpaths = ["tests"]
-django_find_project = false
+ [tool.pytest.ini_options]
+ python_files = ["test_*.py", "*tests.py"]
+ norecursedirs =[".*", "tmp*", "__pycache__"]
+ testpaths = ["tests"]
+ django_find_project = false
+
+# below line is required to generating versions with setuptools_scm
+[tool.setuptools_scm]
 
 [tool.ruff]
 exclude = [
