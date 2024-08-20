@@ -6,12 +6,6 @@ THUMBNAIL_DEBUG = False
 # Backend
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 
-# Key-value store, ships with:
-# sorl.thumbnail.kvstores.cached_db_kvstore.KVStore
-# sorl.thumbnail.kvstores.redis_kvstore.KVStore
-# Redis requires some more work, see docs
-THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'
-
 # Change this to something else for MSSQL
 THUMBNAIL_KEY_DBCOLUMN = 'key'
 
@@ -32,19 +26,6 @@ THUMBNAIL_VIPSHEADER = 'vipsheader'
 
 # Storage for the generated thumbnails
 THUMBNAIL_STORAGE = settings.STORAGES['default']['BACKEND']
-
-# Redis settings
-THUMBNAIL_REDIS_DB = 0
-THUMBNAIL_REDIS_PASSWORD = ''
-THUMBNAIL_REDIS_HOST = 'localhost'
-THUMBNAIL_REDIS_PORT = 6379
-THUMBNAIL_REDIS_UNIX_SOCKET_PATH = None
-THUMBNAIL_REDIS_SSL = False
-THUMBNAIL_REDIS_TIMEOUT = 3600 * 24 * 365 * 10  # 10 years
-
-# DBM settings
-THUMBNAIL_DBM_FILE = "thumbnail_kvstore"
-THUMBNAIL_DBM_MODE = 0o644
 
 # Cache timeout for ``cached_db`` store. You should probably keep this at
 # maximum or ``0`` if your caching backend can handle that as infinite.

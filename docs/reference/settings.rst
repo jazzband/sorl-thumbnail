@@ -25,54 +25,6 @@ default one but just in case you would like to generate thumbnails filenames
 differently or need some special functionality you can override this and use
 your own implementation.
 
-
-``THUMBNAIL_KVSTORE``
-=====================
-
-- Default: ``'sorl.thumbnail.kvstores.cached_db_kvstore.KVStore'``
-
-sorl-thumbnail needs a Key Value Store to :doc:`/operation`.
-sorl-thumbnail ships with support for three Key Value Stores:
-
-Cached DB
----------
-``sorl.thumbnail.kvstores.cached_db_kvstore.KVStore``. This is the default and
-preferred Key Value Store.
-
-Features
-^^^^^^^^
-* Fast persistent storage
-* First query uses database which is slow. Successive queries are cached and if
-  you use memcached this is very fast.
-* Easy to transfer data between environments since the data is in the default
-  database.
-* If you get the database and fast cache out of sync there could be problems.
-
-Redis
------
-``sorl.thumbnail.kvstores.redis_kvstore.KVStore``. It requires you to install a
-Redis server as well as a `redis python client
-<https://github.com/andymccurdy/redis-py/>`_.
-
-Features
-^^^^^^^^
-* Fast persistent storage
-* More dependencies
-* Requires a little extra work to transfer data between environments
-
-Dbm
----
-``sorl.thumbnail.kvstores.dbm_kvstore.KVStore``. A simple Key Value Store has no
-dependencies outside the standard Python library and uses the DBM modules to
-store the data.
-
-Features
-^^^^^^^^
-* No external dependencies, besides the standard library
-* No extra components required, e.g., database or cache
-* Specially indicated for local development environments
-
-
 ``THUMBNAIL_KEY_DBCOLUMN``
 ==========================
 
@@ -157,73 +109,6 @@ Only applicable for the convert Engine.
 - Default: ``settings.DEFAULT_FILE_STORAGE``
 
 The storage class to use for the generated thumbnails.
-
-
-``THUMBNAIL_REDIS_URL``
-=======================
-
-The Redis database URL to connect as used by `redis-py <https://redis-py.readthedocs.io/en/latest/#redis.Redis.from_url>`_
-
-When specified, other ``THUMBNAIL_REDIS_*`` connection settings will be ignored.
-
-
-``THUMBNAIL_REDIS_DB``
-======================
-
-- Default: ``0``
-
-The Redis database. Only applicable for the Redis Key Value Store
-
-
-``THUMBNAIL_REDIS_PASSWORD``
-============================
-
-- Default: ``''``
-
-The password for Redis server. Only applicable for the Redis Key Value Store
-
-
-``THUMBNAIL_REDIS_HOST``
-========================
-
-- Default: ``'localhost'``
-
-The host for Redis server. Only applicable for the Redis Key Value Store
-
-
-``THUMBNAIL_REDIS_PORT``
-========================
-
-- Default: ``6379``
-
-The port for Redis server. Only applicable for the Redis Key Value Store
-
-
-``THUMBNAIL_REDIS_TIMEOUT``
-===========================
-
-- Default: ``3600 * 24 * 365 * 10``
-
-Cache timeout for Redis Key Value Store in seconds. You should probably keep this 
-at maximum or ``None``.
-
-
-``THUMBNAIL_DBM_FILE``
-======================
-
-- Default: ``thumbnail_kvstore``
-
-Filename of the DBM database. Depending on the DBM engine selected by your
-Python installation, this will be used as a prefix because multiple files may be
-created. This can be an absolute path.
-
-
-``THUMBNAIL_DBM_MODE``
-======================
-
-- Default: ``0x644``
-
-Permission bits to use when creating new DBM files
 
 
 ``THUMBNAIL_CACHE_TIMEOUT``

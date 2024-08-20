@@ -1,17 +1,12 @@
-from django.utils.functional import LazyObject
+from django.utils.functional import LazyObject, SimpleLazyObject
 
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
-
+from sorl.thumbnail.kvstores.cached_db_kvstore import KVStore
 
 class Backend(LazyObject):
     def _setup(self):
         self._wrapped = get_module_class(settings.THUMBNAIL_BACKEND)()
-
-
-class KVStore(LazyObject):
-    def _setup(self):
-        self._wrapped = get_module_class(settings.THUMBNAIL_KVSTORE)()
 
 
 class Engine(LazyObject):
@@ -25,6 +20,6 @@ class Storage(LazyObject):
 
 
 backend = Backend()
-kvstore = KVStore()
+kvstore = SimpleLazyObject(lambda: KVStore())
 engine = Engine()
 storage = Storage()

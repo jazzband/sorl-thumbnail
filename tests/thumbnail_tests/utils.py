@@ -11,6 +11,7 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.log import ThumbnailLogHandler
+from sorl.thumbnail.kvstores.cached_db_kvstore import KVStore
 
 from .models import Item
 from .storage import MockLoggingHandler
@@ -88,7 +89,7 @@ class BaseTestCase(unittest.TestCase):
     def setUp(self):
         self.BACKEND = get_module_class(settings.THUMBNAIL_BACKEND)()
         self.ENGINE = get_module_class(settings.THUMBNAIL_ENGINE)()
-        self.KVSTORE = get_module_class(settings.THUMBNAIL_KVSTORE)()
+        self.KVSTORE = KVStore()
 
         if not os.path.exists(settings.MEDIA_ROOT):
             os.makedirs(settings.MEDIA_ROOT)
