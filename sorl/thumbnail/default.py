@@ -8,10 +8,9 @@ class Backend(LazyObject):
     def _setup(self):
         self._wrapped = get_module_class(settings.THUMBNAIL_BACKEND)()
 
-
 class KVStore(LazyObject):
-    def _setup(self):
-        self._wrapped = get_module_class(settings.THUMBNAIL_KVSTORE)()
+     def _setup(self):
+         self._wrapped = get_module_class("sorl.thumbnail.kvstores.cached_db_kvstore.KVStore")()
 
 
 class Engine(LazyObject):

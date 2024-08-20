@@ -11,7 +11,6 @@ THUMBNAIL_LOG_HANDLER = {
     'class': 'sorl.thumbnail.log.ThumbnailLogHandler',
     'level': 'ERROR',
 }
-THUMBNAIL_KVSTORE = 'tests.thumbnail_tests.kvstore.TestKVStore'
 THUMBNAIL_STORAGE = 'tests.thumbnail_tests.storage.TestStorage'
 STORAGES = {
     "default": {
@@ -51,4 +50,3 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
-THUMBNAIL_REDIS_SSL = False
