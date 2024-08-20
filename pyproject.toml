@@ -1,0 +1,17 @@
+[tool.ruff]
+exclude = [
+    ".tox",
+    "docs/*",
+    "*/migrations/*",
+    "tests/settings/*",
+    "sorl/thumbnail/__init__.py",
+    "sorl/thumbnail/admin/__init__.py"
+]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["B", "C901", "E", "F", "W"]
+ignore = ["B904", "B017"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 15
