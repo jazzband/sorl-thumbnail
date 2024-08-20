@@ -5,16 +5,17 @@ import re
 from functools import lru_cache
 from urllib.error import URLError
 from urllib.parse import quote, quote_plus, urlsplit, urlunsplit
-from urllib.request import urlopen, Request
+from urllib.request import Request, urlopen
 
-from django.core.files.base import File, ContentFile
+from django.core.files.base import ContentFile, File
 from django.core.files.storage import Storage  # , default_storage
 from django.utils.encoding import force_str
 from django.utils.functional import LazyObject, empty
+
 from sorl.thumbnail import default
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.default import storage as default_storage
-from sorl.thumbnail.helpers import ThumbnailError, tokey, get_module_class, deserialize
+from sorl.thumbnail.helpers import ThumbnailError, deserialize, get_module_class, tokey
 from sorl.thumbnail.parsers import parse_geometry
 
 url_pat = re.compile(r'^(https?|ftp):\/\/')

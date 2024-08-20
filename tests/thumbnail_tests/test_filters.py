@@ -3,7 +3,6 @@ from django.template.loader import render_to_string
 
 from tests.thumbnail_tests.utils import BaseTestCase
 
-
 pytestmark = pytest.mark.django_db
 
 

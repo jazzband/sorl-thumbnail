@@ -1,7 +1,8 @@
-from boto.dynamodb2.table import Table
 import boto
-from sorl.thumbnail.kvstores.base import KVStoreBase
+from boto.dynamodb2.table import Table
+
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.kvstores.base import KVStoreBase
 
 
 class KVStore(KVStoreBase):

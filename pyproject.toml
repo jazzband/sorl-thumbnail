@@ -10,7 +10,7 @@ exclude = [
 line-length = 100
 
 [tool.ruff.lint]
-select = ["B", "C901", "E", "F", "W"]
+select = ["B", "C901", "E", "F", "I", "W"]
 ignore = ["B904", "B017"]
 
 [tool.ruff.lint.mccabe]

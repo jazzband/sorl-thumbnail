@@ -1,11 +1,11 @@
-import re
-import os
-import subprocess
 import logging
+import os
+import re
+import subprocess
 from collections import OrderedDict
 
-from django.utils.encoding import smart_str
 from django.core.files.temp import NamedTemporaryFile
+from django.utils.encoding import smart_str
 
 from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.conf import settings

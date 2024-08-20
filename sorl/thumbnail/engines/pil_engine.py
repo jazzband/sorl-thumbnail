@@ -3,11 +3,11 @@ from io import BytesIO
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from PIL import Image, ImageFile, ImageDraw, ImageFilter, ImageMode
+    from PIL import Image, ImageDraw, ImageFile, ImageFilter, ImageMode
 except ImportError:
     import Image
-    import ImageFile
     import ImageDraw
+    import ImageFile
     import ImageMode
 
 if hasattr(Image, 'Resampling'):
@@ -36,7 +36,7 @@ def color_count(image):
 
 def histogram_entropy_py(image):
     """ Calculate the entropy of an images' histogram. """
-    from math import log2, fsum
+    from math import fsum, log2
     histosum = float(color_count(image))
     histonorm = (histocol / histosum for histocol in image.histogram())
     return -fsum(p * log2(p) for p in histonorm if p != 0.0)

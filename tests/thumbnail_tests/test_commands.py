@@ -1,13 +1,13 @@
-from io import StringIO
 import os
+from io import StringIO
 
 import pytest
 from django.core import management
 
 from sorl.thumbnail.conf import settings
+
 from .models import Item
 from .utils import BaseTestCase
-
 
 pytestmark = pytest.mark.django_db
 
