@@ -1,8 +1,7 @@
 import os
 
-from sorl.thumbnail.kvstores.base import KVStoreBase
 from sorl.thumbnail.conf import settings
-
+from sorl.thumbnail.kvstores.base import KVStoreBase
 
 try:
     import anydbm as dbm

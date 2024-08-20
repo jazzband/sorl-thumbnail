@@ -2,7 +2,6 @@ import re
 
 from sorl.thumbnail.helpers import ThumbnailError, toint
 
-
 bgpos_pat = re.compile(r'^(?P<value>\d+)(?P<unit>%|px)$')
 geometry_pat = re.compile(r'^(?P<x>\d+)?(?:x(?P<y>\d+))?$')
 

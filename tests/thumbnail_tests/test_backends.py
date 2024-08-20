@@ -1,23 +1,23 @@
-from io import StringIO
 import os
 import platform
-import sys
 import shutil
+import sys
 import unittest
-from PIL import Image
+from io import StringIO
 
 import pytest
 from django.test import TestCase
 from django.test.utils import override_settings
+from PIL import Image
 
 from sorl.thumbnail import default, delete, get_thumbnail
 from sorl.thumbnail.base import ThumbnailBackend
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
-from .utils import BaseTestCase, FakeFile, same_open_fd_count
-from .models import Item
 
+from .models import Item
+from .utils import BaseTestCase, FakeFile, same_open_fd_count
 
 pytestmark = pytest.mark.django_db
 

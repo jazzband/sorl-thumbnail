@@ -1,7 +1,6 @@
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import toint
-from sorl.thumbnail.parsers import parse_crop
-from sorl.thumbnail.parsers import parse_cropbox
+from sorl.thumbnail.parsers import parse_crop, parse_cropbox
 
 
 class EngineBase:

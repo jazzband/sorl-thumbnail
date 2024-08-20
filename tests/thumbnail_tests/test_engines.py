@@ -1,24 +1,24 @@
 import os
 import platform
 import unittest
-from subprocess import Popen, PIPE
+from subprocess import PIPE, Popen
 
 import pytest
-from PIL import Image
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
+from PIL import Image
 
 from sorl.thumbnail import default
 from sorl.thumbnail.base import ThumbnailBackend
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.parsers import parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
-from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
+
 from .models import Item
 from .utils import BaseTestCase
-
 
 pytestmark = pytest.mark.django_db
 

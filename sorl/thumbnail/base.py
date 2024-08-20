@@ -2,12 +2,12 @@ import logging
 import os
 import re
 
-from sorl.thumbnail.conf import settings, defaults as default_settings
-from sorl.thumbnail.helpers import tokey, serialize
-from sorl.thumbnail.images import ImageFile, DummyImageFile
 from sorl.thumbnail import default
+from sorl.thumbnail.conf import defaults as default_settings
+from sorl.thumbnail.conf import settings
+from sorl.thumbnail.helpers import serialize, tokey
+from sorl.thumbnail.images import DummyImageFile, ImageFile
 from sorl.thumbnail.parsers import parse_geometry
-
 
 logger = logging.getLogger(__name__)
 
