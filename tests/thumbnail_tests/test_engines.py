@@ -3,7 +3,6 @@ import platform
 import unittest
 from subprocess import PIPE, Popen
 
-import pytest
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
 from PIL import Image
@@ -19,8 +18,6 @@ from sorl.thumbnail.templatetags.thumbnail import margin
 
 from .models import Item
 from .utils import BaseTestCase
-
-pytestmark = pytest.mark.django_db
 
 
 class SimpleTestCase(BaseTestCase):

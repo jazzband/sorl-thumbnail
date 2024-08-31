@@ -44,7 +44,7 @@ in Google Groups.
 
 Tests
 -----
-The tests should run with tox and pytest. Running `tox` will run all tests for all environments.
+The tests should run with tox. Running `tox` will run all tests for all environments.
 However, it is possible to run a certain environment with `tox -e <env>`, a list of all environments
 can be found with `tox -l`. These tests require the dependencies of the different engines defined in
 the documentation. It is possible to install these dependencies into a vagrant image with the

@@ -5,7 +5,6 @@ import sys
 import unittest
 from io import StringIO
 
-import pytest
 from django.test import TestCase
 from django.test.utils import override_settings
 from PIL import Image
@@ -18,8 +17,6 @@ from sorl.thumbnail.images import ImageFile
 
 from .models import Item
 from .utils import BaseTestCase, FakeFile, same_open_fd_count
-
-pytestmark = pytest.mark.django_db
 
 
 class BackendTest(BaseTestCase):

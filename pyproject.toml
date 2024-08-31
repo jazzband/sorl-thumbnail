@@ -55,13 +55,7 @@ Repository = "https://github.com/jazzband/sorl-thumbnail"
      "pragma: no cover",
      "if __name__ == .__main__.:",
  ]
-
- [tool.pytest.ini_options]
- python_files = ["test_*.py", "*tests.py"]
- norecursedirs =[".*", "tmp*", "__pycache__"]
- testpaths = ["tests"]
- django_find_project = false
-
+ 
 # below line is required to generating versions with setuptools_scm
 [tool.setuptools_scm]
 
