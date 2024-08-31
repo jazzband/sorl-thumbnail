@@ -6,7 +6,6 @@ Features at a glance
 ====================
 
 - Support for Django 4.2, 5.0 and 5.1 following the `Django supported versions policy`_
-- Python 3 support
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and `vipsthumbnail`_
 - Pluggable Key Value Store support (cached db, redis, and dynamodb by AWS)
@@ -74,13 +73,12 @@ Then register 'sorl.thumbnail', in the 'INSTALLED_APPS' section of
 your project's settings. ::
 
     INSTALLED_APPS = [
-        'django.contrib.auth',
         'django.contrib.admin',
-        'django.contrib.sites',
-        'django.contrib.comments',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
-        'django.contrib.contenttypes',
+        'django.contrib.staticfiles',
 
         'sorl.thumbnail',
     ]
