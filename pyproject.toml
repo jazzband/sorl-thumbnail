@@ -40,6 +40,10 @@ classifiers=[
 Homepage = "https://sorl-thumbnail.readthedocs.io/en/latest/"
 Repository = "https://github.com/jazzband/sorl-thumbnail"
 
+[project.optional-dependencies]
+pgmagick = ["pgmagick"]
+pil = ["pillow"]
+wand = ["wand"]
 
 [tool.coverage.run]
  source = ["sorl"]
