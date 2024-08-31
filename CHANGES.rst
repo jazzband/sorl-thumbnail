@@ -2,8 +2,8 @@
 Changes
 =======
 
-Unreleased
-==========
+12.11.0
+=======
 * Deprecated ``THUMBNAIL_KVSTORE``. Only the Django cache-based store will be
   used in a future version.
 * Add support for Django 5.0 and 5.1
