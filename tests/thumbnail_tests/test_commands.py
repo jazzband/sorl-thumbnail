@@ -1,18 +1,15 @@
+import os
 from datetime import datetime
 from io import StringIO
 from unittest import mock
-import os
 
-import pytest
 from django.core import management
 from django.core.management.base import CommandError
 
 from sorl.thumbnail.conf import settings
+
 from .models import Item
 from .utils import BaseTestCase
-
-
-pytestmark = pytest.mark.django_db
 
 
 class CommandTests(BaseTestCase):

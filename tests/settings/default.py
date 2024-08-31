@@ -13,7 +13,12 @@ THUMBNAIL_LOG_HANDLER = {
 }
 THUMBNAIL_KVSTORE = 'tests.thumbnail_tests.kvstore.TestKVStore'
 THUMBNAIL_STORAGE = 'tests.thumbnail_tests.storage.TestStorage'
-DEFAULT_FILE_STORAGE = 'tests.thumbnail_tests.storage.TestStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "tests.thumbnail_tests.storage.TestStorage",
+    },
+}
+
 ADMINS = (
     ('Sorl', 'thumbnail@sorl.net'),
 )

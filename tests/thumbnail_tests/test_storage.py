@@ -1,13 +1,9 @@
 import unittest
-import pytest
 
-from sorl.thumbnail import get_thumbnail, default
+from sorl.thumbnail import default, get_thumbnail
 from sorl.thumbnail.helpers import get_module_class
 
 from .utils import BaseStorageTestCase
-
-
-pytestmark = pytest.mark.django_db
 
 
 class StorageTestCase(BaseStorageTestCase):

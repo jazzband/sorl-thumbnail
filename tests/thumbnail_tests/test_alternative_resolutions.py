@@ -1,16 +1,11 @@
 import os
 
-import pytest
-
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail.conf import settings
-from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
+from sorl.thumbnail.images import ImageFile
 
 from .utils import BaseStorageTestCase
-
-
-pytestmark = pytest.mark.django_db
 
 
 class AlternativeResolutionsTest(BaseStorageTestCase):

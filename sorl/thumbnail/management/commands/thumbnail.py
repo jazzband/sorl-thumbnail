@@ -7,7 +7,6 @@ from django.utils.dateparse import parse_duration
 from sorl.thumbnail import default
 from sorl.thumbnail.images import delete_all_thumbnails
 
-
 VALID_LABELS = ['cleanup', 'clear', 'clear_delete_referenced', 'clear_delete_all']
 
 

@@ -7,7 +7,6 @@ from django.views.static import serve
 
 from .views import direct_to_template
 
-
 urlpatterns = [
     url(r'^media/(?P<path>.+)$', serve,
         {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),

@@ -1,7 +1,7 @@
+import logging
 import os
 import shutil
 import unittest
-import logging
 from contextlib import contextmanager
 from subprocess import check_output
 
@@ -13,6 +13,7 @@ from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.log import ThumbnailLogHandler
+
 from .models import Item
 from .storage import MockLoggingHandler
 

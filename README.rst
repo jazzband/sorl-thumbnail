@@ -5,7 +5,7 @@ Thumbnails for Django.
 Features at a glance
 ====================
 
-- Support for Django 3.2, 4.0 and 4.1 following the `Django supported versions policy`_
+- Support for Django 4.2, 5.0 and 5.1 following the `Django supported versions policy`_
 - Python 3 support
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and `vipsthumbnail`_
@@ -44,7 +44,7 @@ in Google Groups.
 
 Tests
 -----
-The tests should run with tox and pytest. Running `tox` will run all tests for all environments.
+The tests should run with tox. Running `tox` will run all tests for all environments.
 However, it is possible to run a certain environment with `tox -e <env>`, a list of all environments
 can be found with `tox -l`. These tests require the dependencies of the different engines defined in
 the documentation. It is possible to install these dependencies into a vagrant image with the

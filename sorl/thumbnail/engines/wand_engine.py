@@ -2,9 +2,10 @@
 Wand (>=v0.3.0) engine for Sorl-thumbnail
 '''
 
+from wand import exceptions
 from wand.image import Image
 from wand.version import MAGICK_VERSION_NUMBER
-from wand import exceptions
+
 from sorl.thumbnail.engines.base import EngineBase
 
 

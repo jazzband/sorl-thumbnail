@@ -1,20 +1,17 @@
 import os
 import re
-from subprocess import Popen, PIPE
-from PIL import Image
+from subprocess import PIPE, Popen
 
 from django.template.loader import render_to_string
 from django.test import Client, TestCase
 from django.test.utils import override_settings
-import pytest
+from PIL import Image
 
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
+
 from .models import Item
-from .utils import BaseTestCase, DATA_DIR
-
-
-pytestmark = pytest.mark.django_db
+from .utils import DATA_DIR, BaseTestCase
 
 
 class TemplateTestCaseA(BaseTestCase):
