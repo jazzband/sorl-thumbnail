@@ -5,9 +5,8 @@ import unittest
 from contextlib import contextmanager
 from subprocess import check_output
 
-from PIL import Image, ImageDraw
-
 from django.test import TestCase
+from PIL import Image, ImageDraw
 
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import get_module_class
