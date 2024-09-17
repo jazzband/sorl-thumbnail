@@ -5,11 +5,15 @@ Installation & Setup
 Installation
 ============
 First you need to make sure to read the :doc:`requirements`. To install
-sorl-thumbnail is easy::
+sorl-thumbnail::
 
     pip install sorl-thumbnail
 
-Or you can go to `the github page <https://github.com/sorl/sorl-thumbnail>`_
+Depending of the chosen image backend, you may also use one of::
+
+    pip install sorl-thumbnail[pil]
+    pip install sorl-thumbnail[wand]
+    pip install sorl-thumbnail[pgmagick]
 
 Setup
 =====
