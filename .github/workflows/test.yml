@@ -39,7 +39,7 @@ jobs:
       with:
         path: ${{ steps.pip-cache.outputs.CACHE_DIR }}
         key:
-          test-${{ matrix.python-version }}-v1-${{ hashFiles('**/setup.py') }}
+          test-${{ matrix.python-version }}-v1-${{ hashFiles('**/pyproject.toml') }}
         restore-keys: |
           test-${{ matrix.python-version }}-v1-
 
