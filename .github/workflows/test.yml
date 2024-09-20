@@ -32,12 +32,12 @@ jobs:
     - name: Get pip cache dir
       id: pip-cache
       run: |
-        echo "::set-output name=dir::$(pip cache dir)"
+        echo "CACHE_DIR=$(pip cache dir)" >> "$GITHUB_OUTPUT"
 
     - name: Cache
       uses: actions/cache@v4
       with:
-        path: ${{ steps.pip-cache.outputs.dir }}
+        path: ${{ steps.pip-cache.outputs.CACHE_DIR }}
         key:
           test-${{ matrix.python-version }}-v1-${{ hashFiles('**/setup.py') }}
         restore-keys: |
