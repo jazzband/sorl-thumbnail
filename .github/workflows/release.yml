@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: 3.8
 
@@ -29,7 +29,7 @@ jobs:
           echo "::set-output name=dir::$(pip cache dir)"
 
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: release-${{ hashFiles('**/pyproject.toml') }}
