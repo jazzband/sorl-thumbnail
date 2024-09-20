@@ -14,7 +14,7 @@ jobs:
           - python-version: '3.8'
             target: 'qa'
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Start Redis
       uses: supercharge/redis-github-action@1.5.0
@@ -25,21 +25,21 @@ jobs:
         sudo apt-get install libgraphicsmagick1-dev graphicsmagick libjpeg62 zlib1g-dev
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Get pip cache dir
       id: pip-cache
       run: |
-        echo "::set-output name=dir::$(pip cache dir)"
+        echo "CACHE_DIR=$(pip cache dir)" >> "$GITHUB_OUTPUT"
 
     - name: Cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
-        path: ${{ steps.pip-cache.outputs.dir }}
+        path: ${{ steps.pip-cache.outputs.CACHE_DIR }}
         key:
-          test-${{ matrix.python-version }}-v1-${{ hashFiles('**/setup.py') }}
+          test-${{ matrix.python-version }}-v1-${{ hashFiles('**/pyproject.toml') }}
         restore-keys: |
           test-${{ matrix.python-version }}-v1-
 
@@ -55,6 +55,6 @@ jobs:
         TARGET: ${{ matrix.target }}
 
     - name: Upload coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         name: Python ${{ matrix.python-version }}
