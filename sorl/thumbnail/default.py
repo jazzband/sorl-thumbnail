@@ -1,3 +1,4 @@
+from django.core.files.storage import storages
 from django.utils.functional import LazyObject
 
 from sorl.thumbnail.conf import settings
@@ -21,7 +22,10 @@ class Engine(LazyObject):
 
 class Storage(LazyObject):
     def _setup(self):
-        self._wrapped = get_module_class(settings.THUMBNAIL_STORAGE)()
+        if "." in settings.THUMBNAIL_STORAGE:
+            self._wrapped = get_module_class(settings.THUMBNAIL_STORAGE)()
+        else:
+            self._wrapped = storages[settings.THUMBNAIL_STORAGE]
 
 
 backend = Backend()
