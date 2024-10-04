@@ -61,17 +61,17 @@ class TestStorageMixin:
         # slog.debug('url: %s' % name)
         return super().url(name, *args, **kwargs)
 
-    def accessed_time(self, name, *args, **kwargs):
+    def get_accessed_time(self, name, *args, **kwargs):
         slog.debug('accessed_time: %s' % name)
-        return super().accessed_time(name, *args, **kwargs)
+        return super().get_accessed_time(name, *args, **kwargs)
 
-    def created_time(self, name, *args, **kwargs):
+    def get_created_time(self, name, *args, **kwargs):
         slog.debug('created_time: %s' % name)
-        return super().created_time(name, *args, **kwargs)
+        return super().get_created_time(name, *args, **kwargs)
 
-    def modified_time(self, name, *args, **kwargs):
+    def get_modified_time(self, name, *args, **kwargs):
         slog.debug('modified_time: %s' % name)
-        return super().modified_time(name, *args, **kwargs)
+        return super().get_modified_time(name, *args, **kwargs)
 
 
 class TestStorage(TestStorageMixin, FileSystemStorage):
