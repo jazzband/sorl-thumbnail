@@ -16,6 +16,7 @@ EXTENSIONS = {
     'PNG': 'png',
     'GIF': 'gif',
     'WEBP': 'webp',
+    'AVIF': 'avif',
 }
 
 
@@ -57,6 +58,8 @@ class ThumbnailBackend:
             return 'GIF'
         elif file_extension == '.webp':
             return 'WEBP'
+        elif file_extension == '.avif':
+            return 'AVIF'
         else:
             from django.conf import settings
 
