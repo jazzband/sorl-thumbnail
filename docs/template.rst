@@ -65,6 +65,23 @@ these things out::
             else:
                 self.storage = default_storage
 
+Format
+------
+
+sorl-thumbnail supports these formats:
+
+#. jpg, jpeg
+#. png
+#. gif
+#. webp
+#. avif  (requires pillow and pillow-avif-plugin)
+
+to use different format for your images set this variable in your settings.
+
+.. code-block:: python
+     
+    THUMBNAIL_FORMAT = 'JPEG'
+
 Geometry
 --------
 
