@@ -10,7 +10,7 @@ except ImportError:
     import ImageFile
     import ImageMode
 try:
-    import pillow_avif
+    import pillow_avif  # noqa: F401
 except ImportError:
     pass
 
