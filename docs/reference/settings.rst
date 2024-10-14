@@ -281,7 +281,7 @@ The generated thumbnails filename prefix.
 
 - Default: ``'JPEG'``
 
-Default image format, supported formats are: ``'JPEG'``, ``'PNG'``. This also implicitly
+Default image format, supported formats are: ``'JPEG'``, ``'PNG'``, ``'GIF'``, ``'WEBP'``, ``'AVIF'``. This also implicitly
 sets the filename extension. This can be overridden by individual options.
 
 ``THUMBNAIL_PRESERVE_FORMAT``
@@ -358,7 +358,7 @@ missing input source.
 This is the generated thumbnail whensource of the presented thumbnail. Width and
 Height is passed to the string for formatting.  Other options are for example:
 
-- ``https://via.placeholder.com/%(width)sx%(height)s
+- ``https://via.placeholder.com/%(width)sx%(height)s``
 - ``http://placekitten.com/%(width)s/%(height)s`` 
 
 
