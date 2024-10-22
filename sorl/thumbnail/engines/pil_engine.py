@@ -3,7 +3,8 @@ from io import BytesIO
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from PIL import Image, ImageDraw, ImageFile, ImageFilter, ImageMode
+    from PIL import Image, ImageDraw, ImageFile, ImageMode
+    from PIL.ImageFilter import GaussianBlur
 except ImportError:
     import Image
     import ImageDraw
@@ -66,16 +67,6 @@ def round_rectangle(size, radius, fill):
     rectangle.paste(corner.rotate(180), (width - radius, height - radius))
     rectangle.paste(corner.rotate(270), (width - radius, 0))
     return rectangle
-
-
-class GaussianBlur(ImageFilter.Filter):
-    name = "GaussianBlur"
-
-    def __init__(self, radius=2):
-        self.radius = radius
-
-    def filter(self, image):
-        return image.gaussian_blur(self.radius)
 
 
 class Engine(EngineBase):
