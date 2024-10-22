@@ -59,6 +59,15 @@ class SimpleTestCase(BaseTestCase):
         self.assertEqual(t.x, 400)
         self.assertEqual(t.y, 300)
 
+    @unittest.skipIf('pil_engine' not in settings.THUMBNAIL_ENGINE, 'blur is only supported in PIL')
+    def test_crop_and_blur(self):
+        item = Item.objects.get(image='200x100.jpg')
+
+        t = self.BACKEND.get_thumbnail(item.image, '100x100', crop="center", blur='3')
+
+        self.assertEqual(t.x, 100)
+        self.assertEqual(t.y, 100)
+
     def test_kvstore(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
         self.KVSTORE.delete_thumbnails(im)

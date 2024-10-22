@@ -3,7 +3,8 @@ from io import BytesIO
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from PIL import Image, ImageDraw, ImageFile, GaussianBlur, ImageMode
+    from PIL import Image, ImageDraw, ImageFile, ImageMode
+    from PIL.ImageFilter import GaussianBlur
 except ImportError:
     import Image
     import ImageDraw
