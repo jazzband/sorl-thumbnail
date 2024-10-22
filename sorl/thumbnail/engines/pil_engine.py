@@ -75,7 +75,10 @@ class GaussianBlur(ImageFilter.Filter):
         self.radius = radius
 
     def filter(self, image):
-        return image.gaussian_blur(self.radius)
+        xy = self.radius
+        if isinstance(xy, (int, float)):
+            xy = (xy, xy)
+        return image.gaussian_blur(xy)
 
 
 class Engine(EngineBase):
