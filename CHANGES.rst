@@ -2,6 +2,11 @@
 Changes
 =======
 
+Unreleased
+==========
+* ``THUMBNAIL_STORAGE`` should now be an alias in the Django ``STORAGES`` setting.
+  The old way of specifying a dotted path to a Storage module is still supported.
+
 12.11.0
 =======
 * Deprecated ``THUMBNAIL_KVSTORE``. Only the Django cache-based store will be

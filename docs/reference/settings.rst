@@ -166,9 +166,11 @@ Only applicable for the convert Engine.
 ``THUMBNAIL_STORAGE``
 =====================
 
-- Default: ``settings.DEFAULT_FILE_STORAGE``
+- Default: ``default``
 
-The storage class to use for the generated thumbnails.
+The storage to use for the generated thumbnails, as an alias from the Django
+``STORAGES`` setting.
+Optionally accepts a path to a Storage subclass.
 
 
 ``THUMBNAIL_REDIS_URL``
