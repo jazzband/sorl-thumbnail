@@ -8,7 +8,7 @@ from urllib.parse import quote, quote_plus, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 from django.core.files.base import ContentFile, File
-from django.core.files.storage import Storage  # , default_storage
+from django.core.files.storage import Storage
 from django.utils.encoding import force_str
 from django.utils.functional import LazyObject, empty
 

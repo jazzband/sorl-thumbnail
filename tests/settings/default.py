@@ -12,7 +12,7 @@ THUMBNAIL_LOG_HANDLER = {
     'level': 'ERROR',
 }
 THUMBNAIL_KVSTORE = 'tests.thumbnail_tests.kvstore.TestKVStore'
-THUMBNAIL_STORAGE = 'tests.thumbnail_tests.storage.TestStorage'
+THUMBNAIL_STORAGE = 'default'
 STORAGES = {
     "default": {
         "BACKEND": "tests.thumbnail_tests.storage.TestStorage",
