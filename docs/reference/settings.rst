@@ -360,7 +360,7 @@ missing input source.
 This is the generated thumbnail whensource of the presented thumbnail. Width and
 Height is passed to the string for formatting.  Other options are for example:
 
-- ``https://via.placeholder.com/%(width)sx%(height)s
+- ``https://via.placeholder.com/%(width)sx%(height)s``
 - ``http://placekitten.com/%(width)s/%(height)s`` 
 
 
