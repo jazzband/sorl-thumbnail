@@ -1,6 +1,5 @@
 from django import forms
 from django.db import models
-from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from sorl.thumbnail import default
@@ -9,24 +8,6 @@ __all__ = ('ImageField', 'ImageFormField')
 
 
 class ImageField(models.ImageField):
-    def delete_file(self, instance, sender, **kwargs):
-        """
-        Adds deletion of thumbnails and key value store references to the
-        parent class implementation. Only called in Django < 1.2.5
-        """
-        file_ = getattr(instance, self.attname)
-
-        # If no other object of this type references the file, and it's not the
-        # default value for future objects, delete it from the backend.
-        query = Q(**{self.name: file_.name}) & ~Q(pk=instance.pk)
-        qs = sender._default_manager.filter(query)
-
-        if (file_ and file_.name != self.default and not qs):
-            default.backend.delete(file_)
-        elif file_:
-            # Otherwise, just close the file, so it doesn't tie up resources.
-            file_.close()
-
     def formfield(self, **kwargs):
         defaults = {'form_class': ImageFormField}
         defaults.update(kwargs)
