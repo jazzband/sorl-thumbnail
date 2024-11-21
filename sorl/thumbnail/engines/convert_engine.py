@@ -110,7 +110,8 @@ class Engine(EngineBase):
 
     def _get_exif_orientation(self, image):
         args = settings.THUMBNAIL_IDENTIFY.split()
-        args.extend(['-format', '%[exif:orientation]', image['source']])
+        image_param = f"{image['source']}[0]"
+        args.extend(["-format", "%[exif:orientation]", image_param])
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
         result = p.stdout.read().strip()
