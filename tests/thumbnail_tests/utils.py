@@ -5,6 +5,7 @@ import unittest
 from contextlib import contextmanager
 from subprocess import check_output
 
+from django.test import TestCase
 from PIL import Image, ImageDraw
 
 from sorl.thumbnail.conf import settings
@@ -56,7 +57,7 @@ class FakeFile:
         self.name = name
 
 
-class BaseTestCase(unittest.TestCase):
+class BaseTestCase(TestCase):
     IMAGE_DIMENSIONS = [(500, 500), (100, 100), (200, 100), ]
     BACKEND = None
     ENGINE = None
