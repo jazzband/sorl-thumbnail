@@ -40,7 +40,7 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
             # save the 2x resolution version
             'save: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg',
             'get_available_name: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg',
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg'
+            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg',
         ]
         self.assertEqual(self.log, actions)
 

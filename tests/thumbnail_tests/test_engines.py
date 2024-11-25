@@ -423,6 +423,25 @@ class CropBoxTestCase(BaseTestCase):
         'pil_engine' not in settings.THUMBNAIL_ENGINE,
         'the other engines fail this test',
     )
+    def test_PIL_freetransform(self):
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
+        engine = PILEngine()
+        im = engine.get_image(th)
+        self.assertEqual(im.width, 100)
+        self.assertEqual(im.height, 100)
+
+    @unittest.skipIf(
+        'convert_engine' not in settings.THUMBNAIL_ENGINE,
+        'the other engines fail this test',
+    )
+    def test_convert_engine_freetransform(self):
+        from sorl.thumbnail.engines.convert_engine import Engine as ConvertEngine
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
+        engine = ConvertEngine()
+        im = engine.get_image(th)
+        size = engine.get_image_size(im)
+        self.assertEqual(size, (100, 100))
+
     def PIL_test_portrait_crop(self):
         def mean_pixel(x, y):
             values = im.getpixel((x, y))
@@ -502,6 +521,15 @@ class CropBoxTestCase(BaseTestCase):
         'wand_engine' not in settings.THUMBNAIL_ENGINE,
         'the other engines fail this test',
     )
+  
+    def test_wand_engine_freetransform(self):
+        from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
+        engine = WandEngine()
+        im = engine.get_image(th)
+        self.assertEqual(im.width, 100)
+        self.assertEqual(im.height, 100)
+        
     def wand_test_cropbox(self):
         from sorl.thumbnail.engines.wand_engine import Engine as WandEngine
         th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,50,100,150")
@@ -516,6 +544,15 @@ class CropBoxTestCase(BaseTestCase):
         'pgmagick_engine' not in settings.THUMBNAIL_ENGINE,
         'the other engines fail this test',
     )
+
+    def test_pgmagick_engine_freetransform(self):
+        from sorl.thumbnail.engines.pgmagick_engine import Engine as PgmagickEngine
+        th = self.BACKEND.get_thumbnail(self.portrait, '100x100', transform=True)
+        engine = PgmagickEngine()
+        im = engine.get_image(th)
+        self.assertEqual(im.width(100), 100)
+        self.assertEqual(im.height(100), 100)
+
     def pgmagick_test_cropbox(self):
         from sorl.thumbnail.engines.pgmagick_engine import Engine as PgMagickEngine
         th = self.BACKEND.get_thumbnail(self.portrait, '100x100', cropbox="0,50,100,150")
@@ -538,7 +575,6 @@ class CropBoxTestCase(BaseTestCase):
 
         # If the crop went well, then it should scale to 100x100 perfectly
         self.assertEqual(im["size"], (100, 100))
-
 
 class DummyTestCase(unittest.TestCase):
     def setUp(self):
