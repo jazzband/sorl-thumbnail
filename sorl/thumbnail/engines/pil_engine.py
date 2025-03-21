@@ -282,7 +282,7 @@ class Engine(EngineBase):
         except OSError:
             # Try without optimization and icc_profile.
             params.pop('optimize')
-            if 'icc_profile' in params: 
+            if 'icc_profile' in params:
                 params.pop('icc_profile')
             image.save(bf, **params)
             raw_data = bf.getvalue()
