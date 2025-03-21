@@ -267,7 +267,7 @@ class Engine(EngineBase):
         }
 
         # keeps icc_profile
-        if 'icc_profile' in image_info:
+        if image_info and 'icc_profile' in image_info:
             params['icc_profile'] = image_info['icc_profile']
 
         raw_data = None
@@ -278,11 +278,13 @@ class Engine(EngineBase):
             # Do not save unnecessary exif data for smaller thumbnail size
             params.pop('exif', {})
             image.save(bf, **params)
+            raw_data = bf.getvalue()
         except OSError:
-            # Try without optimization.
+            # Try without optimization and icc_profile.
             params.pop('optimize')
+            if 'icc_profile' in params: 
+                params.pop('icc_profile')
             image.save(bf, **params)
-        else:
             raw_data = bf.getvalue()
         finally:
             bf.close()
