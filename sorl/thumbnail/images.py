@@ -8,7 +8,7 @@ from urllib.parse import quote, quote_plus, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 from django.core.files.base import ContentFile, File
-from django.core.files.storage import Storage
+from django.core.files.storage import InvalidStorageError, Storage, storages
 from django.utils.encoding import force_str
 from django.utils.functional import LazyObject, empty
 
@@ -23,7 +23,10 @@ url_pat = re.compile(r'^(https?|ftp):\/\/')
 
 @lru_cache
 def get_or_create_storage(storage):
-    return get_module_class(storage)()
+    try:
+        return storages[storage]
+    except InvalidStorageError:
+        return get_module_class(storage)()
 
 
 def serialize_image_file(image_file):
@@ -188,7 +191,12 @@ class ImageFile(BaseImageFile):
             cls = self.storage._wrapped.__class__
         else:
             cls = self.storage.__class__
-        return '%s.%s' % (cls.__module__, cls.__name__)
+        backend = f"{cls.__module__}.{cls.__name__}"
+        # Try our best to find and serialize the storage alias instead of the backend class.
+        for alias, params in storages.backends.items():
+            if params.get("BACKEND") == backend:
+                return alias
+        return backend
 
     @property
     def key(self):
