@@ -23,29 +23,29 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
     def test_retina(self):
         get_thumbnail(self.image, '50x50')
 
+        cache_path = "test/cache/2c/0f/2c0f909d420e760b8dc4e1d1f79e705b"
         actions = [
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d.jpg',
+            f"exists: {cache_path}.jpg",
 
             # save regular resolution, same as in StorageTestCase
-            'open: retina.jpg',
-            'save: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d.jpg',
-            'get_available_name: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d.jpg',
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d.jpg',
+            "open: retina.jpg",
+            f"save: {cache_path}.jpg",
+            f"get_available_name: {cache_path}.jpg",
+            f"exists: {cache_path}.jpg",
 
             # save the 1.5x resolution version
-            'save: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg',
-            'get_available_name: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg',
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg',
+            f"save: {cache_path}@1.5x.jpg",
+            f"get_available_name: {cache_path}@1.5x.jpg",
+            f"exists: {cache_path}@1.5x.jpg",
 
             # save the 2x resolution version
-            'save: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg',
-            'get_available_name: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg',
-            'exists: test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@2x.jpg'
+            f"save: {cache_path}@2x.jpg",
+            f"get_available_name: {cache_path}@2x.jpg",
+            f"exists: {cache_path}@2x.jpg"
         ]
         self.assertEqual(self.log, actions)
 
-        path = os.path.join(settings.MEDIA_ROOT,
-                            'test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d@1.5x.jpg')
+        path = os.path.join(settings.MEDIA_ROOT, f"{cache_path}@1.5x.jpg")
 
         with open(path) as fp:
             engine = PILEngine()
