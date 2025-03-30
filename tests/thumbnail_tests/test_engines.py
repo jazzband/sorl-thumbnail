@@ -158,18 +158,18 @@ class SimpleTestCase(BaseTestCase):
 
     def test_storage_serialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
-        self.assertEqual(im.serialize_storage(), 'tests.thumbnail_tests.storage.TestStorage')
+        self.assertEqual(im.serialize_storage(), 'default')
         self.assertEqual(
             ImageFile('http://www.image.jpg').serialize_storage(),
             'sorl.thumbnail.images.UrlStorage',
         )
         self.assertEqual(
             ImageFile('http://www.image.jpg', default.storage).serialize_storage(),
-            'tests.thumbnail_tests.storage.TestStorage',
+            'default',
         )
         self.assertEqual(
             ImageFile('getit', default_storage).serialize_storage(),
-            'tests.thumbnail_tests.storage.TestStorage',
+            'default',
         )
 
     @unittest.skipIf(platform.system() == "Darwin", 'quality is saved a different way on os x')
@@ -200,7 +200,7 @@ class SimpleTestCase(BaseTestCase):
         default.kvstore.set(im)
         self.assertEqual(
             default.kvstore.get(im).serialize_storage(),
-            'tests.thumbnail_tests.storage.TestStorage',
+            'default',
         )
         im = ImageFile('https://dummyimage.com/300x300/')
         default.kvstore.set(im)
