@@ -103,13 +103,13 @@ class ThumbnailBackend:
             try:
                 source_image = default.engine.get_image(source)
             except Exception as e:
-                logger.exception(e)
                 if settings.THUMBNAIL_DUMMY:
                     return DummyImageFile(geometry_string)
                 else:
                     # if storage backend says file doesn't exist remotely,
                     # don't try to create it and exit early.
                     # Will return working empty image type; 404'd image
+                    logger.exception(e)
                     logger.warning(
                         'Remote file [%s] at [%s] does not exist',
                         file_, geometry_string,
