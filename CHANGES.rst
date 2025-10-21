@@ -6,6 +6,9 @@ Unreleased
 ==========
 * ``THUMBNAIL_STORAGE`` should now be an alias in the Django ``STORAGES`` setting.
   The old way of specifying a dotted path to a Storage module is still supported.
+* Fixed serialization to use storage aliases instead of backend class paths, ensuring
+  storage OPTIONS (like bucket names and credentials) are preserved when thumbnails are
+  cached and retrieved. Fixes issues with S3, Google Cloud Storage, and other cloud backends.
 * Confirmed support for Python 3.13 (on Django 5.1+).
 * Drop support for Python 3.8.
 * Add support for Django 5.2
