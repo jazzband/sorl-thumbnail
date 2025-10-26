@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.9', '3.13']
+        python-version: ['3.10', '3.13']
         target: [pil, imagemagick, graphicsmagick, redis, wand, dbm]
 
         include:
-          - python-version: '3.9'
+          - python-version: '3.10'
             target: 'qa'
     steps:
     - uses: actions/checkout@v4
