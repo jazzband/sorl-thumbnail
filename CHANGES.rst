@@ -10,7 +10,7 @@ Unreleased
   storage OPTIONS (like bucket names and credentials) are preserved when thumbnails are
   cached and retrieved. Fixes issues with S3, Google Cloud Storage, and other cloud backends.
 * Confirmed support for Python 3.13 (on Django 5.1+).
-* Drop support for Python 3.8.
+* Drop support for Python 3.8 and 3.9.
 * Add support for Django 5.2
 
 12.11.0
