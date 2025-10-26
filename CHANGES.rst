@@ -7,7 +7,7 @@ Unreleased
 * ``THUMBNAIL_STORAGE`` should now be an alias in the Django ``STORAGES`` setting.
   The old way of specifying a dotted path to a Storage module is still supported.
 * Confirmed support for Python 3.13 (on Django 5.1+).
-* Drop support for Python 3.8.
+* Drop support for Python 3.8 and 3.9.
 * Add support for Django 5.2
 
 12.11.0
