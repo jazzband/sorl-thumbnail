@@ -46,8 +46,8 @@ Tests
 The tests should run with tox. Running `tox` will run all tests for all environments.
 However, it is possible to run a certain environment with `tox -e <env>`, a list of all environments
 can be found with `tox -l`. These tests require the dependencies of the different engines defined in
-the documentation. It is possible to install these dependencies into a vagrant image with the
-Vagrantfile in the repo.
+the documentation. The easiest way to run tests is using Docker - see the `contributing documentation <https://sorl-thumbnail.readthedocs.io/en/latest/contributing.html#running-testsuite>`_
+for detailed instructions on running tests locally with Docker.
 
 User Support
 ============
