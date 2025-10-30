@@ -41,6 +41,13 @@ not reference the generated thumbnails by name somewhere else in your code. As
 long as all the original images still exist this will trigger a regeneration of
 all the thumbnails the Key Value Store knows about.
 
+The command supports an optional ``--timeout`` parameter that can specify a
+date filter criteria when deciding to delete a thumbnail. The timeout value can
+be either a number of seconds or an ISO 8601 duration string supported by
+``django.utils.dateparse.parse_duration``. For example, running
+``python manage.py thumbnail clear_delete_referenced --timeout=P90D`` will
+delete all thumbnails that were created more than 90 days ago.
+
 
 .. _thumbnail-clear-delete-all:
 
