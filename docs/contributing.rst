@@ -8,43 +8,84 @@ with other developers, join us in the channel #sorl-thumbnail at freenode.net
 
    irc://irc.freenode.net/#sorl-thumbnail
 
-Running testsuit
-================
+Running testsuite
+=================
 
 For occasional developers we recommend using `GitHub Actions`_ to run testsuite,
 for those who want to run tests locally, read on.
 
 Since sorl-thumbnail supports a variety of image backends, python and
 Django versions, we provide an easy way to test locally across all of them.
-We use `Vagrant`_ for simple interaction with virtual machines and
-`tox`_ for managing python virtual environments.
+We use `Docker`_ for consistent test environments and `tox`_ for managing
+python virtual environments.
 
-Some dependencies like pgmagick takes a lot of time to compiling. To speed up your
-vagrant box you can edit `Vagrant file`_ with mem and cpu or simply install `vagrant-faster`_.
-The resulting .tox folder containing all virtualenvs requires ~
+Prerequisites
+-------------
 
-* `Install Vagrant`_
+* `Install Docker`_ and Docker Compose
 * ``cd`` in your source directory
-* Run ``vagrant up`` to prepare VM. It will download Ubuntu image and install all necessary dependencies.
-* Run ``vagrant ssh`` to log in the VM
-* Launch all tests via ``tox`` (will take some time to build envs first time)
 
-To run only tests against only one configuration use ``-e`` option::
+Running tests
+-------------
 
-    tox -e py34-django16-pil
+Build the Docker image (first time only)::
 
-Py34 stands for python version, 1.6 is Django version and the latter is image library.
-For full list of tox environments, see ``tox.ini``
+    docker compose build
 
-You can get away without using Vagrant if you install all packages locally yourself,
-however, this is not recommended.
+Run all tests (all tox environments)::
+
+    docker compose run --rm test
+
+Run tests for a specific configuration using the ``-e`` option with tox::
+
+    docker compose run --rm test sh -c "redis-server --daemonize yes && tox -e py312-django51-pil"
+
+The format is: ``py<version>-django<version>-<backend>``
+
+For example:
+- ``py312`` = Python 3.12
+- ``django51`` = Django 5.1
+- ``pil`` = Pillow image library backend
+
+For a full list of tox environments, see ``tox.ini``
+
+Running specific tests
+----------------------
+
+To run specific tests, pass Django test labels after ``--``. Django uses dotted module names,
+not file paths::
+
+    # Run a specific test module
+    docker compose run --rm test sh -c "redis-server --daemonize yes && tox -e py312-django51-pil -- tests.thumbnail_tests.test_engines"
+
+Running CI target tests
+-----------------------
+
+To replicate GitHub Actions CI tests, use the ``ci`` service with the TARGET
+environment variable. Available targets: ``pil``, ``imagemagick``, ``graphicsmagick``,
+``redis``, ``wand``, ``dbm``, and ``qa`` (for quality assurance checks).
+
+Run a specific CI target::
+
+    TARGET=pil docker compose run --rm ci
+    TARGET=imagemagick docker compose run --rm ci
+    TARGET=graphicsmagick docker compose run --rm ci
+    TARGET=redis docker compose run --rm ci
+    TARGET=wand docker compose run --rm ci
+    TARGET=dbm docker compose run --rm ci
+    TARGET=qa docker compose run --rm ci
+
+Run all CI targets in sequence::
+
+    for target in pil imagemagick graphicsmagick redis wand dbm qa; do
+      echo "Testing $target..."
+      TARGET=$target docker compose run --rm ci
+    done
 
 .. _GitHub Actions: https://github.com/jazzband/sorl-thumbnail/actions
-.. _Vagrant: https://www.vagrantup.com/
+.. _Docker: https://www.docker.com/
 .. _tox: https://tox.wiki/
-.. _Install Vagrant: https://www.vagrantup.com/docs/installation
-.. _Vagrant file: https://www.vagrantup.com/docs/providers/virtualbox/configuration
-.. _vagrant-faster: https://github.com/rdsubhas/vagrant-faster
+.. _Install Docker: https://docs.docker.com/get-docker/
 
 Sending pull requests
 =====================
