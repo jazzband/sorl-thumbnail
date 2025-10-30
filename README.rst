@@ -13,7 +13,6 @@ Features at a glance
 - Admin integration with possibility to delete
 - Dummy generation (placeholders)
 - Flexible, simple syntax, generates no html
-- ImageField for model that deletes thumbnails (only compatible with django 1.2.5 or less)
 - CSS style cropping options
 - Back smart cropping, and remove borders from the images when cropping
 - Margin calculation for vertical positioning
