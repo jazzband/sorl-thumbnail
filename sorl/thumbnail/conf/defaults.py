@@ -1,3 +1,7 @@
+class DefaultRGB(str):
+    pass
+
+
 # When True ThumbnailNode.render can raise errors
 THUMBNAIL_DEBUG = False
 
@@ -65,7 +69,7 @@ THUMBNAIL_PRESERVE_FORMAT = False
 
 # Colorspace, backends are required to implement: RGB, GRAY
 # Setting this to None will keep the original colorspace.
-THUMBNAIL_COLORSPACE = 'RGB'
+THUMBNAIL_COLORSPACE = DefaultRGB('RGB')
 
 # Should we upscale images by default
 THUMBNAIL_UPSCALE = True
