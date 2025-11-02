@@ -9,6 +9,7 @@ from django.utils.encoding import smart_str
 
 from sorl.thumbnail.base import EXTENSIONS
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.conf.defaults import DefaultRGB
 from sorl.thumbnail.engines.base import EngineBase
 
 logger = logging.getLogger(__name__)
@@ -162,6 +163,9 @@ class Engine(EngineBase):
 
             RGB, GRAY
         """
+        if isinstance(colorspace, DefaultRGB) and not settings.THUMBNAIL_CONVERT.startswith('gm'):
+            # Looks like a safer default than 'RGB' nowadays for imagemagick
+            colorspace = "sRGB"
         image['options']['colorspace'] = colorspace
         return image
 
