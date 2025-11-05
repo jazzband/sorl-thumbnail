@@ -73,6 +73,10 @@ want to see the following::
 
     --- JPEG support available
     --- ZLIB (PNG/ZIP) support available
+    
+to activate avif support install the plugin::
+
+    pip install sorl-thumbnail[avif, pil]
 
 pgmagick installation
 ---------------------

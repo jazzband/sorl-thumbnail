@@ -45,6 +45,7 @@ Repository = "https://github.com/jazzband/sorl-thumbnail"
 pgmagick = ["pgmagick"]
 pil = ["pillow"]
 wand = ["wand"]
+avif = ["pillow-avif-plugin"]
 
 [tool.coverage.run]
  source = ["sorl"]
