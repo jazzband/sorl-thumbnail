@@ -2,8 +2,8 @@
 Changes
 =======
 
-Unreleased
-==========
+13.0.0
+======
 * ``THUMBNAIL_STORAGE`` should now be an alias in the Django ``STORAGES`` setting.
   The old way of specifying a dotted path to a Storage module is still supported.
 * Fixed serialization to use storage aliases instead of backend class paths, ensuring
@@ -12,6 +12,10 @@ Unreleased
 * Confirmed support for Python 3.13 (on Django 5.1+).
 * Drop support for Python 3.8 and 3.9.
 * Add support for Django 5.2
+* Accept a tuple as blur radius use GaussianBlur from PIL (#773)
+* Fixed a performance issue in convert engine with _get_exif_orientation
+* Reduced logging in ThumbnailBackend when THUMBNAIL_DUMMY is activated
+* Privileged sRGB as default for ImageMagick colorspace
 
 12.11.0
 =======
