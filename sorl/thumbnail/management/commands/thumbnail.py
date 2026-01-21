@@ -1,8 +1,4 @@
-from datetime import timedelta
-
-from django.core.management.base import BaseCommand, CommandError
-from django.utils import timezone
-from django.utils.dateparse import parse_duration
+from django.core.management.base import BaseCommand
 
 from sorl.thumbnail import default
 from sorl.thumbnail.images import delete_all_thumbnails
@@ -18,9 +14,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('args', choices=VALID_LABELS, nargs=1)
-        parser.add_argument('--timeout')
 
-    # flake8: noqa: C901
     def handle(self, *labels, **options):
         verbosity = int(options.get('verbosity'))
         label = labels[0]
@@ -37,25 +31,13 @@ class Command(BaseCommand):
             return
 
         if label == 'clear_delete_referenced':
-            timeout_date = None
-            if options['timeout']:
-                # Optional deletion timeout duration
-                if options['timeout'].isdigit():  # A number of seconds
-                    seconds = int(options['timeout'])
-                else:
-                    # A duration string as supported by Django.
-                    duration = parse_duration(options['timeout'])
-                    if not duration:
-                        raise CommandError(f"Unable to parse '{options['timeout']}' as a duration")
-                    seconds = duration.seconds
-                timeout_date = timezone.now() - timedelta(seconds=seconds)
             if verbosity >= 1:
-                msg = "Delete all thumbnail files referenced in Key Value Store"
-                if timeout_date:
-                    msg += f" older than {timeout_date.strftime('%Y-%m-%d %H:%M:%S')}"
-                self.stdout.write(msg, ending=' ... ')
+                self.stdout.write(
+                    "Delete all thumbnail files referenced in Key Value Store",
+                    ending=' ... '
+                )
 
-            default.kvstore.delete_all_thumbnail_files(older_than=timeout_date)
+            default.kvstore.delete_all_thumbnail_files()
 
             if verbosity >= 1:
                 self.stdout.write('[Done]')

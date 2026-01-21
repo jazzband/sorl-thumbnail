@@ -1,10 +1,7 @@
 import os
-from datetime import datetime
 from io import StringIO
-from unittest import mock
 
 from django.core import management
-from django.core.management.base import CommandError
 
 from sorl.thumbnail.conf import settings
 
@@ -46,38 +43,6 @@ class CommandTests(BaseTestCase):
         self.assertTrue(os.path.isfile(name1))
         self.assertTrue(os.path.isfile(name2))
         self.assertFalse(os.path.isfile(name3))
-
-    def _test_clear_delete_referenced_timeout(self, timeout):
-        """
-        Clear KV store and delete referenced thumbnails for thumbnails older
-        than the specified timeout.
-        """
-        name1, name2 = self.make_test_thumbnails('400x300', '200x200')
-        out = StringIO()
-        with mock.patch('tests.thumbnail_tests.storage.TestStorage.get_created_time') as mocked:
-            mocked.return_value = datetime(2016, 9, 29, 12, 58, 27)
-            management.call_command(
-                'thumbnail', 'clear_delete_referenced', f'--timeout={timeout}',
-                verbosity=1, stdout=out
-            )
-        lines = out.getvalue().split("\n")
-        self.assertRegex(
-            lines[0],
-            "Delete all thumbnail files referenced in Key Value Store "
-            r"older than \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \.\.\. \[Done\]"
-        )
-        self.assertFalse(os.path.isfile(name1))
-        self.assertFalse(os.path.isfile(name2))
-
-    def test_clear_delete_referenced_timeout_digits(self):
-        self._test_clear_delete_referenced_timeout('7776000')
-
-    def test_clear_delete_referenced_timeout_duration(self):
-        self._test_clear_delete_referenced_timeout('P180D')
-
-    def test_clear_delete_referenced_timeout_invalid(self):
-        with self.assertRaisesMessage(CommandError, "Unable to parse 'XX360' as a duration"):
-            self._test_clear_delete_referenced_timeout('XX360')
 
     def test_clear_delete_all_action(self):
         """ Clear KV store and delete all thumbnails """
