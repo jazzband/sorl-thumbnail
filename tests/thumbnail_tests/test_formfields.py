@@ -1,6 +1,6 @@
 from django import forms
-from django.test import SimpleTestCase
 from django.forms.widgets import FileInput
+from django.test import SimpleTestCase
 
 from sorl.thumbnail.fields import ImageFormField
 
