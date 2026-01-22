@@ -283,7 +283,7 @@ The generated thumbnails filename prefix.
 
 - Default: ``'JPEG'``
 
-Default image format, supported formats are: ``'JPEG'``, ``'PNG'``. This also implicitly
+Default image format, supported formats are: ``'JPEG'``, ``'PNG'``, ``'GIF'``, ``'WEBP'``, ``'AVIF'``. This also implicitly
 sets the filename extension. This can be overridden by individual options.
 
 ``THUMBNAIL_PRESERVE_FORMAT``

@@ -10,6 +10,10 @@ except ImportError:
     import ImageDraw
     import ImageFile
     import ImageMode
+try:
+    import pillow_avif  # noqa: F401
+except ImportError:
+    pass
 
 if hasattr(Image, 'Resampling'):
     ANTIALIAS = Image.Resampling.LANCZOS
