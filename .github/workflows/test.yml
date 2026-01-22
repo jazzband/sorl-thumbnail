@@ -22,7 +22,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install imagemagick libgraphicsmagick1-dev graphicsmagick libjpeg62 zlib1g-dev
+        sudo apt-get install imagemagick libgraphicsmagick1-dev graphicsmagick libjpeg62 zlib1g-dev libavif-dev
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
