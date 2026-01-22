@@ -1,5 +1,7 @@
 import warnings
 
+from django.utils import timezone
+
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.helpers import ThumbnailError, deserialize, serialize
 from sorl.thumbnail.images import deserialize_image_file, serialize_image_file
@@ -100,6 +102,11 @@ class KVStoreBase:
                     if thumbnail:
                         if older_than is not None:
                             created_time = thumbnail.storage.get_created_time(thumbnail.name)
+                            # Make created_time timezone-aware if it's naive
+                            if timezone.is_naive(created_time):
+                                created_time = timezone.make_aware(created_time)
+                            if timezone.is_naive(older_than):
+                                older_than = timezone.make_aware(older_than)
                             if created_time > older_than:
                                 continue
                         thumbnail.delete()

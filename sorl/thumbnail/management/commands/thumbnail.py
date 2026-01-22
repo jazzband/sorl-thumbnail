@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     duration = parse_duration(options['timeout'])
                     if not duration:
                         raise CommandError(f"Unable to parse '{options['timeout']}' as a duration")
-                    seconds = duration.seconds
+                    seconds = int(duration.total_seconds())
                 timeout_date = timezone.now() - timedelta(seconds=seconds)
             if verbosity >= 1:
                 msg = "Delete all thumbnail files referenced in Key Value Store"
