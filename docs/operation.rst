@@ -61,8 +61,4 @@ data. The other bonus is that we can keep track of what thumbnails has been
 generated from a particular source and deleting them too when the source is
 deleted.
 
-`Schematic view of how things are done
-<https://docs.google.com/drawings/edit?id=1wlE4LkQpzXd2a2Nxfjt6_j5NG7889dzMyf0V-xPAJSE&hl=en>`_
-
 .. |kvstore| replace:: Key Value Store
-
