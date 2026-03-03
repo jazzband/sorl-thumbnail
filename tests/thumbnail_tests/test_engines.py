@@ -172,13 +172,18 @@ class SimpleTestCase(BaseTestCase):
             'default',
         )
 
-        self.assertEqual(im.serialize_storage(use_backend_name=True), 'tests.thumbnail_tests.storage.TestStorage')
+        self.assertEqual(
+            im.serialize_storage(use_backend_name=True),
+            'tests.thumbnail_tests.storage.TestStorage'
+        )
         self.assertEqual(
             ImageFile('http://www.image.jpg').serialize_storage(use_backend_name=True),
             'sorl.thumbnail.images.UrlStorage',
         )
         self.assertEqual(
-            ImageFile('http://www.image.jpg', default.storage).serialize_storage(use_backend_name=True),
+            ImageFile('http://www.image.jpg', default.storage).serialize_storage(
+                use_backend_name=True
+            ),
             'tests.thumbnail_tests.storage.TestStorage',
         )
         self.assertEqual(
