@@ -174,7 +174,7 @@ class SimpleTestCase(BaseTestCase):
 
         self.assertEqual(
             im.serialize_storage(use_backend_name=True),
-            'tests.thumbnail_tests.storage.TestStorage'
+            'tests.thumbnail_tests.storage.TestStorage',
         )
         self.assertEqual(
             ImageFile('http://www.image.jpg').serialize_storage(use_backend_name=True),
