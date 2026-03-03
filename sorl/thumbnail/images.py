@@ -182,7 +182,7 @@ class ImageFile(BaseImageFile):
     def delete(self):
         return self.storage.delete(self.name)
 
-    def serialize_storage(self):
+    def serialize_storage(self, use_backend_name=False):
         if isinstance(self.storage, LazyObject):
             # if storage is wrapped in a lazy object we need to get the real
             # thing.
@@ -192,6 +192,8 @@ class ImageFile(BaseImageFile):
         else:
             cls = self.storage.__class__
         backend = f"{cls.__module__}.{cls.__name__}"
+        if use_backend_name:
+            return backend
         # Try our best to find and serialize the storage alias instead of the backend class.
         for alias, params in storages.backends.items():
             if params.get("BACKEND") == backend:
@@ -200,7 +202,7 @@ class ImageFile(BaseImageFile):
 
     @property
     def key(self):
-        return tokey(self.name, self.serialize_storage())
+        return tokey(self.name, self.serialize_storage(use_backend_name=True))
 
     def serialize(self):
         return serialize_image_file(self)

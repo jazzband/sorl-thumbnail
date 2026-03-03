@@ -23,7 +23,7 @@ class AlternativeResolutionsTest(BaseStorageTestCase):
     def test_retina(self):
         get_thumbnail(self.image, '50x50')
 
-        cache_path = "test/cache/2c/0f/2c0f909d420e760b8dc4e1d1f79e705b"
+        cache_path = "test/cache/91/bb/91bb06cf9169e4c52132bb113f2d4c0d"
         actions = [
             f"exists: {cache_path}.jpg",
 

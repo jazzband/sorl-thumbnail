@@ -172,6 +172,20 @@ class SimpleTestCase(BaseTestCase):
             'default',
         )
 
+        self.assertEqual(im.serialize_storage(use_backend_name=True), 'tests.thumbnail_tests.storage.TestStorage')
+        self.assertEqual(
+            ImageFile('http://www.image.jpg').serialize_storage(use_backend_name=True),
+            'sorl.thumbnail.images.UrlStorage',
+        )
+        self.assertEqual(
+            ImageFile('http://www.image.jpg', default.storage).serialize_storage(use_backend_name=True),
+            'tests.thumbnail_tests.storage.TestStorage',
+        )
+        self.assertEqual(
+            ImageFile('getit', default_storage).serialize_storage(use_backend_name=True),
+            'tests.thumbnail_tests.storage.TestStorage',
+        )
+
     @unittest.skipIf(platform.system() == "Darwin", 'quality is saved a different way on os x')
     def test_quality(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
