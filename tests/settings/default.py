@@ -33,6 +33,7 @@ MEDIA_ROOT = pjoin(PROJ_ROOT, 'media')
 MEDIA_URL = '/media/'
 ROOT_URLCONF = 'tests.thumbnail_tests.urls'
 INSTALLED_APPS = (
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'sorl.thumbnail',
@@ -51,4 +52,12 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+SILENCED_SYSTEM_CHECKS = [
+    # The admin is in INSTALLED_APPS for template discovery only, so silence
+    # checks about auth and messages not installed.
+    "admin.E402",
+    "admin.E404",
+    "admin.E406",
+    "admin.W411",
+]
 THUMBNAIL_REDIS_SSL = False

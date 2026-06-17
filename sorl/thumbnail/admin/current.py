@@ -1,6 +1,6 @@
 import logging
 
-from django import forms
+from django.contrib.admin.widgets import AdminFileWidget
 from django.utils.safestring import mark_safe
 
 from sorl.thumbnail.fields import ImageField
@@ -9,17 +9,11 @@ from sorl.thumbnail.shortcuts import get_thumbnail
 logger = logging.getLogger(__name__)
 
 
-class AdminImageWidget(forms.ClearableFileInput):
+class AdminImageWidget(AdminFileWidget):
     """
     An ImageField Widget for django.contrib.admin that shows a thumbnailed
     image as well as a link to the current one if it hase one.
     """
-
-    template_with_initial = (
-        '%(clear_template)s <br>'
-        '<label>%(input_text)s: %(input)s</label>'
-    )
-    template_with_clear = '<label>%(clear_checkbox_label)s: %(clear)s</label>'
 
     def render(self, name, value, attrs=None, **kwargs):
         output = super().render(name, value, attrs, **kwargs)
