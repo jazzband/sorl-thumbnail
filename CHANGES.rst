@@ -2,6 +2,20 @@
 Changes
 =======
 
+13.1.0
+======
+* The ``clear_delete_referenced`` management command now supports a ``--timeout``
+  option to selectively delete thumbnails (#721)
+* Added avif support through optional ``pillow-avif-plugin`` package (#772)
+* ``ImageField.delete_file`` was removed (obsolete with Django > 1.2.5)
+* Make ``ImageFormField`` render with ``accept="image/*"`` HTML attribute (#731)
+* ``AdminImageWidget`` inherits now from Django's ``AdminFileWidget``
+* Restored ``ImageFile.key`` output from the pre-13 releases, avoiding obsoleting
+  legacy thumbnails (#805)
+* crop='noop' now uses min-scaling like unset crop (#812)
+* Added testing with Django 6.0 and 6.1, and Python 3.14.
+* Dropped support for Django < 5.2.
+
 13.0.0
 ======
 * ``THUMBNAIL_STORAGE`` should now be an alias in the Django ``STORAGES`` setting.
