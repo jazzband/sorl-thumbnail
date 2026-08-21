@@ -41,7 +41,7 @@ def tokey(*args):
     Computes a unique key from arguments given.
     """
     salt = '||'.join([force_str(arg) for arg in args])
-    return hashlib.md5(salt.encode()).hexdigest()
+    return hashlib.md5(salt.encode(), usedforsecurity=False).hexdigest()
 
 
 def serialize(obj):
