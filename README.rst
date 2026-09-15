@@ -103,9 +103,7 @@ See more examples in the section `Template examples`_ in the Documentation
 Model Usage
 -----------
 
-Using the ImageField that automatically deletes references to itself in the key
-value store and its thumbnail references and the thumbnail files when deleted.
-Please note that this is only compatible with django 1.2.5 or less.::
+You can use ``sorl.thumbnail.ImageField`` in your models::
 
     from django.db import models
     from sorl.thumbnail import ImageField
