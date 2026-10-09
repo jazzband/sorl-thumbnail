@@ -12,6 +12,8 @@ Changes
 * ``AdminImageWidget`` inherits now from Django's ``AdminFileWidget``
 * Restored ``ImageFile.key`` output from the pre-13 releases, avoiding obsoleting
   legacy thumbnails (#805)
+* ``ImageFile.serialize_storage`` distinguishes storages that share a backend
+  class, instead of returning the first matching alias (#806)
 * crop='noop' now uses min-scaling like unset crop (#812)
 * Added testing with Django 6.0 and 6.1, and Python 3.14.
 * Dropped support for Django < 5.2.

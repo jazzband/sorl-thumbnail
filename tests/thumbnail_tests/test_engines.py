@@ -191,6 +191,27 @@ class SimpleTestCase(BaseTestCase):
             'tests.thumbnail_tests.storage.TestStorage',
         )
 
+    def test_serialize_storage_distinguishes_same_backend_class(self):
+        from unittest.mock import patch
+
+        from tests.thumbnail_tests.storage import TestStorage
+
+        first = TestStorage()
+        second = TestStorage()
+
+        class _Storages:
+            backends = {
+                'alpha': {'BACKEND': 'tests.thumbnail_tests.storage.TestStorage'},
+                'beta': {'BACKEND': 'tests.thumbnail_tests.storage.TestStorage'},
+            }
+
+            def __getitem__(self, alias):
+                return {'alpha': first, 'beta': second}[alias]
+
+        with patch('sorl.thumbnail.images.storages', _Storages()):
+            self.assertEqual(ImageFile('same.jpg', first).serialize_storage(), 'alpha')
+            self.assertEqual(ImageFile('same.jpg', second).serialize_storage(), 'beta')
+
     @unittest.skipIf(platform.system() == "Darwin", 'quality is saved a different way on os x')
     def test_quality(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)

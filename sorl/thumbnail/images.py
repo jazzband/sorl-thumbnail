@@ -194,9 +194,29 @@ class ImageFile(BaseImageFile):
         backend = f"{cls.__module__}.{cls.__name__}"
         if use_backend_name:
             return backend
-        # Try our best to find and serialize the storage alias instead of the backend class.
-        for alias, params in storages.backends.items():
-            if params.get("BACKEND") == backend:
+        # Match the alias, not just the backend class. Two storages can share a
+        # class and differ only in options; the first class-name hit is the
+        # wrong cache key (#806).
+        matches = [
+            alias
+            for alias, params in storages.backends.items()
+            if params.get("BACKEND") == backend
+        ]
+        if len(matches) == 1:
+            return matches[0]
+        target = self.storage
+        wrapped = getattr(target, "_wrapped", None)
+        for alias in matches:
+            try:
+                candidate = storages[alias]
+            except InvalidStorageError:
+                continue
+            candidate_wrapped = getattr(candidate, "_wrapped", None)
+            if (
+                candidate is target
+                or candidate is wrapped
+                or (wrapped is not None and candidate_wrapped is wrapped)
+            ):
                 return alias
         return backend
 
