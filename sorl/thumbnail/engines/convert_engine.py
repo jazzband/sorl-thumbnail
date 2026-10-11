@@ -40,12 +40,14 @@ class Engine(EngineBase):
 
     def error(self, image, args, err, message):
         """
-        EngineError for a failed tool call, with the call and its stderr unless a read option opts out
+        EngineError for a failed tool call, with the call and its stderr unless a rule opts out
         """
         rules = (self.read_options.get(key, {}) for key in image['read_options'])
         if not all(rule.get('details', True) for rule in rules):
             return EngineError(message)
-        return EngineError("%s: '%s' printed this to stderr:\n%s" % (message, ' '.join(args), err))
+        return EngineError(
+            "%s: '%s' printed this to stderr:\n%s" % (message, ' '.join(args), err)
+        )
 
     def write(self, image, options, thumbnail):
         """
@@ -87,7 +89,9 @@ class Engine(EngineBase):
             out, err = p.communicate()
 
             if returncode:
-                raise self.error(image, args, err, "The convert command exited with a non-zero exit code")
+                raise self.error(
+                    image, args, err, "The convert command exited with a non-zero exit code"
+                )
             elif err:
                 logger.error("Captured stderr: %s", err)
 
@@ -128,7 +132,9 @@ class Engine(EngineBase):
             out, err = p.communicate()
             m = size_re.match(str(out))
             if not m:
-                raise self.error(image, args, err, "The identify command did not report an image size")
+                raise self.error(
+                    image, args, err, "The identify command did not report an image size"
+                )
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']
 
