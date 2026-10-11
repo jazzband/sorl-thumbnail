@@ -11,6 +11,7 @@ from PIL import Image
 from sorl.thumbnail import default
 from sorl.thumbnail.base import ThumbnailBackend
 from sorl.thumbnail.conf import settings
+from sorl.thumbnail.engines.convert_engine import EngineError
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
 from sorl.thumbnail.helpers import get_module_class
 from sorl.thumbnail.images import ImageFile
@@ -310,6 +311,16 @@ class SimpleTestCase(BaseTestCase):
             source = next(arg for arg in args if arg.endswith('[0]'))
             self.assertEqual(args[args.index('-density') + 1], '300')
             self.assertLess(args.index('-density'), args.index(source))
+
+    @unittest.skipIf(
+        'convert_engine' not in settings.THUMBNAIL_ENGINE,
+        'only the convert engine shells out to identify',
+    )
+    def test_identify_failure(self):
+        with open(os.path.join(settings.MEDIA_ROOT, 'broken.pdf'), 'wb') as f:
+            f.write(b'not a pdf')
+        with self.assertRaises(EngineError):
+            self.BACKEND.get_thumbnail('broken.pdf', '50x50')
 
     def test_falsey_file_argument(self):
         with self.assertRaises(ValueError):

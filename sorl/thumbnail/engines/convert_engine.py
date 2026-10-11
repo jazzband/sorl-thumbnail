@@ -107,8 +107,14 @@ class Engine(EngineBase):
             args.append(image['source'] + '[0]')
 
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
-            m = size_re.match(str(p.stdout.read()))
+            out, err = p.communicate()
+            m = size_re.match(str(out))
+            if not m:
+                raise EngineError(
+                    "The command '%s' did not report an image size "
+                    "and printed this to stderr:\n%s"
+                    % (" ".join(args), err)
+                )
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']
 
