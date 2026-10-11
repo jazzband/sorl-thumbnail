@@ -228,8 +228,9 @@ Password for reading an encrypted PDF::
 
 Only the convert engine with ImageMagick honours this option. GraphicsMagick's
 ``identify`` has no such flag, so it cannot size an encrypted PDF at all. The
-password is masked in ``EngineError`` messages, but like every thumbnail option
-it is written to the ``sorl.thumbnail`` debug log.
+password is kept out of ``EngineError`` messages, which then also omit the
+tool's stderr. Like every thumbnail option it is still written to the
+``sorl.thumbnail`` debug log.
 
 ``options``
 ^^^^^^^^^^^
