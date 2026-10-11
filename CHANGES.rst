@@ -6,8 +6,8 @@ Unreleased
 ==========
 * Added ``density`` and ``authenticate`` options to the convert engine, passed
   ahead of the source so PDFs rasterize at a given DPI and encrypted PDFs can
-  be read, per call instead of globally through ``THUMBNAIL_CONVERT``. The
-  password is masked in ``EngineError`` messages (#783, #640)
+  be read, per call instead of globally through ``THUMBNAIL_CONVERT``. Errors
+  from a call carrying a password omit the command line and stderr (#783, #640)
 * The convert engine now raises ``EngineError`` when ``identify`` reports no
   image size, instead of crashing with ``AttributeError`` (#640)
 * Added an engine ``prepare(image, options)`` hook, called before the source
