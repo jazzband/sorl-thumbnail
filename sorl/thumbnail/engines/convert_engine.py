@@ -23,13 +23,29 @@ class Engine(EngineBase):
     options (after it) and size
     """
 
+    # Thumbnail options that convert and identify only honour ahead of the source,
+    # so they can't live in image['options']. 'secret' keeps the value out of errors.
+    read_options = {
+        'density': {},
+        'authenticate': {'secret': True},
+    }
+
     def prepare(self, image, options):
-        # These only work ahead of the source, so they can't live in image['options'].
-        for key in ('density', 'authenticate'):
+        for key in self.read_options:
             if options.get(key):
                 image['read_options'][key] = options[key]
 
         return image
+
+    def command(self, image, args):
+        """
+        Renders the command line for error messages, masking secret read options
+        """
+        secrets = [
+            '%s' % v for k, v in image['read_options'].items()
+            if self.read_options.get(k, {}).get('secret')
+        ]
+        return ' '.join('***' if arg in secrets else arg for arg in args)
 
     def write(self, image, options, thumbnail):
         """
@@ -74,7 +90,7 @@ class Engine(EngineBase):
                 raise EngineError(
                     "The command '%s' exited with a non-zero exit code "
                     "and printed this to stderr:\n%s"
-                    % (" ".join(args), err)
+                    % (self.command(image, args), err)
                 )
             elif err:
                 logger.error("Captured stderr: %s", err)
@@ -119,7 +135,7 @@ class Engine(EngineBase):
                 raise EngineError(
                     "The command '%s' did not report an image size "
                     "and printed this to stderr:\n%s"
-                    % (" ".join(args), err)
+                    % (self.command(image, args), err)
                 )
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']

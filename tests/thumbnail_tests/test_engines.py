@@ -325,6 +325,18 @@ class SimpleTestCase(BaseTestCase):
         with self.assertRaises(EngineError):
             self.BACKEND.get_thumbnail('broken.pdf', '50x50')
 
+    @unittest.skipIf(
+        'convert_engine' not in settings.THUMBNAIL_ENGINE,
+        'only the convert engine shells out to identify',
+    )
+    def test_secret_read_option_masked(self):
+        with open(os.path.join(settings.MEDIA_ROOT, 'broken.pdf'), 'wb') as f:
+            f.write(b'not a pdf')
+        with self.assertRaises(EngineError) as cm:
+            self.BACKEND.get_thumbnail('broken.pdf', '50x50', authenticate='hunter2')
+        self.assertNotIn('hunter2', str(cm.exception))
+        self.assertIn('-authenticate ***', str(cm.exception))
+
     def test_falsey_file_argument(self):
         with self.assertRaises(ValueError):
             self.BACKEND.get_thumbnail('', '100x100')
