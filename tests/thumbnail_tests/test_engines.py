@@ -288,29 +288,32 @@ class SimpleTestCase(BaseTestCase):
 
     @unittest.skipIf(
         'convert_engine' not in settings.THUMBNAIL_ENGINE,
-        'density is only supported by the convert engine',
+        'read options are only supported by the convert engine',
     )
-    def test_density(self):
+    def test_read_options(self):
         item = Item.objects.get(image='100x100.jpg')
+        cases = {'density': '300'}
+        if not settings.THUMBNAIL_CONVERT.startswith('gm'):
+            cases['authenticate'] = 'secret'  # gm identify has no -authenticate
 
         with mock.patch('subprocess.Popen', wraps=Popen) as popen:
-            t = self.BACKEND.get_thumbnail(item.image, '50x50', density=300)
+            t = self.BACKEND.get_thumbnail(item.image, '50x50', **cases)
 
         self.assertEqual((t.x, t.y), (50, 50))
         self.assertNotEqual(t.name, self.BACKEND.get_thumbnail(item.image, '50x50').name)
 
         convert = settings.THUMBNAIL_CONVERT.split(' ')
         identify = settings.THUMBNAIL_IDENTIFY.split(' ')
-        commands = [call.args[0] for call in popen.call_args_list if '-density' in call.args[0]]
-
-        # both the convert and the identify run must read the source at 300 dpi
-        self.assertTrue(any(args[:len(convert)] == convert for args in commands))
-        self.assertTrue(any(args[:len(identify)] == identify for args in commands))
-
-        for args in commands:
-            source = next(arg for arg in args if arg.endswith('[0]'))
-            self.assertEqual(args[args.index('-density') + 1], '300')
-            self.assertLess(args.index('-density'), args.index(source))
+        for key, value in cases.items():
+            flag = '-' + key
+            commands = [call.args[0] for call in popen.call_args_list if flag in call.args[0]]
+            # both the convert and the identify run must read the source with the flag
+            self.assertTrue(any(args[:len(convert)] == convert for args in commands))
+            self.assertTrue(any(args[:len(identify)] == identify for args in commands))
+            for args in commands:
+                source = next(arg for arg in args if arg.endswith('[0]'))
+                self.assertEqual(args[args.index(flag) + 1], value)
+                self.assertLess(args.index(flag), args.index(source))
 
     @unittest.skipIf(
         'convert_engine' not in settings.THUMBNAIL_ENGINE,

@@ -24,9 +24,10 @@ class Engine(EngineBase):
     """
 
     def prepare(self, image, options):
-        # -density only works ahead of the source, so it can't live in image['options'].
-        if options.get('density'):
-            image['read_options']['density'] = options['density']
+        # These only work ahead of the source, so they can't live in image['options'].
+        for key in ('density', 'authenticate'):
+            if options.get(key):
+                image['read_options'][key] = options[key]
 
         return image
 
