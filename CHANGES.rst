@@ -2,6 +2,12 @@
 Changes
 =======
 
+Unreleased
+==========
+* Added a ``density`` option to the convert engine, to rasterize PDF and other
+  vector sources at a given DPI. Allowing per call specification of the density
+  instead of globally with THUMBNAIL_CONVERT='gm convert -density 300' (#783)
+
 13.1.0
 ======
 * The ``clear_delete_referenced`` management command now supports a ``--timeout``
