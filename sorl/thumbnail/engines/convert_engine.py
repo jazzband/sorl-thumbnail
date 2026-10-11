@@ -19,16 +19,16 @@ size_re = re.compile(r'^(?:.+) (?:[A-Z0-9]+) (?P<x>\d+)x(?P<y>\d+)')
 
 class Engine(EngineBase):
     """
-    Image object is a dict with source path, options and size
+    Image object is a dict with source path, read options (before the source),
+    options (after it) and size
     """
 
-    def create(self, image, geometry, options):
+    def prepare(self, image, options):
+        # -density only works ahead of the source, so it can't live in image['options'].
         if options.get('density'):
-            # -density only works ahead of the source, so it can't live in image['options'].
-            image['density'] = options['density']
-            image['size'] = None  # re-identify at the requested density
+            image['read_options']['density'] = options['density']
 
-        return super().create(image, geometry, options)
+        return image
 
     def write(self, image, options, thumbnail):
         """
@@ -42,8 +42,8 @@ class Engine(EngineBase):
 
         args = settings.THUMBNAIL_CONVERT.split(' ')
 
-        if image.get('density'):
-            args.extend(['-density', str(image['density'])])
+        for k, v in image['read_options'].items():
+            args.extend(['-%s' % k, '%s' % v])
 
         args.append(image['source'] + '[0]')
 
@@ -92,7 +92,12 @@ class Engine(EngineBase):
 
         with NamedTemporaryFile(mode='wb', delete=False, suffix=suffix) as fp:
             fp.write(source.read())
-        return {'source': fp.name, 'options': OrderedDict(), 'size': None}
+        return {
+            'source': fp.name,
+            'options': OrderedDict(),
+            'read_options': OrderedDict(),
+            'size': None,
+        }
 
     def get_image_size(self, image):
         """
@@ -101,8 +106,8 @@ class Engine(EngineBase):
         if image['size'] is None:
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
 
-            if image.get('density'):
-                args.extend(['-density', str(image['density'])])
+            for k, v in image['read_options'].items():
+                args.extend(['-%s' % k, '%s' % v])
 
             args.append(image['source'] + '[0]')
 
