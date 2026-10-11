@@ -2,6 +2,7 @@ import os
 import platform
 import unittest
 from subprocess import PIPE, Popen
+from unittest import mock
 
 from django.core.files.storage import default_storage
 from django.template.loader import render_to_string
@@ -283,6 +284,32 @@ class SimpleTestCase(BaseTestCase):
         self.assertNotEqual(factor_noop, factor_center)
         self.assertEqual(factor_center, max(400 / 800, 400 / 600))
         self.assertEqual(factor_none, min(400 / 800, 400 / 600))
+
+    @unittest.skipIf(
+        'convert_engine' not in settings.THUMBNAIL_ENGINE,
+        'density is only supported by the convert engine',
+    )
+    def test_density(self):
+        item = Item.objects.get(image='100x100.jpg')
+
+        with mock.patch('subprocess.Popen', wraps=Popen) as popen:
+            t = self.BACKEND.get_thumbnail(item.image, '50x50', density=300)
+
+        self.assertEqual((t.x, t.y), (50, 50))
+        self.assertNotEqual(t.name, self.BACKEND.get_thumbnail(item.image, '50x50').name)
+
+        convert = settings.THUMBNAIL_CONVERT.split(' ')
+        identify = settings.THUMBNAIL_IDENTIFY.split(' ')
+        commands = [call.args[0] for call in popen.call_args_list if '-density' in call.args[0]]
+
+        # both the convert and the identify run must read the source at 300 dpi
+        self.assertTrue(any(args[:len(convert)] == convert for args in commands))
+        self.assertTrue(any(args[:len(identify)] == identify for args in commands))
+
+        for args in commands:
+            source = next(arg for arg in args if arg.endswith('[0]'))
+            self.assertEqual(args[args.index('-density') + 1], '300')
+            self.assertLess(args.index('-density'), args.index(source))
 
     def test_falsey_file_argument(self):
         with self.assertRaises(ValueError):
