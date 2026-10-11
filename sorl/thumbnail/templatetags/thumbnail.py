@@ -92,6 +92,10 @@ class ThumbnailNode(ThumbnailNodeBase):
 
     def __init__(self, parser, token):
         bits = token.split_contents()
+
+        if len(bits) < 3 or 'as' in bits[1:3]:
+            raise TemplateSyntaxError(self.error_msg)
+
         self.file_ = parser.compile_filter(bits[1])
         self.geometry = parser.compile_filter(bits[2])
         self.options = []

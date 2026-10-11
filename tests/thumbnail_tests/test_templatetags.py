@@ -2,6 +2,7 @@ import os
 import re
 from subprocess import PIPE, Popen
 
+from django.template import Template, TemplateSyntaxError
 from django.template.loader import render_to_string
 from django.test import Client, TestCase
 from django.test.utils import override_settings
@@ -165,6 +166,21 @@ class TemplateTestCaseClient(TestCase):
             end = outbox[0].body.split('\n\n')[-2].split(':')[1].strip()
 
             self.assertEqual(end, '[Errno 2] No such file or directory')
+
+
+class TemplateTestCaseSyntax(TestCase):
+    def test_missing_arguments(self):
+        sources = [
+            '{% thumbnail %}',
+            '{% thumbnail source %}',
+            '{% thumbnail source as im %}{% endthumbnail %}',
+            '{% thumbnail as im %}{% endthumbnail %}',
+            '{% thumbnail source "100x100" as im %}{% thumbnail %}',
+        ]
+        for source in sources:
+            with self.subTest(source=source):
+                with self.assertRaises(TemplateSyntaxError):
+                    Template('{% load thumbnail %}' + source)
 
 
 class TemplateTestCaseTemplateTagAlias(BaseTestCase):

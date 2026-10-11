@@ -2,6 +2,12 @@
 Changes
 =======
 
+Unreleased
+==========
+* The ``thumbnail`` template tag now raises ``TemplateSyntaxError`` when the
+  source or geometry is missing, instead of ``IndexError`` or compiling a tag
+  that fails at render (#720)
+
 13.1.0
 ======
 * The ``clear_delete_referenced`` management command now supports a ``--timeout``
