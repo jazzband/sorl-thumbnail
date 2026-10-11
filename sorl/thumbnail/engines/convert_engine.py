@@ -22,6 +22,14 @@ class Engine(EngineBase):
     Image object is a dict with source path, options and size
     """
 
+    def create(self, image, geometry, options):
+        if options.get('density'):
+            # -density only works ahead of the source, so it can't live in image['options'].
+            image['density'] = options['density']
+            image['size'] = None  # re-identify at the requested density
+
+        return super().create(image, geometry, options)
+
     def write(self, image, options, thumbnail):
         """
         Writes the thumbnail image
@@ -33,6 +41,10 @@ class Engine(EngineBase):
         image['options']['quality'] = options['quality']
 
         args = settings.THUMBNAIL_CONVERT.split(' ')
+
+        if image.get('density'):
+            args.extend(['-density', str(image['density'])])
+
         args.append(image['source'] + '[0]')
 
         for k in image['options']:
@@ -88,7 +100,12 @@ class Engine(EngineBase):
         """
         if image['size'] is None:
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
+
+            if image.get('density'):
+                args.extend(['-density', str(image['density'])])
+
             args.append(image['source'] + '[0]')
+
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             p.wait()
             m = size_re.match(str(p.stdout.read()))
