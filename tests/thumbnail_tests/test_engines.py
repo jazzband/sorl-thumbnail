@@ -329,13 +329,13 @@ class SimpleTestCase(BaseTestCase):
         'convert_engine' not in settings.THUMBNAIL_ENGINE,
         'only the convert engine shells out to identify',
     )
-    def test_secret_read_option_masked(self):
+    def test_read_option_without_details(self):
         with open(os.path.join(settings.MEDIA_ROOT, 'broken.pdf'), 'wb') as f:
             f.write(b'not a pdf')
         with self.assertRaises(EngineError) as cm:
             self.BACKEND.get_thumbnail('broken.pdf', '50x50', authenticate='hunter2')
-        self.assertNotIn('hunter2', str(cm.exception))
-        self.assertIn('-authenticate ***', str(cm.exception))
+        # neither the password, the command line nor the tool's stderr leak into the error
+        self.assertEqual(str(cm.exception), 'The identify command did not report an image size')
 
     def test_falsey_file_argument(self):
         with self.assertRaises(ValueError):

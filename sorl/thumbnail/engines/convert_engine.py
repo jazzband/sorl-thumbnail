@@ -24,11 +24,11 @@ class Engine(EngineBase):
     """
 
     # Thumbnail options that convert and identify only honour ahead of the source,
-    # so they can't live in image['options']. 'secret' keeps the value and the tool's
-    # stderr out of error messages.
+    # so they can't live in image['options']. details=False keeps the tool call,
+    # arguments and stderr, out of error messages.
     read_options = {
         'density': {},
-        'authenticate': {'secret': True},
+        'authenticate': {'details': False},
     }
 
     def prepare(self, image, options):
@@ -40,21 +40,12 @@ class Engine(EngineBase):
 
     def error(self, image, args, err, message):
         """
-        EngineError naming the command; a secret read option is masked and stderr withheld
+        EngineError for a failed tool call, with the call and its stderr unless a read option opts out
         """
-        secrets = [
-            '%s' % v for k, v in image['read_options'].items()
-            if self.read_options.get(k, {}).get('secret')
-        ]
-        command = ' '.join('***' if arg in secrets else arg for arg in args)
-        if secrets:
-            # the tools echo the failing command, secret included, on stderr
-            return EngineError(
-                "The command '%s' %s; stderr withheld because of secret options" % (command, message)
-            )
-        return EngineError(
-            "The command '%s' %s and printed this to stderr:\n%s" % (command, message, err)
-        )
+        rules = (self.read_options.get(key, {}) for key in image['read_options'])
+        if not all(rule.get('details', True) for rule in rules):
+            return EngineError(message)
+        return EngineError("%s: '%s' printed this to stderr:\n%s" % (message, ' '.join(args), err))
 
     def write(self, image, options, thumbnail):
         """
@@ -96,7 +87,7 @@ class Engine(EngineBase):
             out, err = p.communicate()
 
             if returncode:
-                raise self.error(image, args, err, "exited with a non-zero exit code")
+                raise self.error(image, args, err, "The convert command exited with a non-zero exit code")
             elif err:
                 logger.error("Captured stderr: %s", err)
 
@@ -137,7 +128,7 @@ class Engine(EngineBase):
             out, err = p.communicate()
             m = size_re.match(str(out))
             if not m:
-                raise self.error(image, args, err, "did not report an image size")
+                raise self.error(image, args, err, "The identify command did not report an image size")
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']
 
