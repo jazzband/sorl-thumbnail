@@ -37,7 +37,7 @@ digraph operation {
     store [label=<Record the thumbnail in the store<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">and list it under its source</FONT>>,
            fillcolor="#dcebf5", color="#005b81"]
 
-    render [label=<<FONT FACE="monospace">&lt;img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"&gt;</FONT>>,
+    render [label=<<FONT FACE="monospace">&lt;img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"&gt;</FONT><BR/><FONT FACE="monospace">{% endthumbnail %}</FONT>>,
             fillcolor="#e2f3cc", color="#6ba81e"]
 
     subgraph cluster_kv {
