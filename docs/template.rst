@@ -220,6 +220,17 @@ will pass the option in the order given. It is passed to both ``convert``
 and ``identify`` ahead of the source file, so sizing and output agree. It does
 not change the pixel size of raster sources.
 
+``authenticate``
+^^^^^^^^^^^^^^^^
+Password for reading an encrypted PDF::
+
+    {% thumbnail doc.file "400x400" authenticate=doc.password as im %}
+
+Only the convert engine with ImageMagick honours this option. GraphicsMagick's
+``identify`` has no such flag, so it cannot size an encrypted PDF at all. The
+password becomes part of the command line, so it shows up in ``EngineError``
+messages and in the ``sorl.thumbnail`` debug log.
+
 ``options``
 ^^^^^^^^^^^
 Yes this option is called ``options``. This needs to be a context variable that
