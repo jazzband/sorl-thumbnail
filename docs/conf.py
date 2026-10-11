@@ -9,7 +9,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import pkg_resources
+import importlib.metadata
 
 # -- General configuration -----------------------------------------------------
 
@@ -41,7 +41,7 @@ copyright = '2010, Mikko Hellsing'
 # built documents.
 #
 # The short X.Y version.
-version = pkg_resources.get_distribution("sorl-thumbnail").version
+version = importlib.metadata.version("sorl-thumbnail")
 # The full version, including alpha/beta/rc tags.
 release = version
 
