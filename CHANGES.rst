@@ -4,9 +4,13 @@ Changes
 
 Unreleased
 ==========
-* Added a ``density`` option to the convert engine, to rasterize PDF and other
-  vector sources at a given DPI. Allowing per call specification of the density
-  instead of globally with THUMBNAIL_CONVERT='gm convert -density 300' (#783)
+* Added ``density`` and ``authenticate`` options to the convert engine, passed
+  ahead of the source so PDFs rasterize at a given DPI and encrypted PDFs can
+  be read, per call instead of globally through ``THUMBNAIL_CONVERT`` (#783, #640)
+* The convert engine now raises ``EngineError`` when ``identify`` reports no
+  image size, instead of crashing with ``AttributeError`` (#640)
+* Added an engine ``prepare(image, options)`` hook, called before the source
+  is sized, for options that change how it is read
 
 13.1.0
 ======
