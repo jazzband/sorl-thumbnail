@@ -10,13 +10,15 @@ on:
 
 jobs:
   build:
-    if: github.repository == 'jazzband/sorl-thumbnail'
+    if: github.repository == 'mariocesar/sorl-thumbnail'
 
     name: Build release
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -30,26 +32,28 @@ jobs:
       - name: Build package
         run: python -m build && twine check dist/*
 
-      - uses: actions/upload-artifact@v4
-        with: 
+      - uses: actions/upload-artifact@v7
+        with:
           name: dist
           path: dist/
 
   publish:
+    if: github.event.action == 'published'
+
     name: Upload release to PyPI
     needs: build
     runs-on: ubuntu-latest
 
-    environment: 
+    environment:
       name: pypi
-      url: https://pypi.org/project/sorl-thumbnail/ 
+      url: https://pypi.org/project/sorl-thumbnail/
 
     permissions:
       id-token: write
 
     steps:
       - uses: actions/download-artifact@v8
-        with: 
+        with:
           name: dist
           path: dist/
 
