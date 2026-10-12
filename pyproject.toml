@@ -13,7 +13,7 @@ authors = [
   {name = "Mikko Hellsing", email = "mikko@aino.se"},
 ]
 maintainers = [
-  {name = "Jazzband", email = "roadies@jazzband.co"}
+  {name = "Mario-César", email = "mariocesar@humanzilla.com"}
 ]
 requires-python = ">= 3.10"
 classifiers=[
@@ -38,7 +38,7 @@ classifiers=[
 
 [project.urls]
 Homepage = "https://sorl-thumbnail.readthedocs.io/en/latest/"
-Repository = "https://github.com/jazzband/sorl-thumbnail"
+Repository = "https://github.com/mariocesar/sorl-thumbnail"
 
 [project.optional-dependencies]
 pgmagick = ["pgmagick"]
