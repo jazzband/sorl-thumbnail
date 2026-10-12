@@ -2,6 +2,14 @@
 Changes
 =======
 
+Unreleased
+==========
+* ``ImageFile.serialize_storage`` resolves the storage alias by instance instead
+  of returning the first alias with the same backend class, and ``ImageFile.key``
+  includes that alias for storages other than ``default`` and
+  ``THUMBNAIL_STORAGE``. Same-named files on same-class storages no longer share
+  a thumbnail (#806)
+
 13.1.0
 ======
 * The ``clear_delete_referenced`` management command now supports a ``--timeout``
@@ -12,8 +20,6 @@ Changes
 * ``AdminImageWidget`` inherits now from Django's ``AdminFileWidget``
 * Restored ``ImageFile.key`` output from the pre-13 releases, avoiding obsoleting
   legacy thumbnails (#805)
-* ``ImageFile.serialize_storage`` distinguishes storages that share a backend
-  class, instead of returning the first matching alias (#806)
 * crop='noop' now uses min-scaling like unset crop (#812)
 * Added testing with Django 6.0 and 6.1, and Python 3.14.
 * Dropped support for Django < 5.2.

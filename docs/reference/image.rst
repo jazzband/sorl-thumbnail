@@ -98,5 +98,6 @@ Returns a serialized version of self.
 
 ``serialize_storage``
 ---------------------
-Returns the ``self.storage`` as a serialized dot name path string.
+Returns the alias of ``self.storage`` in the Django ``STORAGES`` setting, or
+its dotted class path when the storage is not registered there.
 

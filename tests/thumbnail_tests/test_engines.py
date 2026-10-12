@@ -3,7 +3,7 @@ import platform
 import unittest
 from subprocess import PIPE, Popen
 
-from django.core.files.storage import default_storage
+from django.core.files.storage import default_storage, storages
 from django.template.loader import render_to_string
 from PIL import Image
 
@@ -11,7 +11,7 @@ from sorl.thumbnail import default
 from sorl.thumbnail.base import ThumbnailBackend
 from sorl.thumbnail.conf import settings
 from sorl.thumbnail.engines.pil_engine import Engine as PILEngine
-from sorl.thumbnail.helpers import get_module_class
+from sorl.thumbnail.helpers import get_module_class, tokey
 from sorl.thumbnail.images import ImageFile
 from sorl.thumbnail.parsers import parse_geometry
 from sorl.thumbnail.templatetags.thumbnail import margin
@@ -191,26 +191,20 @@ class SimpleTestCase(BaseTestCase):
             'tests.thumbnail_tests.storage.TestStorage',
         )
 
-    def test_serialize_storage_distinguishes_same_backend_class(self):
-        from unittest.mock import patch
-
-        from tests.thumbnail_tests.storage import TestStorage
-
-        first = TestStorage()
-        second = TestStorage()
-
-        class _Storages:
-            backends = {
-                'alpha': {'BACKEND': 'tests.thumbnail_tests.storage.TestStorage'},
-                'beta': {'BACKEND': 'tests.thumbnail_tests.storage.TestStorage'},
-            }
-
-            def __getitem__(self, alias):
-                return {'alpha': first, 'beta': second}[alias]
-
-        with patch('sorl.thumbnail.images.storages', _Storages()):
-            self.assertEqual(ImageFile('same.jpg', first).serialize_storage(), 'alpha')
-            self.assertEqual(ImageFile('same.jpg', second).serialize_storage(), 'beta')
+    def test_storage_serialize_same_backend_class(self):
+        test_storage = 'tests.thumbnail_tests.storage.TestStorage'
+        with self.settings(STORAGES={
+            'default': {'BACKEND': test_storage},
+            'other': {'BACKEND': test_storage},
+        }):
+            on_default = ImageFile('same.jpg', storages['default'])
+            on_other = ImageFile('same.jpg', storages['other'])
+            self.assertEqual(on_default.serialize_storage(), 'default')
+            self.assertEqual(on_other.serialize_storage(), 'other')
+            # The default storage keeps its pre-13 key, the other one must not collide.
+            self.assertEqual(on_default.key, tokey('same.jpg', test_storage))
+            self.assertEqual(on_other.key, tokey('same.jpg', 'other'))
+            self.assertNotEqual(on_default.key, on_other.key)
 
     @unittest.skipIf(platform.system() == "Darwin", 'quality is saved a different way on os x')
     def test_quality(self):
