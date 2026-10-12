@@ -1,1 +1,1 @@
-Take a look at https://github.com/jazzband/sorl-thumbnail/graphs/contributors
+Take a look at https://github.com/mariocesar/sorl-thumbnail/graphs/contributors
