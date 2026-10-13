@@ -13,7 +13,7 @@ jobs:
     if: github.repository == 'mariocesar/sorl-thumbnail'
 
     name: Build release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
       - uses: actions/checkout@v7
@@ -42,7 +42,7 @@ jobs:
 
     name: Upload release to PyPI
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     environment:
       name: pypi
