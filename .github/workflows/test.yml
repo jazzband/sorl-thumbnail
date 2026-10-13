@@ -86,4 +86,5 @@ jobs:
     - name: Upload coverage
       uses: codecov/codecov-action@v7
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         name: Python ${{ matrix.python-version }}
