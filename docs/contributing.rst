@@ -82,7 +82,7 @@ Run all CI targets in sequence::
       TARGET=$target docker compose run --rm ci
     done
 
-.. _GitHub Actions: https://github.com/jazzband/sorl-thumbnail/actions
+.. _GitHub Actions: https://github.com/mariocesar/sorl-thumbnail/actions
 .. _Docker: https://www.docker.com/
 .. _tox: https://tox.wiki/
 .. _Install Docker: https://docs.docker.com/get-docker/
@@ -92,7 +92,7 @@ Sending pull requests
 
 1. Fork the repo::
 
-    git@github.com:jazzband/sorl-thumbnail.git
+    git@github.com:mariocesar/sorl-thumbnail.git
 
 2. Create a branch for your specific changes::
 

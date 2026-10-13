@@ -1,4 +1,4 @@
-|jazzband-badge| |pypi| |python-badge| |django-badge| |docs| |gh-actions| |codecov|
+|pypi| |python-badge| |django-badge| |docs| |gh-actions| |codecov|
 
 Thumbnails for Django.
 
@@ -23,11 +23,11 @@ Read more in `the documentation (latest version) <https://sorl-thumbnail.readthe
 Developers
 ==========
 
-|jazzband|
-
-This is a `Jazzband <https://jazzband.co>`_ project. By contributing you agree to
-abide by the `Contributor Code of Conduct <https://jazzband.co/about/conduct>`_
-and follow the `guidelines <https://jazzband.co/about/guidelines>`_.
+By contributing you agree to abide by the
+`Code of Conduct <https://github.com/mariocesar/sorl-thumbnail/blob/master/CODE_OF_CONDUCT.md>`_.
+To report a security issue, follow the
+`security policy <https://github.com/mariocesar/sorl-thumbnail/blob/master/SECURITY.md>`_
+instead of opening a public issue.
 
 Feel free to create a new Pull request if you want to propose a new feature.
 If you need development support or want to discuss with other developers
@@ -156,8 +156,8 @@ A fast workaround if you are not willing to tweak your storage backend is to set
 So it will avoid to overly query the S3 API.
 
 
-.. |gh-actions| image:: https://github.com/jazzband/sorl-thumbnail/workflows/Test/badge.svg
-    :target: https://github.com/jazzband/sorl-thumbnail/actions
+.. |gh-actions| image:: https://github.com/mariocesar/sorl-thumbnail/workflows/Test/badge.svg
+    :target: https://github.com/mariocesar/sorl-thumbnail/actions
 .. |docs| image:: https://readthedocs.org/projects/pip/badge/?version=latest
     :alt: Documentation for latest version
     :target: https://sorl-thumbnail.readthedocs.io/en/latest/
@@ -170,15 +170,9 @@ So it will avoid to overly query the S3 API.
 .. |django-badge| image:: https://img.shields.io/pypi/djversions/sorl-thumbnail.svg
     :target: https://pypi.python.org/pypi/sorl-thumbnail
     :alt: Supported Python versions
-.. |codecov| image:: https://codecov.io/gh/jazzband/sorl-thumbnail/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/jazzband/sorl-thumbnail
+.. |codecov| image:: https://codecov.io/gh/mariocesar/sorl-thumbnail/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/mariocesar/sorl-thumbnail
    :alt: Coverage
-.. |jazzband-badge| image:: https://jazzband.co/static/img/badge.svg
-   :target: https://jazzband.co/
-   :alt: Jazzband
-.. |jazzband| image:: https://jazzband.co/static/img/jazzband.svg
-   :target: https://jazzband.co/
-   :alt: Jazzband
 
 .. _`Pillow`: https://pillow.readthedocs.io/
 .. _`ImageMagick`: https://imagemagick.org/
@@ -190,5 +184,5 @@ So it will avoid to overly query the S3 API.
 .. _`Template examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#template-examples
 .. _`Model examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#model-examples
 .. _`Low level API examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#low-level-api-examples
-.. _`issue #351`: https://github.com/jazzband/sorl-thumbnail/issues/351
+.. _`issue #351`: https://github.com/mariocesar/sorl-thumbnail/issues/351
 .. _`Django supported versions policy`: https://www.djangoproject.com/download/#supported-versions
