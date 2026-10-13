@@ -45,6 +45,7 @@ pgmagick = ["pgmagick"]
 pil = ["pillow"]
 wand = ["wand"]
 avif = ["pillow-avif-plugin"]
+docs = ["sphinx"]
 
 [tool.coverage.run]
  source = ["sorl"]

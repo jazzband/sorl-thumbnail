@@ -1,0 +1,86 @@
+// How a thumbnail request travels through sorl-thumbnail.
+// Preview with: dot -Tsvg operation.dot > operation.svg
+digraph operation {
+    graph [rankdir=TB, fontname="Helvetica", fontsize=11, bgcolor=transparent,
+           nodesep=0.35, ranksep=0.38, pad=0.2, newrank=true, compound=true]
+    node  [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled",
+           fillcolor="#f2f2f2", color="#8c8c8c", margin="0.16,0.09"]
+    edge  [fontname="Helvetica", fontsize=9.5, color="#666666", fontcolor="#444444",
+           arrowsize=0.8]
+
+    // colours: green = your template, blue = key value store, yellow = file storage, grey = image engine
+    request [label=<<FONT FACE="monospace">{% thumbnail item.image "100x100" crop="center" as im %}</FONT><BR/><FONT POINT-SIZE="9.5" COLOR="#555555">or get_thumbnail(item.image, "100x100", crop="center") from Python</FONT>>,
+             fillcolor="#e2f3cc", color="#6ba81e"]
+
+    name [label=<Name the thumbnail after what was asked<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">md5(source name + storage, geometry, options)</FONT><BR/><FONT FACE="monospace" POINT-SIZE="9.5">cache/5d/0b/5d0b4e…fa.jpg</FONT>>]
+
+    lookup [label="Is that key\nin the store?", shape=diamond, style=filled,
+            fillcolor="#dcebf5", color="#005b81", margin=0]
+
+    hit [label=<Serve the stored record<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">name, storage and size; no file is touched,<BR/>even if the source or the thumbnail is gone</FONT>>,
+         fillcolor="#dcebf5", color="#005b81"]
+
+    exists [label="Is the file already\nin storage?", shape=diamond, style=filled,
+            fillcolor="#fff3c4", color="#b8960c", margin=0]
+
+    read [label=<Read the source file<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">engine.get_image(source)</FONT>>,
+          fillcolor="#fff3c4", color="#b8960c"]
+
+    missing [label=<Source unreadable<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">dummy image if THUMBNAIL_DUMMY,<BR/>otherwise an empty thumbnail</FONT>>,
+             fillcolor="#fde8e4", color="#e32e00"]
+
+    create [label=<Create the thumbnail in memory<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">cropbox › orientation › colorspace › remove_border › scale › crop › rounded › blur › padding</FONT>>]
+
+    write [label=<Write the thumbnail file<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">plus a @2x… copy per THUMBNAIL_ALTERNATIVE_RESOLUTIONS</FONT>>,
+           fillcolor="#fff3c4", color="#b8960c"]
+
+    store [label=<Record the thumbnail in the store<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">and list it under its source</FONT>>,
+           fillcolor="#dcebf5", color="#005b81"]
+
+    render [label=<<FONT FACE="monospace">&lt;img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"&gt;</FONT><BR/><FONT FACE="monospace">{% endthumbnail %}</FONT>>,
+            fillcolor="#e2f3cc", color="#6ba81e"]
+
+    subgraph cluster_kv {
+        label=<What the Key Value Store remembers<BR/><FONT POINT-SIZE="9.5" COLOR="#555555">a Django cache in front of the thumbnail_kvstore table</FONT>>
+        labeljust=l; style="rounded,filled"; fillcolor="#eef4f8"; color="#005b81"; fontcolor="#005b81"
+        node [shape=plain, style="", margin=0]
+        edge [color="#005b81", fontcolor="#005b81", style=dashed]
+        kv_source [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8aa8bd" BGCOLOR="white">
+            <TR><TD><FONT FACE="monospace" POINT-SIZE="9.5">image || source key</FONT></TD></TR>
+            <TR><TD><FONT POINT-SIZE="9.5">name, storage, size</FONT></TD></TR></TABLE>>]
+        kv_thumbs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8aa8bd" BGCOLOR="white">
+            <TR><TD><FONT FACE="monospace" POINT-SIZE="9.5">thumbnails || source key</FONT></TD></TR>
+            <TR><TD><FONT POINT-SIZE="9.5">[thumbnail key, thumbnail key, …]</FONT></TD></TR></TABLE>>]
+        kv_thumb [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8aa8bd" BGCOLOR="white">
+            <TR><TD><FONT FACE="monospace" POINT-SIZE="9.5">image || thumbnail key</FONT></TD></TR>
+            <TR><TD><FONT POINT-SIZE="9.5">name, storage, size</FONT></TD></TR></TABLE>>]
+        kv_thumbs -> kv_thumb [label="lists the keys of"]
+        {rank=same; kv_source; kv_thumbs}
+    }
+
+    delete [label=<<FONT FACE="monospace">delete(item.image)</FONT><BR/><FONT POINT-SIZE="9.5" COLOR="#555555">removes its record and every listed thumbnail, records and files;<BR/>the source file too unless delete_file=False</FONT>>,
+            fillcolor="#fde8e4", color="#e32e00"]
+
+    cleanup [label=<<FONT FACE="monospace">manage.py thumbnail cleanup</FONT><BR/><FONT POINT-SIZE="9.5" COLOR="#555555">removes records whose files are gone</FONT>>,
+             fillcolor="#fde8e4", color="#e32e00"]
+
+    // main flow
+    request -> name -> lookup [weight=4]
+    lookup -> hit [label="yes", color="#6ba81e", fontcolor="#4a7a10"]
+    hit -> render [color="#6ba81e"]
+    lookup -> exists [label="no", weight=4]
+    exists -> store [label="yes"]
+    exists -> read [label="no", weight=4]
+    read -> create [weight=4]
+    read -> missing [label="error", color="#e32e00", fontcolor="#e32e00"]
+    missing -> render [color="#e32e00"]
+    create -> write -> store [weight=4]
+    store -> render [weight=4]
+
+    // the store and what touches it
+    store -> kv_thumbs [lhead=cluster_kv, style=dashed, color="#005b81", label="writes", constraint=false]
+    render -> kv_source [lhead=cluster_kv, style=invis]
+    render -> kv_thumbs [lhead=cluster_kv, style=invis]
+    kv_thumb -> delete [dir=back, style=dashed, color="#e32e00", fontcolor="#e32e00", label="drops each listed thumbnail"]
+    kv_thumb -> cleanup [dir=back, style=dashed, color="#e32e00", fontcolor="#e32e00", label="checks each file still exists"]
+}

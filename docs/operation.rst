@@ -15,6 +15,11 @@ information in the |kvstore|.  It is worth noting that sorl-thumbnail does not
 check if source or thumbnail exists if the thumbnail key is found in the
 |kvstore|.
 
+.. graphviz:: operation.dot
+   :caption: How a thumbnail request is served. Green is your template, blue
+             the Key Value Store, yellow the file storage and grey the image
+             engine.
+
 .. note:: This means that if you change or delete a source file or delete the
     thumbnail, sorl-thumbnail will still fetch from the |kvstore|.
     Therefore it is important that if you delete or change a source or
