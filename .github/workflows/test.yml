@@ -14,10 +14,10 @@ jobs:
           - python-version: '3.10'
             target: 'qa'
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Start Redis
-      uses: supercharge/redis-github-action@1.5.0
+      uses: supercharge/redis-github-action@1.8.1
 
     - name: Install system dependencies
       run: |
@@ -25,7 +25,7 @@ jobs:
         sudo apt-get install imagemagick libgraphicsmagick1-dev graphicsmagick libjpeg62 zlib1g-dev libavif-dev
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -35,7 +35,7 @@ jobs:
         echo "CACHE_DIR=$(pip cache dir)" >> "$GITHUB_OUTPUT"
 
     - name: Cache
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ${{ steps.pip-cache.outputs.CACHE_DIR }}
         key:
@@ -55,6 +55,6 @@ jobs:
         TARGET: ${{ matrix.target }}
 
     - name: Upload coverage
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v7
       with:
         name: Python ${{ matrix.python-version }}
