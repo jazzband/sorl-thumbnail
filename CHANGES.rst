@@ -2,6 +2,14 @@
 Changes
 =======
 
+Unreleased
+==========
+* ``ImageFile.serialize_storage`` resolves the storage alias by instance instead
+  of returning the first alias with the same backend class, and ``ImageFile.key``
+  includes that alias for storages other than ``default`` and
+  ``THUMBNAIL_STORAGE``. Same-named files on same-class storages no longer share
+  a thumbnail (#806)
+
 13.1.0
 ======
 * The ``clear_delete_referenced`` management command now supports a ``--timeout``
