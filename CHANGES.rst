@@ -2,11 +2,13 @@
 Changes
 =======
 
-Unreleased
-==========
-* sorl-thumbnail is moving out of Jazzband, which is closing, and into
-  https://github.com/mariocesar/sorl-thumbnail. Thank you to Jazzband and to
-  everyone who kept the project alive there for nine years. ❤️ (#827)
+13.2.0
+======
+
+sorl-thumbnail is moving out of Jazzband, which is closing, and into
+https://github.com/mariocesar/sorl-thumbnail. Thank you to Jazzband and to
+everyone who kept the project alive there for nine years. ❤️ (#827)
+
 * Added ``density`` and ``authenticate`` options to the convert engine, passed
   ahead of the source so PDFs rasterize at a given DPI and encrypted PDFs can
   be read, per call instead of globally through ``THUMBNAIL_CONVERT``. Errors

@@ -5,7 +5,7 @@ Thumbnails for Django.
 Features at a glance
 ====================
 
-- Support for Django 4.2, 5.0, 5.1, and 5.2 following the `Django supported versions policy`_
+- Support for Django 5.2, 6.0, and 6.1 following the `Django supported versions policy`_
 - Storage support
 - Pluggable Engine support for `Pillow`_, `ImageMagick`_, `PIL`_, `Wand`_, `pgmagick`_, and `vipsthumbnail`_
 - Pluggable Key Value Store support (cached db, redis, and dynamodb by AWS)
@@ -150,7 +150,7 @@ So it will avoid to overly query the S3 API.
 
 .. |gh-actions| image:: https://github.com/mariocesar/sorl-thumbnail/workflows/Test/badge.svg
     :target: https://github.com/mariocesar/sorl-thumbnail/actions
-.. |docs| image:: https://readthedocs.org/projects/pip/badge/?version=latest
+.. |docs| image:: https://readthedocs.org/projects/sorl-thumbnail/badge/?version=latest
     :alt: Documentation for latest version
     :target: https://sorl-thumbnail.readthedocs.io/en/latest/
 .. |pypi| image:: https://img.shields.io/pypi/v/sorl-thumbnail.svg
