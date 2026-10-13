@@ -9,6 +9,9 @@ Unreleased
   includes that alias for storages other than ``default`` and
   ``THUMBNAIL_STORAGE``. Same-named files on same-class storages no longer share
   a thumbnail (#806)
+* The docs build again on Read the Docs and with current setuptools. The new
+  ``docs`` extra installs what is needed to build them (#823)
+* Added a drawing of how a thumbnail request is served to the operation docs (#714)
 
 13.1.0
 ======
