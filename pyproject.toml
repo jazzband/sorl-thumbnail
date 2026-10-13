@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64", "setuptools_scm>=8"]
+requires = ["setuptools>=77","setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,7 @@ name = "sorl-thumbnail"
 dynamic = ["version"]
 description = "Thumbnails for Django"
 readme = "README.rst"
-license = {file = "LICENSE"}
+license = "BSD-3-Clause"
 keywords = ["django", "thumbnail", "sorl"]
 authors = [
   {name = "Mikko Hellsing", email = "mikko@aino.se"},
@@ -20,7 +20,6 @@ classifiers=[
     'Development Status :: 5 - Production/Stable',
     'Environment :: Web Environment',
     'Intended Audience :: Developers',
-    'License :: OSI Approved :: BSD License',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3.10',
