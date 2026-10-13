@@ -9,7 +9,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import pkg_resources
+import importlib.metadata
 
 # -- General configuration -----------------------------------------------------
 
@@ -18,7 +18,9 @@ import pkg_resources
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.viewcode']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.viewcode',
+              'sphinx.ext.graphviz']
+graphviz_output_format = 'svg'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -41,7 +43,7 @@ copyright = '2010, Mikko Hellsing'
 # built documents.
 #
 # The short X.Y version.
-version = pkg_resources.get_distribution("sorl-thumbnail").version
+version = importlib.metadata.version("sorl-thumbnail")
 # The full version, including alpha/beta/rc tags.
 release = version
 

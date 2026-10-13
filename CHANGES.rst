@@ -12,6 +12,17 @@ Unreleased
   image size, instead of crashing with ``AttributeError`` (#640)
 * Added an engine ``prepare(image, options)`` hook, called before the source
   is sized, for options that change how it is read
+* The ``thumbnail`` template tag now raises ``TemplateSyntaxError`` when the
+  source or geometry is missing, instead of ``IndexError`` or compiling a tag
+  that fails at render (#720)
+* ``ImageFile.serialize_storage`` resolves the storage alias by instance instead
+  of returning the first alias with the same backend class, and ``ImageFile.key``
+  includes that alias for storages other than ``default`` and
+  ``THUMBNAIL_STORAGE``. Same-named files on same-class storages no longer share
+  a thumbnail (#806)
+* The docs build again on Read the Docs and with current setuptools. The new
+  ``docs`` extra installs what is needed to build them (#823)
+* Added a drawing of how a thumbnail request is served to the operation docs (#714)
 
 13.1.0
 ======

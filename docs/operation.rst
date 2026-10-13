@@ -15,6 +15,11 @@ information in the |kvstore|.  It is worth noting that sorl-thumbnail does not
 check if source or thumbnail exists if the thumbnail key is found in the
 |kvstore|.
 
+.. graphviz:: operation.dot
+   :caption: How a thumbnail request is served. Green is your template, blue
+             the Key Value Store, yellow the file storage and grey the image
+             engine.
+
 .. note:: This means that if you change or delete a source file or delete the
     thumbnail, sorl-thumbnail will still fetch from the |kvstore|.
     Therefore it is important that if you delete or change a source or
@@ -37,10 +42,7 @@ the ``delete`` method of the ``ThumbnailBackend`` class or subclass::
 The ``sorl.thumbnail.delete`` method always deletes the input files thumbnail
 Key Value Store references as well as thumbnail files. You can use this method
 on thumbnails as well as source files. Alternatively if you have **deleted** a
-file you can use the management command :ref:`thumbnail-cleanup`.  Deleting an
-image using the ``sorl.thumbnail.ImageField`` will notify the |kvstore| to
-delete references to it and delete all of its thumbnail references and files,
-exactly like the above code example.
+file you can use the management command :ref:`thumbnail-cleanup`.
 
 **Why you ask?** Why go through all the trouble with a |kvstore| and risk
 stale cache? Why not use a database to cache if you are going to do that?

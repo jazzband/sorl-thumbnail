@@ -7,6 +7,7 @@ from urllib.error import URLError
 from urllib.parse import quote, quote_plus, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
+from django.conf import DEFAULT_STORAGE_ALIAS
 from django.core.files.base import ContentFile, File
 from django.core.files.storage import InvalidStorageError, Storage, storages
 from django.utils.encoding import force_str
@@ -183,26 +184,31 @@ class ImageFile(BaseImageFile):
         return self.storage.delete(self.name)
 
     def serialize_storage(self, use_backend_name=False):
-        if isinstance(self.storage, LazyObject):
+        storage = self.storage
+        if isinstance(storage, LazyObject):
             # if storage is wrapped in a lazy object we need to get the real
             # thing.
-            if self.storage._wrapped is empty:
-                self.storage._setup()
-            cls = self.storage._wrapped.__class__
-        else:
-            cls = self.storage.__class__
+            if storage._wrapped is empty:
+                storage._setup()
+            storage = storage._wrapped
+        cls = storage.__class__
         backend = f"{cls.__module__}.{cls.__name__}"
         if use_backend_name:
             return backend
-        # Try our best to find and serialize the storage alias instead of the backend class.
+        # Resolve the alias by instance, not by class: several aliases may share
+        # a backend class and differ only in OPTIONS (#806).
         for alias, params in storages.backends.items():
-            if params.get("BACKEND") == backend:
+            if params.get("BACKEND") == backend and storages[alias] is storage:
                 return alias
         return backend
 
     @property
     def key(self):
-        return tokey(self.name, self.serialize_storage(use_backend_name=True))
+        storage = self.serialize_storage()
+        # The default and thumbnail storages keep their pre-13 keys (#805).
+        if storage in (DEFAULT_STORAGE_ALIAS, settings.THUMBNAIL_STORAGE):
+            storage = self.serialize_storage(use_backend_name=True)
+        return tokey(self.name, storage)
 
     def serialize(self):
         return serialize_image_file(self)
