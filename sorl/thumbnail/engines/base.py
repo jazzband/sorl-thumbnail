@@ -180,6 +180,12 @@ class EngineBase:
         """
         return {}
 
+    def prepare(self, image, options):
+        """
+        Hook for engines that need per-call options before the source is sized
+        """
+        return image
+
     # Methods which engines need to implement
     # The ``image`` argument refers to a backend image object
     def get_image(self, source):

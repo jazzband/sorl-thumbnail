@@ -207,6 +207,30 @@ Images are not padded by default, but this can be changed by setting
 This is the color to use for padding the image. It defaults to ``#ffffff`` and
 can be globally set with the setting ``THUMBNAIL_PADDING_COLOR``.
 
+``density``
+^^^^^^^^^^^
+Resolution, in dots per inch, at which vector sources such as PDF, EPS or SVG
+are rasterized before thumbnailing. ImageMagick and GraphicsMagick default to
+``72``, which is far too coarse for a PDF page on a high resolution display::
+
+    {% thumbnail doc.file "400x400" density=300 as im %}
+
+Only the convert engine honours the special case for this option, other engines
+will pass the option in the order given. It is passed to both ``convert``
+and ``identify`` ahead of the source file, so sizing and output agree. It does
+not change the pixel size of raster sources.
+
+``authenticate``
+^^^^^^^^^^^^^^^^
+Password for reading an encrypted PDF::
+
+    {% thumbnail doc.file "400x400" authenticate=doc.password as im %}
+
+Only the convert engine with ImageMagick honours this option. GraphicsMagick's
+``identify`` has no such flag, so it cannot size an encrypted PDF at all. The
+``EngineError`` messages for a call carrying this option leave out the command
+line and the tool's output, so the password never appears in them. Like every
+thumbnail option it is still written to the ``sorl.thumbnail`` debug log.
 
 ``options``
 ^^^^^^^^^^^

@@ -119,6 +119,8 @@ class ThumbnailBackend:
                     )
                     return thumbnail
 
+            source_image = default.engine.prepare(source_image, options)
+
             # We might as well set the size since we have the image in memory
             image_info = default.engine.get_image_info(source_image)
             options['image_info'] = image_info

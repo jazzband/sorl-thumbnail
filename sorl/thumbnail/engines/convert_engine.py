@@ -19,8 +19,35 @@ size_re = re.compile(r'^(?:.+) (?:[A-Z0-9]+) (?P<x>\d+)x(?P<y>\d+)')
 
 class Engine(EngineBase):
     """
-    Image object is a dict with source path, options and size
+    Image object is a dict with source path, read options (before the source),
+    options (after it) and size
     """
+
+    # Thumbnail options that convert and identify only honour ahead of the source,
+    # so they can't live in image['options']. details=False keeps the tool call,
+    # arguments and stderr, out of error messages.
+    read_options = {
+        'density': {},
+        'authenticate': {'details': False},
+    }
+
+    def prepare(self, image, options):
+        for key in self.read_options:
+            if options.get(key):
+                image['read_options'][key] = options[key]
+
+        return image
+
+    def error(self, image, args, err, message):
+        """
+        EngineError for a failed tool call, with the call and its stderr unless a rule opts out
+        """
+        rules = (self.read_options.get(key, {}) for key in image['read_options'])
+        if not all(rule.get('details', True) for rule in rules):
+            return EngineError(message)
+        return EngineError(
+            "%s: '%s' printed this to stderr:\n%s" % (message, ' '.join(args), err)
+        )
 
     def write(self, image, options, thumbnail):
         """
@@ -33,6 +60,10 @@ class Engine(EngineBase):
         image['options']['quality'] = options['quality']
 
         args = settings.THUMBNAIL_CONVERT.split(' ')
+
+        for k, v in image['read_options'].items():
+            args.extend(['-%s' % k, '%s' % v])
+
         args.append(image['source'] + '[0]')
 
         for k in image['options']:
@@ -58,10 +89,8 @@ class Engine(EngineBase):
             out, err = p.communicate()
 
             if returncode:
-                raise EngineError(
-                    "The command '%s' exited with a non-zero exit code "
-                    "and printed this to stderr:\n%s"
-                    % (" ".join(args), err)
+                raise self.error(
+                    image, args, err, "The convert command exited with a non-zero exit code"
                 )
             elif err:
                 logger.error("Captured stderr: %s", err)
@@ -80,7 +109,12 @@ class Engine(EngineBase):
 
         with NamedTemporaryFile(mode='wb', delete=False, suffix=suffix) as fp:
             fp.write(source.read())
-        return {'source': fp.name, 'options': OrderedDict(), 'size': None}
+        return {
+            'source': fp.name,
+            'options': OrderedDict(),
+            'read_options': OrderedDict(),
+            'size': None,
+        }
 
     def get_image_size(self, image):
         """
@@ -88,10 +122,19 @@ class Engine(EngineBase):
         """
         if image['size'] is None:
             args = settings.THUMBNAIL_IDENTIFY.split(' ')
+
+            for k, v in image['read_options'].items():
+                args.extend(['-%s' % k, '%s' % v])
+
             args.append(image['source'] + '[0]')
+
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            p.wait()
-            m = size_re.match(str(p.stdout.read()))
+            out, err = p.communicate()
+            m = size_re.match(str(out))
+            if not m:
+                raise self.error(
+                    image, args, err, "The identify command did not report an image size"
+                )
             image['size'] = int(m.group('x')), int(m.group('y'))
         return image['size']
 
