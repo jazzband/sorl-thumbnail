@@ -1,4 +1,4 @@
-|pypi| |python-badge| |django-badge| |docs| |gh-actions| |codecov|
+|pypi| |python-badge| |django-badge| |docs| |gh-actions| |codecov| |precommit|
 
 Thumbnails for Django.
 
@@ -161,10 +161,13 @@ So it will avoid to overly query the S3 API.
     :alt: Supported Python versions
 .. |django-badge| image:: https://img.shields.io/pypi/djversions/sorl-thumbnail.svg
     :target: https://pypi.python.org/pypi/sorl-thumbnail
-    :alt: Supported Python versions
+    :alt: Supported Django versions
 .. |codecov| image:: https://codecov.io/gh/mariocesar/sorl-thumbnail/graph/badge.svg?token=YSN2eCESQT 
     :target: https://codecov.io/gh/mariocesar/sorl-thumbnail
     :alt: Coverage
+.. |precommit| image:: https://results.pre-commit.ci/badge/github/mariocesar/sorl-thumbnail/master.svg
+   :target: https://results.pre-commit.ci/latest/github/mariocesar/sorl-thumbnail/master
+   :alt: pre-commit.ci status
 
 .. _`Pillow`: https://pillow.readthedocs.io/
 .. _`ImageMagick`: https://imagemagick.org/
