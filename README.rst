@@ -162,9 +162,9 @@ So it will avoid to overly query the S3 API.
 .. |django-badge| image:: https://img.shields.io/pypi/djversions/sorl-thumbnail.svg
     :target: https://pypi.python.org/pypi/sorl-thumbnail
     :alt: Supported Python versions
-.. |codecov| image:: https://codecov.io/gh/mariocesar/sorl-thumbnail/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/mariocesar/sorl-thumbnail
-   :alt: Coverage
+.. |codecov| image:: https://codecov.io/gh/mariocesar/sorl-thumbnail/graph/badge.svg?token=YSN2eCESQT 
+    :target: https://codecov.io/gh/mariocesar/sorl-thumbnail
+    :alt: Coverage
 
 .. _`Pillow`: https://pillow.readthedocs.io/
 .. _`ImageMagick`: https://imagemagick.org/
