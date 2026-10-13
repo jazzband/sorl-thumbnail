@@ -31,14 +31,7 @@ instead of opening a public issue.
 
 Feel free to create a new Pull request if you want to propose a new feature.
 If you need development support or want to discuss with other developers
-join us in the channel #sorl-thumbnail at freenode.net or Gitter.
-
-For releases updates and more in deep development discussion use our mailing list
-in Google Groups.
-
-- IRC Channel: irc://irc.freenode.net/#sorl-thumbnail
-
-- Mailing List: sorl-thumbnail@googlegroups.com https://groups.google.com/d/forum/sorl-thumbnail
+join us in `GitHub Discussions`_.
 
 Tests
 -----
@@ -51,8 +44,7 @@ for detailed instructions on running tests locally with Docker.
 User Support
 ============
 
-If you need help using sorl-thumbnail browse https://stackoverflow.com/questions/tagged/sorl-thumbnail
-and posts your questions with the `sorl-thumbnail` tag.
+If you need help using sorl-thumbnail ask in the Q&A category of `GitHub Discussions`_.
 
 
 How to Use
@@ -184,5 +176,6 @@ So it will avoid to overly query the S3 API.
 .. _`Template examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#template-examples
 .. _`Model examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#model-examples
 .. _`Low level API examples`: https://sorl-thumbnail.readthedocs.io/en/latest/examples.html#low-level-api-examples
+.. _`GitHub Discussions`: https://github.com/mariocesar/sorl-thumbnail/discussions
 .. _`issue #351`: https://github.com/mariocesar/sorl-thumbnail/issues/351
 .. _`Django supported versions policy`: https://www.djangoproject.com/download/#supported-versions

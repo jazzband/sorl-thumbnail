@@ -4,9 +4,7 @@ Contributing
 
 Feel free to create a new Pull request if you want to propose a new feature
 or fix a bug.  If you need development support or want to discuss
-with other developers, join us in the channel #sorl-thumbnail at freenode.net
-
-   irc://irc.freenode.net/#sorl-thumbnail
+with other developers, join us in `GitHub Discussions`_.
 
 Running testsuite
 =================
@@ -82,6 +80,7 @@ Run all CI targets in sequence::
       TARGET=$target docker compose run --rm ci
     done
 
+.. _GitHub Discussions: https://github.com/mariocesar/sorl-thumbnail/discussions
 .. _GitHub Actions: https://github.com/mariocesar/sorl-thumbnail/actions
 .. _Docker: https://www.docker.com/
 .. _tox: https://tox.wiki/
