@@ -4,6 +4,9 @@ Changes
 
 Unreleased
 ==========
+* The ``thumbnail`` template tag now raises ``TemplateSyntaxError`` when the
+  source or geometry is missing, instead of ``IndexError`` or compiling a tag
+  that fails at render (#720)
 * ``ImageFile.serialize_storage`` resolves the storage alias by instance instead
   of returning the first alias with the same backend class, and ``ImageFile.key``
   includes that alias for storages other than ``default`` and
