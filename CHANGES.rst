@@ -8,6 +8,8 @@ Unreleased
 * The PIL engine keeps animated GIFs animated when the thumbnail format is
   ``GIF``. Every frame is thumbnailed, keeping its duration and the loop
   count. Other formats still take the first frame (#687)
+* ``crop='smart'`` no longer hangs on some image sizes, and no longer returns
+  a thumbnail narrower than requested when it trims the right side (#829)
 * The default branch is now ``main`` instead of ``master``. GitHub redirects
   links to ``master`` to ``main``. To update an existing clone or fork::
 
