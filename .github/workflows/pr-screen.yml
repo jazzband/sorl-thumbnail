@@ -6,6 +6,14 @@ on:
   schedule:
     - cron: '17 6 * * *'
   workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number to screen. Leave empty to run the sweep.
+        type: string
+      dry_run:
+        description: Only report, do not label, draft or comment
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -22,7 +30,7 @@ env:
 
 jobs:
   screen:
-    if: github.event_name == 'pull_request_target'
+    if: github.event_name == 'pull_request_target' || inputs.pr != ''
     runs-on: ubuntu-26.04
     steps:
       # API calls only. Never check out the pull request here.
@@ -30,7 +38,10 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const pr = context.payload.pull_request;
+            const inputs = context.payload.inputs || {};
+            const dryRun = inputs.dry_run === 'true' || inputs.dry_run === true;
+            const pr = context.payload.pull_request
+              || (await github.rest.pulls.get({ owner, repo, pull_number: Number(inputs.pr) })).data;
             const login = pr.user.login;
             const label = process.env.LABEL;
             const fastMinutes = Number(process.env.FAST_FIX_MINUTES);
@@ -39,8 +50,10 @@ jobs:
             const velocityRepos = Number(process.env.VELOCITY_REPOS);
             const replyDays = Number(process.env.REPLY_DAYS);
 
-            if (pr.user.type === 'Bot') return;
-            if (['OWNER', 'MEMBER', 'COLLABORATOR'].includes(pr.author_association)) return;
+            if (pr.user.type === 'Bot') return core.info(`${login} is a bot account, skipping`);
+            if (['OWNER', 'MEMBER', 'COLLABORATOR'].includes(pr.author_association)) {
+              return core.info(`${login} is ${pr.author_association}, skipping`);
+            }
 
             const search = (q, per_page) => github.rest.search.issuesAndPullRequests({
               q, per_page, advanced_search: 'true',
@@ -82,8 +95,9 @@ jobs:
               reasons.push(`you opened ${recent.total_count} pull requests in ${repos.size} different repositories this week and this is your first one here`);
             }
 
-            if (reasons.length === 0) return;
-            core.notice(`Quarantined #${pr.number}: ${reasons.join('; ')}`);
+            if (reasons.length === 0) return core.notice(`#${pr.number} passes`);
+            core.notice(`${dryRun ? 'Would quarantine' : 'Quarantined'} #${pr.number}: ${reasons.join('; ')}`);
+            if (dryRun) return;
 
             try {
               await github.rest.issues.createLabel({ owner, repo, name: label, color: 'e4a11b' });
@@ -117,7 +131,7 @@ jobs:
             });
 
   sweep:
-    if: github.event_name != 'pull_request_target'
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.pr == '')
     runs-on: ubuntu-26.04
     steps:
       - uses: actions/github-script@v8
