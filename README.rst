@@ -24,9 +24,9 @@ Developers
 ==========
 
 By contributing you agree to abide by the
-`Code of Conduct <https://github.com/mariocesar/sorl-thumbnail/blob/master/CODE_OF_CONDUCT.md>`_.
+`Code of Conduct <https://github.com/mariocesar/sorl-thumbnail/blob/main/CODE_OF_CONDUCT.md>`_.
 To report a security issue, follow the
-`security policy <https://github.com/mariocesar/sorl-thumbnail/blob/master/SECURITY.md>`_
+`security policy <https://github.com/mariocesar/sorl-thumbnail/blob/main/SECURITY.md>`_
 instead of opening a public issue.
 
 Feel free to create a new Pull request if you want to propose a new feature.
@@ -165,8 +165,8 @@ So it will avoid to overly query the S3 API.
 .. |codecov| image:: https://codecov.io/gh/mariocesar/sorl-thumbnail/graph/badge.svg?token=YSN2eCESQT 
     :target: https://codecov.io/gh/mariocesar/sorl-thumbnail
     :alt: Coverage
-.. |precommit| image:: https://results.pre-commit.ci/badge/github/mariocesar/sorl-thumbnail/master.svg
-   :target: https://results.pre-commit.ci/latest/github/mariocesar/sorl-thumbnail/master
+.. |precommit| image:: https://results.pre-commit.ci/badge/github/mariocesar/sorl-thumbnail/main.svg
+   :target: https://results.pre-commit.ci/latest/github/mariocesar/sorl-thumbnail/main
    :alt: pre-commit.ci status
 
 .. _`Pillow`: https://pillow.readthedocs.io/

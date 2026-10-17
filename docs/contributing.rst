@@ -95,12 +95,12 @@ Sending pull requests
 
 2. Create a branch for your specific changes::
 
-    $ git checkout master
+    $ git checkout main
     $ git pull
     $ git checkout -b feature/foobar
 
    To simplify things, please, make one branch per issue (pull request).
-   It's also important to make sure your branch is up-to-date with upstream master,
+   It's also important to make sure your branch is up-to-date with upstream main,
    so that maintainers can merge changes easily.
 
 3. Commit changes. Please update docs, if relevant.
