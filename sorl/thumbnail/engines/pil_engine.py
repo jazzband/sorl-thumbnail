@@ -3,13 +3,14 @@ from io import BytesIO
 from sorl.thumbnail.engines.base import EngineBase
 
 try:
-    from PIL import Image, ImageDraw, ImageFile, ImageMode
+    from PIL import Image, ImageDraw, ImageFile, ImageMode, ImageSequence
     from PIL.ImageFilter import GaussianBlur
 except ImportError:
     import Image
     import ImageDraw
     import ImageFile
     import ImageMode
+    import ImageSequence
 try:
     import pillow_avif  # noqa: F401
 except ImportError:
@@ -74,11 +75,29 @@ def round_rectangle(size, radius, fill):
 
 
 class Engine(EngineBase):
+    def create(self, image, geometry, options):
+        """
+        An animated source written as GIF is thumbnailed frame by frame,
+        returning the list of frames
+        """
+        if options['format'] != 'GIF' or not getattr(image, 'is_animated', False):
+            return super().create(image, geometry, options)
+
+        frames = []
+        for frame in ImageSequence.Iterator(image):
+            # Copy, seeking to the next frame reuses the same image
+            thumbnail = super().create(frame.copy(), geometry, options)
+            thumbnail.info['duration'] = frame.info.get('duration', 0)
+            frames.append(thumbnail)
+        return frames
+
     def get_image(self, source):
         buffer = BytesIO(source.read())
         return Image.open(buffer)
 
     def get_image_size(self, image):
+        if isinstance(image, list):  # Animated GIF frames, see create()
+            image = image[0]
         return image.size
 
     def get_image_info(self, image):
@@ -260,6 +279,9 @@ class Engine(EngineBase):
         return im
 
     def _get_raw_data(self, image, format_, quality, image_info=None, progressive=False):
+        frames = image if isinstance(image, list) else [image]  # see create()
+        image = frames[0]
+
         # Increase (but never decrease) PIL buffer size
         ImageFile.MAXBLOCK = max(ImageFile.MAXBLOCK, image.size[0] * image.size[1])
         bf = BytesIO()
@@ -269,6 +291,17 @@ class Engine(EngineBase):
             'quality': quality,
             'optimize': 1,
         }
+
+        if len(frames) > 1:
+            params['save_all'] = True
+            params['append_images'] = frames[1:]
+            params['duration'] = [frame.info['duration'] for frame in frames]
+            # Clear each frame before drawing the next one, otherwise
+            # transparent animations leave trails
+            params['disposal'] = 2
+
+            if 'loop' in image_info:
+                params['loop'] = image_info['loop']
 
         # keeps icc_profile
         if 'icc_profile' in image_info:
