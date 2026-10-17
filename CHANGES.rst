@@ -8,6 +8,9 @@ Unreleased
 * The PIL engine keeps animated GIFs animated when the thumbnail format is
   ``GIF``. Every frame is thumbnailed, keeping its duration and the loop
   count. Other formats still take the first frame (#687)
+* ``UrlStorage`` no longer escapes ``+`` and ``/`` in the query string of
+  remote image URLs. This broke signed URLs (S3, CloudFront, image proxies),
+  which the server then rejected as having an invalid signature
 * The default branch is now ``main`` instead of ``master``. GitHub redirects
   links to ``master`` to ``main``. To update an existing clone or fork::
 
