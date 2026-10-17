@@ -6,7 +6,7 @@ from unittest import mock
 
 from django.core.files.storage import default_storage, storages
 from django.template.loader import render_to_string
-from PIL import Image
+from PIL import Image, ImageSequence
 
 from sorl.thumbnail import default
 from sorl.thumbnail.base import ThumbnailBackend
@@ -230,6 +230,27 @@ class SimpleTestCase(BaseTestCase):
         th = self.BACKEND.get_thumbnail(path, '11x11', format='JPEG')
         img = Image.open(th.storage.path(th.name))
         self.assertFalse(self.is_transparent(img))
+
+    @unittest.skipIf('pil_engine' not in settings.THUMBNAIL_ENGINE, 'animation is only kept in PIL')
+    def test_animated_gif(self):
+        # A red square moving right over a transparent background
+        frames = []
+        for x in (0, 50, 100):
+            frame = Image.new('RGBA', (200, 100))
+            frame.paste((255, 0, 0, 255), (x, 0, x + 50, 100))
+            frames.append(frame)
+        frames[0].save(os.path.join(settings.MEDIA_ROOT, 'animated.gif'), save_all=True,
+                       append_images=frames[1:], duration=[100, 200, 300], loop=0, disposal=2)
+
+        th = self.BACKEND.get_thumbnail('animated.gif', '100x50', format='GIF')
+        img = Image.open(th.storage.path(th.name))
+        self.assertEqual((th.x, th.y), (100, 50))
+        self.assertEqual(img.info['loop'], 0)
+        self.assertEqual([frame.info['duration'] for frame in ImageSequence.Iterator(img)],
+                         [100, 200, 300])
+        # The square left the top left corner, it must not leave a trail there
+        img.seek(2)
+        self.assertEqual(img.convert('RGBA').getpixel((0, 0))[3], 0)
 
     def test_image_file_deserialize(self):
         im = ImageFile(Item.objects.get(image='500x500.jpg').image)
