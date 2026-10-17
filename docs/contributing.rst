@@ -112,3 +112,19 @@ Sending pull requests
 6. Submit a `pull request`_.
 
 .. _pull request: https://help.github.com/articles/using-pull-requests
+
+Using AI tools
+==============
+
+Use whatever tools you like to write the change, but you are the one sending
+it. That means:
+
+* Mention in the description if you used AI, and for what.
+* Run the tests and read the diff before you open the pull request.
+* Reply when someone reviews it. Pull requests nobody answers for get closed.
+
+We don't take pull requests sent by scripts that watch the issue tracker and
+send a patch minutes later, even if the patch is right. New pull requests get
+checked for this and the ones that look like it are turned into drafts with
+the ``needs-author-verification`` label until the author replies. If that
+doesn't happen in a week they are closed. You can ask to have one reopened.
