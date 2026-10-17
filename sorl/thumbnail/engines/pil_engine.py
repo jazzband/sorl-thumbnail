@@ -220,9 +220,11 @@ class Engine(EngineBase):
         geometry_ratio = geometry_width / geometry_height
 
         # The is proportionally wider than it should be
-        while image_width / image_height > geometry_ratio:
-
-            slice_width = max(image_width - geometry_width, 10)
+        while True:
+            # Cut at most 10px per round, and never past the target ratio
+            slice_width = min(image_width - round(image_height * geometry_ratio), 10)
+            if slice_width <= 0:
+                break
 
             right = image.crop((image_width - slice_width, 0, image_width, image_height))
             left = image.crop((0, 0, slice_width, image_height))
@@ -230,14 +232,15 @@ class Engine(EngineBase):
             if self._get_image_entropy(left) < self._get_image_entropy(right):
                 image = image.crop((slice_width, 0, image_width, image_height))
             else:
-                image = image.crop((0, 0, image_height - slice_width, image_height))
+                image = image.crop((0, 0, image_width - slice_width, image_height))
 
             image_width -= slice_width
 
         # The image is proportionally taller than it should be
-        while image_width / image_height < geometry_ratio:
-
-            slice_height = min(image_height - geometry_height, 10)
+        while True:
+            slice_height = min(image_height - round(image_width / geometry_ratio), 10)
+            if slice_height <= 0:
+                break
 
             bottom = image.crop((0, image_height - slice_height, image_width, image_height))
             top = image.crop((0, 0, image_width, slice_height))
