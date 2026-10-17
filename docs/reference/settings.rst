@@ -286,6 +286,13 @@ The generated thumbnails filename prefix.
 Default image format, supported formats are: ``'JPEG'``, ``'PNG'``, ``'GIF'``, ``'WEBP'``, ``'AVIF'``. This also implicitly
 sets the filename extension. This can be overridden by individual options.
 
+With the PIL engine, an animated source stays animated when the format is
+``'GIF'``, for example with ``format='GIF'`` or ``THUMBNAIL_PRESERVE_FORMAT``.
+Every frame is thumbnailed, so the cost grows with the number of frames. If you
+accept uploaded images, consider limiting the frame count when validating them,
+for example with Pillow's ``Image.open(file).n_frames``.
+
+
 ``THUMBNAIL_PRESERVE_FORMAT``
 =============================
 
