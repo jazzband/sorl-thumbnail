@@ -104,11 +104,17 @@ jobs:
             } catch {}
             await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: [label] });
 
-            if (!pr.draft) {
-              await github.graphql(
-                `mutation($id: ID!) { convertPullRequestToDraft(input: {pullRequestId: $id}) { pullRequest { isDraft } } }`,
-                { id: pr.node_id },
-              );
+            let drafted = pr.draft;
+            if (!drafted) {
+              try {
+                await github.graphql(
+                  `mutation($id: ID!) { convertPullRequestToDraft(input: {pullRequestId: $id}) { pullRequest { isDraft } } }`,
+                  { id: pr.node_id },
+                );
+                drafted = true;
+              } catch (e) {
+                core.warning(`Could not convert #${pr.number} to draft: ${e.message}`);
+              }
             }
 
             const guide = 'https://sorl-thumbnail.readthedocs.io/en/latest/contributing.html#using-ai-tools';
@@ -117,7 +123,7 @@ jobs:
               body: [
                 `Hi @${login}, thanks for the patch.`,
                 '',
-                'I turned this into a draft because:',
+                `I ${drafted ? 'turned this into a draft' : 'put this on hold'} because:`,
                 '',
                 ...reasons.map(r => `- ${r}`),
                 '',
@@ -126,7 +132,7 @@ jobs:
                 '- did you use AI, and for what',
                 '- did you run the tests and read the diff yourself',
                 '',
-                `Then I'll mark it ready for review. If I don't hear back in ${replyDays} days it gets closed. Just comment if you want it reopened.`,
+                `Then I'll ${drafted ? 'mark it ready for review' : 'take the label off and review it'}. If I don't hear back in ${replyDays} days it gets closed. Just comment if you want it reopened.`,
               ].join('\n'),
             });
 
