@@ -2,6 +2,17 @@
 Changes
 =======
 
+Unreleased
+==========
+
+* The default branch is now ``main`` instead of ``master``. GitHub redirects
+  links to ``master`` to ``main``. To update an existing clone or fork::
+
+    git branch -m master main
+    git fetch origin
+    git branch -u origin/main main
+    git remote set-head origin -a
+
 13.2.0
 ======
 
